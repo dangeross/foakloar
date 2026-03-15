@@ -15,10 +15,11 @@ export function stripArticles(noun) {
 }
 
 /**
- * Build a verb alias map from events in the current place + inventory.
+ * Build a verb alias map from events in the current place + inventory + extra sources.
  * Returns Map<alias, canonicalVerb>.
+ * @param {Object[]} [extraEvents] — additional verb sources (e.g. roaming NPCs)
  */
-export function buildVerbMap(events, placeEvent, inventoryDtags) {
+export function buildVerbMap(events, placeEvent, inventoryDtags, extraEvents = []) {
   const map = new Map();
   const sources = [];
 
@@ -34,6 +35,10 @@ export function buildVerbMap(events, placeEvent, inventoryDtags) {
   for (const dtag of inventoryDtags) {
     const ev = events.get(dtag);
     if (ev) sources.push(ev);
+  }
+
+  for (const ev of extraEvents) {
+    sources.push(ev);
   }
 
   for (const ev of sources) {

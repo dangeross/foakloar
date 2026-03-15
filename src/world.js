@@ -1,7 +1,3 @@
-import { AUTHOR_PUBKEY, WORLD_TAG } from './config.js';
-
-const A_PREFIX = `30078:${AUTHOR_PUBKEY}:${WORLD_TAG}`;
-
 export function getTag(event, name) {
   return event.tags.find((t) => t[0] === name)?.[1];
 }
@@ -19,29 +15,13 @@ export function dtagFromRef(ref) {
 }
 
 /**
- * Resolve the current state of an event ref against player state.
- * Returns the state string for the ref's type, or null if not applicable.
- */
-function resolveRefState(dtag, refType, playerState) {
-  if (refType === 'item') return playerState.itemStates?.[dtag] ?? null;
-  if (refType === 'feature') return playerState.featureStates?.[dtag] ?? null;
-  if (refType === 'puzzle') return playerState.puzzlesSolved?.includes(dtag) ? 'solved' : 'unsolved';
-  return null;
-}
-
-/**
  * Check requires and requires-not tags on an event against player state.
  * Spec shapes:
  *   ["requires",     "<event-ref>", "<state-or-blank>", "<description-or-blank>"]
  *   ["requires-not", "<event-ref>", "<state-or-blank>", "<description-or-blank>"]
  *
- * Resolves the referenced event, checks its type tag, then dispatches:
- *   item    — blank state = player holds it; non-blank = must be in that state
- *   feature — checks featureStates
- *   puzzle  — checks puzzlesSolved (state "solved" / "unsolved")
- *   portal  — checks portalStates (future)
- *
- * requires-not inverts the check: fails if the condition IS met.
+ * All event states live in playerState.states — unified map keyed by d-tag.
+ * Items additionally require inventory membership.
  *
  * Returns { allowed: true } or { allowed: false, reason: string }.
  */
@@ -61,19 +41,19 @@ export function checkRequires(event, playerState, events) {
         return { allowed: false, reason: failDesc };
       }
       if (expectedState) {
-        const currentState = playerState.itemStates?.[dtag];
+        const currentState = playerState.states?.[dtag];
         if (currentState !== expectedState) {
           return { allowed: false, reason: failDesc };
         }
       }
     } else if (refType === 'puzzle') {
       if (expectedState === 'solved') {
-        if (!playerState.puzzlesSolved?.includes(dtag)) {
+        if (playerState.states?.[dtag] !== 'solved') {
           return { allowed: false, reason: failDesc };
         }
       }
     } else if (refType === 'feature') {
-      const currentState = playerState.featureStates?.[dtag];
+      const currentState = playerState.states?.[dtag];
       if (expectedState && currentState !== expectedState) {
         return { allowed: false, reason: failDesc };
       }
@@ -95,21 +75,19 @@ export function checkRequires(event, playerState, events) {
     if (refType === 'item') {
       const hasItem = playerState.inventory.includes(dtag);
       if (!forbiddenState) {
-        // requires-not with blank state = must NOT hold the item
         if (hasItem) return { allowed: false, reason: failDesc };
       } else {
-        // requires-not with state = must NOT be in that state (if held)
-        if (hasItem && playerState.itemStates?.[dtag] === forbiddenState) {
+        if (hasItem && playerState.states?.[dtag] === forbiddenState) {
           return { allowed: false, reason: failDesc };
         }
       }
     } else if (refType === 'puzzle') {
-      const currentState = resolveRefState(dtag, refType, playerState);
+      const currentState = playerState.states?.[dtag] ?? 'unsolved';
       if (forbiddenState && currentState === forbiddenState) {
         return { allowed: false, reason: failDesc };
       }
     } else if (refType === 'feature') {
-      const currentState = playerState.featureStates?.[dtag];
+      const currentState = playerState.states?.[dtag];
       if (forbiddenState && currentState === forbiddenState) {
         return { allowed: false, reason: failDesc };
       }
@@ -178,10 +156,10 @@ export function resolveExits(events, placeDTag, playerState) {
   for (const [, event] of events) {
     if (getTag(event, 'type') !== 'portal') continue;
 
-    // Check portal visibility — default state from event, overridden by player state
+    // Check portal visibility — default state from event, overridden by unified player states
     const portalDTag = getTag(event, 'd');
     const defaultState = getTag(event, 'state');
-    const currentState = playerState?.portalStates?.[portalDTag] ?? defaultState;
+    const currentState = playerState?.states?.[portalDTag] ?? defaultState;
     if (currentState === 'hidden') continue;
 
     const exitTags = getTags(event, 'exit');
@@ -191,7 +169,7 @@ export function resolveExits(events, placeDTag, playerState) {
       const ref = tag[1];
       if (!ref.includes(':place:')) continue;
 
-      const refDTag = ref.replace(`30078:${AUTHOR_PUBKEY}:`, '');
+      const refDTag = dtagFromRef(ref);
       if (refDTag !== placeDTag) continue;
 
       const slot = tag[2];
@@ -200,7 +178,7 @@ export function resolveExits(events, placeDTag, playerState) {
       for (let j = 0; j < exitTags.length; j++) {
         if (j === i) continue;
         const destRef = exitTags[j][1];
-        const destDTag = destRef.replace(`30078:${AUTHOR_PUBKEY}:`, '');
+        const destDTag = dtagFromRef(destRef);
 
         exits.push({ slot, label, destinationDTag: destDTag, portalEvent: event });
       }

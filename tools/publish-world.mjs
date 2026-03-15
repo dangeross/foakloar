@@ -12,6 +12,7 @@ import { clues } from '../lib/events/clues.mjs';
 import { puzzle } from '../lib/events/puzzle.mjs';
 import { npcs } from '../lib/events/npcs.mjs';
 import { dialogue } from '../lib/events/dialogue.mjs';
+import { world } from '../lib/events/world.mjs';
 
 function bytesToHex(bytes) {
   return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
@@ -79,6 +80,7 @@ console.log(`Sanctum encrypted (${sanctumEncrypted.length} chars)\n`);
 // ── Build all 17 events ─────────────────────────────────────────────────────
 
 const unsignedEvents = [
+  ...world(pubkey),
   ...places(pubkey, sanctumEncrypted),
   ...portals(pubkey),
   ...items(pubkey),

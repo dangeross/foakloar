@@ -719,8 +719,9 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["on-interact",     "turn on",  "set-state",   "on"],
     ["on-interact",     "turn off", "set-state",   "off"],
     ["on-move",         "on",       "decrement",   "battery"],
-    ["on-counter-zero", "battery",  "set-state",   "dead"],
-    ["on-counter-zero", "battery",  "consequence", "30078:<ZA>:zork1:consequence:lamp-dies"],
+    ["on-counter",  "battery",  "50",  "set-state",   "flickering"],
+    ["on-counter", "battery", "0",         "set-state",   "dead"],
+    ["on-counter", "battery", "0",  "consequence", "30078:<ZA>:zork1:consequence:lamp-dies"],
     ["description", "A battery-powered brass lantern."]
   ]
 }
@@ -813,7 +814,7 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",            "examine","look"],
     ["on-interact",     "light", "set-state",   "lit"],
     ["on-move",         "lit",   "decrement",   "burn-time"],
-    ["on-counter-zero", "burn-time", "set-state","dead"],
+    ["on-counter", "burn-time", "0", "set-state","dead"],
     ["description", "A pair of white candles."]
   ]
 }
@@ -829,7 +830,7 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",            "examine","look"],
     ["on-interact",     "strike",  "set-state",  "lit", "30078:<ZA>:zork1:item:candles"],
     ["on-interact",     "strike",  "decrement",  "matches"],
-    ["on-counter-zero", "matches", "consequence","30078:<ZA>:zork1:consequence:out-of-matches"],
+    ["on-counter", "matches", "0", "consequence","30078:<ZA>:zork1:consequence:out-of-matches"],
     ["description", "A small book of matches."]
   ]
 }
@@ -1545,7 +1546,7 @@ Observations from mapping Zork 1 against the final schema:
 - **Single kind, type tag** — all 100+ events are `kind: 30078`; `type` tag differentiates. One relay subscription covers the whole world.
 - **`requires` on places** handles darkness — no special dark-place logic in the client.
 - **`transition` table** enforces puzzle sequencing — altar requires `dry → watered → prayed` in order. No client puzzle logic.
-- **`on-counter-zero`** handles lantern battery and candle burn time — same pattern.
+- **`on-counter`** handles lantern battery and candle burn time — same pattern.
 - **`requires-not`** on NPC (grue, bat) gates existence to conditions cleanly.
 - **Consequences** unify death, combat outcomes, victory, and resource depletion.
 - **Asymmetric portals** work naturally — maze exits are intentionally non-reversible.

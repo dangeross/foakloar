@@ -1,9 +1,62 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useRelay } from './useRelay.js';
 import { usePlayerState } from './usePlayerState.js';
-import { GENESIS_PLACE, AUTHOR_PUBKEY } from './config.js';
+import { AUTHOR_PUBKEY, WORLD_TAG } from './config.js';
 import { GameEngine } from './engine/engine.js';
 import { PlayerStateMutator } from './engine/player-state.js';
+import { getTag, getTags, dtagFromRef } from './world.js';
+import { resolveTheme, applyTheme } from './theme.js';
+
+/** Map entry types to colour slots */
+const TYPE_COLOUR = {
+  command:          'text',
+  narrative:        'text',
+  title:            'title',
+  error:            'error',
+  exits:            'exits',
+  item:             'item',
+  feature:          'dim',
+  'clue-title':     'clue',
+  clue:             'clue',
+  'puzzle-title':   'puzzle',
+  puzzle:           'puzzle',
+  hint:             'puzzle',
+  success:          'highlight',
+  win:              'item',
+  sealed:           'dim',
+  npc:              'npc',
+  'npc-title':      'npc',
+  dialogue:         'npc',
+  'dialogue-option':'npc',
+  markdown:         'text',
+  'media-markdown': 'text',
+  'media-ascii':    'text',
+};
+
+/** Map entry types to extra CSS classes (layout, weight, etc.) */
+const TYPE_CLASS = {
+  command:          'mt-2',
+  title:            'font-bold mt-3',
+  exits:            'text-sm mt-1',
+  item:             'text-sm',
+  feature:          'text-sm',
+  'clue-title':     'font-bold mt-2',
+  clue:             'italic',
+  'puzzle-title':   'font-bold mt-2',
+  puzzle:           'italic',
+  hint:             'text-sm',
+  success:          'font-bold',
+  win:              'whitespace-pre-wrap mt-2',
+  sealed:           'italic',
+  npc:              'text-sm',
+  'npc-title':      'font-bold mt-3',
+  dialogue:         'italic',
+  'dialogue-option':'text-sm',
+  markdown:         'prose-dungeon mt-1',
+  'media-markdown': 'prose-dungeon mt-1',
+  'media-ascii':    'whitespace-pre font-mono text-sm mt-2 leading-none',
+  'media-image':    'mt-2',
+};
 
 export default function App() {
   const { events, status } = useRelay();
@@ -16,21 +69,43 @@ export default function App() {
   const historyIndexRef = useRef(-1);
   const draftRef = useRef('');
 
+  // Resolve world event config from events
+  const worldConfig = useMemo(() => {
+    if (events.size === 0) return null;
+    const worldEvent = events.get(`${WORLD_TAG}:world`);
+    if (!worldEvent) return null;
+
+    const startRef = getTag(worldEvent, 'start');
+    const genesisPlace = startRef ? dtagFromRef(startRef) : `${WORLD_TAG}:place:clearing`;
+    const inventoryRefs = getTags(worldEvent, 'inventory').map((t) => t[1]);
+    const title = getTag(worldEvent, 'title') || WORLD_TAG;
+    const cwTags = getTags(worldEvent, 'cw').map((t) => t[1]);
+
+    return { genesisPlace, inventoryRefs, title, cwTags, worldEvent };
+  }, [events]);
+
+  // Apply theme from world event
+  useEffect(() => {
+    const colours = resolveTheme(worldConfig?.worldEvent || null);
+    applyTheme(colours);
+  }, [worldConfig]);
+
   // Lazily create or update engine with latest events
   const getEngine = useCallback(() => {
-    const mutator = new PlayerStateMutator(player.state);
+    const mutator = new PlayerStateMutator(player.state, player.npcStates);
+    const genesisPlace = worldConfig?.genesisPlace || `${WORLD_TAG}:place:clearing`;
     if (!engineRef.current) {
       engineRef.current = new GameEngine({
         events,
         player: mutator,
-        config: { GENESIS_PLACE, AUTHOR_PUBKEY },
+        config: { GENESIS_PLACE: genesisPlace, AUTHOR_PUBKEY },
       });
     } else {
       engineRef.current.events = events;
       engineRef.current.player = mutator;
     }
     return engineRef.current;
-  }, [events, player.state]);
+  }, [events, player.state, worldConfig]);
 
   // Flush engine output into React log state and commit player state
   const commitEngine = useCallback((engine) => {
@@ -38,21 +113,20 @@ export default function App() {
     if (entries.length > 0) {
       setLog((prev) => [...prev, ...entries]);
     }
-    player.replaceState(engine.getPlayerState());
+    player.replaceState(engine.getPlayerState(), engine.player.npcStates);
   }, [player]);
 
   useEffect(() => {
     logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [log]);
 
-  // Keep input focused — refocus on click anywhere or after renders
+  // Keep input focused
   useEffect(() => {
     inputRef.current?.focus();
   }, [status, log]);
 
   useEffect(() => {
     function refocus(e) {
-      // Don't steal focus from other inputs/textareas if any exist
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       inputRef.current?.focus();
     }
@@ -64,7 +138,28 @@ export default function App() {
   useEffect(() => {
     if (status === 'ready' && events.size > 0 && log.length === 0) {
       const engine = getEngine();
+
       engine.reconcileCounterLow();
+
+      // Give starting inventory on new game
+      const isNewGame = !player.state.place && player.state.inventory.length === 0;
+      if (isNewGame && worldConfig?.inventoryRefs) {
+        for (const ref of worldConfig.inventoryRefs) {
+          const dtag = dtagFromRef(ref);
+          if (!engine.player.hasItem(dtag)) {
+            engine.player.pickUp(dtag);
+            const itemEvent = events.get(dtag);
+            if (itemEvent) {
+              const defaultState = getTag(itemEvent, 'state');
+              if (defaultState) engine.player.setState(dtag, defaultState);
+              for (const ct of getTags(itemEvent, 'counter')) {
+                engine.player.setCounter(`${dtag}:${ct[1]}`, parseInt(ct[2], 10));
+              }
+            }
+          }
+        }
+      }
+
       engine.enterRoom(engine.currentPlace);
       commitEngine(engine);
     }
@@ -75,7 +170,6 @@ export default function App() {
     const val = inputRef.current.value;
     if (!val.trim()) return;
     inputRef.current.value = '';
-    // Push to history — skip dialogue choices (numeric) and puzzle answers
     const engine = getEngine();
     if (!engine.dialogueActive && !engine.puzzleActive) {
       const hist = historyRef.current;
@@ -96,7 +190,6 @@ export default function App() {
     if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (historyIndexRef.current === -1) {
-        // Save current input as draft before browsing history
         draftRef.current = inputRef.current.value;
         historyIndexRef.current = hist.length - 1;
       } else if (historyIndexRef.current > 0) {
@@ -110,69 +203,52 @@ export default function App() {
         historyIndexRef.current++;
         inputRef.current.value = hist[historyIndexRef.current];
       } else {
-        // Past the end — restore draft
         historyIndexRef.current = -1;
         inputRef.current.value = draftRef.current;
       }
     }
   }
 
-  // Derive UI state from engine
+  // Derive UI state
   const engine = engineRef.current;
   const puzzleActive = engine?.puzzleActive ?? null;
   const dialogueActive = engine?.dialogueActive ?? null;
+  const worldTitle = worldConfig?.title || WORLD_TAG;
 
   return (
-    <div className="max-w-2xl mx-auto p-6 flex flex-col h-screen">
-      <div className="text-sm text-green-600 mb-2">
-        Relay: {status} | Events: {events.size}
+    <div className="max-w-2xl mx-auto p-6 flex flex-col h-screen"
+         style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}>
+      <div className="text-sm mb-2" style={{ color: 'var(--colour-dim)' }}>
+        {worldTitle} | Relay: {status} | Events: {events.size}
       </div>
 
       {status === 'connecting' && <p>Connecting to relay...</p>}
-      {status === 'failed' && <p className="text-red-400">Failed to connect to any relay.</p>}
+      {status === 'failed' && <p style={{ color: 'var(--colour-error)' }}>Failed to connect to any relay.</p>}
 
       <div className="flex-1 overflow-y-auto mb-4">
         {log.map((entry, i) => {
-          const typeClass =
-            entry.type === 'command' ? 'text-green-300 mt-2' :
-            entry.type === 'title' ? 'text-green-200 font-bold mt-3' :
-            entry.type === 'error' ? 'text-red-400' :
-            entry.type === 'exits' ? 'text-green-600 text-sm mt-1' :
-            entry.type === 'item' ? 'text-yellow-400 text-sm' :
-            entry.type === 'feature' ? 'text-green-500 text-sm' :
-            entry.type === 'clue-title' ? 'text-cyan-400 font-bold mt-2' :
-            entry.type === 'clue' ? 'text-cyan-300 italic' :
-            entry.type === 'puzzle-title' ? 'text-purple-400 font-bold mt-2' :
-            entry.type === 'puzzle' ? 'text-purple-300 italic' :
-            entry.type === 'hint' ? 'text-purple-500 text-sm' :
-            entry.type === 'success' ? 'text-green-300 font-bold' :
-            entry.type === 'win' ? 'text-yellow-300 whitespace-pre-wrap mt-2' :
-            entry.type === 'sealed' ? 'text-gray-500 italic' :
-            entry.type === 'npc' ? 'text-amber-400 text-sm' :
-            entry.type === 'npc-title' ? 'text-amber-300 font-bold mt-3' :
-            entry.type === 'dialogue' ? 'text-amber-200 italic' :
-            entry.type === 'dialogue-option' ? 'text-amber-400 text-sm' :
-            entry.type === 'markdown' ? 'text-green-400 prose-dungeon mt-1' :
-            entry.type === 'media-markdown' ? 'text-green-400 prose-dungeon mt-1' :
-            entry.type === 'media-ascii' ? 'text-green-500 whitespace-pre font-mono text-sm mt-2 leading-none' :
-            entry.type === 'media-image' ? 'mt-2' :
-            'text-green-400';
+          const colourSlot = TYPE_COLOUR[entry.type] || 'text';
+          const extraClass = TYPE_CLASS[entry.type] || '';
+          const style = { color: `var(--colour-${colourSlot})` };
 
           if (entry.html) {
-            return <div key={i} className={typeClass} dangerouslySetInnerHTML={{ __html: entry.html }} />;
+            return <div key={i} className={extraClass} style={style} dangerouslySetInnerHTML={{ __html: entry.html }} />;
           }
-          return <p key={i} className={typeClass}>{entry.text}</p>;
+          return <p key={i} className={extraClass} style={style}>{entry.text}</p>;
         })}
         <div ref={logEndRef} />
       </div>
 
       {status === 'ready' && (
         <form onSubmit={onSubmit} className="flex gap-2">
-          <span className="text-green-400">{dialogueActive ? '#' : puzzleActive ? '?' : '>'}</span>
+          <span style={{ color: 'var(--colour-text)' }}>
+            {dialogueActive ? '#' : puzzleActive ? '?' : '>'}
+          </span>
           <input
             ref={inputRef}
             type="text"
-            className="flex-1 bg-transparent border-none outline-none text-green-400 font-mono"
+            className="flex-1 bg-transparent border-none outline-none font-mono"
+            style={{ color: 'var(--colour-text)' }}
             placeholder={dialogueActive ? 'Choose an option...' : puzzleActive ? 'Enter your answer...' : ''}
             onKeyDown={onKeyDown}
             autoFocus

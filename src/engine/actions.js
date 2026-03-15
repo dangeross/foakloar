@@ -40,9 +40,9 @@ export function applyExternalSetState(targetRef, targetState, events, player, em
   }
 
   if (targetType === 'portal') {
-    const portalCurrentState = player.getPortalState(targetDTag) ?? getDefaultState(targetEvent);
+    const portalCurrentState = player.getState(targetDTag) ?? getDefaultState(targetEvent);
     if (portalCurrentState !== targetState) {
-      player.setPortalState(targetDTag, targetState);
+      player.setState(targetDTag, targetState);
       const transition = findTransition(targetEvent, portalCurrentState, targetState);
       if (transition?.text) emit(transition.text, 'narrative');
     }
@@ -50,9 +50,9 @@ export function applyExternalSetState(targetRef, targetState, events, player, em
   }
 
   if (targetType === 'feature') {
-    const featCurrentState = player.getFeatureState(targetDTag) ?? getDefaultState(targetEvent);
+    const featCurrentState = player.getState(targetDTag) ?? getDefaultState(targetEvent);
     if (featCurrentState !== targetState) {
-      player.setFeatureState(targetDTag, targetState);
+      player.setState(targetDTag, targetState);
       const transition = findTransition(targetEvent, featCurrentState, targetState);
       if (transition?.text) emit(transition.text, 'narrative');
     }
@@ -72,7 +72,7 @@ export function giveItem(itemRef, events, player, emit) {
   player.pickUp(itemDTag);
   const itemEvent = events.get(itemDTag);
   const itemDefaultState = itemEvent ? getDefaultState(itemEvent) : null;
-  if (itemDefaultState) player.setItemState(itemDTag, itemDefaultState);
+  if (itemDefaultState) player.setState(itemDTag, itemDefaultState);
 
   if (itemEvent) {
     for (const ct of getTags(itemEvent, 'counter')) {
@@ -84,11 +84,11 @@ export function giveItem(itemRef, events, player, emit) {
 }
 
 /**
- * Evaluate on-counter-low tags on state entry.
- * If counter is already below threshold and item is not already in the target state, fire the action.
+ * Evaluate on-counter tags on state entry (re-evaluation).
+ * If counter is already at or below threshold and item is not already in the target state, fire the action.
  */
 export function evalCounterLow(item, dtag, currentState, player, emit) {
-  for (const lt of getTags(item, 'on-counter-low')) {
+  for (const lt of getTags(item, 'on-counter')) {
     const counterName = lt[1];
     const threshold = parseInt(lt[2], 10);
     const action = lt[3];
@@ -103,7 +103,7 @@ export function evalCounterLow(item, dtag, currentState, player, emit) {
     if (action === 'set-state' && actionTarget) {
       const transition = findTransition(item, currentState, actionTarget);
       if (transition) {
-        player.setItemState(dtag, transition.to);
+        player.setState(dtag, transition.to);
         if (transition.text) emit(transition.text, 'narrative');
         currentState = transition.to;
       }
@@ -145,16 +145,16 @@ export function evalSequencePuzzles(place, events, player, emit) {
         if (!targetEvent) continue;
         const targetType = getTag(targetEvent, 'type');
         if (targetType === 'portal') {
-          const portalCurrentState = player.getPortalState(targetDTag) ?? getDefaultState(targetEvent);
+          const portalCurrentState = player.getState(targetDTag) ?? getDefaultState(targetEvent);
           if (portalCurrentState !== value) {
-            player.setPortalState(targetDTag, value);
+            player.setState(targetDTag, value);
             const transition = findTransition(targetEvent, portalCurrentState, value);
             if (transition?.text) emit(transition.text, 'narrative');
           }
         } else if (targetType === 'feature') {
-          const featCurrentState = player.getFeatureState(targetDTag) ?? getDefaultState(targetEvent);
+          const featCurrentState = player.getState(targetDTag) ?? getDefaultState(targetEvent);
           if (featCurrentState !== value) {
-            player.setFeatureState(targetDTag, value);
+            player.setState(targetDTag, value);
             const transition = findTransition(targetEvent, featCurrentState, value);
             if (transition?.text) emit(transition.text, 'narrative');
           }

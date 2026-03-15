@@ -767,7 +767,7 @@ Path-conditional content uses standard `requires`:
     ["verb",            "examine","look"],
     ["on-interact",     "use",    "deal-damage-npc", ""],
     ["on-interact",     "use",    "decrement",       "bullets"],
-    ["on-counter-zero", "bullets","set-state",       "empty"],
+    ["on-counter", "bullets", "0","set-state",       "empty"],
     ["description", "A standard .38 revolver."]
   ]
 }
@@ -1075,10 +1075,10 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
   "kind": 30078, "tags": [
     ["d",           "fate:puzzle:path-choice"], ["t", "fate"], ["type", "puzzle"],
     ["puzzle-type", "observe"],
-    ["on-complete", "give-item",  "30078:<FA>:fate:item:path-wits"],
-    ["on-complete", "give-item",  "30078:<FA>:fate:item:path-fists"],
-    ["on-complete", "give-item",  "30078:<FA>:fate:item:path-team"],
-    ["on-complete", "set-state",  "solved"]
+    ["on-complete", "", "give-item",  "30078:<FA>:fate:item:path-wits"],
+    ["on-complete", "", "give-item",  "30078:<FA>:fate:item:path-fists"],
+    ["on-complete", "", "give-item",  "30078:<FA>:fate:item:path-team"],
+    ["on-complete", "", "set-state",  "solved"]
   ],
   "content": "Three paths lie before you. The mind. The fist. The heart. Choose wisely — the path cannot be changed."
 }
@@ -1094,7 +1094,7 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["puzzle-type", "sequence"],
     ["ordered",     "false"],
     ["requires",    "30078:<FA>:fate:item:orichalcum-beads", "shaped", "The gate mechanism needs shaped orichalcum."],
-    ["on-complete", "set-state", "solved"]
+    ["on-complete", "", "set-state", "solved"]
   ],
   "content": "Slots in the gate mechanism. They seem to require orichalcum beads of a specific shape."
 }
@@ -1107,8 +1107,8 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["ordered",     "true"],
     ["requires",    "30078:<FA>:fate:item:stone-tablet",  "", "The tablet's symbols must be used."],
     ["requires",    "30078:<FA>:fate:feature:omphalos-stone", "resonating", "The stone is not yet resonating."],
-    ["on-complete", "set-state",  "solved"],
-    ["on-complete", "set-state",  "activated", "30078:<FA>:fate:feature:omphalos-stone"]
+    ["on-complete", "", "set-state",  "solved"],
+    ["on-complete", "", "set-state",  "activated", "30078:<FA>:fate:feature:omphalos-stone"]
   ],
   "content": "The tablet's symbols and the stone's carvings must be brought into alignment."
 }
@@ -1121,8 +1121,8 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["ordered",     "true"],
     ["requires",    "30078:<FA>:fate:item:orichalcum-beads", "shaped", "The beads must be shaped first."],
     ["requires",    "30078:<FA>:fate:feature:bead-machine",  "loaded", "The beads must be loaded into the machine."],
-    ["on-complete", "set-state",  "solved"],
-    ["on-complete", "set-state",  "aligned", "30078:<FA>:fate:feature:bead-machine"]
+    ["on-complete", "", "set-state",  "solved"],
+    ["on-complete", "", "set-state",  "aligned", "30078:<FA>:fate:feature:bead-machine"]
   ],
   "content": "The beads must be arranged in the correct configuration."
 }
@@ -1133,8 +1133,8 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["d",           "fate:puzzle:sternhart-reveal"], ["t", "fate"], ["type", "puzzle"],
     ["puzzle-type", "observe"],
     ["requires",    "30078:<FA>:fate:item:path-wits", "", "Only available on the Wits path."],
-    ["on-complete", "set-state",  "hostile", "30078:<FA>:fate:npc:sternhart"],
-    ["on-complete", "set-state",  "solved"]
+    ["on-complete", "", "set-state",  "hostile", "30078:<FA>:fate:npc:sternhart"],
+    ["on-complete", "", "set-state",  "solved"]
   ],
   "content": "Sternhart's story doesn't add up. The right questions will expose him."
 }
@@ -1155,7 +1155,7 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["transition",  "unknown", "known", "You understand how to shape the orichalcum."],
     ["requires",    "30078:<FA>:fate:item:orichalcum-beads", "raw",  "You need the raw orichalcum beads."],
     ["requires",    "30078:<FA>:fate:item:stone-tablet",     "",     "The tablet shows the required shapes."],
-    ["on-complete", "set-state", "shaped", "30078:<FA>:fate:item:orichalcum-beads"],
+    ["on-complete", "", "set-state", "shaped", "30078:<FA>:fate:item:orichalcum-beads"],
     ["ordered",     "false"]
   ]
 }

@@ -192,7 +192,7 @@ ACT 3 — The Deep              (sanctum, the mechanism, the sealed chamber)
 | 8 | Item-gated feature | Hermit's chest | `requires item` on feature |
 | 9 | Sequence puzzle | Mechanism Chamber | `puzzle-type: sequence`, `ordered: true` |
 | 10 | `on-complete` reveal | Mechanism Chamber | `on-complete set-state visible portal` |
-| 11 | `roams-when` | (future NPC) | deferred |
+| 11 | Roaming NPC + steals | Cave Network | `roams-when`, `steals-item`, `deposits`, `stash`, NPC `inventory` |
 | 12 | `media` tag | Sanctum | `media: text/plain` ASCII art |
 | 13 | `content-type: markdown` | Select places | richer prose |
 
@@ -220,9 +220,32 @@ ACT 3 — The Deep              (sanctum, the mechanism, the sealed chamber)
 - Entry points: `greeting`, `after-cave`, `after-chapel`, `after-lake`
 - Does not give items directly — hints only
 
----
+**The Collector** — roaming, cave network + underground
+- A silent, unsettling presence in the dark. Not hostile — indifferent. It takes things.
+- Roams the cave network and underground passages
+- `speed: 3` — moves once every 3 player moves
+- `order: random` — unpredictable route
+- `route`: Cave Network, Flooded Passage, Echo Chamber, Underground Lake
+- `stash`: Flooded Passage — stolen items accumulate here, retrievable by the player
+- `steals-item: any` — takes the most recently acquired item when encountered
+- `roams-when: hunting` — initial state. If the player has no items, it has nothing to take — consider `roams-when` tied to a world state, or simply always roams
+- `inventory`: nothing at spawn — accumulates stolen items
+- No dialogue — it doesn't speak
+- Exercises: NPC `inventory`, `roams-when`, `steals-item`, `deposits`, `stash`, position tracking
 
-## Clue Chain (full)
+The player can retrieve stolen items by finding the stash in the Flooded Passage. The Collector never returns to the stash while the player is there — it avoids light (requires lantern `off` to encounter, or simply roams away when player enters).
+
+**The Ferryman** — static, underground lake shore
+- A hooded figure at the water's edge. Ancient. Patient. Not interested in conversation.
+- Offers passage across the lake to the mechanism chamber — bypassing part of the puzzle chain
+- Pay 10 sats via LNURL → receive `ferry-token` → portal to mechanism chamber unlocks
+- `requires item:ferry-token` on the shortcut portal
+- No dialogue beyond the toll — `option: "Pay the toll"` triggers the payment event
+- Tests `type: payment` with NPC as delivery mechanism and shortcut as reward
+- Does not roam — always at the lake shore
+- The long route (full puzzle chain) remains open — Ferryman is optional
+
+---
 
 | # | Clue | Source | Points to |
 |---|------|--------|-----------|
@@ -244,15 +267,16 @@ ACT 3 — The Deep              (sanctum, the mechanism, the sealed chamber)
 | Type | Count |
 |------|-------|
 | `place` | 12 |
-| `portal` | 16 |
-| `item` | 6 |
+| `portal` | 17 |
+| `item` | 7 |
 | `feature` | ~20 |
 | `clue` | 10 |
 | `puzzle` | 2 |
-| `npc` | 1 |
+| `payment` | 1 |
+| `npc` | 3 |
 | `dialogue` | ~8 nodes |
 | `consequence` | 2 |
-| **Total** | **~77** |
+| **Total** | **~81** |
 
 ---
 

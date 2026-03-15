@@ -1,0 +1,89 @@
+/**
+ * npc.js — Pure functions for NPC roaming and inventory.
+ * No React imports. No side effects.
+ */
+
+import { getTag, getTags, dtagFromRef } from '../world.js';
+
+/**
+ * Simple deterministic hash for NPC position seeding.
+ * Returns a positive integer from a string seed.
+ */
+function hashSeed(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash);
+}
+
+/**
+ * Calculate which route place a roaming NPC is currently at.
+ *
+ * @param {Object} npcEvent — the NPC event
+ * @param {number} moveCount — player's total move count
+ * @param {string|undefined} npcState — NPC's current state
+ * @returns {string|null} — d-tag of the place the NPC is at, or null if not roaming
+ */
+export function calculateNpcPlace(npcEvent, moveCount, npcState) {
+  const routeTags = getTags(npcEvent, 'route');
+  if (routeTags.length === 0) return null;
+
+  const speed = parseInt(getTag(npcEvent, 'speed') || '1', 10);
+  const order = getTag(npcEvent, 'order') || 'sequential';
+  const roamsWhen = getTag(npcEvent, 'roams-when');
+
+  // If roams-when is set and NPC is not in that state, stay at first route place (spawn)
+  if (roamsWhen && npcState !== roamsWhen) {
+    return dtagFromRef(routeTags[0][1]);
+  }
+
+  const routes = routeTags.map((t) => dtagFromRef(t[1]));
+  const npcDtag = getTag(npcEvent, 'd');
+  const npcMoves = Math.floor(moveCount / speed);
+
+  if (order === 'random') {
+    // Deterministic pseudo-random: seed from NPC d-tag + move step
+    const seed = hashSeed(npcDtag + ':' + npcMoves);
+    return routes[seed % routes.length];
+  }
+
+  // Sequential — cycle through routes
+  return routes[npcMoves % routes.length];
+}
+
+/**
+ * Initialize NPC state from its event tags.
+ * Returns a fresh NPC state object.
+ */
+export function initNpcState(npcEvent) {
+  const state = getTag(npcEvent, 'state') || null;
+  const health = getTag(npcEvent, 'health');
+  const inventoryRefs = getTags(npcEvent, 'inventory').map((t) => dtagFromRef(t[1]));
+
+  return {
+    state,
+    inventory: inventoryRefs,
+    health: health ? parseInt(health, 10) : null,
+  };
+}
+
+/**
+ * Find all roaming NPCs currently at a given place.
+ * Returns array of { npcEvent, npcDtag }.
+ */
+export function findRoamingNpcsAtPlace(events, placeDtag, moveCount, getNpcState) {
+  const results = [];
+  for (const [dtag, event] of events) {
+    if (getTag(event, 'type') !== 'npc') continue;
+    const routeTags = getTags(event, 'route');
+    if (routeTags.length === 0) continue;
+
+    const npcState = getNpcState(dtag);
+    const currentPlace = calculateNpcPlace(event, moveCount, npcState?.state);
+    if (currentPlace === placeDtag) {
+      results.push({ npcEvent: event, npcDtag: dtag });
+    }
+  }
+  return results;
+}

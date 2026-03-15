@@ -79,7 +79,7 @@ The client can:
 - Parse `state`, `transition`, `counter` tags from item events
 - Track item states and counters in localStorage (`item-states`, `item-counters`)
 - `on-move` handler: fire on every player navigation, decrement counters
-- `on-counter-zero`: fire consequence or state transition when counter hits 0
+- `on-counter`: fire consequence or state transition when counter hits 0
 - Item state transitions: same logic as feature transitions
 
 **Test with:**

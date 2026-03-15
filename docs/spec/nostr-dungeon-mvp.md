@@ -1,4 +1,5 @@
-# NOSTR Dungeon — MVP Scope
+# FOAKLOAR — MVP Scope
+*Federated Open Adventure and Knowledge Living On A Relay*
 *Personal reference · Work in progress*
 
 ---

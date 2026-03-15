@@ -1,4 +1,5 @@
-# NOSTR Dungeon — Design Document
+# FOAKLOAR — Design Document
+*Federated Open Adventure and Knowledge Living On A Relay*
 *Personal reference · Work in progress*
 
 ---
@@ -111,6 +112,7 @@ Individual tag values have no protocol-level size limit, but contribute to `max_
 | `feature` | Feature | A fixed, interactive part of a place |
 | `clue` | Clue | A piece of information, optionally sealed |
 | `puzzle` | Puzzle | A client-side verified challenge |
+| `payment` | Payment | A Lightning payment gate — on confirmation gives a receipt item |
 | `recipe` | Recipe | Defines item combination rules |
 | `npc` | NPC | An actor placed by a place author |
 | `dialogue` | Dialogue | A single dialogue node; nodes grouped by d-tag prefix |
@@ -455,22 +457,21 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 | Tag | Trigger target | Fires when |
 |-----|---------------|------------|
 | `on-interact` | Verb string | Player uses a verb on this feature, item, or NPC |
-| `on-complete` | — | Player satisfies all `requires` and confirms action (puzzle answered, recipe combined) |
+| `on-complete` | `""` (blank) | Player satisfies all `requires` and confirms action (puzzle answered, recipe combined). Trigger-target is always blank — `["on-complete", "", "<action-type>", "<action-target?>"]` |
 | `on-enter` | `player` or place `a`-tag | Player enters this place (arg: `player`), or NPC arrives at a place (arg: place ref). Client dispatches based on event `type`. |
 | `on-encounter` | `player` or NPC `a`-tag | NPC is in the same place as target |
 | `on-attacked` | — | NPC is attacked by player |
 | `on-health-zero` | — | This NPC's health reaches zero |
 | `on-player-health-zero` | — | Player health reaches zero (on place or NPC) |
 | `on-move` | State string or `—` | Every player move; optional state guard |
-| `on-counter-zero` | Counter name | Named counter reaches zero |
-| `on-counter-low` | Counter name, threshold | Fires on threshold crossing, state entry, and load reconciliation — see counter section |
+| `on-counter` | Counter name, threshold | Fires when counter reaches or crosses threshold — see counter section |
 
 **Action types** (shared across all `on-*` tags):
 
 | Action | Target | Effect |
 |--------|--------|--------|
 | `unlock` | Lock `a`-tag | Satisfies a lock condition |
-| `set-state` | State string, optional event `a`-tag | Transitions this event (or a referenced event) to a new state |
+| `set-state` | State string, optional event `a`-tag | Transitions this event (or a referenced event) to a new state. External target on `on-interact`: `["on-interact", "insert", "set-state", "amulet-placed", "30078:<pubkey>:the-lake:feature:mechanism"]` |
 | `traverse` | Portal `a`-tag | Sends the player through a portal |
 | `give-item` | Item `a`-tag | Adds an item to player inventory |
 | `consume-item` | Item `a`-tag | Removes an item from player inventory |
@@ -491,43 +492,43 @@ New action types can be added without changing the tag structure — the dispatc
 
 A named numeric value tracked in player state. Declared on any event type — item, feature, NPC, place. Decrements or increments via `on-*` handlers. Two triggers fire based on counter value:
 
-- `on-counter-low` — fires once when the counter crosses below a threshold. Use for warnings.
-- `on-counter-zero` — fires when the counter reaches zero. Use for depletion.
+- `on-counter` — fires when the counter reaches or crosses a threshold. `0` is just another threshold value — no special case needed.
 
 ```json
 ["counter", "<n>", "<initial-value>"]
 ```
 
-Both triggers follow the same action shape as all `on-*` tags — they fire actions, not inline messages. Warning text comes from state transitions, keeping all player-facing text in one place:
+Follows the same action shape as all `on-*` tags — they fire actions, not inline messages. Warning text comes from state transitions, keeping all player-facing text in one place:
 
 ```json
 // Lantern — warning at 50, death at 0
 ["counter",         "battery",  "300"],
 ["transition",      "on",        "flickering", "The lantern flickers ominously."],
 ["transition",      "flickering","dead",        "The lantern dies. Darkness closes in."],
-["on-counter-low",  "battery",  "50",  "set-state",   "flickering"],
-["on-counter-zero", "battery",         "set-state",   "dead"],
-["on-counter-zero", "battery",         "consequence", "30078:<pubkey>:the-lake:consequence:lamp-dies"]
+["on-counter",  "battery",  "50",  "set-state",   "flickering"],
+["on-counter", "battery", "0",         "set-state",   "dead"],
+["on-counter", "battery", "0",         "consequence", "30078:<pubkey>:the-lake:consequence:lamp-dies"]
 ```
 
 **Shape:**
 
 ```json
-["on-counter-low",  "<counter>", "<threshold>", "<action-type>", "<action-target?>"]
-["on-counter-zero", "<counter>",               "<action-type>", "<action-target?>"]
+["on-counter", "<counter>", "<threshold>", "<action-type>", "<action-target?>"]
 ```
 
-`on-counter-low` has three behavioural rules:
+Always four arguments: counter name, threshold, action type, optional action target. `0` is a valid threshold — not a special case.
+
+`on-counter` has three behavioural rules:
 
 1. **Threshold crossing** — counter decrements from above to at-or-below the threshold. Fires once per crossing. The client tracks this to avoid repeated firing on every subsequent decrement.
-2. **State entry** — whenever an event's state changes via any `set-state` action, the client immediately evaluates all `on-counter-low` tags. If the counter is already below threshold, the action fires immediately — unless the event's current state is already the result of that action (prevents loops).
-3. **Reconciliation on load** — when the client restores persisted player state, it re-evaluates all `on-counter-low` tags for all events in the current place. If a counter is below threshold and the event's state doesn't reflect it, the action fires immediately. This catches any inconsistency between saved counter values and saved event states — for example, if a session ended between a counter decrement and the resulting state change.
+2. **State entry** — whenever an event's state changes via any `set-state` action, the client immediately evaluates all `on-counter` tags. If the counter is already below threshold, the action fires immediately — unless the event's current state is already the result of that action (prevents loops).
+3. **Reconciliation on load** — when the client restores persisted player state, it re-evaluates all `on-counter` tags for all events in the current place. If a counter is below threshold and the event's state doesn't reflect it, the action fires immediately. This catches any inconsistency between saved counter values and saved event states — for example, if a session ended between a counter decrement and the resulting state change.
 
 This means a lantern turned off and back on at low battery will immediately enter `flickering` state — the correct physical behaviour. The player doesn't lose the warning cue because they cycled the lantern.
 
 The loop prevention guard applies to all three conditions: if the event is already in the action's target state, do not fire. This is the only thing preventing infinite loops on state entry and load reconciliation.
 
-The client tracks threshold crossings per counter instance, not per state. State entry re-evaluation and load reconciliation always run regardless of prior crossing history.
+The client tracks threshold crossings per counter per threshold value — multiple `on-counter` tags on the same counter with different thresholds each track and fire independently. State entry re-evaluation and load reconciliation always run regardless of prior crossing history.
 
 Multiple counters on a single event:
 
@@ -727,7 +728,7 @@ A challenge that produces an outcome when completed. Verification is always clie
     ["puzzle-type", "riddle"],
     ["answer-hash", "<sha256(answer + salt)>"],
     ["salt",        "the-lake:puzzle:chapel-riddle:v1"],
-    ["on-complete", "set-state", "solved"]
+    ["on-complete", "", "set-state", "solved"]
   ],
   "content": "I have a neck but no head, a body but no soul. I guard what you seek but ask nothing in return. What am I?"
 }
@@ -740,7 +741,7 @@ The answer is never stored. `SHA256(answer + salt)` means the client hashes the 
 | Type | Mechanic | Notes |
 |------|---------|-------|
 | `riddle` | Answer hashes to known value | Uses `answer-hash` + `salt` tags |
-| `sequence` | Events must reach given states in order | Same as recipe with `ordered: true` — uses `requires` on event states |
+| `sequence` | Events must reach given states in order | Same as recipe with `ordered: true` |
 | `cipher` | Decode an encrypted message | Uses NIP-44 sealed content |
 | `observe` | Notice something in place/clue descriptions | Client surfaces on player action |
 | `map` | Navigate a sub-maze | Client-side spatial challenge |
@@ -758,21 +759,24 @@ The answer is never stored. `SHA256(answer + salt)` means the client hashes the 
     ["requires",    "30078:<pubkey>:the-lake:feature:lever-a", "pulled", "You need to pull lever A first."],
     ["requires",    "30078:<pubkey>:the-lake:feature:lever-b", "pulled", "You need to pull lever B next."],
     ["requires",    "30078:<pubkey>:the-lake:feature:lever-c", "pulled", "You need to pull lever C last."],
-    ["on-complete", "set-state", "visible", "30078:<pubkey>:the-lake:portal:secret-door"]
+    ["on-complete", "", "set-state", "visible", "30078:<pubkey>:the-lake:portal:secret-door"]
   ],
   "content": "Three levers protrude from the wall."
 }
 ```
 
+
 The `combine` puzzle type is now redundant — item combination is handled entirely by `type: recipe`. Remove it from the type hint list.
+
+**Sequence puzzle evaluation** — the client evaluates a sequence puzzle's `requires` automatically after any feature or item state change in the current place, not only on explicit player action. If all conditions are satisfied, `on-complete` fires immediately. This means players don't need to "submit" a sequence — completing the last step triggers completion automatically.
 
 **Branching puzzles** — when a puzzle has multiple possible outcomes depending on player choice (e.g. choosing between three paths), the schema fires multiple `on-complete` tags but the client must present the choice and fire only the appropriate one. This is the one case where client-layer selection is required — the schema defines what each outcome does, but cannot itself encode which choice the player made. The client presents the options, the player chooses, and the client fires the matching `on-complete` action:
 
 ```json
 // Path choice — client presents three options, fires the chosen one
-["on-complete", "give-item", "30078:<pubkey>:the-lake:item:path-wits"],
-["on-complete", "give-item", "30078:<pubkey>:the-lake:item:path-fists"],
-["on-complete", "give-item", "30078:<pubkey>:the-lake:item:path-team"]
+["on-complete", "", "give-item", "30078:<pubkey>:the-lake:item:path-wits"],
+["on-complete", "", "give-item", "30078:<pubkey>:the-lake:item:path-fists"],
+["on-complete", "", "give-item", "30078:<pubkey>:the-lake:item:path-team"]
 ```
 
 Everything else — conditions, outcomes, state transitions, NPC behaviour — is fully expressed in the schema with no special client logic required.
@@ -796,8 +800,8 @@ Defines what items combine to produce a new item. Structurally identical to a se
     ["requires",    "30078:<pubkey>:the-lake:item:wooden-rod",   "", ""],
     ["requires",    "30078:<pubkey>:the-lake:item:iron-key",     "", ""],
     ["requires",    "30078:<pubkey>:the-lake:item:serpent-gem",  "", ""],
-    ["on-complete", "give-item",  "30078:<pubkey>:the-lake:item:serpent-staff"],
-    ["on-complete", "set-state",  "known", "30078:<pubkey>:the-lake:clue:staff-origin"],
+    ["on-complete", "", "give-item",  "30078:<pubkey>:the-lake:item:serpent-staff"],
+    ["on-complete", "", "set-state",  "known", "30078:<pubkey>:the-lake:clue:staff-origin"],
     ["ordered",     "false"]
   ],
   "content": ""
@@ -807,6 +811,74 @@ Defines what items combine to produce a new item. Structurally identical to a se
 - `ordered: true` — ingredients must be combined in sequence; client evaluates `requires` in tag order
 - Ingredients are consumed from inventory on completion; produced item is added
 - A feature can be required for crafting: `["requires", "30078:<pubkey>:the-lake:feature:forge", "lit", "You need a lit forge."]`
+
+---
+
+### 2.7b Payment (`type: payment`)
+
+A Lightning payment gate. The player pays a LNURL invoice; on confirmation the client fires `on-complete` — typically giving a receipt item that satisfies a `requires` condition on a portal or feature. Verification is via LUD-11 (LNURL-verify), keyed on the payment hash.
+
+There is no hash verification — payment itself is the condition. The verify endpoint is the source of truth.
+
+```json
+{
+  "kind": 30078,
+  "pubkey": "<author_pubkey>",
+  "tags": [
+    ["d",           "the-lake:payment:entry-fee"],
+    ["t",           "the-lake"],
+    ["type",        "payment"],
+    ["amount",      "1000"],
+    ["unit",        "sats"],
+    ["lnurl",       "lnurl1dp68gurn8..."],
+    ["on-complete", "", "give-item", "30078:<pubkey>:the-lake:item:entry-token"],
+    ["on-complete", "", "set-state", "solved"]
+  ],
+  "content": "A toll gate. 1000 sats to pass."
+}
+```
+
+**Client flow:**
+
+1. Client fetches LNURL-pay metadata, generates invoice
+2. Stores `payment-hash` locally against the payment event `d`-tag — before player pays
+3. Displays invoice (QR code or copyable string) to player
+4. Polls LUD-11 verify endpoint until `paid` or timeout
+5. On `paid` → fire `on-complete`, add receipt item to inventory, mark `complete` in local state
+
+**Local state shape:**
+
+```json
+{
+  "payment-attempts": {
+    "the-lake:payment:entry-fee": {
+      "payment-hash": "abc123...",
+      "status": "pending | paid | complete"
+    }
+  }
+}
+```
+
+**Recovery on reload:**
+On load, the client checks all `payment-attempts` entries. Any entry with status `pending` or `paid` but not `complete` is re-verified by polling LUD-11 with the stored `payment-hash`. If the endpoint confirms `paid`, `on-complete` fires. This handles client crashes, network failures, and interrupted sessions cleanly — the payment hash is the persistent proof of payment.
+
+**Proof of payment:**
+The player's wallet holds the preimage as cryptographic proof of payment. The payment hash (stored by the client) is sufficient for verify endpoint queries. If the player disputes a failed `on-complete`, the preimage from their wallet is unforgeable proof to the world author.
+
+**Invoice expiry:**
+LNURL-pay invoices typically expire after 60 seconds. If the player doesn't pay before expiry, the client should offer to generate a fresh invoice. The stored `payment-hash` is discarded and replaced with the new invoice's hash.
+
+**Author infrastructure:**
+
+`type: payment` requires the world author to operate or use a LNURL server supporting:
+
+| LUD | Name | Purpose |
+|-----|------|---------|
+| [LUD-01](https://github.com/lnurl/luds/blob/legacy/lnurl-rfc.md) | LNURL base | Core encoding and request/response format |
+| [LUD-06](https://github.com/lnurl/luds/blob/legacy/06.md) | `payRequest` | LNURL-pay flow — invoice generation |
+| [LUD-11](https://github.com/lnurl/luds/blob/legacy/11.md) | `verify` | Payment status polling keyed on payment hash |
+
+If the verify endpoint goes offline, the puzzle becomes unsolvable for new players — existing players with `complete` status are unaffected. Authors should treat LNURL infrastructure as a long-term hosting commitment, or use a shared platform service.
 
 ---
 
@@ -893,6 +965,21 @@ The grue only exists (is rendered) when the lantern is off — `requires-not` on
 | `route` | Place `a`-tag | A place in the NPC's movement pool (multiple allowed) |
 | `stash` | Place `a`-tag | Where the NPC deposits stolen or held items |
 | `roams-when` | State string | NPC only roams when in this state; if absent, always roams |
+| `inventory` | Item `a`-tag | Item the NPC carries — multiple allowed. Can be stolen, dropped on death, or deposited at stash. |
+
+`inventory` on an NPC fills the gap left by `steals-item` and `deposits` — those actions imply the NPC can hold items, but without `inventory` there was no way to declare what it starts with. The Zork thief carrying a stiletto, the bat stealing your lantern — both need a starting inventory:
+
+```json
+// Thief starts carrying a stiletto
+["inventory", "30078:<ZA>:zork1:item:stiletto"]
+
+// Merchant stocks three items for sale
+["inventory", "30078:<pubkey>:the-lake:item:healing-potion"],
+["inventory", "30078:<pubkey>:the-lake:item:rope"],
+["inventory", "30078:<pubkey>:the-lake:item:torch"]
+```
+
+NPC inventory items are tracked in player state per NPC — the client knows what each NPC is carrying at any point. When `deposits` fires, carried items appear in the current place. When the NPC dies, carried items drop. When `steals-item` fires, the stolen item is added to the NPC's carried set.
 
 `roams-when` allows movement to be state-conditional. An NPC with `route` tags but a `roams-when` state will only move when its current state matches. In any other state it stays at its spawn point. This means roaming can be activated or deactivated by a state transition — a consequence fires, the NPC transitions to the `roams-when` state, and the client begins routing it.
 
@@ -1200,8 +1287,8 @@ Any item, feature, or NPC can carry a named counter — a numeric value tracked 
     ["on-interact",     "turn on",  "set-state",   "on"],
     ["on-interact",     "turn off", "set-state",   "off"],
     ["on-move",         "on",       "decrement",   "battery"],
-    ["on-counter-zero", "battery",  "set-state",   "dead"],
-    ["on-counter-zero", "battery",  "consequence", "30078:<pubkey>:the-lake:consequence:lamp-dies"],
+    ["on-counter", "battery", "0",  "set-state",   "dead"],
+    ["on-counter", "battery", "0",  "consequence", "30078:<pubkey>:the-lake:consequence:lamp-dies"],
     ["description",     "A battery-powered brass lantern."]
   ]
 }
@@ -1460,10 +1547,20 @@ The world event is a replaceable event (`kind: 30078`). The genesis author can u
     ["collaborator",  "<Carol's pubkey>"],
 
     // Aesthetic
-    ["theme",         "terminal-green"],
-    ["accent-colour", "#4a9e6b"],
-    ["font",          "monospace"],
-    ["cursor",        "block"],
+    ["theme",   "terminal-green"],
+    ["colour",  "bg",        "#000000"],
+    ["colour",  "text",      "#00ff41"],
+    ["colour",  "title",     "#a7f3d0"],
+    ["colour",  "dim",       "#16a34a"],
+    ["colour",  "highlight", "#ffffff"],
+    ["colour",  "error",     "#f87171"],
+    ["colour",  "item",      "#facc15"],
+    ["colour",  "npc",       "#fbbf24"],
+    ["colour",  "clue",      "#22d3ee"],
+    ["colour",  "puzzle",    "#c084fc"],
+    ["colour",  "exits",     "#16a34a"],
+    ["font",    "ibm-plex-mono"],
+    ["cursor",  "block"],
 
     // Cover media
     ["content-type",  "text/markdown"],
@@ -1484,19 +1581,66 @@ The world event is a replaceable event (`kind: 30078`). The genesis author can u
 | `tag` | String | Genre/discovery tags — multiple allowed |
 | `cw` | String | Content warning — multiple allowed. Client displays before loading. |
 | `start` | Place `a`-tag | Genesis place — where players begin |
+| `inventory` | Item `a`-tag | Starting inventory item — multiple allowed. Given to player on new game, not on reload. |
 | `relay` | WSS URL | Recommended relay for this world — multiple allowed |
 | `collaboration` | `closed` \| `vouched` \| `open` | Collaboration mode |
 | `collaborator` | Pubkey hex | Trusted collaborator — multiple allowed |
-| `theme` | Theme string | Client colour theme |
-| `accent-colour` | Hex colour | Primary accent colour |
-| `font` | Font string | Preferred monospace font |
+| `theme` | Theme string | Named preset — provides all colour defaults. `colour` tags override individual slots. |
+| `colour` | Slot + hex | Override a specific colour slot — multiple allowed |
+| `font` | Font string | Preferred font — named option or CSS font-family string |
 | `cursor` | `block` \| `underline` \| `beam` | Cursor style |
 | `content-type` | MIME type | Format of `content` field |
 | `media` | Type + value | Cover art or world image |
 
+**Colour slots:**
+
+| Slot | Semantic role |
+|------|--------------|
+| `bg` | Background |
+| `text` | Primary text |
+| `title` | Place titles, headings |
+| `dim` | Secondary/muted text — exits, descriptions |
+| `highlight` | Hover, focus, selection |
+| `error` | Error messages |
+| `item` | Item names and interactions |
+| `npc` | NPC names and dialogue |
+| `clue` | Clue text |
+| `puzzle` | Puzzle prompts |
+| `exits` | Exit slot labels |
+
+**Built-in theme presets:**
+
+| Theme | Feel | bg | text |
+|-------|------|----|------|
+| `terminal-green` | Classic CRT | `#000000` | `#00ff41` |
+| `parchment` | Ancient manuscript | `#f5e6c8` | `#3d2b1f` |
+| `void-blue` | Sci-fi cold | `#000814` | `#00b4d8` |
+| `blood-red` | Horror | `#0a0000` | `#ff2020` |
+| `monochrome` | Clean minimal | `#111111` | `#eeeeee` |
+| `custom` | No defaults — all `colour` tags required | — | — |
+
+Each preset defines a full colour map. `colour` tags override individual slots. Use `theme: custom` with all `colour` tags for total control.
+
+**Font options:**
+
+| Value | Description |
+|-------|-------------|
+| `ibm-plex-mono` | Current default — clean technical monospace |
+| `courier` | Classic typewriter feel |
+| `pixel` | Retro pixel font |
+| `serif` | Parchment/manuscript feel |
+| Any CSS `font-family` string | Custom font — client applies directly |
+
 Content warnings use a `cw` tag with a short string. Clients display these before the world loads — the player can choose not to enter. Common values: `violence`, `horror`, `mild-peril`, `adult`, `flashing-lights`. No enforced vocabulary — world authors choose their own, clients can filter on known values.
 
 The `start` tag removes any ambiguity about where to begin — the client fetches the world event, reads `start`, fetches that place, and begins. The `relay` hints mean the world is self-contained — share the `npub` URL and a client can find everything without prior knowledge of which relays to query.
+
+`inventory` tags declare the player's starting items — given once on new game, not on every session load. This is the world author's character setup: the scribbled note that implies mystery, the worn compass that implies a journey. Items declared here follow all normal inventory rules — they can be consumed, stolen, or lost.
+
+```json
+["inventory", "30078:<pubkey>:the-lake:item:scribbled-note"],
+["inventory", "30078:<pubkey>:the-lake:item:worn-compass"]
+```
 
 The client bootstraps a world by fetching:
 ```

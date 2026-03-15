@@ -13,6 +13,7 @@ import { stripArticles, buildVerbMap, parseInput, findInventoryItem } from './pa
 import {
   applyExternalSetState, giveItem, evalCounterLow, evalSequencePuzzles,
 } from './actions.js';
+import { calculateNpcPlace, initNpcState, findRoamingNpcsAtPlace } from './npc.js';
 
 export class GameEngine {
   /**
@@ -26,7 +27,8 @@ export class GameEngine {
     this.player = player;
     this.config = config;
 
-    this.currentPlace = config.GENESIS_PLACE;
+    // Restore position from saved state, or start at genesis
+    this.currentPlace = player.state.place || config.GENESIS_PLACE;
     this.puzzleActive = null;
     this.dialogueActive = null;
 
@@ -72,10 +74,11 @@ export class GameEngine {
 
   // ── Room entry ────────────────────────────────────────────────────────
 
-  enterRoom(dtag) {
+  enterRoom(dtag, { isMoving = false } = {}) {
     const room = this.events.get(dtag);
     if (!room) { this._emit("You can't go that way.", 'error'); return; }
     this.currentPlace = dtag;
+    this.player.setPlace(dtag);
     this.puzzleActive = null;
     this.dialogueActive = null;
 
@@ -103,11 +106,13 @@ export class GameEngine {
       }
     }
 
-    // Items (skip picked-up)
-    for (const ref of getTags(room, 'item')) {
-      const itemDTag = dtagFromRef(ref[1]);
-      if (this.player.hasItem(itemDTag)) continue;
-      const item = this.events.get(itemDTag);
+    // Seed place items on first visit (from room's item tags)
+    this._seedPlaceItems(dtag, room);
+
+    // Items — show what's on the ground at this place
+    const placeItems = this.player.getPlaceItems(dtag) || [];
+    for (const itemDtag of placeItems) {
+      const item = this.events.get(itemDtag);
       if (item) this._emit(`You see: ${getTag(item, 'title')}`, 'item');
     }
 
@@ -117,19 +122,38 @@ export class GameEngine {
       const feature = this.events.get(fDTag);
       if (!feature) continue;
       const fDefaultState = getDefaultState(feature);
-      const fCurrentState = this.player.getFeatureState(fDTag) ?? fDefaultState;
+      const fCurrentState = this.player.getState(fDTag) ?? fDefaultState;
       if (fCurrentState === 'hidden') continue;
       this._emit(`There is a ${getTag(feature, 'title')} here.`, 'feature');
     }
 
-    // NPCs
+    // Static NPCs (placed by the room)
     for (const ref of getTags(room, 'npc')) {
       const npcDTag = dtagFromRef(ref[1]);
       const npc = this.events.get(npcDTag);
       if (!npc) continue;
+      // Skip roaming NPCs here — they're handled below
+      if (getTags(npc, 'route').length > 0) continue;
       const npcReq = checkRequires(npc, this.player.state, this.events);
       if (!npcReq.allowed) continue;
       this._emit(`${getTag(npc, 'title')} is here.`, 'npc');
+    }
+
+    // Roaming NPCs — check if any are currently at this place
+    const roamingHere = findRoamingNpcsAtPlace(
+      this.events, dtag, this.player.getMoveCount(),
+      (npcDtag) => this.player.getNpcState(npcDtag),
+    );
+    for (const { npcEvent, npcDtag } of roamingHere) {
+      const npcReq = checkRequires(npcEvent, this.player.state, this.events);
+      if (!npcReq.allowed) continue;
+      // Ensure NPC state is initialized
+      this.player.ensureNpcState(npcDtag, initNpcState(npcEvent));
+      this._emit(`${getTag(npcEvent, 'title')} is here.`, 'npc');
+      // Fire on-encounter triggers only on actual movement, not on look
+      if (isMoving) {
+        this._fireNpcEncounter(npcEvent, npcDtag);
+      }
     }
 
     // Exits
@@ -139,12 +163,47 @@ export class GameEngine {
     }
   }
 
+  // ── Place items ─────────────────────────────────────────────────────
+
+  /** Seed a place's item inventory from its room event tags (first visit only). */
+  _seedPlaceItems(placeDtag, roomEvent) {
+    if (this.player.getPlaceItems(placeDtag)) return; // already seeded
+    const itemDtags = getTags(roomEvent, 'item').map((ref) => dtagFromRef(ref[1]));
+    // Exclude items held by player or any NPC
+    const onGround = itemDtags.filter((d) => {
+      if (this.player.hasItem(d)) return false;
+      // Check all NPC inventories
+      for (const npc of Object.values(this.player.npcStates)) {
+        if (npc.inventory && npc.inventory.includes(d)) return false;
+      }
+      return true;
+    });
+    this.player.seedPlaceItems(placeDtag, onGround);
+  }
+
+  /** Find an item on the ground at the current place by noun. */
+  _findPlaceItem(noun) {
+    const placeItems = this.player.getPlaceItems(this.currentPlace) || [];
+    for (const itemDtag of placeItems) {
+      const item = this.events.get(itemDtag);
+      if (!item) continue;
+      const title = getTag(item, 'title')?.toLowerCase() || '';
+      if (title.includes(noun)) return { event: item, dtag: itemDtag, type: 'item' };
+      for (const nt of getTags(item, 'noun')) {
+        for (let i = 1; i < nt.length; i++) {
+          if (nt[i].toLowerCase() === noun) return { event: item, dtag: itemDtag, type: 'item' };
+        }
+      }
+    }
+    return null;
+  }
+
   // ── Examine inventory item ────────────────────────────────────────────
 
   examineInventoryItem(invMatch) {
     const desc = getTag(invMatch.event, 'description');
     if (desc) this._emit(desc, 'narrative');
-    const itemState = this.player.getItemState(invMatch.dtag);
+    const itemState = this.player.getState(invMatch.dtag);
     if (itemState) this._emit(`It is currently ${itemState}.`, 'narrative');
     for (const ct of getTags(invMatch.event, 'counter')) {
       const key = `${invMatch.dtag}:${ct[1]}`;
@@ -182,7 +241,7 @@ export class GameEngine {
           if (transition.from === transition.to) {
             if (transition.text) this._emit(transition.text, 'narrative');
           } else {
-            this.player.setFeatureState(dtag, transition.to);
+            this.player.setState(dtag, transition.to);
             if (transition.text) this._emit(transition.text, 'narrative');
             currentState = transition.to;
           }
@@ -216,7 +275,7 @@ export class GameEngine {
 
     const { event, dtag } = match;
     const fDefault = getDefaultState(event);
-    const fCurrent = this.player.getFeatureState(dtag) ?? fDefault;
+    const fCurrent = this.player.getState(dtag) ?? fDefault;
     if (fCurrent === 'hidden') return null;
 
     const featureReq = checkRequires(event, this.player.state, this.events);
@@ -254,7 +313,7 @@ export class GameEngine {
 
     if (match.type === 'feature') {
       const fDefault = getDefaultState(event);
-      const fCurrent = this.player.getFeatureState(dtag) ?? fDefault;
+      const fCurrent = this.player.getState(dtag) ?? fDefault;
       if (fCurrent === 'hidden') {
         const invMatch = findInventoryItem(this.events, this.player.state.inventory, noun);
         if (invMatch) { this.examineInventoryItem(invMatch); return; }
@@ -270,7 +329,7 @@ export class GameEngine {
     }
 
     const defaultState = getDefaultState(event);
-    const currentState = this.player.getFeatureState(dtag) || defaultState;
+    const currentState = this.player.getState(dtag) || defaultState;
 
     const desc = getTag(event, 'description');
     if (desc) this._emit(desc, 'narrative');
@@ -297,15 +356,24 @@ export class GameEngine {
   handlePickup(rawNoun) {
     if (!this.place) return;
     const noun = stripArticles(rawNoun);
-    const match = findByNoun(this.events, this.place, noun);
+
+    // Check room items and place items by noun
+    let match = this._findPlaceItem(noun);
+
+    if (!match) {
+      // Fall back to findByNoun for non-item matches (error messages)
+      match = findByNoun(this.events, this.place, noun);
+    }
+
     if (!match) { this._emit("You don't see that here.", 'error'); return; }
     if (match.type !== 'item') { this._emit("You can't pick that up.", 'error'); return; }
     if (this.player.hasItem(match.dtag)) { this._emit('You already have that.', 'error'); return; }
 
     this.player.pickUp(match.dtag);
+    this.player.removePlaceItem(this.currentPlace, match.dtag);
 
     const defaultState = getDefaultState(match.event);
-    if (defaultState) this.player.setItemState(match.dtag, defaultState);
+    if (defaultState) this.player.setState(match.dtag, defaultState);
 
     for (const ct of getTags(match.event, 'counter')) {
       this.player.setCounter(`${match.dtag}:${ct[1]}`, parseInt(ct[2], 10));
@@ -321,7 +389,7 @@ export class GameEngine {
     if (!match) { this._emit("You don't have that.", 'error'); return; }
 
     const { event, dtag } = match;
-    const currentState = this.player.getItemState(dtag) || getDefaultState(event);
+    const currentState = this.player.getState(dtag) || getDefaultState(event);
 
     let acted = false;
     for (const tag of getTags(event, 'on-interact')) {
@@ -337,20 +405,20 @@ export class GameEngine {
 
         const extType = getTag(extEvent, 'type');
         if (extType === 'feature') {
-          const extCurrentState = this.player.getFeatureState(extDTag) ?? getDefaultState(extEvent);
+          const extCurrentState = this.player.getState(extDTag) ?? getDefaultState(extEvent);
           const transition = findTransition(extEvent, extCurrentState, targetState);
           if (transition) {
             if (transition.from !== transition.to) {
-              this.player.setFeatureState(extDTag, transition.to);
+              this.player.setState(extDTag, transition.to);
             }
             if (transition.text) this._emit(transition.text, 'narrative');
             acted = true;
             evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty));
           }
         } else if (extType === 'portal') {
-          const extCurrentState = this.player.getPortalState(extDTag) ?? getDefaultState(extEvent);
+          const extCurrentState = this.player.getState(extDTag) ?? getDefaultState(extEvent);
           if (extCurrentState !== targetState) {
-            this.player.setPortalState(extDTag, targetState);
+            this.player.setState(extDTag, targetState);
             const transition = findTransition(extEvent, extCurrentState, targetState);
             if (transition?.text) this._emit(transition.text, 'narrative');
           }
@@ -360,7 +428,7 @@ export class GameEngine {
         const transition = findTransition(event, currentState, targetState);
         if (transition) {
           if (transition.from !== transition.to) {
-            this.player.setItemState(dtag, transition.to);
+            this.player.setState(dtag, transition.to);
           }
           if (transition.text) this._emit(transition.text, 'narrative');
           if (transition.from !== transition.to) {
@@ -369,6 +437,14 @@ export class GameEngine {
           acted = true;
         }
       } else if (action === 'consume-item') {
+        // consume-item target is an item a-tag (usually self)
+        const consumeDtag = targetState ? dtagFromRef(targetState) : dtag;
+        if (this.player.hasItem(consumeDtag)) {
+          this.player.removeItem(consumeDtag);
+          const consumeEvent = this.events.get(consumeDtag);
+          const consumeTitle = consumeEvent ? getTag(consumeEvent, 'title') : consumeDtag;
+          this._emit(`${consumeTitle} is consumed.`, 'item');
+        }
         acted = true;
       }
     }
@@ -382,7 +458,7 @@ export class GameEngine {
     for (const dtag of this.player.state.inventory) {
       const item = this.events.get(dtag);
       if (!item) continue;
-      const currentState = this.player.getItemState(dtag);
+      const currentState = this.player.getState(dtag);
 
       for (const tag of getTags(item, 'on-move')) {
         if (tag[1] !== currentState) continue;
@@ -397,32 +473,20 @@ export class GameEngine {
           const newVal = Math.max(0, current - amount);
           this.player.setCounter(key, newVal);
 
-          for (const lt of getTags(item, 'on-counter-low')) {
-            if (lt[1] !== counterName) continue;
-            const threshold = parseInt(lt[2], 10);
-            if (current > threshold && newVal <= threshold && newVal > 0) {
-              const action = lt[3];
-              const actionTarget = lt[4];
+          // Unified on-counter: fires when counter crosses threshold downward
+          for (const ct of getTags(item, 'on-counter')) {
+            if (ct[1] !== counterName) continue;
+            const threshold = parseInt(ct[2], 10);
+            if (current > threshold && newVal <= threshold) {
+              const action = ct[3];
+              const actionTarget = ct[4];
               if (action === 'set-state' && actionTarget) {
-                const currentItemState = this.player.getItemState(dtag);
+                const currentItemState = this.player.getState(dtag);
                 const transition = findTransition(item, currentItemState, actionTarget);
                 if (transition) {
-                  this.player.setItemState(dtag, transition.to);
+                  this.player.setState(dtag, transition.to);
                   if (transition.text) this._emit(transition.text, 'narrative');
                 }
-              }
-            }
-          }
-
-          if (newVal === 0) {
-            for (const zt of getTags(item, 'on-counter-zero')) {
-              if (zt[1] !== counterName) continue;
-              if (zt[2] === 'set-state') {
-                const targetState = zt[3];
-                const stateNow = this.player.getItemState(dtag);
-                const transition = findTransition(item, stateNow, targetState);
-                this.player.setItemState(dtag, targetState);
-                if (transition?.text) this._emit(transition.text, 'narrative');
               }
             }
           }
@@ -440,8 +504,99 @@ export class GameEngine {
     const req = checkRequires(exit.portalEvent, this.player.state, this.events);
     if (!req.allowed) { this._emit(req.reason, 'error'); return; }
 
+    this.player.incrementMoveCount();
     this.processOnMove();
-    this.enterRoom(exit.destinationDTag);
+    this._processNpcOnMove();
+    this.enterRoom(exit.destinationDTag, { isMoving: true });
+  }
+
+  // ── NPC encounter ──────────────────────────────────────────────────────
+
+  _fireNpcEncounter(npcEvent, npcDtag) {
+    for (const tag of getTags(npcEvent, 'on-encounter')) {
+      if (tag[1] !== 'player') continue;
+      const action = tag[2];
+      const actionTarget = tag[3];
+
+      if (action === 'steals-item') {
+        this._npcStealsItem(npcDtag, actionTarget);
+      } else if (action === 'deal-damage') {
+        // Combat — future phase
+      } else if (action === 'consequence') {
+        // Consequence — future phase
+      }
+    }
+  }
+
+  /**
+   * NPC steals an item from the player.
+   * target is 'any' (steal first stealable item) or an item a-tag.
+   */
+  _npcStealsItem(npcDtag, target) {
+    const npcEvent = this.events.get(npcDtag);
+    const npcTitle = npcEvent ? getTag(npcEvent, 'title') : 'Someone';
+
+    if (target === 'any') {
+      // Steal the most recently acquired item
+      if (this.player.state.inventory.length === 0) return;
+      const stolenDtag = this.player.state.inventory[this.player.state.inventory.length - 1];
+      const stolenEvent = this.events.get(stolenDtag);
+      const stolenTitle = stolenEvent ? getTag(stolenEvent, 'title') : stolenDtag;
+      this.player.removeItem(stolenDtag);
+      this.player.npcPickUp(npcDtag, stolenDtag);
+      this._emit(`${npcTitle} snatches your ${stolenTitle}!`, 'error');
+    } else if (target) {
+      const itemDtag = dtagFromRef(target);
+      if (!this.player.hasItem(itemDtag)) return;
+      const stolenEvent = this.events.get(itemDtag);
+      const stolenTitle = stolenEvent ? getTag(stolenEvent, 'title') : itemDtag;
+      this.player.removeItem(itemDtag);
+      this.player.npcPickUp(npcDtag, itemDtag);
+      this._emit(`${npcTitle} snatches your ${stolenTitle}!`, 'error');
+    }
+  }
+
+  /**
+   * Process NPC on-enter triggers after movement.
+   * Check if any roaming NPC has arrived at its stash place.
+   */
+  _processNpcOnMove() {
+    const moveCount = this.player.getMoveCount();
+    for (const [dtag, event] of this.events) {
+      if (getTag(event, 'type') !== 'npc') continue;
+      if (getTags(event, 'route').length === 0) continue;
+
+      const npcState = this.player.getNpcState(dtag);
+      if (!npcState) continue;
+
+      const npcPlace = calculateNpcPlace(event, moveCount, npcState.state);
+      if (!npcPlace) continue;
+
+      // Fire on-enter triggers for the NPC's current place
+      for (const tag of getTags(event, 'on-enter')) {
+        const placeRef = tag[1];
+        if (placeRef === 'player') continue; // dialogue on-enter, not NPC movement
+        const placeDtag = dtagFromRef(placeRef);
+        if (placeDtag !== npcPlace) continue;
+
+        const action = tag[2];
+        if (action === 'deposits') {
+          this._npcDeposits(dtag, npcPlace);
+        }
+      }
+    }
+  }
+
+  /**
+   * NPC deposits all carried items at its current place.
+   */
+  _npcDeposits(npcDtag, placeDtag) {
+    const dropped = this.player.npcDropAll(npcDtag);
+    if (dropped.length === 0) return;
+    // Add each item to the place's inventory
+    for (const itemDtag of dropped) {
+      this.player.addPlaceItem(placeDtag, itemDtag);
+    }
   }
 
   // ── Puzzle answer ─────────────────────────────────────────────────────
@@ -513,12 +668,12 @@ export class GameEngine {
           if (!requiresState) {
             passes = hasIt;
           } else {
-            passes = hasIt && this.player.getItemState(reqDtag) === requiresState;
+            passes = hasIt && this.player.getState(reqDtag) === requiresState;
           }
         } else if (reqType === 'puzzle') {
           passes = requiresState === 'solved' && this.player.isPuzzleSolved(reqDtag);
         } else if (reqType === 'feature') {
-          passes = requiresState && this.player.getFeatureState(reqDtag) === requiresState;
+          passes = requiresState && this.player.getState(reqDtag) === requiresState;
         }
 
         if (passes) entryRef = nodeRef;
@@ -562,16 +717,16 @@ export class GameEngine {
               this._emit(`\n${getTag(targetEvent, 'title')}:`, 'clue-title');
               this._emit(targetEvent.content, 'clue');
             } else if (targetType === 'portal') {
-              const portalCurrentState = this.player.getPortalState(targetDTag) ?? getDefaultState(targetEvent);
+              const portalCurrentState = this.player.getState(targetDTag) ?? getDefaultState(targetEvent);
               if (portalCurrentState !== actionTarget) {
-                this.player.setPortalState(targetDTag, actionTarget);
+                this.player.setState(targetDTag, actionTarget);
                 const transition = findTransition(targetEvent, portalCurrentState, actionTarget);
                 if (transition?.text) this._emit(transition.text, 'narrative');
               }
             } else if (targetType === 'feature') {
-              const featCurrentState = this.player.getFeatureState(targetDTag) ?? getDefaultState(targetEvent);
+              const featCurrentState = this.player.getState(targetDTag) ?? getDefaultState(targetEvent);
               if (featCurrentState !== actionTarget) {
-                this.player.setFeatureState(targetDTag, actionTarget);
+                this.player.setState(targetDTag, actionTarget);
                 const transition = findTransition(targetEvent, featCurrentState, actionTarget);
                 if (transition?.text) this._emit(transition.text, 'narrative');
               }
@@ -662,6 +817,21 @@ export class GameEngine {
     if (this.place) {
       const match = findByNoun(this.events, this.place, noun);
       if (match) return match;
+
+      // Check roaming NPCs at this place
+      const roaming = findRoamingNpcsAtPlace(
+        this.events, this.currentPlace, this.player.getMoveCount(),
+        (npcDtag) => this.player.getNpcState(npcDtag),
+      );
+      for (const { npcEvent, npcDtag } of roaming) {
+        const title = getTag(npcEvent, 'title')?.toLowerCase() || '';
+        if (title.includes(noun)) return { event: npcEvent, dtag: npcDtag, type: 'npc' };
+        for (const nt of getTags(npcEvent, 'noun')) {
+          for (let i = 1; i < nt.length; i++) {
+            if (nt[i].toLowerCase() === noun) return { event: npcEvent, dtag: npcDtag, type: 'npc' };
+          }
+        }
+      }
     }
     const invMatch = findInventoryItem(this.events, this.player.state.inventory, noun);
     if (invMatch) return { ...invMatch, type: 'item' };
@@ -683,7 +853,7 @@ export class GameEngine {
 
     if (type === 'feature') {
       const fDefault = getDefaultState(event);
-      const fCurrent = this.player.getFeatureState(dtag) ?? fDefault;
+      const fCurrent = this.player.getState(dtag) ?? fDefault;
       if (fCurrent === 'hidden') {
         this._emit("You don't see that here.", 'error');
         return;
@@ -697,7 +867,7 @@ export class GameEngine {
         if (desc) this._emit(desc, 'narrative');
       }
 
-      const currentState = this.player.getFeatureState(dtag) ?? fDefault;
+      const currentState = this.player.getState(dtag) ?? fDefault;
       if (!this.processFeatureInteract(event, dtag, verb, currentState)) {
         if (verb !== 'examine') this._emit('Nothing happens.', 'narrative');
       }
@@ -734,7 +904,7 @@ export class GameEngine {
     for (const dtag of this.player.state.inventory) {
       const item = this.events.get(dtag);
       if (!item) continue;
-      const currentState = this.player.getItemState(dtag);
+      const currentState = this.player.getState(dtag);
       if (currentState) evalCounterLow(item, dtag, currentState, this.player, (t, ty) => this._emit(t, ty));
     }
   }
@@ -776,8 +946,13 @@ export class GameEngine {
     const pickupMatch = trimmed.match(/^(?:pick up|take|get|grab)\s+(.+)$/);
     if (pickupMatch) { this.handlePickup(pickupMatch[1]); return; }
 
-    // Data-driven verb/noun parser
-    const verbMap = buildVerbMap(this.events, this.place, this.player.state.inventory);
+    // Data-driven verb/noun parser — include roaming NPCs as verb sources
+    const roamingHere = findRoamingNpcsAtPlace(
+      this.events, this.currentPlace, this.player.getMoveCount(),
+      (npcDtag) => this.player.getNpcState(npcDtag),
+    );
+    const roamingEvents = roamingHere.map((r) => r.npcEvent);
+    const verbMap = buildVerbMap(this.events, this.place, this.player.state.inventory, roamingEvents);
     const parsed = parseInput(trimmed, verbMap);
 
     if (parsed && parsed.noun1) {
