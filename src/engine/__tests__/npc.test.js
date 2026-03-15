@@ -25,10 +25,10 @@ describe('calculateNpcPlace', () => {
       routes: [`${WORLD}:place:a`, `${WORLD}:place:b`, `${WORLD}:place:c`],
     });
 
-    expect(calculateNpcPlace(npc, 0, null)).toBe(`${WORLD}:place:a`);
-    expect(calculateNpcPlace(npc, 1, null)).toBe(`${WORLD}:place:b`);
-    expect(calculateNpcPlace(npc, 2, null)).toBe(`${WORLD}:place:c`);
-    expect(calculateNpcPlace(npc, 3, null)).toBe(`${WORLD}:place:a`); // wraps
+    expect(calculateNpcPlace(npc, 0, null)).toBe(ref(`${WORLD}:place:a`));
+    expect(calculateNpcPlace(npc, 1, null)).toBe(ref(`${WORLD}:place:b`));
+    expect(calculateNpcPlace(npc, 2, null)).toBe(ref(`${WORLD}:place:c`));
+    expect(calculateNpcPlace(npc, 3, null)).toBe(ref(`${WORLD}:place:a`)); // wraps
   });
 
   it('respects speed — moves every N player moves', () => {
@@ -39,11 +39,11 @@ describe('calculateNpcPlace', () => {
     });
 
     // At speed 3: npcMoves = floor(moveCount / 3)
-    expect(calculateNpcPlace(npc, 0, null)).toBe(`${WORLD}:place:a`);  // npcMoves=0
-    expect(calculateNpcPlace(npc, 1, null)).toBe(`${WORLD}:place:a`);  // npcMoves=0
-    expect(calculateNpcPlace(npc, 2, null)).toBe(`${WORLD}:place:a`);  // npcMoves=0
-    expect(calculateNpcPlace(npc, 3, null)).toBe(`${WORLD}:place:b`);  // npcMoves=1
-    expect(calculateNpcPlace(npc, 6, null)).toBe(`${WORLD}:place:a`);  // npcMoves=2
+    expect(calculateNpcPlace(npc, 0, null)).toBe(ref(`${WORLD}:place:a`));  // npcMoves=0
+    expect(calculateNpcPlace(npc, 1, null)).toBe(ref(`${WORLD}:place:a`));  // npcMoves=0
+    expect(calculateNpcPlace(npc, 2, null)).toBe(ref(`${WORLD}:place:a`));  // npcMoves=0
+    expect(calculateNpcPlace(npc, 3, null)).toBe(ref(`${WORLD}:place:b`));  // npcMoves=1
+    expect(calculateNpcPlace(npc, 6, null)).toBe(ref(`${WORLD}:place:a`));  // npcMoves=2
   });
 
   it('random order is deterministic for same inputs', () => {
@@ -83,9 +83,9 @@ describe('calculateNpcPlace', () => {
     });
 
     // State is null (not 'free') — stays at first route (spawn)
-    expect(calculateNpcPlace(npc, 0, null)).toBe(`${WORLD}:place:a`);
-    expect(calculateNpcPlace(npc, 5, null)).toBe(`${WORLD}:place:a`);
-    expect(calculateNpcPlace(npc, 10, 'captured')).toBe(`${WORLD}:place:a`);
+    expect(calculateNpcPlace(npc, 0, null)).toBe(ref(`${WORLD}:place:a`));
+    expect(calculateNpcPlace(npc, 5, null)).toBe(ref(`${WORLD}:place:a`));
+    expect(calculateNpcPlace(npc, 10, 'captured')).toBe(ref(`${WORLD}:place:a`));
   });
 
   it('roams when roams-when matches current state', () => {
@@ -96,9 +96,9 @@ describe('calculateNpcPlace', () => {
       roamsWhen: 'free',
     });
 
-    expect(calculateNpcPlace(npc, 0, 'free')).toBe(`${WORLD}:place:a`);
-    expect(calculateNpcPlace(npc, 1, 'free')).toBe(`${WORLD}:place:b`);
-    expect(calculateNpcPlace(npc, 2, 'free')).toBe(`${WORLD}:place:c`);
+    expect(calculateNpcPlace(npc, 0, 'free')).toBe(ref(`${WORLD}:place:a`));
+    expect(calculateNpcPlace(npc, 1, 'free')).toBe(ref(`${WORLD}:place:b`));
+    expect(calculateNpcPlace(npc, 2, 'free')).toBe(ref(`${WORLD}:place:c`));
   });
 });
 
@@ -115,7 +115,7 @@ describe('initNpcState', () => {
     const state = initNpcState(npc);
     expect(state.state).toBe('neutral');
     expect(state.health).toBe(8);
-    expect(state.inventory).toEqual([`${WORLD}:item:dagger`, `${WORLD}:item:potion`]);
+    expect(state.inventory).toEqual([ref(`${WORLD}:item:dagger`), ref(`${WORLD}:item:potion`)]);
   });
 
   it('handles NPC with no state/health/inventory', () => {
@@ -142,11 +142,11 @@ describe('findRoamingNpcsAtPlace', () => {
     const events = buildEvents(npc);
 
     const result = findRoamingNpcsAtPlace(
-      events, `${WORLD}:place:market`, 0,
+      events, ref(`${WORLD}:place:market`), 0,
       () => null,
     );
     expect(result).toHaveLength(1);
-    expect(result[0].npcDtag).toBe(`${WORLD}:npc:patrol`);
+    expect(result[0].npcDtag).toBe(ref(`${WORLD}:npc:patrol`));
   });
 
   it('returns empty when NPC is elsewhere', () => {
@@ -158,7 +158,7 @@ describe('findRoamingNpcsAtPlace', () => {
     const events = buildEvents(npc);
 
     const result = findRoamingNpcsAtPlace(
-      events, `${WORLD}:place:tavern`, 0,  // NPC at market (index 0), not tavern
+      events, ref(`${WORLD}:place:tavern`), 0,  // NPC at market (index 0), not tavern
       () => null,
     );
     expect(result).toHaveLength(0);
@@ -174,7 +174,7 @@ describe('findRoamingNpcsAtPlace', () => {
     const events = buildEvents(place, item, npc);
 
     const result = findRoamingNpcsAtPlace(
-      events, `${WORLD}:place:market`, 0,
+      events, ref(`${WORLD}:place:market`), 0,
       () => null,
     );
     expect(result).toHaveLength(1);
@@ -189,7 +189,7 @@ describe('engine roaming NPC integration', () => {
     return new GameEngine({
       events,
       player,
-      config: { GENESIS_PLACE: `${WORLD}:place:start`, AUTHOR_PUBKEY: PUBKEY },
+      config: { GENESIS_PLACE: ref(`${WORLD}:place:start`), AUTHOR_PUBKEY: PUBKEY },
     });
   }
 
@@ -201,9 +201,9 @@ describe('engine roaming NPC integration', () => {
       routes: [`${WORLD}:place:market`, `${WORLD}:place:tavern`],
     });
     const events = buildEvents(room, thief);
-    const engine = createEngine(events, { place: `${WORLD}:place:market`, moveCount: 0 });
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:market`), moveCount: 0 });
 
-    engine.enterRoom(`${WORLD}:place:market`);
+    engine.enterRoom(ref(`${WORLD}:place:market`));
     const output = engine.flush();
 
     expect(output.some((e) => e.type === 'npc' && e.text.includes('Thief'))).toBe(true);
@@ -218,9 +218,9 @@ describe('engine roaming NPC integration', () => {
     });
     const events = buildEvents(room, thief);
     // moveCount=0, NPC at tavern (first route)
-    const engine = createEngine(events, { place: `${WORLD}:place:market`, moveCount: 0 });
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:market`), moveCount: 0 });
 
-    engine.enterRoom(`${WORLD}:place:market`);
+    engine.enterRoom(ref(`${WORLD}:place:market`));
     const output = engine.flush();
 
     expect(output.some((e) => e.type === 'npc' && e.text.includes('Thief'))).toBe(false);
@@ -236,19 +236,19 @@ describe('engine roaming NPC integration', () => {
     });
     const events = buildEvents(room, sword, thief);
     const engine = createEngine(events, {
-      place: `${WORLD}:place:market`,
-      inventory: [`${WORLD}:item:sword`],
+      place: ref(`${WORLD}:place:market`),
+      inventory: [ref(`${WORLD}:item:sword`)],
       moveCount: 0,
     });
 
-    engine.enterRoom(`${WORLD}:place:market`, { isMoving: true });
+    engine.enterRoom(ref(`${WORLD}:place:market`), { isMoving: true });
     const output = engine.flush();
 
     // Player should have lost the sword
-    expect(engine.player.hasItem(`${WORLD}:item:sword`)).toBe(false);
+    expect(engine.player.hasItem(ref(`${WORLD}:item:sword`))).toBe(false);
     // NPC should have gained it
-    const npcState = engine.player.getNpcState(`${WORLD}:npc:thief`);
-    expect(npcState.inventory).toContain(`${WORLD}:item:sword`);
+    const npcState = engine.player.getNpcState(ref(`${WORLD}:npc:thief`));
+    expect(npcState.inventory).toContain(ref(`${WORLD}:item:sword`));
     // Output should mention the theft
     expect(output.some((e) => e.type === 'error' && e.text.includes('snatches'))).toBe(true);
   });
@@ -261,8 +261,8 @@ describe('engine roaming NPC integration', () => {
       [`${WORLD}:place:room2`, 'south'],
     ]);
     const events = buildEvents(room1, room2, portal);
-    const engine = createEngine(events, { place: `${WORLD}:place:room1`, moveCount: 0 });
-    engine.enterRoom(`${WORLD}:place:room1`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room1`), moveCount: 0 });
+    engine.enterRoom(ref(`${WORLD}:place:room1`));
     engine.flush();
 
     await engine.handleCommand('north');
@@ -287,17 +287,17 @@ describe('engine roaming NPC integration', () => {
 
     // NPC starts with a dagger in inventory
     const npcStates = {
-      [`${WORLD}:npc:thief`]: {
+      [ref(`${WORLD}:npc:thief`)]: {
         state: null,
-        inventory: [`${WORLD}:item:dagger`],
+        inventory: [ref(`${WORLD}:item:dagger`)],
         health: null,
       },
     };
     const engine = createEngine(events, {
-      place: `${WORLD}:place:room1`,
+      place: ref(`${WORLD}:place:room1`),
       moveCount: 0,
     }, npcStates);
-    engine.enterRoom(`${WORLD}:place:room1`);
+    engine.enterRoom(ref(`${WORLD}:place:room1`));
     engine.flush();
 
     // Move — this increments moveCount to 1
@@ -305,7 +305,7 @@ describe('engine roaming NPC integration', () => {
     await engine.handleCommand('north');
 
     // NPC should have deposited the dagger
-    const npcState = engine.player.getNpcState(`${WORLD}:npc:thief`);
+    const npcState = engine.player.getNpcState(ref(`${WORLD}:npc:thief`));
     expect(npcState.inventory).toEqual([]);
   });
 
@@ -322,8 +322,8 @@ describe('engine roaming NPC integration', () => {
       dialogue: [[ref(`${WORLD}:dialogue:thief-greet`)]],
     });
     const events = buildEvents(room, thief, greetNode);
-    const engine = createEngine(events, { place: `${WORLD}:place:market`, moveCount: 0 });
-    engine.enterRoom(`${WORLD}:place:market`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:market`), moveCount: 0 });
+    engine.enterRoom(ref(`${WORLD}:place:market`));
     engine.flush();
 
     await engine.handleCommand('talk thief');
@@ -342,12 +342,12 @@ describe('engine roaming NPC integration', () => {
     const room = makePlace('room');
     const events = buildEvents(room, potion);
     const engine = createEngine(events, {
-      place: `${WORLD}:place:room`,
-      inventory: [`${WORLD}:item:potion`],
+      place: ref(`${WORLD}:place:room`),
+      inventory: [ref(`${WORLD}:item:potion`)],
     });
 
     await engine.handleCommand('drink potion');
-    expect(engine.player.hasItem(`${WORLD}:item:potion`)).toBe(false);
+    expect(engine.player.hasItem(ref(`${WORLD}:item:potion`))).toBe(false);
   });
 
   it('look does not re-trigger on-encounter', () => {
@@ -360,18 +360,18 @@ describe('engine roaming NPC integration', () => {
     });
     const events = buildEvents(room, sword, thief);
     const engine = createEngine(events, {
-      place: `${WORLD}:place:market`,
-      inventory: [`${WORLD}:item:sword`, `${WORLD}:item:extra`],
+      place: ref(`${WORLD}:place:market`),
+      inventory: [ref(`${WORLD}:item:sword`), ref(`${WORLD}:item:extra`)],
       moveCount: 0,
     });
 
     // First entry with isMoving — steals one item
-    engine.enterRoom(`${WORLD}:place:market`, { isMoving: true });
+    engine.enterRoom(ref(`${WORLD}:place:market`), { isMoving: true });
     engine.flush();
     expect(engine.player.state.inventory).toHaveLength(1);
 
     // look (no isMoving) — should NOT steal again
-    engine.enterRoom(`${WORLD}:place:market`);
+    engine.enterRoom(ref(`${WORLD}:place:market`));
     engine.flush();
     expect(engine.player.state.inventory).toHaveLength(1);
   });
@@ -385,17 +385,17 @@ describe('engine roaming NPC integration', () => {
     });
     const events = buildEvents(room, thief);
     const engine = createEngine(events, {
-      place: `${WORLD}:place:market`,
-      inventory: [`${WORLD}:item:old`, `${WORLD}:item:new`],
+      place: ref(`${WORLD}:place:market`),
+      inventory: [ref(`${WORLD}:item:old`), ref(`${WORLD}:item:new`)],
       moveCount: 0,
     });
 
-    engine.enterRoom(`${WORLD}:place:market`, { isMoving: true });
+    engine.enterRoom(ref(`${WORLD}:place:market`), { isMoving: true });
     engine.flush();
 
     // Should have stolen the last (newest) item
-    expect(engine.player.hasItem(`${WORLD}:item:old`)).toBe(true);
-    expect(engine.player.hasItem(`${WORLD}:item:new`)).toBe(false);
+    expect(engine.player.hasItem(ref(`${WORLD}:item:old`))).toBe(true);
+    expect(engine.player.hasItem(ref(`${WORLD}:item:new`))).toBe(false);
   });
 
   it('stolen item does not reappear in its original room', () => {
@@ -408,20 +408,20 @@ describe('engine roaming NPC integration', () => {
     });
     const events = buildEvents(room, key, thief);
     const engine = createEngine(events, {
-      place: `${WORLD}:place:cave`,
-      inventory: [`${WORLD}:item:key`],
+      place: ref(`${WORLD}:place:cave`),
+      inventory: [ref(`${WORLD}:item:key`)],
       moveCount: 0,
     });
 
     // Thief steals the key
-    engine.enterRoom(`${WORLD}:place:cave`, { isMoving: true });
+    engine.enterRoom(ref(`${WORLD}:place:cave`), { isMoving: true });
     engine.flush();
-    expect(engine.player.hasItem(`${WORLD}:item:key`)).toBe(false);
-    const npcState = engine.player.getNpcState(`${WORLD}:npc:thief`);
-    expect(npcState.inventory).toContain(`${WORLD}:item:key`);
+    expect(engine.player.hasItem(ref(`${WORLD}:item:key`))).toBe(false);
+    const npcState = engine.player.getNpcState(ref(`${WORLD}:npc:thief`));
+    expect(npcState.inventory).toContain(ref(`${WORLD}:item:key`));
 
     // Re-enter room — key should NOT appear
-    engine.enterRoom(`${WORLD}:place:cave`);
+    engine.enterRoom(ref(`${WORLD}:place:cave`));
     const output = engine.flush();
     const itemLines = output.filter((e) => e.type === 'item' && e.text.includes('Key'));
     expect(itemLines).toHaveLength(0);
@@ -445,17 +445,17 @@ describe('engine roaming NPC integration', () => {
     const events = buildEvents(cave, stash, portal, key, thief);
 
     const npcStates = {
-      [`${WORLD}:npc:thief`]: {
+      [ref(`${WORLD}:npc:thief`)]: {
         state: null,
-        inventory: [`${WORLD}:item:key`],
+        inventory: [ref(`${WORLD}:item:key`)],
         health: null,
       },
     };
     const engine = createEngine(events, {
-      place: `${WORLD}:place:cave`,
+      place: ref(`${WORLD}:place:cave`),
       moveCount: 0,
     }, npcStates);
-    engine.enterRoom(`${WORLD}:place:cave`);
+    engine.enterRoom(ref(`${WORLD}:place:cave`));
     engine.flush();
 
     // Move — NPC goes to stash (route[1]) and deposits
@@ -463,16 +463,16 @@ describe('engine roaming NPC integration', () => {
     engine.flush();
 
     // Key should be in the stash place's inventory
-    const stashItems = engine.player.getPlaceItems(`${WORLD}:place:stash`) || [];
-    expect(stashItems).toContain(`${WORLD}:item:key`);
+    const stashItems = engine.player.getPlaceItems(ref(`${WORLD}:place:stash`)) || [];
+    expect(stashItems).toContain(ref(`${WORLD}:item:key`));
 
     // Visit cave — key should NOT appear
-    engine.enterRoom(`${WORLD}:place:cave`);
+    engine.enterRoom(ref(`${WORLD}:place:cave`));
     const caveOutput = engine.flush();
     expect(caveOutput.some((e) => e.type === 'item' && e.text.includes('Key'))).toBe(false);
 
     // Visit stash — key SHOULD appear
-    engine.enterRoom(`${WORLD}:place:stash`);
+    engine.enterRoom(ref(`${WORLD}:place:stash`));
     const stashOutput = engine.flush();
     expect(stashOutput.some((e) => e.type === 'item' && e.text.includes('Key'))).toBe(true);
   });

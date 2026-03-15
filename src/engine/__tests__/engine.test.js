@@ -6,7 +6,7 @@ import {
   buildEvents, freshState, makeMutator,
 } from './helpers.js';
 
-const CONFIG = { GENESIS_PLACE: `${WORLD}:place:start`, AUTHOR_PUBKEY: PUBKEY };
+const CONFIG = { GENESIS_PLACE: ref(`${WORLD}:place:start`), AUTHOR_PUBKEY: PUBKEY };
 
 function createEngine(events, playerOverrides = {}) {
   const player = makeMutator(playerOverrides);
@@ -20,15 +20,15 @@ describe('GameEngine construction', () => {
     const place = makePlace('start');
     const events = buildEvents(place);
     const engine = createEngine(events);
-    expect(engine.currentPlace).toBe(`${WORLD}:place:start`);
+    expect(engine.currentPlace).toBe(ref(`${WORLD}:place:start`));
   });
 
   it('restores saved place', () => {
     const start = makePlace('start');
     const cave = makePlace('cave');
     const events = buildEvents(start, cave);
-    const engine = createEngine(events, { place: `${WORLD}:place:cave` });
-    expect(engine.currentPlace).toBe(`${WORLD}:place:cave`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:cave`) });
+    expect(engine.currentPlace).toBe(ref(`${WORLD}:place:cave`));
   });
 });
 
@@ -39,7 +39,7 @@ describe('enterRoom', () => {
     const place = makePlace('clearing');
     const events = buildEvents(place);
     const engine = createEngine(events);
-    engine.enterRoom(`${WORLD}:place:clearing`);
+    engine.enterRoom(ref(`${WORLD}:place:clearing`));
     const output = engine.flush();
 
     expect(output.some((e) => e.type === 'title' && e.text.includes('Clearing'))).toBe(true);
@@ -50,8 +50,8 @@ describe('enterRoom', () => {
     const place = makePlace('clearing');
     const events = buildEvents(place);
     const engine = createEngine(events);
-    engine.enterRoom(`${WORLD}:place:clearing`);
-    expect(engine.player.state.place).toBe(`${WORLD}:place:clearing`);
+    engine.enterRoom(ref(`${WORLD}:place:clearing`));
+    expect(engine.player.state.place).toBe(ref(`${WORLD}:place:clearing`));
   });
 
   it('shows items not yet picked up', () => {
@@ -59,7 +59,7 @@ describe('enterRoom', () => {
     const place = makePlace('room', { items: [`${WORLD}:item:sword`] });
     const events = buildEvents(place, sword);
     const engine = createEngine(events);
-    engine.enterRoom(`${WORLD}:place:room`);
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     const output = engine.flush();
 
     expect(output.some((e) => e.type === 'item' && e.text.includes('Sword'))).toBe(true);
@@ -69,8 +69,8 @@ describe('enterRoom', () => {
     const sword = makeItem('sword');
     const place = makePlace('room', { items: [`${WORLD}:item:sword`] });
     const events = buildEvents(place, sword);
-    const engine = createEngine(events, { inventory: [`${WORLD}:item:sword`] });
-    engine.enterRoom(`${WORLD}:place:room`);
+    const engine = createEngine(events, { inventory: [ref(`${WORLD}:item:sword`)] });
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     const output = engine.flush();
 
     expect(output.some((e) => e.type === 'item' && e.text.includes('Sword'))).toBe(false);
@@ -81,7 +81,7 @@ describe('enterRoom', () => {
     const place = makePlace('room', { features: [`${WORLD}:feature:trap`] });
     const events = buildEvents(place, trap);
     const engine = createEngine(events);
-    engine.enterRoom(`${WORLD}:place:room`);
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     const output = engine.flush();
 
     expect(output.some((e) => e.type === 'feature')).toBe(false);
@@ -92,7 +92,7 @@ describe('enterRoom', () => {
     const place = makePlace('room', { features: [`${WORLD}:feature:altar`] });
     const events = buildEvents(place, altar);
     const engine = createEngine(events);
-    engine.enterRoom(`${WORLD}:place:room`);
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     const output = engine.flush();
 
     expect(output.some((e) => e.type === 'feature' && e.text.includes('Altar'))).toBe(true);
@@ -107,7 +107,7 @@ describe('enterRoom', () => {
     ]);
     const events = buildEvents(room1, room2, portal);
     const engine = createEngine(events);
-    engine.enterRoom(`${WORLD}:place:room1`);
+    engine.enterRoom(ref(`${WORLD}:place:room1`));
     const output = engine.flush();
 
     expect(output.some((e) => e.type === 'exits' && e.text.includes('north'))).toBe(true);
@@ -119,7 +119,7 @@ describe('enterRoom', () => {
     place.tags.push(['requires', ref(`${WORLD}:item:key`), '', 'The vault is sealed.']);
     const events = buildEvents(place, key);
     const engine = createEngine(events);
-    engine.enterRoom(`${WORLD}:place:vault`);
+    engine.enterRoom(ref(`${WORLD}:place:vault`));
     const output = engine.flush();
 
     expect(output.some((e) => e.text === 'The vault is sealed.')).toBe(true);
@@ -134,8 +134,8 @@ describe('handleCommand built-ins', () => {
   it('look re-renders current room', async () => {
     const place = makePlace('room');
     const events = buildEvents(place);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
-    engine.enterRoom(`${WORLD}:place:room`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     engine.flush();
 
     await engine.handleCommand('look');
@@ -146,7 +146,7 @@ describe('handleCommand built-ins', () => {
   it('inventory shows empty message', async () => {
     const place = makePlace('room');
     const events = buildEvents(place);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
 
     await engine.handleCommand('i');
     const output = engine.flush();
@@ -158,8 +158,8 @@ describe('handleCommand built-ins', () => {
     const place = makePlace('room');
     const events = buildEvents(place, sword);
     const engine = createEngine(events, {
-      place: `${WORLD}:place:room`,
-      inventory: [`${WORLD}:item:sword`],
+      place: ref(`${WORLD}:place:room`),
+      inventory: [ref(`${WORLD}:item:sword`)],
     });
 
     await engine.handleCommand('inventory');
@@ -175,12 +175,12 @@ describe('handlePickup', () => {
     const sword = makeItem('sword', { nouns: [['sword']] });
     const place = makePlace('room', { items: [`${WORLD}:item:sword`] });
     const events = buildEvents(place, sword);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
 
     await engine.handleCommand('take sword');
     const output = engine.flush();
 
-    expect(engine.player.hasItem(`${WORLD}:item:sword`)).toBe(true);
+    expect(engine.player.hasItem(ref(`${WORLD}:item:sword`))).toBe(true);
     expect(output.some((e) => e.type === 'item' && e.text.includes('Taken'))).toBe(true);
   });
 
@@ -192,19 +192,19 @@ describe('handlePickup', () => {
     });
     const place = makePlace('room', { items: [`${WORLD}:item:lantern`] });
     const events = buildEvents(place, lantern);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
 
     await engine.handleCommand('get lantern');
 
-    expect(engine.player.getState(`${WORLD}:item:lantern`)).toBe('off');
-    expect(engine.player.getCounter(`${WORLD}:item:lantern:battery`)).toBe(100);
+    expect(engine.player.getState(ref(`${WORLD}:item:lantern`))).toBe('off');
+    expect(engine.player.getCounter(`${ref(`${WORLD}:item:lantern`)}:battery`)).toBe(100);
   });
 
   it('rejects picking up features', async () => {
     const lever = makeFeature('lever', { nouns: [['lever']] });
     const place = makePlace('room', { features: [`${WORLD}:feature:lever`] });
     const events = buildEvents(place, lever);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
 
     await engine.handleCommand('take lever');
     const output = engine.flush();
@@ -223,12 +223,12 @@ describe('movement', () => {
       [`${WORLD}:place:room2`, 'south'],
     ]);
     const events = buildEvents(room1, room2, portal);
-    const engine = createEngine(events, { place: `${WORLD}:place:room1` });
-    engine.enterRoom(`${WORLD}:place:room1`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room1`) });
+    engine.enterRoom(ref(`${WORLD}:place:room1`));
     engine.flush();
 
     await engine.handleCommand('north');
-    expect(engine.currentPlace).toBe(`${WORLD}:place:room2`);
+    expect(engine.currentPlace).toBe(ref(`${WORLD}:place:room2`));
   });
 
   it('rejects movement through gated portal', async () => {
@@ -242,21 +242,21 @@ describe('movement', () => {
       requires: [[ref(`${WORLD}:item:key`), '', 'The door is locked.']],
     });
     const events = buildEvents(room1, room2, portal, key);
-    const engine = createEngine(events, { place: `${WORLD}:place:room1` });
-    engine.enterRoom(`${WORLD}:place:room1`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room1`) });
+    engine.enterRoom(ref(`${WORLD}:place:room1`));
     engine.flush();
 
     await engine.handleCommand('north');
     const output = engine.flush();
-    expect(engine.currentPlace).toBe(`${WORLD}:place:room1`);
+    expect(engine.currentPlace).toBe(ref(`${WORLD}:place:room1`));
     expect(output.some((e) => e.text === 'The door is locked.')).toBe(true);
   });
 
   it('rejects invalid direction', async () => {
     const room = makePlace('room');
     const events = buildEvents(room);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
-    engine.enterRoom(`${WORLD}:place:room`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     engine.flush();
 
     await engine.handleCommand('west');
@@ -282,17 +282,18 @@ describe('processOnMove', () => {
       [`${WORLD}:place:room2`, 'south'],
     ]);
     const events = buildEvents(room1, room2, portal, lantern);
+    const lanternRef = ref(`${WORLD}:item:lantern`);
     const engine = createEngine(events, {
-      place: `${WORLD}:place:room1`,
-      inventory: [`${WORLD}:item:lantern`],
-      states: { [`${WORLD}:item:lantern`]: 'on' },
-      counters: { [`${WORLD}:item:lantern:battery`]: 50 },
+      place: ref(`${WORLD}:place:room1`),
+      inventory: [lanternRef],
+      states: { [lanternRef]: 'on' },
+      counters: { [`${lanternRef}:battery`]: 50 },
     });
-    engine.enterRoom(`${WORLD}:place:room1`);
+    engine.enterRoom(ref(`${WORLD}:place:room1`));
     engine.flush();
 
     await engine.handleCommand('north');
-    expect(engine.player.getCounter(`${WORLD}:item:lantern:battery`)).toBe(49);
+    expect(engine.player.getCounter(`${lanternRef}:battery`)).toBe(49);
   });
 
   it('fires on-counter threshold crossing', async () => {
@@ -311,21 +312,21 @@ describe('processOnMove', () => {
       [`${WORLD}:place:room2`, 'south'],
     ]);
     const events = buildEvents(room1, room2, portal, lantern);
-    const dtag = `${WORLD}:item:lantern`;
+    const lanternRef = ref(`${WORLD}:item:lantern`);
     const engine = createEngine(events, {
-      place: `${WORLD}:place:room1`,
-      inventory: [dtag],
-      states: { [dtag]: 'on' },
-      counters: { [`${dtag}:battery`]: 21 }, // One move will cross threshold 20
+      place: ref(`${WORLD}:place:room1`),
+      inventory: [lanternRef],
+      states: { [lanternRef]: 'on' },
+      counters: { [`${lanternRef}:battery`]: 21 }, // One move will cross threshold 20
     });
-    engine.enterRoom(`${WORLD}:place:room1`);
+    engine.enterRoom(ref(`${WORLD}:place:room1`));
     engine.flush();
 
     await engine.handleCommand('north');
     const output = engine.flush();
 
-    expect(engine.player.getCounter(`${dtag}:battery`)).toBe(20);
-    expect(engine.player.getState(dtag)).toBe('flickering');
+    expect(engine.player.getCounter(`${lanternRef}:battery`)).toBe(20);
+    expect(engine.player.getState(lanternRef)).toBe('flickering');
     expect(output.some((e) => e.text === 'The lantern flickers ominously.')).toBe(true);
   });
 });
@@ -343,14 +344,14 @@ describe('feature interaction', () => {
     });
     const place = makePlace('room', { features: [`${WORLD}:feature:lever`] });
     const events = buildEvents(place, lever);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
-    engine.enterRoom(`${WORLD}:place:room`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     engine.flush();
 
     await engine.handleCommand('pull lever');
     const output = engine.flush();
 
-    expect(engine.player.getState(`${WORLD}:feature:lever`)).toBe('down');
+    expect(engine.player.getState(ref(`${WORLD}:feature:lever`))).toBe('down');
     expect(output.some((e) => e.text === 'You pull the lever down.')).toBe(true);
   });
 
@@ -372,14 +373,14 @@ describe('feature interaction', () => {
     const place = makePlace('room', { features: [`${WORLD}:feature:lever`] });
     const hall = makePlace('hall');
     const events = buildEvents(place, hall, lever, gate);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
-    engine.enterRoom(`${WORLD}:place:room`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     engine.flush();
 
     await engine.handleCommand('pull lever');
     const output = engine.flush();
 
-    expect(engine.player.getState(`${WORLD}:portal:gate`)).toBe('open');
+    expect(engine.player.getState(ref(`${WORLD}:portal:gate`))).toBe('open');
     expect(output.some((e) => e.text === 'The gate swings open!')).toBe(true);
   });
 
@@ -394,12 +395,12 @@ describe('feature interaction', () => {
     const gem = makeItem('gem');
     const place = makePlace('room', { features: [`${WORLD}:feature:chest`] });
     const events = buildEvents(place, chest, gem);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
-    engine.enterRoom(`${WORLD}:place:room`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     engine.flush();
 
     await engine.handleCommand('open chest');
-    expect(engine.player.hasItem(`${WORLD}:item:gem`)).toBe(true);
+    expect(engine.player.hasItem(ref(`${WORLD}:item:gem`))).toBe(true);
   });
 });
 
@@ -416,16 +417,17 @@ describe('item interaction', () => {
     });
     const place = makePlace('room');
     const events = buildEvents(place, lantern);
+    const lanternRef = ref(`${WORLD}:item:lantern`);
     const engine = createEngine(events, {
-      place: `${WORLD}:place:room`,
-      inventory: [`${WORLD}:item:lantern`],
-      states: { [`${WORLD}:item:lantern`]: 'off' },
+      place: ref(`${WORLD}:place:room`),
+      inventory: [lanternRef],
+      states: { [lanternRef]: 'off' },
     });
 
     await engine.handleCommand('light lantern');
     const output = engine.flush();
 
-    expect(engine.player.getState(`${WORLD}:item:lantern`)).toBe('on');
+    expect(engine.player.getState(lanternRef)).toBe('on');
     expect(output.some((e) => e.text === 'The lantern blazes to life.')).toBe(true);
   });
 });
@@ -441,8 +443,8 @@ describe('examine', () => {
     });
     const place = makePlace('room', { features: [`${WORLD}:feature:altar`] });
     const events = buildEvents(place, altar);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
-    engine.enterRoom(`${WORLD}:place:room`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     engine.flush();
 
     await engine.handleCommand('x altar');
@@ -458,10 +460,11 @@ describe('examine', () => {
     });
     const place = makePlace('room');
     const events = buildEvents(place, lantern);
+    const lanternRef = ref(`${WORLD}:item:lantern`);
     const engine = createEngine(events, {
-      place: `${WORLD}:place:room`,
-      inventory: [`${WORLD}:item:lantern`],
-      states: { [`${WORLD}:item:lantern`]: 'on' },
+      place: ref(`${WORLD}:place:room`),
+      inventory: [lanternRef],
+      states: { [lanternRef]: 'on' },
     });
 
     await engine.handleCommand('examine lantern');
@@ -489,8 +492,8 @@ describe('dialogue', () => {
     });
     const place = makePlace('room', { npcs: [`${WORLD}:npc:guardian`] });
     const events = buildEvents(place, npc, greetNode, whoNode);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
-    engine.enterRoom(`${WORLD}:place:room`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     engine.flush();
 
     // Start dialogue via talk verb
@@ -516,12 +519,12 @@ describe('dialogue', () => {
     });
     const place = makePlace('room', { npcs: [`${WORLD}:npc:sage`] });
     const events = buildEvents(place, npc, greetNode, moreNode);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
 
     // Need verb tag for 'talk' — add to NPC
     npc.tags.push(['verb', 'talk', 'speak']);
 
-    engine.enterRoom(`${WORLD}:place:room`);
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     engine.flush();
 
     await engine.handleCommand('talk sage');
@@ -543,10 +546,10 @@ describe('dialogue', () => {
     });
     const place = makePlace('room', { npcs: [`${WORLD}:npc:sage`] });
     const events = buildEvents(place, npc, greetNode);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
 
     npc.tags.push(['verb', 'talk']);
-    engine.enterRoom(`${WORLD}:place:room`);
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     engine.flush();
 
     await engine.handleCommand('talk sage');
@@ -563,8 +566,8 @@ describe('unknown command', () => {
   it('emits error for unrecognised input', async () => {
     const place = makePlace('room');
     const events = buildEvents(place);
-    const engine = createEngine(events, { place: `${WORLD}:place:room` });
-    engine.enterRoom(`${WORLD}:place:room`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`) });
+    engine.enterRoom(ref(`${WORLD}:place:room`));
     engine.flush();
 
     await engine.handleCommand('xyzzy');

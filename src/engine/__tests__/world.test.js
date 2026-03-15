@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  getTag, getTags, dtagFromRef, getDefaultState, findTransition,
+  getTag, getTags, dtagFromRef, aTagOf, getDefaultState, findTransition,
   checkRequires, findByNoun, resolveExits,
 } from '../../world.js';
 import {
@@ -37,6 +37,13 @@ describe('getTags', () => {
 describe('dtagFromRef', () => {
   it('extracts d-tag from event ref', () => {
     expect(dtagFromRef(`30078:${PUBKEY}:test-world:place:room`)).toBe('test-world:place:room');
+  });
+});
+
+describe('aTagOf', () => {
+  it('constructs full a-tag from event', () => {
+    const ev = makeEvent('test-world:place:room', [['type', 'place']]);
+    expect(aTagOf(ev)).toBe(`30078:${PUBKEY}:test-world:place:room`);
   });
 });
 
@@ -81,7 +88,7 @@ describe('checkRequires', () => {
         requires: [[ref(`${WORLD}:item:key`), '', 'You need the key.']],
       });
       const events = buildEvents(key, door);
-      const state = freshState({ inventory: [`${WORLD}:item:key`] });
+      const state = freshState({ inventory: [ref(`${WORLD}:item:key`)] });
       expect(checkRequires(door, state, events).allowed).toBe(true);
     });
 
@@ -106,15 +113,15 @@ describe('checkRequires', () => {
 
       // Has item but wrong state
       const state1 = freshState({
-        inventory: [`${WORLD}:item:lantern`],
-        states: { [`${WORLD}:item:lantern`]: 'off' },
+        inventory: [ref(`${WORLD}:item:lantern`)],
+        states: { [ref(`${WORLD}:item:lantern`)]: 'off' },
       });
       expect(checkRequires(door, state1, events).allowed).toBe(false);
 
       // Has item in correct state
       const state2 = freshState({
-        inventory: [`${WORLD}:item:lantern`],
-        states: { [`${WORLD}:item:lantern`]: 'on' },
+        inventory: [ref(`${WORLD}:item:lantern`)],
+        states: { [ref(`${WORLD}:item:lantern`)]: 'on' },
       });
       expect(checkRequires(door, state2, events).allowed).toBe(true);
     });
@@ -127,7 +134,7 @@ describe('checkRequires', () => {
         requires: [[ref(`${WORLD}:feature:lever`), 'down', 'Pull the lever first.']],
       });
       const events = buildEvents(lever, gate);
-      const state = freshState({ states: { [`${WORLD}:feature:lever`]: 'down' } });
+      const state = freshState({ states: { [ref(`${WORLD}:feature:lever`)]: 'down' } });
       expect(checkRequires(gate, state, events).allowed).toBe(true);
     });
 
@@ -137,7 +144,7 @@ describe('checkRequires', () => {
         requires: [[ref(`${WORLD}:feature:lever`), 'down', 'Pull the lever first.']],
       });
       const events = buildEvents(lever, gate);
-      const state = freshState({ states: { [`${WORLD}:feature:lever`]: 'up' } });
+      const state = freshState({ states: { [ref(`${WORLD}:feature:lever`)]: 'up' } });
       expect(checkRequires(gate, state, events).allowed).toBe(false);
     });
   });
@@ -149,7 +156,7 @@ describe('checkRequires', () => {
         requires: [[ref(`${WORLD}:puzzle:riddle`), 'solved', 'Solve the riddle.']],
       });
       const events = buildEvents(puzzle, door);
-      const state = freshState({ states: { [`${WORLD}:puzzle:riddle`]: 'solved' } });
+      const state = freshState({ states: { [ref(`${WORLD}:puzzle:riddle`)]: 'solved' } });
       expect(checkRequires(door, state, events).allowed).toBe(true);
     });
 
@@ -183,7 +190,7 @@ describe('checkRequires', () => {
         ['requires-not', ref(`${WORLD}:item:key`), '', 'You already have the key.'],
       ]);
       const events = buildEvents(key, ev);
-      const state = freshState({ inventory: [`${WORLD}:item:key`] });
+      const state = freshState({ inventory: [ref(`${WORLD}:item:key`)] });
       const result = checkRequires(ev, state, events);
       expect(result.allowed).toBe(false);
       expect(result.reason).toBe('You already have the key.');
@@ -199,15 +206,15 @@ describe('checkRequires', () => {
 
       // Has item in non-forbidden state — passes
       const state1 = freshState({
-        inventory: [`${WORLD}:item:lantern`],
-        states: { [`${WORLD}:item:lantern`]: 'on' },
+        inventory: [ref(`${WORLD}:item:lantern`)],
+        states: { [ref(`${WORLD}:item:lantern`)]: 'on' },
       });
       expect(checkRequires(ev, state1, events).allowed).toBe(true);
 
       // Has item in forbidden state — fails
       const state2 = freshState({
-        inventory: [`${WORLD}:item:lantern`],
-        states: { [`${WORLD}:item:lantern`]: 'broken' },
+        inventory: [ref(`${WORLD}:item:lantern`)],
+        states: { [ref(`${WORLD}:item:lantern`)]: 'broken' },
       });
       expect(checkRequires(ev, state2, events).allowed).toBe(false);
     });
@@ -224,13 +231,13 @@ describe('checkRequires', () => {
     const events = buildEvents(key, lever, ev);
 
     // Only key — fails on lever
-    const state1 = freshState({ inventory: [`${WORLD}:item:key`] });
+    const state1 = freshState({ inventory: [ref(`${WORLD}:item:key`)] });
     expect(checkRequires(ev, state1, events).allowed).toBe(false);
 
     // Both satisfied
     const state2 = freshState({
-      inventory: [`${WORLD}:item:key`],
-      states: { [`${WORLD}:feature:lever`]: 'down' },
+      inventory: [ref(`${WORLD}:item:key`)],
+      states: { [ref(`${WORLD}:feature:lever`)]: 'down' },
     });
     expect(checkRequires(ev, state2, events).allowed).toBe(true);
   });
@@ -246,7 +253,7 @@ describe('findByNoun', () => {
     const result = findByNoun(events, place, 'switch');
     expect(result).not.toBeNull();
     expect(result.type).toBe('feature');
-    expect(result.dtag).toBe(`${WORLD}:feature:lever`);
+    expect(result.dtag).toBe(ref(`${WORLD}:feature:lever`));
   });
 
   it('finds item by title substring', () => {
@@ -276,11 +283,11 @@ describe('resolveExits', () => {
       [`${WORLD}:place:room2`, 'south'],
     ]);
     const events = buildEvents(place1, place2, portal);
-    const exits = resolveExits(events, `${WORLD}:place:room1`, freshState());
+    const exits = resolveExits(events, ref(`${WORLD}:place:room1`), freshState());
 
     expect(exits).toHaveLength(1);
     expect(exits[0].slot).toBe('north');
-    expect(exits[0].destinationDTag).toBe(`${WORLD}:place:room2`);
+    expect(exits[0].destinationDTag).toBe(ref(`${WORLD}:place:room2`));
   });
 
   it('hides portals with hidden state', () => {
@@ -291,7 +298,7 @@ describe('resolveExits', () => {
       [`${WORLD}:place:room2`, 'south'],
     ], { state: 'hidden' });
     const events = buildEvents(place1, place2, portal);
-    const exits = resolveExits(events, `${WORLD}:place:room1`, freshState());
+    const exits = resolveExits(events, ref(`${WORLD}:place:room1`), freshState());
 
     expect(exits).toHaveLength(0);
   });
@@ -304,8 +311,8 @@ describe('resolveExits', () => {
       [`${WORLD}:place:room2`, 'south'],
     ], { state: 'hidden' });
     const events = buildEvents(place1, place2, portal);
-    const state = freshState({ states: { [`${WORLD}:portal:p1`]: 'visible' } });
-    const exits = resolveExits(events, `${WORLD}:place:room1`, state);
+    const state = freshState({ states: { [ref(`${WORLD}:portal:p1`)]: 'visible' } });
+    const exits = resolveExits(events, ref(`${WORLD}:place:room1`), state);
 
     expect(exits).toHaveLength(1);
   });

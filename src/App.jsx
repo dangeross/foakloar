@@ -4,7 +4,7 @@ import { usePlayerState } from './usePlayerState.js';
 import { AUTHOR_PUBKEY, WORLD_TAG } from './config.js';
 import { GameEngine } from './engine/engine.js';
 import { PlayerStateMutator } from './engine/player-state.js';
-import { getTag, getTags, dtagFromRef } from './world.js';
+import { getTag, getTags } from './world.js';
 import { resolveTheme, applyTheme } from './theme.js';
 
 /** Map entry types to colour slots */
@@ -72,11 +72,11 @@ export default function App() {
   // Resolve world event config from events
   const worldConfig = useMemo(() => {
     if (events.size === 0) return null;
-    const worldEvent = events.get(`${WORLD_TAG}:world`);
+    const worldEvent = events.get(`30078:${AUTHOR_PUBKEY}:${WORLD_TAG}:world`);
     if (!worldEvent) return null;
 
     const startRef = getTag(worldEvent, 'start');
-    const genesisPlace = startRef ? dtagFromRef(startRef) : `${WORLD_TAG}:place:clearing`;
+    const genesisPlace = startRef || `30078:${AUTHOR_PUBKEY}:${WORLD_TAG}:place:clearing`;
     const inventoryRefs = getTags(worldEvent, 'inventory').map((t) => t[1]);
     const title = getTag(worldEvent, 'title') || WORLD_TAG;
     const cwTags = getTags(worldEvent, 'cw').map((t) => t[1]);
@@ -93,7 +93,7 @@ export default function App() {
   // Lazily create or update engine with latest events
   const getEngine = useCallback(() => {
     const mutator = new PlayerStateMutator(player.state, player.npcStates);
-    const genesisPlace = worldConfig?.genesisPlace || `${WORLD_TAG}:place:clearing`;
+    const genesisPlace = worldConfig?.genesisPlace || `30078:${AUTHOR_PUBKEY}:${WORLD_TAG}:place:clearing`;
     if (!engineRef.current) {
       engineRef.current = new GameEngine({
         events,
@@ -145,15 +145,14 @@ export default function App() {
       const isNewGame = !player.state.place && player.state.inventory.length === 0;
       if (isNewGame && worldConfig?.inventoryRefs) {
         for (const ref of worldConfig.inventoryRefs) {
-          const dtag = dtagFromRef(ref);
-          if (!engine.player.hasItem(dtag)) {
-            engine.player.pickUp(dtag);
-            const itemEvent = events.get(dtag);
+          if (!engine.player.hasItem(ref)) {
+            engine.player.pickUp(ref);
+            const itemEvent = events.get(ref);
             if (itemEvent) {
               const defaultState = getTag(itemEvent, 'state');
-              if (defaultState) engine.player.setState(dtag, defaultState);
+              if (defaultState) engine.player.setState(ref, defaultState);
               for (const ct of getTags(itemEvent, 'counter')) {
-                engine.player.setCounter(`${dtag}:${ct[1]}`, parseInt(ct[2], 10));
+                engine.player.setCounter(`${ref}:${ct[1]}`, parseInt(ct[2], 10));
               }
             }
           }

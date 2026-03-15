@@ -48,7 +48,7 @@ describe('buildVerbMap', () => {
     });
     const place = makePlace('room');
     const events = buildEvents(place, sword);
-    const map = buildVerbMap(events, place, [`${WORLD}:item:sword`]);
+    const map = buildVerbMap(events, place, [ref(`${WORLD}:item:sword`)]);
 
     expect(map.get('swing')).toBe('swing');
     expect(map.get('slash')).toBe('swing');
@@ -118,22 +118,22 @@ describe('findInventoryItem', () => {
   it('finds item by title match', () => {
     const sword = makeItem('sword', { nouns: [['sword']] });
     const events = buildEvents(sword);
-    const result = findInventoryItem(events, [`${WORLD}:item:sword`], 'sword');
+    const result = findInventoryItem(events, [ref(`${WORLD}:item:sword`)], 'sword');
     expect(result).not.toBeNull();
-    expect(result.dtag).toBe(`${WORLD}:item:sword`);
+    expect(result.dtag).toBe(ref(`${WORLD}:item:sword`));
   });
 
   it('finds item by noun alias', () => {
     const lantern = makeItem('lantern', { nouns: [['lantern', 'lamp', 'brass lantern']] });
     const events = buildEvents(lantern);
-    const result = findInventoryItem(events, [`${WORLD}:item:lantern`], 'lamp');
+    const result = findInventoryItem(events, [ref(`${WORLD}:item:lantern`)], 'lamp');
     expect(result).not.toBeNull();
   });
 
   it('returns null for non-matching noun', () => {
     const sword = makeItem('sword', { nouns: [['sword']] });
     const events = buildEvents(sword);
-    expect(findInventoryItem(events, [`${WORLD}:item:sword`], 'shield')).toBeNull();
+    expect(findInventoryItem(events, [ref(`${WORLD}:item:sword`)], 'shield')).toBeNull();
   });
 
   it('returns null for empty inventory', () => {

@@ -5,7 +5,7 @@
 
 import {
   getTag, getTags, resolveExits, checkRequires,
-  findByNoun, dtagFromRef, getDefaultState, findTransition,
+  findByNoun, aTagOf, getDefaultState, findTransition,
 } from '../world.js';
 import { derivePrivateKey } from '../nip44-client.js';
 import { renderRoomContent } from './content.js';
@@ -18,7 +18,7 @@ import { calculateNpcPlace, initNpcState, findRoamingNpcsAtPlace } from './npc.j
 export class GameEngine {
   /**
    * @param {Object} opts
-   * @param {Map} opts.events — Map<dtag, event>
+   * @param {Map} opts.events — Map<a-tag, event>
    * @param {import('./player-state.js').PlayerStateMutator} opts.player
    * @param {{ GENESIS_PLACE: string, AUTHOR_PUBKEY: string }} opts.config
    */
@@ -118,7 +118,7 @@ export class GameEngine {
 
     // Features (skip hidden)
     for (const ref of getTags(room, 'feature')) {
-      const fDTag = dtagFromRef(ref[1]);
+      const fDTag = ref[1];  // full a-tag
       const feature = this.events.get(fDTag);
       if (!feature) continue;
       const fDefaultState = getDefaultState(feature);
@@ -129,7 +129,7 @@ export class GameEngine {
 
     // Static NPCs (placed by the room)
     for (const ref of getTags(room, 'npc')) {
-      const npcDTag = dtagFromRef(ref[1]);
+      const npcDTag = ref[1];  // full a-tag
       const npc = this.events.get(npcDTag);
       if (!npc) continue;
       // Skip roaming NPCs here — they're handled below
@@ -168,7 +168,7 @@ export class GameEngine {
   /** Seed a place's item inventory from its room event tags (first visit only). */
   _seedPlaceItems(placeDtag, roomEvent) {
     if (this.player.getPlaceItems(placeDtag)) return; // already seeded
-    const itemDtags = getTags(roomEvent, 'item').map((ref) => dtagFromRef(ref[1]));
+    const itemDtags = getTags(roomEvent, 'item').map((ref) => ref[1]);  // full a-tags
     // Exclude items held by player or any NPC
     const onGround = itemDtags.filter((d) => {
       if (this.player.hasItem(d)) return false;
@@ -248,7 +248,7 @@ export class GameEngine {
           acted = true;
         }
       } else if (action === 'give-item') {
-        const itemDTag = dtagFromRef(targetState);
+        const itemDTag = targetState;  // targetState is the item a-tag ref
         if (!this.player.hasItem(itemDTag)) {
           giveItem(targetState, this.events, this.player, (t, ty) => this._emit(t, ty));
         }
@@ -399,7 +399,7 @@ export class GameEngine {
       const targetRef = tag[4];
 
       if (action === 'set-state' && targetRef) {
-        const extDTag = dtagFromRef(targetRef);
+        const extDTag = targetRef;  // full a-tag
         const extEvent = this.events.get(extDTag);
         if (!extEvent) continue;
 
@@ -438,7 +438,7 @@ export class GameEngine {
         }
       } else if (action === 'consume-item') {
         // consume-item target is an item a-tag (usually self)
-        const consumeDtag = targetState ? dtagFromRef(targetState) : dtag;
+        const consumeDtag = targetState || dtag;
         if (this.player.hasItem(consumeDtag)) {
           this.player.removeItem(consumeDtag);
           const consumeEvent = this.events.get(consumeDtag);
@@ -546,12 +546,11 @@ export class GameEngine {
       this.player.npcPickUp(npcDtag, stolenDtag);
       this._emit(`${npcTitle} snatches your ${stolenTitle}!`, 'error');
     } else if (target) {
-      const itemDtag = dtagFromRef(target);
-      if (!this.player.hasItem(itemDtag)) return;
-      const stolenEvent = this.events.get(itemDtag);
-      const stolenTitle = stolenEvent ? getTag(stolenEvent, 'title') : itemDtag;
-      this.player.removeItem(itemDtag);
-      this.player.npcPickUp(npcDtag, itemDtag);
+      if (!this.player.hasItem(target)) return;
+      const stolenEvent = this.events.get(target);
+      const stolenTitle = stolenEvent ? getTag(stolenEvent, 'title') : target;
+      this.player.removeItem(target);
+      this.player.npcPickUp(npcDtag, target);
       this._emit(`${npcTitle} snatches your ${stolenTitle}!`, 'error');
     }
   }
@@ -574,10 +573,9 @@ export class GameEngine {
 
       // Fire on-enter triggers for the NPC's current place
       for (const tag of getTags(event, 'on-enter')) {
-        const placeRef = tag[1];
+        const placeRef = tag[1];  // full a-tag
         if (placeRef === 'player') continue; // dialogue on-enter, not NPC movement
-        const placeDtag = dtagFromRef(placeRef);
-        if (placeDtag !== npcPlace) continue;
+        if (placeRef !== npcPlace) continue;
 
         const action = tag[2];
         if (action === 'deposits') {
@@ -654,33 +652,32 @@ export class GameEngine {
       if (!requiresRef) {
         entryRef = nodeRef;
       } else {
-        const reqDtag = dtagFromRef(requiresRef);
-        const reqEvent = this.events.get(reqDtag);
+        const reqEvent = this.events.get(requiresRef);
         const reqType = reqEvent ? getTag(reqEvent, 'type') : '';
 
         let passes = false;
         if (reqType === 'dialogue') {
-          passes = requiresState === 'visited' && this.player.isDialogueVisited(reqDtag);
+          passes = requiresState === 'visited' && this.player.isDialogueVisited(requiresRef);
         } else if (reqType === 'clue') {
-          passes = this.player.isClueSeen(reqDtag);
+          passes = this.player.isClueSeen(requiresRef);
         } else if (reqType === 'item') {
-          const hasIt = this.player.hasItem(reqDtag);
+          const hasIt = this.player.hasItem(requiresRef);
           if (!requiresState) {
             passes = hasIt;
           } else {
-            passes = hasIt && this.player.getState(reqDtag) === requiresState;
+            passes = hasIt && this.player.getState(requiresRef) === requiresState;
           }
         } else if (reqType === 'puzzle') {
-          passes = requiresState === 'solved' && this.player.isPuzzleSolved(reqDtag);
+          passes = requiresState === 'solved' && this.player.isPuzzleSolved(requiresRef);
         } else if (reqType === 'feature') {
-          passes = requiresState && this.player.getState(reqDtag) === requiresState;
+          passes = requiresState && this.player.getState(requiresRef) === requiresState;
         }
 
         if (passes) entryRef = nodeRef;
       }
     }
 
-    return entryRef ? dtagFromRef(entryRef) : null;
+    return entryRef || null;  // entryRef is already a full a-tag
   }
 
   enterDialogueNode(npcDtag, nodeDtag) {
@@ -706,27 +703,26 @@ export class GameEngine {
       if (action === 'give-item' && actionTarget) {
         giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty));
       } else if (action === 'set-state' && actionTarget) {
-        const extRef = tag[4];
+        const extRef = tag[4];  // full a-tag
         if (extRef) {
-          const targetDTag = dtagFromRef(extRef);
-          const targetEvent = this.events.get(targetDTag);
+          const targetEvent = this.events.get(extRef);
           if (targetEvent) {
             const targetType = getTag(targetEvent, 'type');
             if (targetType === 'clue') {
-              this.player.markClueSeen(targetDTag);
+              this.player.markClueSeen(extRef);
               this._emit(`\n${getTag(targetEvent, 'title')}:`, 'clue-title');
               this._emit(targetEvent.content, 'clue');
             } else if (targetType === 'portal') {
-              const portalCurrentState = this.player.getState(targetDTag) ?? getDefaultState(targetEvent);
+              const portalCurrentState = this.player.getState(extRef) ?? getDefaultState(targetEvent);
               if (portalCurrentState !== actionTarget) {
-                this.player.setState(targetDTag, actionTarget);
+                this.player.setState(extRef, actionTarget);
                 const transition = findTransition(targetEvent, portalCurrentState, actionTarget);
                 if (transition?.text) this._emit(transition.text, 'narrative');
               }
             } else if (targetType === 'feature') {
-              const featCurrentState = this.player.getState(targetDTag) ?? getDefaultState(targetEvent);
+              const featCurrentState = this.player.getState(extRef) ?? getDefaultState(targetEvent);
               if (featCurrentState !== actionTarget) {
-                this.player.setState(targetDTag, actionTarget);
+                this.player.setState(extRef, actionTarget);
                 const transition = findTransition(targetEvent, featCurrentState, actionTarget);
                 if (transition?.text) this._emit(transition.text, 'narrative');
               }
@@ -754,7 +750,7 @@ export class GameEngine {
       if (!nextRef) {
         visibleOptions.push({ label, nextDtag: null });
       } else {
-        const nextDtag = dtagFromRef(nextRef);
+        const nextDtag = nextRef;  // full a-tag
         const destNode = this.events.get(nextDtag);
         if (destNode) {
           const destReq = checkRequires(destNode, this.player.state, this.events);

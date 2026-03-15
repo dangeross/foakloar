@@ -29,7 +29,7 @@ describe('applyExternalSetState', () => {
     );
 
     expect(result.acted).toBe(true);
-    expect(player.isClueSeen(`${WORLD}:clue:ancient-note`)).toBe(true);
+    expect(player.isClueSeen(ref(`${WORLD}:clue:ancient-note`))).toBe(true);
     expect(messages.some((m) => m.type === 'clue')).toBe(true);
   });
 
@@ -45,13 +45,13 @@ describe('applyExternalSetState', () => {
     );
 
     expect(result.acted).toBe(true);
-    expect(result.puzzleActivated).toBe(`${WORLD}:puzzle:riddle`);
+    expect(result.puzzleActivated).toBe(ref(`${WORLD}:puzzle:riddle`));
   });
 
   it('skips already-solved puzzle', () => {
     const puzzle = makePuzzle('riddle');
     const events = buildEvents(puzzle);
-    const player = makeMutator({ states: { [`${WORLD}:puzzle:riddle`]: 'solved' } });
+    const player = makeMutator({ states: { [ref(`${WORLD}:puzzle:riddle`)]: 'solved' } });
     const { messages, emit, emitHtml } = collector();
 
     const result = applyExternalSetState(
@@ -80,7 +80,7 @@ describe('applyExternalSetState', () => {
       events, player, emit, emitHtml,
     );
 
-    expect(player.getState(`${WORLD}:portal:gate`)).toBe('open');
+    expect(player.getState(ref(`${WORLD}:portal:gate`))).toBe('open');
     expect(messages.some((m) => m.text === 'The gate creaks open.')).toBe(true);
   });
 
@@ -98,7 +98,7 @@ describe('applyExternalSetState', () => {
       events, player, emit, emitHtml,
     );
 
-    expect(player.getState(`${WORLD}:feature:torch`)).toBe('lit');
+    expect(player.getState(ref(`${WORLD}:feature:torch`))).toBe('lit');
     expect(messages.some((m) => m.text === 'The torch blazes to life.')).toBe(true);
   });
 
@@ -129,16 +129,17 @@ describe('giveItem', () => {
 
     giveItem(ref(`${WORLD}:item:sword`), events, player, emit);
 
-    expect(player.hasItem(`${WORLD}:item:sword`)).toBe(true);
-    expect(player.getState(`${WORLD}:item:sword`)).toBe('sheathed');
-    expect(player.getCounter(`${WORLD}:item:sword:durability`)).toBe(50);
+    const swordRef = ref(`${WORLD}:item:sword`);
+    expect(player.hasItem(swordRef)).toBe(true);
+    expect(player.getState(swordRef)).toBe('sheathed');
+    expect(player.getCounter(`${swordRef}:durability`)).toBe(50);
     expect(messages.some((m) => m.text?.includes('Sword'))).toBe(true);
   });
 
   it('does not duplicate if already held', () => {
     const sword = makeItem('sword');
     const events = buildEvents(sword);
-    const player = makeMutator({ inventory: [`${WORLD}:item:sword`] });
+    const player = makeMutator({ inventory: [ref(`${WORLD}:item:sword`)] });
     const { messages, emit } = collector();
 
     giveItem(ref(`${WORLD}:item:sword`), events, player, emit);
@@ -157,17 +158,17 @@ describe('evalCounterLow', () => {
       transitions: [['on', 'flickering', 'The lantern flickers.']],
     });
     const events = buildEvents(lantern);
-    const dtag = `${WORLD}:item:lantern`;
+    const lanternRef = ref(`${WORLD}:item:lantern`);
     const player = makeMutator({
-      inventory: [dtag],
-      states: { [dtag]: 'on' },
-      counters: { [`${dtag}:battery`]: 15 },
+      inventory: [lanternRef],
+      states: { [lanternRef]: 'on' },
+      counters: { [`${lanternRef}:battery`]: 15 },
     });
     const { messages, emit } = collector();
 
-    evalCounterLow(lantern, dtag, 'on', player, emit);
+    evalCounterLow(lantern, lanternRef, 'on', player, emit);
 
-    expect(player.getState(dtag)).toBe('flickering');
+    expect(player.getState(lanternRef)).toBe('flickering');
     expect(messages.some((m) => m.text === 'The lantern flickers.')).toBe(true);
   });
 
@@ -177,17 +178,17 @@ describe('evalCounterLow', () => {
       onCounter: [['battery', '20', 'set-state', 'flickering']],
       transitions: [['on', 'flickering', 'Flickers.']],
     });
-    const dtag = `${WORLD}:item:lantern`;
+    const lanternRef = ref(`${WORLD}:item:lantern`);
     const player = makeMutator({
-      inventory: [dtag],
-      states: { [dtag]: 'on' },
-      counters: { [`${dtag}:battery`]: 50 },
+      inventory: [lanternRef],
+      states: { [lanternRef]: 'on' },
+      counters: { [`${lanternRef}:battery`]: 50 },
     });
     const { messages, emit } = collector();
 
-    evalCounterLow(lantern, dtag, 'on', player, emit);
+    evalCounterLow(lantern, lanternRef, 'on', player, emit);
 
-    expect(player.getState(dtag)).toBe('on');
+    expect(player.getState(lanternRef)).toBe('on');
     expect(messages).toHaveLength(0);
   });
 
@@ -197,15 +198,15 @@ describe('evalCounterLow', () => {
       onCounter: [['battery', '20', 'set-state', 'flickering']],
       transitions: [['on', 'flickering', 'Flickers.']],
     });
-    const dtag = `${WORLD}:item:lantern`;
+    const lanternRef = ref(`${WORLD}:item:lantern`);
     const player = makeMutator({
-      inventory: [dtag],
-      states: { [dtag]: 'flickering' },
-      counters: { [`${dtag}:battery`]: 15 },
+      inventory: [lanternRef],
+      states: { [lanternRef]: 'flickering' },
+      counters: { [`${lanternRef}:battery`]: 15 },
     });
     const { messages, emit } = collector();
 
-    evalCounterLow(lantern, dtag, 'flickering', player, emit);
+    evalCounterLow(lantern, lanternRef, 'flickering', player, emit);
 
     expect(messages).toHaveLength(0);
   });

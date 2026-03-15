@@ -144,12 +144,12 @@ export function makeDialogueNode(name, { text, options = [], onEnter = [], requi
   return makeEvent(dtag, tags, '');
 }
 
-/** Build a Map<dtag, event> from an array of events. */
+/** Build a Map<a-tag, event> from an array of events. */
 export function buildEvents(...eventList) {
   const map = new Map();
   for (const ev of eventList) {
     const dtag = ev.tags.find((t) => t[0] === 'd')?.[1];
-    if (dtag) map.set(dtag, ev);
+    if (dtag) map.set(`30078:${ev.pubkey}:${dtag}`, ev);
   }
   return map;
 }
@@ -204,7 +204,7 @@ export function makeMutator(overrides = {}, npcStates = {}) {
 export function makeEngine(events, playerOverrides = {}, configOverrides = {}, npcStates = {}) {
   const player = makeMutator(playerOverrides, npcStates);
   const config = {
-    GENESIS_PLACE: `${WORLD}:place:start`,
+    GENESIS_PLACE: ref(`${WORLD}:place:start`),
     AUTHOR_PUBKEY: PUBKEY,
     ...configOverrides,
   };

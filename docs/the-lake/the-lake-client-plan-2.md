@@ -151,17 +151,17 @@ This phase exists because Phase 11 initially used d-tag keys. Any players who pl
 ```json
 {
   "player": {
-    "place":     "the-lake:place:cave-network",
+    "place":     "30078:<pubkey>:the-lake:place:cave-network",
     "inventory": [],
     "moveCount": 12
   },
-  "the-lake:npc:collector": {
+  "30078:<pubkey>:the-lake:npc:collector": {
     "state":     null,
-    "inventory": ["the-lake:item:iron-key"],
+    "inventory": ["30078:<pubkey>:the-lake:item:iron-key"],
     "health":    null
   },
-  "the-lake:place:flooded-passage": {
-    "inventory": ["the-lake:item:brass-lantern"]
+  "30078:<pubkey>:the-lake:place:flooded-passage": {
+    "inventory": ["30078:<pubkey>:the-lake:item:brass-lantern"]
   }
 }
 ```

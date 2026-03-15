@@ -136,6 +136,74 @@ describe('PlayerStateMutator', () => {
     });
   });
 
+  // ── Place Items ──────────────────────────────────────────────────────
+
+  describe('place items', () => {
+    it('getPlaceItems returns null for unseeded place', () => {
+      const m = new PlayerStateMutator(freshState());
+      expect(m.getPlaceItems('cave')).toBeNull();
+    });
+
+    it('seedPlaceItems stores items on first call', () => {
+      const m = new PlayerStateMutator(freshState());
+      m.seedPlaceItems('cave', ['sword', 'shield']);
+      expect(m.getPlaceItems('cave')).toEqual(['sword', 'shield']);
+    });
+
+    it('seedPlaceItems is idempotent — does not overwrite', () => {
+      const m = new PlayerStateMutator(freshState());
+      m.seedPlaceItems('cave', ['sword']);
+      m.seedPlaceItems('cave', ['sword', 'shield']);
+      expect(m.getPlaceItems('cave')).toEqual(['sword']);
+    });
+
+    it('seedPlaceItems skips writing when item list is empty', () => {
+      const m = new PlayerStateMutator(freshState());
+      m.seedPlaceItems('empty-room', []);
+      expect(m.npcStates['empty-room']).toBeUndefined();
+      expect(m.getPlaceItems('empty-room')).toBeNull();
+    });
+
+    it('removePlaceItem removes one item', () => {
+      const m = new PlayerStateMutator(freshState());
+      m.seedPlaceItems('cave', ['sword', 'shield']);
+      m.removePlaceItem('cave', 'sword');
+      expect(m.getPlaceItems('cave')).toEqual(['shield']);
+    });
+
+    it('removePlaceItem keeps empty array to prevent re-seeding', () => {
+      const m = new PlayerStateMutator(freshState());
+      m.seedPlaceItems('cave', ['sword']);
+      m.removePlaceItem('cave', 'sword');
+      // Must be empty array, not null/undefined — prevents re-seeding
+      expect(m.getPlaceItems('cave')).toEqual([]);
+      expect(m.npcStates['cave']?.inventory).toEqual([]);
+    });
+
+    it('seedPlaceItems does not re-seed after all items removed', () => {
+      const m = new PlayerStateMutator(freshState());
+      m.seedPlaceItems('cave', ['sword']);
+      m.removePlaceItem('cave', 'sword');
+      // Attempt to re-seed — should be blocked by existing empty inventory
+      m.seedPlaceItems('cave', ['sword']);
+      expect(m.getPlaceItems('cave')).toEqual([]);
+    });
+
+    it('addPlaceItem adds to existing inventory', () => {
+      const m = new PlayerStateMutator(freshState());
+      m.seedPlaceItems('cave', ['sword']);
+      m.addPlaceItem('cave', 'shield');
+      expect(m.getPlaceItems('cave')).toEqual(['sword', 'shield']);
+    });
+
+    it('addPlaceItem is idempotent', () => {
+      const m = new PlayerStateMutator(freshState());
+      m.seedPlaceItems('cave', ['sword']);
+      m.addPlaceItem('cave', 'sword');
+      expect(m.getPlaceItems('cave')).toEqual(['sword']);
+    });
+  });
+
   // ── Reset ─────────────────────────────────────────────────────────────
 
   it('reset clears all state', () => {

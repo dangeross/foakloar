@@ -29,7 +29,7 @@ export function useRelay() {
                 if (d) {
                   setEvents((prev) => {
                     const next = new Map(prev);
-                    next.set(d, event);
+                    next.set(`30078:${event.pubkey}:${d}`, event);
                     return next;
                   });
                 }

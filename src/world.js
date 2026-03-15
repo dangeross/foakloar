@@ -10,6 +10,12 @@ export function getEventByDTag(events, dtag) {
   return events.get(dtag);
 }
 
+/** Construct the full a-tag for an event: 30078:<pubkey>:<d-tag> */
+export function aTagOf(event) {
+  return `30078:${event.pubkey}:${getTag(event, 'd')}`;
+}
+
+/** @deprecated — only for display; use a-tag refs directly as keys */
 export function dtagFromRef(ref) {
   return ref.replace(/^30078:[^:]+:/, '');
 }
@@ -28,32 +34,31 @@ export function dtagFromRef(ref) {
 export function checkRequires(event, playerState, events) {
   // --- requires ---
   for (const tag of getTags(event, 'requires')) {
-    const ref = tag[1];
+    const ref = tag[1];        // full a-tag: 30078:<pubkey>:<d-tag>
     const expectedState = tag[2] || '';
     const failDesc = tag[3] || "You can't do that.";
-    const dtag = dtagFromRef(ref);
 
-    const refEvent = events?.get(dtag);
+    const refEvent = events?.get(ref);
     const refType = refEvent ? getTag(refEvent, 'type') : '';
 
     if (refType === 'item') {
-      if (!playerState.inventory.includes(dtag)) {
+      if (!playerState.inventory.includes(ref)) {
         return { allowed: false, reason: failDesc };
       }
       if (expectedState) {
-        const currentState = playerState.states?.[dtag];
+        const currentState = playerState.states?.[ref];
         if (currentState !== expectedState) {
           return { allowed: false, reason: failDesc };
         }
       }
     } else if (refType === 'puzzle') {
       if (expectedState === 'solved') {
-        if (playerState.states?.[dtag] !== 'solved') {
+        if (playerState.states?.[ref] !== 'solved') {
           return { allowed: false, reason: failDesc };
         }
       }
     } else if (refType === 'feature') {
-      const currentState = playerState.states?.[dtag];
+      const currentState = playerState.states?.[ref];
       if (expectedState && currentState !== expectedState) {
         return { allowed: false, reason: failDesc };
       }
@@ -64,30 +69,29 @@ export function checkRequires(event, playerState, events) {
 
   // --- requires-not ---
   for (const tag of getTags(event, 'requires-not')) {
-    const ref = tag[1];
+    const ref = tag[1];        // full a-tag
     const forbiddenState = tag[2] || '';
     const failDesc = tag[3] || "You can't do that.";
-    const dtag = dtagFromRef(ref);
 
-    const refEvent = events?.get(dtag);
+    const refEvent = events?.get(ref);
     const refType = refEvent ? getTag(refEvent, 'type') : '';
 
     if (refType === 'item') {
-      const hasItem = playerState.inventory.includes(dtag);
+      const hasItem = playerState.inventory.includes(ref);
       if (!forbiddenState) {
         if (hasItem) return { allowed: false, reason: failDesc };
       } else {
-        if (hasItem && playerState.states?.[dtag] === forbiddenState) {
+        if (hasItem && playerState.states?.[ref] === forbiddenState) {
           return { allowed: false, reason: failDesc };
         }
       }
     } else if (refType === 'puzzle') {
-      const currentState = playerState.states?.[dtag] ?? 'unsolved';
+      const currentState = playerState.states?.[ref] ?? 'unsolved';
       if (forbiddenState && currentState === forbiddenState) {
         return { allowed: false, reason: failDesc };
       }
     } else if (refType === 'feature') {
-      const currentState = playerState.states?.[dtag];
+      const currentState = playerState.states?.[ref];
       if (forbiddenState && currentState === forbiddenState) {
         return { allowed: false, reason: failDesc };
       }
@@ -107,7 +111,7 @@ export function findByNoun(events, placeEvent, noun) {
   for (const type of types) {
     const refs = getTags(placeEvent, type);
     for (const ref of refs) {
-      const dtag = dtagFromRef(ref[1]);
+      const dtag = ref[1];  // full a-tag
       const event = events.get(dtag);
       if (!event) continue;
 
@@ -156,31 +160,29 @@ export function resolveExits(events, placeDTag, playerState) {
   for (const [, event] of events) {
     if (getTag(event, 'type') !== 'portal') continue;
 
-    // Check portal visibility — default state from event, overridden by unified player states
-    const portalDTag = getTag(event, 'd');
+    // Check portal visibility — state key is the full a-tag
+    const portalRef = aTagOf(event);
     const defaultState = getTag(event, 'state');
-    const currentState = playerState?.states?.[portalDTag] ?? defaultState;
+    const currentState = playerState?.states?.[portalRef] ?? defaultState;
     if (currentState === 'hidden') continue;
 
     const exitTags = getTags(event, 'exit');
     for (let i = 0; i < exitTags.length; i++) {
       const tag = exitTags[i];
       // Portal exit shape: ["exit", "<place-ref>", "<slot>", "<label?>"]
-      const ref = tag[1];
+      const ref = tag[1];  // full a-tag
       if (!ref.includes(':place:')) continue;
 
-      const refDTag = dtagFromRef(ref);
-      if (refDTag !== placeDTag) continue;
+      if (ref !== placeDTag) continue;
 
       const slot = tag[2];
       const label = tag[3] || '';
 
       for (let j = 0; j < exitTags.length; j++) {
         if (j === i) continue;
-        const destRef = exitTags[j][1];
-        const destDTag = dtagFromRef(destRef);
+        const destRef = exitTags[j][1];  // full a-tag
 
-        exits.push({ slot, label, destinationDTag: destDTag, portalEvent: event });
+        exits.push({ slot, label, destinationDTag: destRef, portalEvent: event });
       }
     }
   }

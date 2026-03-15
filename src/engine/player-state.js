@@ -43,16 +43,19 @@ export class PlayerStateMutator {
     return this.npcStates[placeDtag]?.inventory || null;
   }
 
-  /** Seed a place's item list (from room item tags on first visit). Idempotent. */
+  /** Seed a place's item list (from room item tags on first visit). Idempotent.
+   *  Skips writing if inventory would be empty — no key = not yet seeded. */
   seedPlaceItems(placeDtag, itemDtags) {
     if (this.npcStates[placeDtag]?.inventory) return; // already seeded
+    if (itemDtags.length === 0) return; // nothing to seed — keep key absent
     this.npcStates = {
       ...this.npcStates,
       [placeDtag]: { ...this.npcStates[placeDtag], inventory: [...itemDtags] },
     };
   }
 
-  /** Remove an item from a place (player picked it up). */
+  /** Remove an item from a place (player picked it up).
+   *  Keeps { inventory: [] } as "seeded but empty" to prevent re-seeding. */
   removePlaceItem(placeDtag, itemDtag) {
     const items = this.npcStates[placeDtag]?.inventory;
     if (!items) return;

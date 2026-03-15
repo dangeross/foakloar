@@ -4,7 +4,7 @@
  */
 
 import {
-  getTag, getTags, dtagFromRef, getDefaultState, findTransition,
+  getTag, getTags, getDefaultState, findTransition,
   checkRequires,
 } from '../world.js';
 
@@ -14,35 +14,34 @@ import {
  * Returns { acted, puzzleActivated } where puzzleActivated is a dtag or null.
  */
 export function applyExternalSetState(targetRef, targetState, events, player, emit, emitHtml) {
-  const targetDTag = dtagFromRef(targetRef);
-  const targetEvent = events.get(targetDTag);
+  const targetEvent = events.get(targetRef);  // targetRef is full a-tag
   if (!targetEvent) return { acted: false, puzzleActivated: null };
 
   const targetType = getTag(targetEvent, 'type');
 
   if (targetType === 'clue') {
-    player.markClueSeen(targetDTag);
+    player.markClueSeen(targetRef);
     emit(`\n${getTag(targetEvent, 'title')}:`, 'clue-title');
     emit(targetEvent.content, 'clue');
     return { acted: true, puzzleActivated: null };
   }
 
   if (targetType === 'puzzle') {
-    if (player.isPuzzleSolved(targetDTag)) {
+    if (player.isPuzzleSolved(targetRef)) {
       emit('You have already solved this.', 'narrative');
     } else {
       emit(`\nA riddle appears:`, 'puzzle-title');
       emit(targetEvent.content, 'puzzle');
       emit('Type your answer...', 'hint');
-      return { acted: true, puzzleActivated: targetDTag };
+      return { acted: true, puzzleActivated: targetRef };
     }
     return { acted: true, puzzleActivated: null };
   }
 
   if (targetType === 'portal') {
-    const portalCurrentState = player.getState(targetDTag) ?? getDefaultState(targetEvent);
+    const portalCurrentState = player.getState(targetRef) ?? getDefaultState(targetEvent);
     if (portalCurrentState !== targetState) {
-      player.setState(targetDTag, targetState);
+      player.setState(targetRef, targetState);
       const transition = findTransition(targetEvent, portalCurrentState, targetState);
       if (transition?.text) emit(transition.text, 'narrative');
     }
@@ -50,9 +49,9 @@ export function applyExternalSetState(targetRef, targetState, events, player, em
   }
 
   if (targetType === 'feature') {
-    const featCurrentState = player.getState(targetDTag) ?? getDefaultState(targetEvent);
+    const featCurrentState = player.getState(targetRef) ?? getDefaultState(targetEvent);
     if (featCurrentState !== targetState) {
-      player.setState(targetDTag, targetState);
+      player.setState(targetRef, targetState);
       const transition = findTransition(targetEvent, featCurrentState, targetState);
       if (transition?.text) emit(transition.text, 'narrative');
     }
@@ -66,20 +65,19 @@ export function applyExternalSetState(targetRef, targetState, events, player, em
  * Give an item to the player — initialize state and counters.
  */
 export function giveItem(itemRef, events, player, emit) {
-  const itemDTag = dtagFromRef(itemRef);
-  if (player.hasItem(itemDTag)) return;
+  if (player.hasItem(itemRef)) return;  // itemRef is full a-tag
 
-  player.pickUp(itemDTag);
-  const itemEvent = events.get(itemDTag);
+  player.pickUp(itemRef);
+  const itemEvent = events.get(itemRef);
   const itemDefaultState = itemEvent ? getDefaultState(itemEvent) : null;
-  if (itemDefaultState) player.setState(itemDTag, itemDefaultState);
+  if (itemDefaultState) player.setState(itemRef, itemDefaultState);
 
   if (itemEvent) {
     for (const ct of getTags(itemEvent, 'counter')) {
-      player.setCounter(`${itemDTag}:${ct[1]}`, parseInt(ct[2], 10));
+      player.setCounter(`${itemRef}:${ct[1]}`, parseInt(ct[2], 10));
     }
   }
-  const itemTitle = itemEvent ? getTag(itemEvent, 'title') : itemDTag;
+  const itemTitle = itemEvent ? getTag(itemEvent, 'title') : itemRef;
   emit(`Received: ${itemTitle}`, 'item');
 }
 
@@ -118,7 +116,7 @@ export function evalSequencePuzzles(place, events, player, emit) {
   if (!place) return;
 
   for (const ref of getTags(place, 'puzzle')) {
-    const pDTag = dtagFromRef(ref[1]);
+    const pDTag = ref[1];  // full a-tag
     if (player.isPuzzleSolved(pDTag)) continue;
     const puzzleEvent = events.get(pDTag);
     if (!puzzleEvent) continue;
@@ -140,21 +138,20 @@ export function evalSequencePuzzles(place, events, player, emit) {
       const extRef = tag[4];
 
       if (action === 'set-state' && extRef) {
-        const targetDTag = dtagFromRef(extRef);
-        const targetEvent = events.get(targetDTag);
+        const targetEvent = events.get(extRef);  // extRef is full a-tag
         if (!targetEvent) continue;
         const targetType = getTag(targetEvent, 'type');
         if (targetType === 'portal') {
-          const portalCurrentState = player.getState(targetDTag) ?? getDefaultState(targetEvent);
+          const portalCurrentState = player.getState(extRef) ?? getDefaultState(targetEvent);
           if (portalCurrentState !== value) {
-            player.setState(targetDTag, value);
+            player.setState(extRef, value);
             const transition = findTransition(targetEvent, portalCurrentState, value);
             if (transition?.text) emit(transition.text, 'narrative');
           }
         } else if (targetType === 'feature') {
-          const featCurrentState = player.getState(targetDTag) ?? getDefaultState(targetEvent);
+          const featCurrentState = player.getState(extRef) ?? getDefaultState(targetEvent);
           if (featCurrentState !== value) {
-            player.setState(targetDTag, value);
+            player.setState(extRef, value);
             const transition = findTransition(targetEvent, featCurrentState, value);
             if (transition?.text) emit(transition.text, 'narrative');
           }

@@ -3,7 +3,7 @@
  * No React imports. No side effects.
  */
 
-import { getTag, getTags, dtagFromRef } from '../world.js';
+import { getTag, getTags } from '../world.js';
 
 const PREPOSITIONS = ['on', 'with', 'to', 'at', 'in', 'into'];
 
@@ -26,7 +26,7 @@ export function buildVerbMap(events, placeEvent, inventoryDtags, extraEvents = [
   if (placeEvent) {
     for (const type of ['feature', 'item', 'npc']) {
       for (const ref of getTags(placeEvent, type)) {
-        const ev = events.get(dtagFromRef(ref[1]));
+        const ev = events.get(ref[1]);
         if (ev) sources.push(ev);
       }
     }

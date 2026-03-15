@@ -3,7 +3,7 @@
  * No React imports. No side effects.
  */
 
-import { getTag, getTags, dtagFromRef } from '../world.js';
+import { getTag, getTags } from '../world.js';
 
 /**
  * Simple deterministic hash for NPC position seeding.
@@ -35,10 +35,10 @@ export function calculateNpcPlace(npcEvent, moveCount, npcState) {
 
   // If roams-when is set and NPC is not in that state, stay at first route place (spawn)
   if (roamsWhen && npcState !== roamsWhen) {
-    return dtagFromRef(routeTags[0][1]);
+    return routeTags[0][1];  // full a-tag
   }
 
-  const routes = routeTags.map((t) => dtagFromRef(t[1]));
+  const routes = routeTags.map((t) => t[1]);  // full a-tags
   const npcDtag = getTag(npcEvent, 'd');
   const npcMoves = Math.floor(moveCount / speed);
 
@@ -59,7 +59,7 @@ export function calculateNpcPlace(npcEvent, moveCount, npcState) {
 export function initNpcState(npcEvent) {
   const state = getTag(npcEvent, 'state') || null;
   const health = getTag(npcEvent, 'health');
-  const inventoryRefs = getTags(npcEvent, 'inventory').map((t) => dtagFromRef(t[1]));
+  const inventoryRefs = getTags(npcEvent, 'inventory').map((t) => t[1]);  // full a-tags
 
   return {
     state,
