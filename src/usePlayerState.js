@@ -7,7 +7,7 @@ function load() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch {}
-  return { inventory: [], flags: {}, cryptoKeys: [], cluesSeen: [], puzzlesSolved: [] };
+  return { inventory: [], flags: {}, cryptoKeys: [], cluesSeen: [], puzzlesSolved: [], featureStates: {}, itemStates: {}, itemCounters: {}, portalStates: {}, dialogueVisited: [] };
 }
 
 function save(state) {
@@ -52,8 +52,37 @@ export function usePlayerState() {
       puzzlesSolved: s.puzzlesSolved.includes(dtag) ? s.puzzlesSolved : [...s.puzzlesSolved, dtag],
     })),
     isPuzzleSolved: (dtag) => state.puzzlesSolved.includes(dtag),
+    getFeatureState: (dtag) => state.featureStates[dtag],
+    setFeatureState: (dtag, newState) => update((s) => ({
+      ...s,
+      featureStates: { ...s.featureStates, [dtag]: newState },
+    })),
+    getItemState: (dtag) => state.itemStates?.[dtag],
+    setItemState: (dtag, newState) => update((s) => ({
+      ...s,
+      itemStates: { ...s.itemStates, [dtag]: newState },
+    })),
+    markDialogueVisited: (dtag) => update((s) => ({
+      ...s,
+      dialogueVisited: (s.dialogueVisited || []).includes(dtag) ? (s.dialogueVisited || []) : [...(s.dialogueVisited || []), dtag],
+    })),
+    isDialogueVisited: (dtag) => (state.dialogueVisited || []).includes(dtag),
+    getPortalState: (dtag) => state.portalStates?.[dtag],
+    setPortalState: (dtag, newState) => update((s) => ({
+      ...s,
+      portalStates: { ...s.portalStates, [dtag]: newState },
+    })),
+    getCounter: (key) => state.itemCounters?.[key],
+    setCounter: (key, value) => update((s) => ({
+      ...s,
+      itemCounters: { ...s.itemCounters, [key]: value },
+    })),
+    replaceState: (newState) => {
+      save(newState);
+      setState(newState);
+    },
     reset: () => {
-      const fresh = { inventory: [], flags: {}, cryptoKeys: [], cluesSeen: [], puzzlesSolved: [] };
+      const fresh = { inventory: [], flags: {}, cryptoKeys: [], cluesSeen: [], puzzlesSolved: [], featureStates: {}, itemStates: {}, itemCounters: {}, portalStates: {}, dialogueVisited: [] };
       save(fresh);
       setState(fresh);
     },

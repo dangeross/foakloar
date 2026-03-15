@@ -10,6 +10,8 @@ import { items } from '../lib/events/items.mjs';
 import { features } from '../lib/events/features.mjs';
 import { clues } from '../lib/events/clues.mjs';
 import { puzzle } from '../lib/events/puzzle.mjs';
+import { npcs } from '../lib/events/npcs.mjs';
+import { dialogue } from '../lib/events/dialogue.mjs';
 
 function bytesToHex(bytes) {
   return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
@@ -83,6 +85,8 @@ const unsignedEvents = [
   ...features(pubkey),
   ...clues(pubkey),
   ...puzzle(pubkey, answerHash, derivedPubKey),
+  ...npcs(pubkey),
+  ...dialogue(pubkey),
 ];
 
 console.log(`Built ${unsignedEvents.length} unsigned events:\n`);
