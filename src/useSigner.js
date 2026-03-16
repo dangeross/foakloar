@@ -12,6 +12,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { generateSecretKey, getPublicKey, finalizeEvent } from 'nostr-tools/pure';
 import { decode as nip19Decode } from 'nostr-tools/nip19';
+import * as nip44 from 'nostr-tools/nip44';
 
 function hexToBytes(hex) {
   const bytes = new Uint8Array(hex.length / 2);
@@ -53,10 +54,31 @@ function useNip07Detection() {
  */
 function makeKeySigner(secretKey) {
   const pubkey = getPublicKey(secretKey);
+  const conversationKey = nip44.v2.utils.getConversationKey(secretKey, pubkey);
   return {
     getPublicKey: async () => pubkey,
     signEvent: async (event) => finalizeEvent(event, secretKey),
+    encrypt: async (plaintext) => nip44.v2.encrypt(plaintext, conversationKey),
+    decrypt: async (ciphertext) => nip44.v2.decrypt(ciphertext, conversationKey),
     pubkey,
+  };
+}
+
+/**
+ * Create a signer backed by a NIP-07 browser extension.
+ */
+function makeExtensionSigner(pk) {
+  const nip44Ext = window.nostr?.nip44 || null;
+  return {
+    getPublicKey: () => window.nostr.getPublicKey(),
+    signEvent: (ev) => window.nostr.signEvent(ev),
+    encrypt: nip44Ext
+      ? async (plaintext) => nip44Ext.encrypt(pk, plaintext)
+      : null,
+    decrypt: nip44Ext
+      ? async (ciphertext) => nip44Ext.decrypt(pk, ciphertext)
+      : null,
+    pubkey: pk,
   };
 }
 
@@ -96,26 +118,33 @@ export function useSigner() {
   const [pubkey, setPubkey] = useState(null);
   const signerRef = useRef(null);
 
-  // Initialise ephemeral signer on mount
-  useEffect(() => {
-    // Check if we had a previous session method
-    const savedMethod = localStorage.getItem('nostr-auth-method');
+  const savedMethodRef = useRef(localStorage.getItem('nostr-auth-method'));
 
-    if (savedMethod === 'extension' && window.nostr) {
-      // Re-connect to extension
-      window.nostr.getPublicKey().then((pk) => {
-        signerRef.current = {
-          getPublicKey: () => window.nostr.getPublicKey(),
-          signEvent: (ev) => window.nostr.signEvent(ev),
-          nip44: window.nostr.nip44 || null,
-          pubkey: pk,
-        };
-        setPubkey(pk);
-        setMethod('extension');
-      }).catch(() => {
-        // Extension refused — fall back to ephemeral
-        initEphemeral();
-      });
+  // Initialise signer — re-runs when nip07Available changes
+  useEffect(() => {
+    const savedMethod = savedMethodRef.current;
+
+    // For extension: wait until NIP-07 detection resolves
+    if (savedMethod === 'extension') {
+      if (window.nostr) {
+        window.nostr.getPublicKey().then((pk) => {
+          signerRef.current = makeExtensionSigner(pk);
+          setPubkey(pk);
+          setMethod('extension');
+        }).catch(() => {
+          // Extension refused — permanently fall back
+          savedMethodRef.current = 'ephemeral';
+          initEphemeral();
+        });
+        return;
+      }
+      // Extension not yet injected — use ephemeral signer temporarily
+      // but preserve savedMethodRef so re-run will try extension again
+      if (!signerRef.current) {
+        const sk = getOrCreateEphemeralKey();
+        signerRef.current = makeKeySigner(sk);
+        setPubkey(signerRef.current.pubkey);
+      }
       return;
     }
 
@@ -137,8 +166,8 @@ export function useSigner() {
       }
     }
 
-    initEphemeral();
-  }, []);
+    if (!signerRef.current) initEphemeral();
+  }, [nip07Available]);
 
   function initEphemeral() {
     const sk = getOrCreateEphemeralKey();
@@ -180,12 +209,7 @@ export function useSigner() {
     }
     try {
       const pk = await window.nostr.getPublicKey();
-      signerRef.current = {
-        getPublicKey: () => window.nostr.getPublicKey(),
-        signEvent: (ev) => window.nostr.signEvent(ev),
-        nip44: window.nostr.nip44 || null,
-        pubkey: pk,
-      };
+      signerRef.current = makeExtensionSigner(pk);
       setPubkey(pk);
       setMethod('extension');
       localStorage.setItem('nostr-auth-method', 'extension');

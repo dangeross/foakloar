@@ -8,6 +8,7 @@ import { PlayerStateMutator } from './engine/player-state.js';
 import { getTag, getTags } from './world.js';
 import { resolveTheme, applyTheme } from './theme.js';
 import { buildTrustSet, resolveClientMode } from './trust.js';
+import { useStateBackup } from './useStateBackup.js';
 
 /** Map entry types to colour slots */
 const TYPE_COLOUR = {
@@ -63,13 +64,21 @@ const TYPE_CLASS = {
 };
 
 export default function App() {
-  const { events, status } = useRelay();
+  const { events, status, relay } = useRelay();
   const player = usePlayerState();
   const identity = useSigner();
+  const backup = useStateBackup({
+    signer: identity.signer,
+    relay,
+    playerState: player.state,
+    npcStates: player.npcStates,
+    replaceState: player.replaceState,
+  });
   const [log, setLog] = useState([]);
   const [clientMode, setClientMode] = useState('community');
   const [showLogin, setShowLogin] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const [generation, setGeneration] = useState(0);
   const engineRef = useRef(null);
   const inputRef = useRef(null);
   const logEndRef = useRef(null);
@@ -181,7 +190,7 @@ export default function App() {
       engine.enterRoom(engine.currentPlace);
       commitEngine(engine);
     }
-  }, [status]);
+  }, [status, generation]);
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -391,7 +400,53 @@ export default function App() {
                 </div>
               )}
 
-              {loginError && <div className="mt-2" style={{ color: 'var(--colour-error)' }}>{loginError}</div>}
+              {backup.canBackup && (
+                <div className="mt-3 pt-2" style={{ borderTop: '1px solid var(--colour-dim)' }}>
+                  <div className="mb-1" style={{ color: 'var(--colour-dim)' }}>State Backup:</div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={async () => {
+                        const res = await backup.saveToRelay();
+                        if (res.ok) setLoginError('');
+                      }}
+                      disabled={backup.saving}
+                      className="cursor-pointer"
+                      style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
+                    >
+                      {backup.saving ? 'Saving...' : 'Save'}
+                    </button>
+                    <button
+                      onClick={async () => {
+                        const res = await backup.loadFromRelay();
+                        if (res.ok) {
+                          setLoginError('');
+                          setShowLogin(false);
+                          // Reset game log and bump generation to force re-enter room
+                          engineRef.current = null;
+                          setLog([]);
+                          setGeneration((g) => g + 1);
+                        }
+                      }}
+                      disabled={backup.loading}
+                      className="cursor-pointer"
+                      style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
+                    >
+                      {backup.loading ? 'Loading...' : 'Restore'}
+                    </button>
+                  </div>
+                  {backup.lastSaved && (
+                    <div className="mt-1" style={{ color: 'var(--colour-dim)' }}>
+                      Last saved: {backup.lastSaved.toLocaleTimeString()}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {(loginError || backup.error) && (
+                <div className="mt-2" style={{ color: 'var(--colour-error)' }}>
+                  {loginError || backup.error}
+                </div>
+              )}
             </div>
           </div>
         </>

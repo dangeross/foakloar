@@ -55,5 +55,5 @@ export function useRelay() {
     };
   }, []);
 
-  return { events, status };
+  return { events, status, relay: relayRef };
 }
