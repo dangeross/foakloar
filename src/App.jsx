@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useRelay } from './useRelay.js';
 import { usePlayerState } from './usePlayerState.js';
+import { useSigner } from './useSigner.js';
 import { AUTHOR_PUBKEY, WORLD_TAG } from './config.js';
 import { GameEngine } from './engine/engine.js';
 import { PlayerStateMutator } from './engine/player-state.js';
@@ -64,8 +65,11 @@ const TYPE_CLASS = {
 export default function App() {
   const { events, status } = useRelay();
   const player = usePlayerState();
+  const identity = useSigner();
   const [log, setLog] = useState([]);
   const [clientMode, setClientMode] = useState('community');
+  const [showLogin, setShowLogin] = useState(false);
+  const [loginError, setLoginError] = useState('');
   const engineRef = useRef(null);
   const inputRef = useRef(null);
   const logEndRef = useRef(null);
@@ -231,37 +235,166 @@ export default function App() {
   const availableModes = trustInfo?.availableModes || [];
   const effectiveMode = trustInfo?.effectiveMode || 'community';
 
+  const shortPubkey = identity.pubkey ? identity.pubkey.slice(0, 8) + '...' : '';
+  const isLoggedIn = identity.method !== 'ephemeral';
+
   return (
     <div className="max-w-2xl mx-auto p-6 flex flex-col h-screen"
          style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}>
       <div className="text-sm mb-2 flex justify-between" style={{ color: 'var(--colour-dim)' }}>
-        <span>{worldTitle} | Relay: {status} | Events: {events.size}</span>
-        {availableModes.length > 1 && (
-          <span>
-            {availableModes.map((mode) => (
-              <button
-                key={mode}
-                onClick={() => setClientMode(mode)}
-                className="ml-2 cursor-pointer"
-                style={{
-                  color: mode === effectiveMode ? 'var(--colour-highlight)' : 'var(--colour-dim)',
-                  textDecoration: mode === effectiveMode ? 'underline' : 'none',
-                  background: 'none',
-                  border: 'none',
-                  font: 'inherit',
-                  padding: 0,
-                }}
-              >
-                {mode}
-              </button>
-            ))}
-          </span>
-        )}
+        <span>{worldTitle}{status !== 'ready' ? ` | ${status}` : ''}</span>
+        <span className="flex items-center gap-2">
+          {availableModes.length > 1 && (
+            <span>
+              {availableModes.map((mode) => (
+                <button
+                  key={mode}
+                  onClick={() => setClientMode(mode)}
+                  className="ml-2 cursor-pointer"
+                  style={{
+                    color: mode === effectiveMode ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+                    textDecoration: mode === effectiveMode ? 'underline' : 'none',
+                    background: 'none',
+                    border: 'none',
+                    font: 'inherit',
+                    padding: 0,
+                  }}
+                >
+                  {mode}
+                </button>
+              ))}
+            </span>
+          )}
+          <button
+            onClick={() => setShowLogin(!showLogin)}
+            className="cursor-pointer"
+            style={{
+              color: isLoggedIn ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+              background: 'none',
+              border: 'none',
+              font: 'inherit',
+              padding: 0,
+            }}
+            title={`${identity.method}: ${identity.pubkey || 'none'}`}
+          >
+            {isLoggedIn ? `[${shortPubkey}]` : '[--]'}
+          </button>
+        </span>
       </div>
       {effectiveMode === 'explorer' && (
         <div className="text-xs mb-1" style={{ color: 'var(--colour-error)' }}>
           Explorer mode — you are viewing unverified community content.
         </div>
+      )}
+
+      {showLogin && (
+        <>
+          <div
+            className="fixed inset-0 z-40"
+            onClick={() => { setShowLogin(false); setLoginError(''); }}
+          />
+          <div
+            className="fixed z-50 font-mono text-xs"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: 'var(--colour-bg)',
+              color: 'var(--colour-text)',
+              border: '2px solid var(--colour-dim)',
+              boxShadow: '4px 4px 0 var(--colour-dim)',
+              padding: 0,
+              minWidth: '28em',
+              maxWidth: '90vw',
+            }}
+          >
+            {/* Title bar */}
+            <div
+              className="flex justify-between px-2 py-1"
+              style={{ backgroundColor: 'var(--colour-dim)', color: 'var(--colour-bg)' }}
+            >
+              <span>IDENTITY</span>
+              <button
+                onClick={() => { setShowLogin(false); setLoginError(''); }}
+                className="cursor-pointer"
+                style={{ background: 'none', border: 'none', font: 'inherit', color: 'var(--colour-bg)', padding: 0 }}
+              >
+                [X]
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-3">
+              <div className="mb-2" style={{ color: 'var(--colour-dim)' }}>
+                Status: {isLoggedIn ? identity.method : 'anonymous (ephemeral key)'}
+              </div>
+              <div className="mb-3" style={{ color: 'var(--colour-dim)', wordBreak: 'break-all' }}>
+                Pubkey: {identity.pubkey || 'none'}
+              </div>
+
+              {identity.method !== 'extension' && identity.nip07Available && (
+                <div className="mb-2">
+                  <button
+                    onClick={async () => {
+                      const res = await identity.loginExtension();
+                      if (!res.ok) setLoginError(res.error);
+                      else { setLoginError(''); setShowLogin(false); }
+                    }}
+                    className="cursor-pointer"
+                    style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
+                  >
+                    Use Nostr Extension
+                  </button>
+                </div>
+              )}
+
+              {identity.method !== 'nsec' && (
+                <form
+                  className="mb-2"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const nsec = e.target.elements.nsec.value.trim();
+                    const res = identity.login(nsec);
+                    if (!res.ok) setLoginError(res.error);
+                    else { setLoginError(''); setShowLogin(false); e.target.reset(); }
+                  }}
+                >
+                  <div className="mb-1" style={{ color: 'var(--colour-dim)' }}>Login with nsec:</div>
+                  <div className="flex gap-1">
+                    <input
+                      name="nsec"
+                      type="password"
+                      placeholder="nsec1..."
+                      className="flex-1 bg-transparent outline-none font-mono text-xs px-1"
+                      style={{ color: 'var(--colour-text)', border: '1px solid var(--colour-dim)' }}
+                    />
+                    <button
+                      type="submit"
+                      className="cursor-pointer"
+                      style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
+                    >
+                      OK
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {isLoggedIn && (
+                <div className="mt-2">
+                  <button
+                    onClick={() => { identity.logout(); setShowLogin(false); }}
+                    className="cursor-pointer"
+                    style={{ color: 'var(--colour-error)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+
+              {loginError && <div className="mt-2" style={{ color: 'var(--colour-error)' }}>{loginError}</div>}
+            </div>
+          </div>
+        </>
       )}
 
       {status === 'connecting' && <p>Connecting to relay...</p>}
