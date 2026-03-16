@@ -128,14 +128,23 @@ Phase 12 (world event bootstrap) follows immediately after.
 
 ## Files to Reference
 
-| File | Purpose |
-|------|---------|
-| `nostr-dungeon-design.md` | Full schema spec |
-| `the-lake-world.md` | World design — 12 places, full narrative |
-| `the-lake-client-plan.md` | Phases 1-10 — complete ✓ |
-| `the-lake-client-plan-2.md` | Phases 11-17 — current work |
-| `zork1-event-reference.md` | Worked example — all schema patterns |
-| `CHANGELOG.md` | Full history of schema changes |
+All docs at `https://github.com/dangeross/foakloar/tree/main/docs`
+
+| File | Repo path | Purpose |
+|------|-----------|---------|
+| `foakloar-design.md` | `spec/` | Full schema spec |
+| `foakloar-mvp.md` | `spec/` | MVP scope |
+| `CHANGELOG.md` | `spec/` | Full history of schema changes |
+| `HANDOFF.md` | `the-lake/` | This file |
+| `the-lake-world.md` | `the-lake/` | World design — 12 places, full narrative |
+| `the-lake-client-plan.md` | `the-lake/` | Phases 1-10 — complete ✓ |
+| `the-lake-client-plan-2.md` | `the-lake/` | Phases 11-18 — current work |
+| `ideas.md` | `the-lake/` | Use cases, payment mechanics, story ideas |
+| `zork1-event-reference.md` | `reference/` | Worked example — all schema patterns |
+| `fate-of-atlantis-reference.md` | `reference/` | Fate of Atlantis reference |
+| `goonies-reference.md` | `reference/` | Goonies reference |
+| `foakloar-authoring-guide.md` | `reference/` | World authoring guide |
+| `foakloar-micro-world.md` | `reference/` | Micro-world example — The Lighthouse Keeper |
 
 ---
 

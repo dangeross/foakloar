@@ -27,7 +27,10 @@ export function renderMarkdown(text) {
 export function renderRoomContent(room, cryptoKeys) {
   const entries = [];
 
-  const contentType = getTag(room, 'content-type');
+  const contentTypeTag = room.tags.find((t) => t[0] === 'content-type');
+  const contentType = contentTypeTag?.[1];
+  const innerFormat = contentTypeTag?.[2]; // e.g. "text/markdown" after NIP-44 decryption
+
   if (contentType === 'application/nip44') {
     let decrypted = null;
     for (const privKey of cryptoKeys) {
@@ -37,7 +40,12 @@ export function renderRoomContent(room, cryptoKeys) {
       } catch {}
     }
     if (decrypted) {
-      entries.push({ text: decrypted, type: 'win' });
+      // Render decrypted content according to inner format (third element of content-type)
+      if (innerFormat === 'text/markdown') {
+        entries.push({ html: renderMarkdown(decrypted), type: 'markdown' });
+      } else {
+        entries.push({ text: decrypted, type: 'win' });
+      }
     } else {
       entries.push({ text: 'The air hums with sealed energy. You lack the key to read what is written here.', type: 'sealed' });
     }

@@ -155,7 +155,10 @@ The atomic unit of the world. A place the player can occupy.
 
 **Key design decisions:**
 
-- Exit tags are **named slots only** — they do not declare a destination. Destinations are the portal's responsibility.
+- Exit tags on a **place** declare that a slot exists. Two valid forms:
+  - `["exit", "north"]` — slot only, no hint. The portal is the sole source of destination and label.
+  - `["exit", "30078:<pubkey>:place:cave", "north", "Optional label"]` — extended form, hints the destination on the place itself. Useful when authoring place and portal together. The portal still owns the canonical binding — if the two conflict, the portal wins.
+- Exit tags are **named slots only** on the place — they do not create a connection. Destinations are the portal's responsibility.
 - `noun` tags make places referenceable in commands like `examine place` or `look around`.
 - The place is replaceable by its author (same `d` tag + pubkey = update). The author can add/remove exit slots freely.
 - `content` is the prose description rendered to the player.
@@ -241,7 +244,7 @@ Stitches two exit slots together. Owned and published by whoever creates the con
 
 ### 2.3 Item (`type: item`)
 
-A portable thing. Items can always be picked up, carried, used, and combined. They are placed in places by the place author via reference tags — they do not declare their own location. Once picked up, the client records this in local player state and suppresses the item from place rendering. Items are never dropped — once carried, they are used, combined, or consumed.
+A portable thing. Items can be picked up, carried, used, combined, dropped, stolen, and deposited. They are placed in places by the place author via reference tags — they do not declare their own location. Place inventories are seeded from these reference tags on first visit, then mutated by player pickup, NPC theft, and deposits. Every item lives in exactly one inventory at any time — player, NPC, or place.
 
 Items support the same `state`, `verb`, and `on-interact` tags as features — some items are interactive even when carried. State is tracked per-item in local player state.
 
@@ -1125,7 +1128,7 @@ A reusable outcome definition. Consequences are fired by portals, NPCs, or `on-i
 | `consume-item` | Item `a`-tag | Removes item from inventory |
 | `deal-damage` | Integer string | Reduces player health |
 
-State keys for `preserves` / `clears`: `inventory`, `item-states`, `feature-states`, `flags`, `solved`, `defeated-npcs`, `unlocked-gates`, `crypto-keys`, `known-recipes`, `visited`.
+State keys for `clears`: `inventory`, `states`, `counters`, `cryptoKeys`, `dialogueVisited`, `paymentAttempts`, `visited`.
 
 **Referencing a consequence:**
 
@@ -1306,7 +1309,7 @@ The central innovation: puzzle gates are not simulated — they use actual crypt
 
 ### 3.1 NIP-44 Encrypted Places / Clues
 
-A sealed place or clue has its `content` encrypted via NIP-44 and declares `content-type: application/nip44`. The `state` is set to `sealed`. The corresponding private key is the "key item" in the game world — found by solving puzzles, earned through play.
+A sealed place or clue has its `content` encrypted via NIP-44 and declares `content-type: application/nip44`. The `state` is set to `sealed`. The `puzzle` tag declares which puzzle's answer is the decryption key — the publishing tool uses this to encrypt before signing.
 
 ```json
 {
@@ -1316,18 +1319,66 @@ A sealed place or clue has its `content` encrypted via NIP-44 and declares `cont
     ["type",         "place"],
     ["title",        "The Sanctum"],
     ["state",        "sealed"],
-    ["content-type", "application/nip44"]
+    ["content-type", "application/nip44", "text/markdown"],
+    ["puzzle",         "the-lake:puzzle:serpent-mechanism"]
   ],
-  "content": "<NIP44_Encrypt(plaintext, lock_pubkey)>"
+  "content": "<NIP-44 ciphertext>"
 }
 ```
 
-The client detects `content-type: application/nip44`, attempts decryption with any held crypto keys, and renders the decrypted content on success. On failure the place description is withheld — the player knows they're missing something.
+The client detects `content-type: application/nip44`, attempts decryption using the key derived from the solved puzzle's answer, and renders the decrypted content on success. On failure the place description is withheld — the player knows they're missing something.
+
+When the sealed content is not plain text, declare the plaintext format with a `content-type third element` tag:
+
+```json
+["content-type", "application/nip44", "text/markdown"],
+["puzzle",         "the-lake:puzzle:serpent-mechanism"]
+```
+
+`content-type third element` tells the client how to render the decrypted content. If absent, `text/plain` is assumed. The publishing tool uses it to validate the plaintext before encrypting.
 
 **What this means in practice:**
 - The place event exists on relays and is publicly visible
-- Its `content` is ciphertext — unreadable without the private key
-- No amount of relay scraping helps. The key must be found in-game.
+- Its `content` is ciphertext — unreadable without the puzzle answer
+- No amount of relay scraping helps. The answer must be earned in-game.
+
+---
+
+### 3.1.1 World Event File Format (for LLM authorship)
+
+When an LLM authors a world, it cannot perform NIP-44 encryption — this requires a keypair the author generates outside the LLM session. Instead, the LLM outputs a structured JSON file with two top-level keys:
+
+```json
+{
+  "answers": {
+    "the-lake:puzzle:serpent-mechanism": "the answer the player must find"
+  },
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",            "the-lake:place:sanctum"],
+        ["content-type", "application/nip44"],
+        ["puzzle",       "the-lake:puzzle:serpent-mechanism"]
+      ],
+      "content": "The plaintext win prose goes here — the publishing tool will encrypt this."
+    }
+  ]
+}
+```
+
+The publishing tool processes the file before signing:
+1. For each event with `content-type: application/nip44` and a `puzzle` tag
+2. Look up the answer from the `answers` map using the puzzle d-tag
+3. Derive the NIP-44 key from the answer
+4. Encrypt the `content` field with that key
+5. Replace `content` with ciphertext
+6. Strip the `answers` object entirely — it never reaches the relay
+7. Sign and publish
+
+The `answers` map also drives `answer-hash` computation. The LLM outputs the plaintext answer; the publishing tool computes `SHA256(answer + salt)` and verifies it matches the puzzle event's `answer-hash` before encrypting.
+
+**For LLM authors:** always output the `answers` map alongside your events. The `content` of NIP-44 sealed events should be the plaintext prose — clearly readable, clearly intended for encryption. The publishing tool handles the rest.
 
 ---
 
@@ -1379,23 +1430,67 @@ Player state is personal and instanced. No two players share progression state. 
 
 ---
 
-### 4.1 What Player State Covers
+### 4.1 Storage Architecture
 
-- **Inventory** — list of item `a`-tag references with current state per item (non-scarce; items can be held by many players)
-- **Item states** — per-item state values for carried items (e.g. lantern: `on`, mirror: `angled`)
-- **Feature states** — per-feature state values for interacted features (e.g. window: `open`, chest: `opened`)
-- **Event states** — per-event current state for all interactive events (features, items, NPCs, rooms, puzzles) tracked in local player state
-- **NPC states** — per-NPC current state (`gone`, `present`, `blocking` etc.) tracked in local player state
-- **Unlocked gates** — set of lock `d`-tags whose crypto conditions the player has satisfied
-- **Held crypto keys** — private keys discovered or derived through play (these unlock NIP-44 sealed events)
-- **Known recipes** — set of recipe `d`-tags revealed through clues or experimentation
-- **Visited places** — set of place `d`-tags (for map rendering and dialogue conditions)
-- **Health** — current hit points; `max-health` ceiling defined by the world or client default
-- **NPC health** — per-NPC current health, tracked locally per player
+All state stored under the world slug as the localStorage key. Player, NPCs, and places are flat siblings:
+
+```json
+{
+  "player": {
+    "place":           "the-lake:place:cave-network",
+    "inventory":       ["the-lake:item:brass-lantern"],
+    "states":          {
+      "the-lake:item:brass-lantern":     "on",
+      "the-lake:feature:altar":          "watered",
+      "the-lake:portal:chapel-to-crypt": "visible",
+      "the-lake:puzzle:chapel-riddle":   "solved"
+    },
+    "counters":        { "the-lake:item:brass-lantern:battery": 147 },
+    "cryptoKeys":      [],
+    "dialogueVisited": { "the-lake:dialogue:hermit:cave": "visited" },
+    "paymentAttempts": {},
+    "visited":         ["the-lake:place:clearing"],
+    "moveCount":       8
+  },
+  "the-lake:npc:collector": {
+    "state":     null,
+    "inventory": ["the-lake:item:iron-key"],
+    "health":    null
+  },
+  "the-lake:place:flooded-passage": {
+    "inventory": ["the-lake:item:iron-key"]
+  }
+}
+```
+
+**Key rules:**
+
+- **Flat siblings** — `player`, NPCs, and places are siblings at the top level. No nesting.
+- **`player.states`** — flat map, d-tag → state string. All event states the player has affected: items, features, portals, puzzles. Type-agnostic — consistent with how `requires` evaluates.
+- **`player.counters`** — flat map, `d-tag:counterName` → integer. All counters across all event types.
+- **`player.moveCount`** — incremented on every navigation. Drives deterministic NPC position calculation.
+- **NPC `state`** — `null` until first encounter or state change. Client reads NPC event's `state` tag as default when `null`. First-class property, not nested in a map.
+- **Place inventories** — seeded from place event `item` tags on first visit (tracked via `player.visited`). After seeding, the array is the source of truth.
+- **Every item lives in exactly one inventory** — player, NPC, or place. No duplication, no negative checks. Items move between inventories on pickup, drop, steal, deposit.
+- **camelCase** throughout: `cryptoKeys`, `dialogueVisited`, `paymentAttempts`, `moveCount`.
 
 ---
 
-### 4.2 Local State (Primary)
+### 4.2 What Player State Covers
+
+- **`player.place`** — current place d-tag. Restored on reload — player resumes where they left off.
+- **`player.inventory`** — list of item d-tag references currently carried
+- **`player.states`** — unified state map for all event types (items, features, portals, puzzles)
+- **`player.counters`** — all counter values across all event types
+- **`player.cryptoKeys`** — private keys discovered or derived through play (unlock NIP-44 sealed events)
+- **`player.dialogueVisited`** — dialogue nodes visited, for entry point evaluation
+- **`player.paymentAttempts`** — payment hashes and status for recovery on reload
+- **`player.visited`** — place d-tags visited, for place inventory seeding and map rendering
+- **`player.moveCount`** — total moves taken, for NPC position calculation
+
+---
+
+### 4.3 Local State (Primary)
 
 Player state lives on the client device. No relay writes required for normal play.
 
@@ -1404,7 +1499,7 @@ Player state lives on the client device. No relay writes required for normal pla
 
 ---
 
-### 4.3 NOSTR-Signed Backup (Optional)
+### 4.4 NOSTR-Signed Backup (Optional)
 
 Player publishes encrypted state events to relays for portability. Content is NIP-44 encrypted to the player's own pubkey — only they can read it.
 
@@ -1427,7 +1522,7 @@ The client publishes this periodically as a checkpoint. On a new device, the pla
 
 ---
 
-### 4.4 Inventory & Non-Scarcity
+### 4.5 Inventory & Non-Scarcity
 
 Items are non-scarce by design. Multiple players can hold the same item simultaneously. This is intentional — the item is not the gate, the cryptographic condition is.
 
