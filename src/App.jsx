@@ -6,6 +6,7 @@ import { GameEngine } from './engine/engine.js';
 import { PlayerStateMutator } from './engine/player-state.js';
 import { getTag, getTags } from './world.js';
 import { resolveTheme, applyTheme } from './theme.js';
+import { buildTrustSet, resolveClientMode } from './trust.js';
 
 /** Map entry types to colour slots */
 const TYPE_COLOUR = {
@@ -14,6 +15,7 @@ const TYPE_COLOUR = {
   title:            'title',
   error:            'error',
   exits:            'exits',
+  'exits-untrusted':'error',
   item:             'item',
   feature:          'dim',
   'clue-title':     'clue',
@@ -38,6 +40,7 @@ const TYPE_CLASS = {
   command:          'mt-2',
   title:            'font-bold mt-3',
   exits:            'text-sm mt-1',
+  'exits-untrusted':'text-sm',
   item:             'text-sm',
   feature:          'text-sm',
   'clue-title':     'font-bold mt-2',
@@ -62,6 +65,7 @@ export default function App() {
   const { events, status } = useRelay();
   const player = usePlayerState();
   const [log, setLog] = useState([]);
+  const [clientMode, setClientMode] = useState('community');
   const engineRef = useRef(null);
   const inputRef = useRef(null);
   const logEndRef = useRef(null);
@@ -84,6 +88,14 @@ export default function App() {
     return { genesisPlace, inventoryRefs, title, cwTags, worldEvent };
   }, [events]);
 
+  // Build trust set from world event + vouch events
+  const trustInfo = useMemo(() => {
+    if (!worldConfig?.worldEvent) return null;
+    const trustSet = buildTrustSet(worldConfig.worldEvent, events);
+    const { availableModes, effectiveMode } = resolveClientMode(trustSet.collaboration, clientMode);
+    return { trustSet, availableModes, effectiveMode };
+  }, [worldConfig, events, clientMode]);
+
   // Apply theme from world event
   useEffect(() => {
     const colours = resolveTheme(worldConfig?.worldEvent || null);
@@ -94,18 +106,21 @@ export default function App() {
   const getEngine = useCallback(() => {
     const mutator = new PlayerStateMutator(player.state, player.npcStates);
     const genesisPlace = worldConfig?.genesisPlace || `30078:${AUTHOR_PUBKEY}:${WORLD_TAG}:place:clearing`;
+    const trustSet = trustInfo?.trustSet || null;
+    const effectiveMode = trustInfo?.effectiveMode || 'community';
     if (!engineRef.current) {
       engineRef.current = new GameEngine({
         events,
         player: mutator,
-        config: { GENESIS_PLACE: genesisPlace, AUTHOR_PUBKEY },
+        config: { GENESIS_PLACE: genesisPlace, AUTHOR_PUBKEY, trustSet, clientMode: effectiveMode },
       });
     } else {
       engineRef.current.events = events;
       engineRef.current.player = mutator;
+      engineRef.current.config = { ...engineRef.current.config, trustSet, clientMode: effectiveMode };
     }
     return engineRef.current;
-  }, [events, player.state, worldConfig]);
+  }, [events, player.state, worldConfig, trustInfo]);
 
   // Flush engine output into React log state and commit player state
   const commitEngine = useCallback((engine) => {
@@ -213,13 +228,41 @@ export default function App() {
   const puzzleActive = engine?.puzzleActive ?? null;
   const dialogueActive = engine?.dialogueActive ?? null;
   const worldTitle = worldConfig?.title || WORLD_TAG;
+  const availableModes = trustInfo?.availableModes || [];
+  const effectiveMode = trustInfo?.effectiveMode || 'community';
 
   return (
     <div className="max-w-2xl mx-auto p-6 flex flex-col h-screen"
          style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}>
-      <div className="text-sm mb-2" style={{ color: 'var(--colour-dim)' }}>
-        {worldTitle} | Relay: {status} | Events: {events.size}
+      <div className="text-sm mb-2 flex justify-between" style={{ color: 'var(--colour-dim)' }}>
+        <span>{worldTitle} | Relay: {status} | Events: {events.size}</span>
+        {availableModes.length > 1 && (
+          <span>
+            {availableModes.map((mode) => (
+              <button
+                key={mode}
+                onClick={() => setClientMode(mode)}
+                className="ml-2 cursor-pointer"
+                style={{
+                  color: mode === effectiveMode ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+                  textDecoration: mode === effectiveMode ? 'underline' : 'none',
+                  background: 'none',
+                  border: 'none',
+                  font: 'inherit',
+                  padding: 0,
+                }}
+              >
+                {mode}
+              </button>
+            ))}
+          </span>
+        )}
       </div>
+      {effectiveMode === 'explorer' && (
+        <div className="text-xs mb-1" style={{ color: 'var(--colour-error)' }}>
+          Explorer mode — you are viewing unverified community content.
+        </div>
+      )}
 
       {status === 'connecting' && <p>Connecting to relay...</p>}
       {status === 'failed' && <p style={{ color: 'var(--colour-error)' }}>Failed to connect to any relay.</p>}

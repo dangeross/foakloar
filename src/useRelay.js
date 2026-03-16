@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Relay } from 'nostr-tools/relay';
-import { RELAY_URLS, WORLD_TAG, AUTHOR_PUBKEY } from './config.js';
+import { RELAY_URLS, WORLD_TAG } from './config.js';
 
 export function useRelay() {
   const [events, setEvents] = useState(new Map());
@@ -22,7 +22,7 @@ export function useRelay() {
           console.log(`Connected to ${url}`);
 
           relay.subscribe(
-            [{ kinds: [30078], '#t': [WORLD_TAG], authors: [AUTHOR_PUBKEY] }],
+            [{ kinds: [30078], '#t': [WORLD_TAG] }],
             {
               onevent(event) {
                 const d = event.tags.find((t) => t[0] === 'd')?.[1];

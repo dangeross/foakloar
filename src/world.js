@@ -189,3 +189,52 @@ export function resolveExits(events, placeDTag, playerState) {
 
   return exits;
 }
+
+/**
+ * Resolve exits with trust filtering and contested portal detection.
+ * Wraps resolveExits and applies trust-based authorship checks.
+ *
+ * Returns two lists:
+ * - `exits` — visible exits (trusted + unverified depending on mode)
+ * - `hiddenByTrust` — exits hidden by trust filtering (for `look <direction>`)
+ *
+ * @param {Map} events — full event map
+ * @param {string} placeDTag — current place a-tag
+ * @param {Object} playerState — player state
+ * @param {Object|null} trustSet — from buildTrustSet
+ * @param {string} clientMode — 'canonical' | 'community' | 'explorer'
+ * @param {function} getTrustLevelFn — getTrustLevel function
+ * @returns {{ exits: Array, hiddenByTrust: Array }}
+ */
+export function resolveExitsWithTrust(events, placeDTag, playerState, trustSet, clientMode, getTrustLevelFn) {
+  const rawExits = resolveExits(events, placeDTag, playerState);
+
+  // No trust set — fall back to unfiltered (backward compat)
+  if (!trustSet) {
+    const exits = rawExits.map((e) => ({ ...e, trusted: true, trustLevel: 'trusted', contested: false }));
+    return { exits, hiddenByTrust: [] };
+  }
+
+  // Tag each exit with trust level
+  const tagged = rawExits.map((exit) => {
+    const trustLevel = getTrustLevelFn(trustSet, exit.portalEvent.pubkey, 'portal', clientMode);
+    return { ...exit, trustLevel, trusted: trustLevel !== 'hidden' };
+  });
+
+  // Split into visible and hidden
+  const visible = tagged.filter((e) => e.trustLevel !== 'hidden');
+  const hiddenByTrust = tagged.filter((e) => e.trustLevel === 'hidden');
+
+  // Detect contested slots (multiple visible portals on same slot)
+  const slotCounts = {};
+  for (const exit of visible) {
+    slotCounts[exit.slot] = (slotCounts[exit.slot] || 0) + 1;
+  }
+
+  const exits = visible.map((exit) => ({
+    ...exit,
+    contested: slotCounts[exit.slot] > 1,
+  }));
+
+  return { exits, hiddenByTrust };
+}

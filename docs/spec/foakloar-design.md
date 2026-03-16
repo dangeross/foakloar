@@ -1914,13 +1914,80 @@ An attacker can publish anything — but if no trusted event in the chain refere
 
 ### 6.7 Portal Conflict Resolution
 
-When two portals claim the same exit slot on the same place:
+When multiple portals claim the same exit slot, the client's behaviour depends on trust mode and the number of portals involved. The core principle: **navigation should always work without surprise; unverified content requires deliberate exploration.**
 
-- In `closed` / `vouched` mode: only trusted portals are shown. Conflicts within the trust set are surfaced as a choice — *"you sense two paths north"*
-- In `open` mode: all portals shown, with trust indicators
-- The player can always explicitly choose which portal to follow
+---
 
-Contested portals are a feature of open worlds — unreliable cartography, diverging factions, living history.
+**Exit slot behaviour:**
+
+| Situation | `south` | `look south` |
+|-----------|---------|-------------|
+| One trusted portal | Navigate immediately | Shows portal details |
+| Multiple trusted portals | Disambiguation list | Full list |
+| One trusted + unverified | Navigate, shows `[+N unverified]` hint | Full list with all |
+| Unverified only | Short list (up to 5) with trust indicators | Full list |
+| No portals | "You can't go that way." | "Nothing leads south." |
+
+`south` is the navigation command — it moves the player or presents a choice when ambiguous. `look south` is always the examination command — it shows everything available on that slot without navigating.
+
+---
+
+**Short list (unverified-only, `south`):**
+
+```
+> south
+  Multiple paths south:
+  1. A freshly cut path into the woods. (trusted) [npub1dan...]
+  2. A mysterious door. (unverified) [npub1abc...]
+  3. A dark alley. (unverified) [npub1xyz...]
+  + 9 more — type "look south" to see all
+
+> 2
+  You are about to enter an unverified path by npub1abc...
+  "A mysterious door." — proceed? (yes/no)
+```
+
+Entering an unverified portal always requires confirmation — the player sees the label and author pubkey before committing.
+
+**Full list (`look south`):**
+
+Shows all portals on the slot with trust indicators and author attribution. No cap. No navigation — examination only.
+
+**`[+N unverified]` hint:**
+
+When a trusted portal is navigated but unverified alternatives exist, the client appends a hint after arrival:
+
+```
+You take the path north into the woods.
+[+3 unverified paths from the clearing — type "look south" to see them]
+```
+
+The player is never surprised by alternatives they didn't know existed.
+
+---
+
+**Trust indicators:**
+
+| Label | Meaning |
+|-------|---------|
+| `(trusted)` | Authored by genesis, collaborator, or vouched pubkey |
+| `(community)` | Outside trust set but in community mode |
+| `(unverified)` | Unknown pubkey — explorer mode only |
+
+**Content warnings on portals:** if an unverified portal has a `cw` tag, display it in the list before the player selects it.
+
+---
+
+**Mode summary:**
+
+| Mode | Default display | Unverified shown |
+|------|----------------|-----------------|
+| `closed` | Trusted exits only | Never |
+| `vouched` | Trusted + vouched exits | Never |
+| `community` | Trusted + vouched, `[+N unverified]` hint | On `look <slot>` only |
+| `open` | All, trusted first | In short list, full on `look <slot>` |
+
+Contested portals are a feature of open worlds — unreliable cartography, diverging factions, living history. The UI model makes this explorable without being overwhelming.
 
 ---
 

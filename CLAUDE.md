@@ -18,23 +18,27 @@ A decentralised text adventure built on NOSTR (kind 30078). The world is a graph
 
 | File | Purpose |
 |------|---------|
-| `docs/spec/nostr-dungeon-design.md` | **Canonical design spec** — all tag shapes defined here |
-| `docs/the-lake/the-lake-client-plan-1.md` | Phase 1–10 client implementation plan |
+| `docs/spec/foakloar-design.md` | **Canonical design spec** — all tag shapes defined here |
+| `docs/spec/CHANGELOG.md` | Schema changelog — all spec changes |
+| `docs/the-lake/HANDOFF.md` | Session handoff — current status, design decisions |
+| `docs/the-lake/the-lake-client-plan.md` | Phase 1–10 client implementation plan |
 | `docs/the-lake/the-lake-client-plan-2.md` | Phase 11–18 client implementation plan |
 | `docs/the-lake/the-lake-world.md` | Full world design (places, items, puzzles) |
 | `src/App.jsx` | Main game component — rendering, theme, world bootstrap |
 | `src/usePlayerState.js` | Player state hook with world-keyed localStorage persistence |
-| `src/world.js` | World query helpers (requires check, noun lookup, exits) |
+| `src/world.js` | World query helpers (requires check, noun lookup, exits with trust) |
+| `src/trust.js` | Trust model — buildTrustSet, getTrustLevel, resolveClientMode |
 | `src/theme.js` | Theme resolver — presets + world event colour overrides |
 | `src/config.js` | Relay URLs, world tag, author pubkey |
-| `src/engine/engine.js` | GameEngine class — command dispatch, room entry, movement |
+| `src/engine/engine.js` | GameEngine class — command dispatch, room entry, movement, contested exits |
 | `src/engine/player-state.js` | PlayerStateMutator — synchronous state wrapper |
 | `src/engine/parser.js` | Verb/noun parser — verb map, article stripping |
 | `src/engine/actions.js` | Action resolution — set-state, give-item, counters |
 | `src/engine/content.js` | Content rendering — markdown, media, NIP-44 |
-| `src/engine/__tests__/` | Vitest unit tests for engine, parser, actions, world |
+| `src/engine/__tests__/` | Vitest unit tests for engine, parser, actions, world, trust |
 | `lib/events/*.mjs` | World event definitions (places, portals, items, features, clues) |
-| `tools/publish-world.mjs` | Publishes events to relays |
+| `lib/events/trust-test.mjs` | Trust test events — collaborator, vouched, untrusted authors |
+| `tools/publish-world.mjs` | Publishes events to relays (4 author keypairs) |
 
 ---
 
@@ -121,6 +125,7 @@ All previously tracked deviations have been fixed:
 | 11. State Structure Refactor | Done |
 | 12. World Event Bootstrap + Theme | Done |
 | 13. NPC Inventory + Roaming | Done |
+| 14. Trust Model + Contested Exits | Done |
 
 ---
 
@@ -130,7 +135,41 @@ All previously tracked deviations have been fixed:
 - **One verb tag per canonical verb.** Don't combine multiple canonical verbs into one tag (e.g. `["verb", "examine", "pray"]` is wrong — use two separate verb tags).
 - **Article stripping.** The client strips leading articles (`the`, `a`, `an`) from noun input. Noun tags should never include articles: `["noun", "lantern", "brass lantern"]` matches `the brass lantern`.
 - **Two-noun commands.** `<verb> <noun> [preposition] <noun>` — target is noun2, instrument is noun1. Prepositions: `on`, `with`, `to`, `at`, `in`, `into`.
-- **Built-in commands** (not data-driven): `look`/`l`, `inventory`/`i`, `pick up`/`take`/`get`/`grab`, direction words.
+- **Built-in commands** (not data-driven): `look`/`l`, `look <direction>`, `inventory`/`i`, `pick up`/`take`/`get`/`grab`, direction words, `yes`/`no` (confirmation).
+
+---
+
+## Trust Model (spec section 6)
+
+### Collaboration modes and available client modes
+
+| World `collaboration` | Available client modes |
+|---|---|
+| `closed` | canonical |
+| `vouched` | canonical, community, explorer (vouchers only) |
+| `open` | canonical, community |
+
+### Trust levels per mode
+
+| Trust Level | Canonical | Community | Explorer / Open+Community |
+|---|---|---|---|
+| Genesis / Collaborator | ✅ trusted | ✅ trusted | ✅ trusted |
+| Vouched | ❌ hidden | ✅ trusted | ✅ trusted |
+| Untrusted | ❌ hidden | ❌ hidden | ⚠️ unverified |
+
+### Contested exit UI (spec section 6.7)
+
+| Situation | `south` | `look south` |
+|---|---|---|
+| One trusted | Navigate immediately | Shows portal details |
+| Multiple trusted | Disambiguation list | Full list |
+| Trusted + unverified | Navigate trusted, `[+N unverified]` hint | Full list |
+| Unverified only | Short list (max 5), choice + confirmation | Full list |
+
+- `look <direction>` always shows all portals on a slot with trust indicators and pubkeys
+- Unverified portals require yes/no confirmation before entry
+- `cw` tags shown in `look <direction>` listing
+- `resolveExitsWithTrust` returns `{ exits, hiddenByTrust }` — hidden exits available for `look`
 
 ---
 
@@ -148,9 +187,10 @@ All previously tracked deviations have been fixed:
 
 - Run `npm test` (or `npx vitest run`) before committing — all tests must pass
 - Run `npm run test:watch` during development for live feedback
-- Tests live in `src/engine/__tests__/` and cover: player state, parser, world helpers, actions, engine integration
+- Tests live in `src/engine/__tests__/` and cover: player state, parser, world helpers, actions, engine integration, trust
 - Test helpers in `__tests__/helpers.js` provide factory functions for building events and engine instances
 - When adding new engine features, add corresponding tests
+- **Preview testing:** When changes affect UI rendering or depend on live relay events (e.g. new event types, visual styling, trust mode switching), also test with a browser preview before committing
 
 ---
 

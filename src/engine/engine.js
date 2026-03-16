@@ -4,9 +4,10 @@
  */
 
 import {
-  getTag, getTags, resolveExits, checkRequires,
+  getTag, getTags, resolveExits, resolveExitsWithTrust, checkRequires,
   findByNoun, aTagOf, getDefaultState, findTransition,
 } from '../world.js';
+import { getTrustLevel } from '../trust.js';
 import { derivePrivateKey } from '../nip44-client.js';
 import { renderRoomContent } from './content.js';
 import { stripArticles, buildVerbMap, parseInput, findInventoryItem } from './parser.js';
@@ -20,7 +21,7 @@ export class GameEngine {
    * @param {Object} opts
    * @param {Map} opts.events — Map<a-tag, event>
    * @param {import('./player-state.js').PlayerStateMutator} opts.player
-   * @param {{ GENESIS_PLACE: string, AUTHOR_PUBKEY: string }} opts.config
+   * @param {{ GENESIS_PLACE: string, AUTHOR_PUBKEY: string, trustSet?: Object, clientMode?: string }} opts.config
    */
   constructor({ events, player, config }) {
     this.events = events;
@@ -31,6 +32,8 @@ export class GameEngine {
     this.currentPlace = player.state.place || config.GENESIS_PLACE;
     this.puzzleActive = null;
     this.dialogueActive = null;
+    this.pendingConfirm = null;
+    this.pendingChoice = null;  // { direction, exits } — disambiguation list awaiting numeric input
 
     /** @type {Array<{text?: string, html?: string, type: string}>} */
     this.output = [];
@@ -68,8 +71,17 @@ export class GameEngine {
     return this.events.get(this.currentPlace);
   }
 
+  /**
+   * Resolve exits for the current place with trust filtering.
+   * Returns { exits, hiddenByTrust } when trust is active.
+   */
+  get exitData() {
+    return this._resolveRoomExits(this.currentPlace);
+  }
+
+  /** Shortcut: visible exits only (for movement). */
   get exits() {
-    return resolveExits(this.events, this.currentPlace, this.player.state);
+    return this.exitData.exits;
   }
 
   // ── Room entry ────────────────────────────────────────────────────────
@@ -81,6 +93,7 @@ export class GameEngine {
     this.player.setPlace(dtag);
     this.puzzleActive = null;
     this.dialogueActive = null;
+    this.pendingChoice = null;
 
     const title = getTag(room, 'title') || dtag;
     this._emit(`\n— ${title} —`, 'title');
@@ -89,9 +102,10 @@ export class GameEngine {
     const placeReq = checkRequires(room, this.player.state, this.events);
     if (!placeReq.allowed) {
       this._emit(placeReq.reason, 'narrative');
-      const roomExits = resolveExits(this.events, dtag, this.player.state);
+      const { exits: roomExits } = this._resolveRoomExits(dtag);
       if (roomExits.length > 0) {
-        this._emit(`Exits: ${roomExits.map((e) => e.slot).join(', ')}`, 'exits');
+        const slots = [...new Set(roomExits.map((e) => e.slot))];
+        this._emit(`Exits: ${slots.join(', ')}`, 'exits');
       }
       return;
     }
@@ -156,10 +170,176 @@ export class GameEngine {
       }
     }
 
-    // Exits
-    const roomExits = resolveExits(this.events, dtag, this.player.state);
-    if (roomExits.length > 0) {
-      this._emit(`Exits: ${roomExits.map((e) => e.slot).join(', ')}`, 'exits');
+    // Exits — spec 6.7 contested exit model
+    this._emitExits(dtag);
+  }
+
+  // ── Trust-aware exit resolution ──────────────────────────────────────
+
+  /**
+   * Returns { exits, hiddenByTrust } for a place.
+   * Without trust set, hiddenByTrust is always empty.
+   */
+  _resolveRoomExits(dtag) {
+    const { trustSet, clientMode } = this.config;
+    if (trustSet) {
+      return resolveExitsWithTrust(
+        this.events, dtag, this.player.state,
+        trustSet, clientMode || 'community', getTrustLevel,
+      );
+    }
+    const raw = resolveExits(this.events, dtag, this.player.state);
+    return {
+      exits: raw.map((e) => ({ ...e, trusted: true, trustLevel: 'trusted', contested: false })),
+      hiddenByTrust: [],
+    };
+  }
+
+  // ── Exit display (spec 6.7) ─────────────────────────────────────────
+
+  /**
+   * Emit exit lines for a room. Handles:
+   * - Trusted exits listed normally
+   * - Multiple trusted on same slot → `slot (N paths)`
+   * - Unverified-only slot → listed with `[unverified]` marker
+   * - `[+N unverified]` hint when trusted portal exists but hidden alternatives do too
+   */
+  _emitExits(dtag) {
+    const { exits, hiddenByTrust } = this._resolveRoomExits(dtag);
+    if (exits.length === 0 && hiddenByTrust.length === 0) return;
+
+    // Group visible exits by slot
+    const slotGroups = {};
+    for (const exit of exits) {
+      if (!slotGroups[exit.slot]) slotGroups[exit.slot] = [];
+      slotGroups[exit.slot].push(exit);
+    }
+
+    // Count hidden exits per slot (for [+N unverified] hint)
+    const hiddenPerSlot = {};
+    for (const exit of hiddenByTrust) {
+      hiddenPerSlot[exit.slot] = (hiddenPerSlot[exit.slot] || 0) + 1;
+    }
+
+    const labels = [];
+    const unverifiedOnlySlots = [];
+
+    for (const [slot, slotExits] of Object.entries(slotGroups)) {
+      const trustedCount = slotExits.filter((e) => e.trustLevel === 'trusted').length;
+      const unverifiedCount = slotExits.filter((e) => e.trustLevel === 'unverified').length;
+
+      if (trustedCount > 1) {
+        // Multiple trusted portals on same slot → disambiguation needed
+        labels.push(`${slot} (${trustedCount} paths)`);
+      } else if (trustedCount === 1 && unverifiedCount === 0) {
+        // Single trusted, no unverified visible — simple
+        labels.push(slot);
+      } else if (trustedCount === 1 && unverifiedCount > 0) {
+        // Trusted wins the slot, but unverified exist — just show the slot
+        labels.push(slot);
+      } else if (trustedCount === 0 && unverifiedCount > 0) {
+        // Only unverified on this slot
+        unverifiedOnlySlots.push({ slot, count: unverifiedCount });
+      }
+    }
+
+    // Emit the main exits line
+    if (labels.length > 0) {
+      this._emit(`Exits: ${labels.join(', ')}`, 'exits');
+    }
+
+    // Unverified-only slots (open + community or vouched + explorer)
+    if (unverifiedOnlySlots.length > 0) {
+      for (const { slot, count } of unverifiedOnlySlots) {
+        const prefix = labels.length > 0 ? '       ' : 'Exits: ';
+        if (count === 1) {
+          this._emit(`${prefix}${slot} (unverified)`, 'exits-untrusted');
+        } else {
+          this._emit(`${prefix}${slot} (${count} unverified paths)`, 'exits-untrusted');
+        }
+      }
+    }
+
+    // [+N unverified] hints for slots that have a trusted portal but also unverified/hidden alternatives
+    // Only shown in community/explorer mode — in canonical mode, hidden portals are fully invisible
+    const mode = this.config.clientMode || 'community';
+    if (mode !== 'canonical') {
+      // Count hidden-by-trust exits per slot
+      for (const [slot, count] of Object.entries(hiddenPerSlot)) {
+        if (slotGroups[slot]?.some((e) => e.trustLevel === 'trusted')) {
+          this._emit(`[+${count} unverified path${count > 1 ? 's' : ''} ${slot} — type "look ${slot}" to see]`, 'exits-untrusted');
+        }
+      }
+      // Count visible unverified exits on slots that also have a trusted exit
+      for (const [slot, slotExits] of Object.entries(slotGroups)) {
+        if (hiddenPerSlot[slot]) continue; // already emitted above
+        const unverifiedOnSlot = slotExits.filter((e) => e.trustLevel === 'unverified').length;
+        const hasTrusted = slotExits.some((e) => e.trustLevel === 'trusted');
+        if (hasTrusted && unverifiedOnSlot > 0) {
+          this._emit(`[+${unverifiedOnSlot} unverified path${unverifiedOnSlot > 1 ? 's' : ''} ${slot} — type "look ${slot}" to see]`, 'exits-untrusted');
+        }
+      }
+    }
+
+    // Contested trusted portals — show details
+    for (const [slot, slotExits] of Object.entries(slotGroups)) {
+      const trusted = slotExits.filter((e) => e.trustLevel === 'trusted');
+      if (trusted.length > 1) {
+        for (let i = 0; i < trusted.length; i++) {
+          const label = trusted[i].label || `path ${i + 1}`;
+          this._emit(`  ${slot} ${i + 1}: ${label}`, 'exits');
+        }
+      }
+    }
+  }
+
+  /**
+   * Handle `look <direction>` — shows full list of all portals on a slot.
+   * Examination only, never navigates. Shows trusted and hidden portals.
+   */
+  handleLookDirection(direction) {
+    const { exits, hiddenByTrust } = this._resolveRoomExits(this.currentPlace);
+    const mode = this.config.clientMode || 'community';
+
+    // Collect portals on this slot — in canonical mode, hidden portals stay invisible
+    const allOnSlot = [
+      ...exits.filter((e) => e.slot === direction),
+      ...(mode !== 'canonical' ? hiddenByTrust.filter((e) => e.slot === direction) : []),
+    ];
+
+    if (allOnSlot.length === 0) {
+      this._emit(`Nothing leads ${direction}.`, 'narrative');
+      return;
+    }
+
+    this._emit(`Paths ${direction}:`, 'narrative');
+    for (let i = 0; i < allOnSlot.length; i++) {
+      const exit = allOnSlot[i];
+      const label = exit.label || `path ${i + 1}`;
+      const pubkey = exit.portalEvent.pubkey;
+      const shortPk = pubkey.slice(0, 12) + '...';
+
+      let indicator;
+      if (exit.trustLevel === 'trusted') {
+        indicator = '(trusted)';
+      } else if (exit.trustLevel === 'unverified') {
+        indicator = '(unverified)';
+      } else {
+        indicator = '(unverified)';
+      }
+
+      // Show cw tags if present
+      const cwTags = getTags(exit.portalEvent, 'cw');
+      const cwWarning = cwTags.length > 0 ? ` [cw: ${cwTags.map((t) => t[1]).join(', ')}]` : '';
+
+      const type = exit.trustLevel === 'trusted' ? 'exits' : 'exits-untrusted';
+      this._emit(`  ${i + 1}. ${label} ${indicator} [${shortPk}]${cwWarning}`, type);
+    }
+
+    // Allow numeric selection after viewing the list
+    if (allOnSlot.length > 1) {
+      const hasUnverified = allOnSlot.some((e) => e.trustLevel !== 'trusted');
+      this.pendingChoice = { direction, exits: allOnSlot, unverified: hasUnverified };
     }
   }
 
@@ -497,9 +677,77 @@ export class GameEngine {
 
   // ── Movement ──────────────────────────────────────────────────────────
 
-  handleMove(direction) {
-    const exit = this.exits.find((e) => e.slot === direction);
-    if (!exit) { this._emit("You can't go that way.", 'error'); return; }
+  /**
+   * Handle movement — spec 6.7 contested exit model.
+   *
+   * - One trusted portal → navigate immediately
+   * - Multiple trusted → disambiguation list
+   * - One trusted + unverified → navigate trusted, show [+N unverified] hint
+   * - Unverified only → short list (max 5) with trust indicators, require choice
+   * - Unverified portal → confirmation required (pendingConfirm state)
+   */
+  handleMove(direction, choiceIndex = null) {
+    const { exits: allExits, hiddenByTrust } = this._resolveRoomExits(this.currentPlace);
+    const matchingExits = allExits.filter((e) => e.slot === direction);
+    if (matchingExits.length === 0) { this._emit("You can't go that way.", 'error'); return; }
+
+    const trustedExits = matchingExits.filter((e) => e.trustLevel === 'trusted');
+    const unverifiedExits = matchingExits.filter((e) => e.trustLevel === 'unverified');
+
+    let exit;
+
+    if (trustedExits.length === 1 && unverifiedExits.length === 0) {
+      // Simple case: one trusted portal, navigate immediately
+      exit = trustedExits[0];
+    } else if (trustedExits.length === 1 && unverifiedExits.length > 0) {
+      // Trusted wins the slot — navigate, hint about unverified after arrival
+      exit = trustedExits[0];
+      // We'll emit the hint after enterRoom below
+    } else if (trustedExits.length > 1) {
+      // Multiple trusted — disambiguation
+      if (choiceIndex === null) {
+        this._emit(`Multiple paths ${direction}:`, 'narrative');
+        for (let i = 0; i < trustedExits.length; i++) {
+          const label = trustedExits[i].label || `path ${i + 1}`;
+          this._emit(`  ${i + 1}. ${label} (trusted)`, 'exits');
+        }
+        this.pendingChoice = { direction, exits: trustedExits };
+        return;
+      }
+      if (choiceIndex < 1 || choiceIndex > trustedExits.length) {
+        this._emit(`Choose 1-${trustedExits.length}.`, 'error');
+        return;
+      }
+      exit = trustedExits[choiceIndex - 1];
+    } else if (unverifiedExits.length > 0) {
+      // Unverified only — short list (max 5)
+      if (choiceIndex === null) {
+        this._emit(`Multiple paths ${direction}:`, 'narrative');
+        const shown = unverifiedExits.slice(0, 5);
+        for (let i = 0; i < shown.length; i++) {
+          const label = shown[i].label || `path ${i + 1}`;
+          const pk = shown[i].portalEvent.pubkey.slice(0, 12) + '...';
+          this._emit(`  ${i + 1}. ${label} (unverified) [${pk}]`, 'exits-untrusted');
+        }
+        if (unverifiedExits.length > 5) {
+          this._emit(`  + ${unverifiedExits.length - 5} more — type "look ${direction}" to see all`, 'exits-untrusted');
+        }
+        this.pendingChoice = { direction, exits: unverifiedExits, unverified: true };
+        return;
+      }
+      if (choiceIndex < 1 || choiceIndex > unverifiedExits.length) {
+        this._emit(`Choose 1-${unverifiedExits.length}.`, 'error');
+        return;
+      }
+      // Unverified portal — confirmation required
+      const chosen = unverifiedExits[choiceIndex - 1];
+      const pk = chosen.portalEvent.pubkey.slice(0, 12) + '...';
+      const label = chosen.label || 'an unknown path';
+      this.pendingConfirm = { exit: chosen };
+      this._emit(`You are about to enter an unverified path by ${pk}`, 'exits-untrusted');
+      this._emit(`"${label}" — proceed? (yes/no)`, 'exits-untrusted');
+      return;
+    }
 
     const req = checkRequires(exit.portalEvent, this.player.state, this.events);
     if (!req.allowed) { this._emit(req.reason, 'error'); return; }
@@ -912,11 +1160,78 @@ export class GameEngine {
     if (!trimmed) return;
     this._emit(`> ${input}`, 'command');
 
+    // Confirmation mode — unverified portal entry
+    if (this.pendingConfirm) {
+      if (trimmed === 'yes' || trimmed === 'y') {
+        const exit = this.pendingConfirm.exit;
+        this.pendingConfirm = null;
+        const req = checkRequires(exit.portalEvent, this.player.state, this.events);
+        if (!req.allowed) { this._emit(req.reason, 'error'); return; }
+        this.player.incrementMoveCount();
+        this.processOnMove();
+        this._processNpcOnMove();
+        this.enterRoom(exit.destinationDTag, { isMoving: true });
+      } else {
+        this.pendingConfirm = null;
+        this._emit('You stay where you are.', 'narrative');
+      }
+      return;
+    }
+
+    // Choice mode — disambiguation list awaiting numeric input
+    if (this.pendingChoice) {
+      const num = parseInt(trimmed, 10);
+      if (!isNaN(num)) {
+        const { direction, exits } = this.pendingChoice;
+        this.pendingChoice = null;
+        if (num < 1 || num > exits.length) {
+          this._emit(`Choose 1-${exits.length}.`, 'error');
+          return;
+        }
+        const chosen = exits[num - 1];
+        if (chosen.trustLevel !== 'trusted') {
+          // Unverified portal — confirmation required
+          const pk = chosen.portalEvent.pubkey.slice(0, 12) + '...';
+          const label = chosen.label || 'an unknown path';
+          this.pendingConfirm = { exit: chosen };
+          this._emit(`You are about to enter an unverified path by ${pk}`, 'exits-untrusted');
+          this._emit(`"${label}" — proceed? (yes/no)`, 'exits-untrusted');
+        } else {
+          // Trusted portal — navigate directly
+          const req = checkRequires(chosen.portalEvent, this.player.state, this.events);
+          if (!req.allowed) { this._emit(req.reason, 'error'); return; }
+          this.player.incrementMoveCount();
+          this.processOnMove();
+          this._processNpcOnMove();
+          this.enterRoom(chosen.destinationDTag, { isMoving: true });
+        }
+        return;
+      }
+      // Non-numeric input clears the pending choice
+      this.pendingChoice = null;
+    }
+
     // Dialogue mode
     if (this.dialogueActive) { this.handleDialogueChoice(trimmed); return; }
 
     // Puzzle mode
     if (this.puzzleActive) { await this.handlePuzzleAnswer(trimmed); return; }
+
+    // Built-in: look <direction> — spec 6.7 portal listing
+    const lookDirMatch = trimmed.match(/^(?:look|l)\s+(.+)$/);
+    if (lookDirMatch) {
+      const dir = lookDirMatch[1];
+      // Check if it's a valid direction (not a noun for examine)
+      const allExits = [
+        ...this._resolveRoomExits(this.currentPlace).exits,
+        ...this._resolveRoomExits(this.currentPlace).hiddenByTrust,
+      ];
+      if (allExits.some((e) => e.slot === dir)) {
+        this.handleLookDirection(dir);
+        return;
+      }
+      // Fall through to examine
+    }
 
     // Built-in: look
     if (trimmed === 'look' || trimmed === 'l') {
@@ -935,6 +1250,12 @@ export class GameEngine {
           this._emit(`  ${item ? getTag(item, 'title') : dtag}`, 'item');
         }
       }
+      return;
+    }
+
+    // Built-in: reset — return to start place
+    if (trimmed === 'reset') {
+      this.enterRoom(this.config.GENESIS_PLACE);
       return;
     }
 
@@ -970,11 +1291,17 @@ export class GameEngine {
       return;
     }
 
-    // Movement — try as direction
-    const direction = trimmed.replace(/^go\s+/, '');
-    if (this.exits.find((e) => e.slot === direction)) {
-      this.handleMove(direction);
-      return;
+    // Movement — try as direction, with optional choice index for contested portals
+    const dirInput = trimmed.replace(/^go\s+/, '');
+    const dirMatch = dirInput.match(/^(\S+?)(?:\s+(\d+))?$/);
+    if (dirMatch) {
+      const dir = dirMatch[1];
+      const choiceIndex = dirMatch[2] ? parseInt(dirMatch[2], 10) : null;
+      const visibleExits = this.exits;
+      if (visibleExits.find((e) => e.slot === dir)) {
+        this.handleMove(dir, choiceIndex);
+        return;
+      }
     }
 
     this._emit("I don't understand that.", 'error');

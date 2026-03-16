@@ -26,6 +26,40 @@ Next: Phase 11 — world event bootstrap.
 
 ---
 
+## Contested Exit UI Model — Design Decision
+
+**Design before building.** Portal conflict resolution is now specced in `foakloar-design.md` section 6.7. Key decisions:
+
+**`south` behaviour:**
+- One trusted portal → navigate immediately
+- Multiple trusted → disambiguation list (existing pattern)
+- One trusted + unverified → navigate, append `[+N unverified]` hint on arrival
+- Unverified only → short list (up to 5), numbered, with trust indicators
+- No portals → "You can't go that way."
+
+**`look south` behaviour:**
+- Always shows full list of all portals on that slot — trusted and unverified
+- Examination only, never navigates
+
+**Confirmation on unverified:**
+Selecting an unverified portal shows author pubkey and label, requires yes/no before entering.
+
+**Trust indicators:** `(trusted)`, `(community)`, `(unverified)`
+
+**`cw` tags** on portals shown in listing before player selects.
+
+**Mode summary:**
+
+| Mode | Unverified shown |
+|------|-----------------|
+| `closed` / `vouched` | Never |
+| `community` | On `look <slot>` only |
+| `open` | In short list + `look <slot>` |
+
+Do not implement before reviewing spec section 6.7.
+
+---
+
 ## Schema Changes Since Last Client Session
 
 ### 1. `on-complete` shape — blank trigger-target required (BREAKING)

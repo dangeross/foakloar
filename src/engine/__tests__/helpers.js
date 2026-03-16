@@ -5,9 +5,11 @@ import { PlayerStateMutator } from '../player-state.js';
 import { GameEngine } from '../engine.js';
 
 const PUBKEY = 'testpubkey0000000000000000000000000000000000000000000000000000';
+const PUBKEY2 = 'testpubkey2222222222222222222222222222222222222222222222222222';
+const PUBKEY3 = 'testpubkey3333333333333333333333333333333333333333333333333333';
 const WORLD = 'test-world';
 
-export { PUBKEY, WORLD };
+export { PUBKEY, PUBKEY2, PUBKEY3, WORLD };
 
 /** Build an a-tag event ref from a d-tag. */
 export function ref(dtag) {
@@ -209,4 +211,66 @@ export function makeEngine(events, playerOverrides = {}, configOverrides = {}, n
     ...configOverrides,
   };
   return new GameEngine({ events, player, config });
+}
+
+// ── Multi-author helpers ──────────────────────────────────────────────
+
+/** Build an a-tag ref with a specific pubkey. */
+export function refFor(pubkey, dtag) {
+  return `30078:${pubkey}:${dtag}`;
+}
+
+/** Create an event with a specific author pubkey. */
+export function makeEventAs(pubkey, dtag, tags = [], content = '') {
+  return {
+    kind: 30078,
+    pubkey,
+    created_at: Math.floor(Date.now() / 1000),
+    tags: [['d', dtag], ...tags],
+    content,
+  };
+}
+
+/** Create a portal event with a specific author pubkey. */
+export function makePortalAs(pubkey, name, exits, { state, transitions = [], requires = [], extraTags = [] } = {}) {
+  const dtag = `${WORLD}:portal:${name}`;
+  const tags = [
+    ['type', 'portal'],
+    ...exits.map((e) => {
+      // e[0] is a full a-tag ref (not a bare d-tag to wrap)
+      return ['exit', e[0], e[1], e[2] || ''];
+    }),
+    ...(state ? [['state', state]] : []),
+    ...transitions.map((t) => ['transition', t[0], t[1], t[2] || '']),
+    ...requires.map((r) => ['requires', ...r]),
+    ...extraTags,
+  ];
+  return makeEventAs(pubkey, dtag, tags, '');
+}
+
+/** Create a world event with collaboration and collaborator tags. */
+export function makeWorldEvent({ collaboration = 'closed', collaborators = [], start, title, extraTags = [] } = {}) {
+  const dtag = `${WORLD}:world`;
+  const tags = [
+    ['type', 'world'],
+    ['title', title || 'Test World'],
+    ['collaboration', collaboration],
+    ...collaborators.map((pk) => ['collaborator', pk]),
+    ...(start ? [['start', start]] : []),
+    ...extraTags,
+  ];
+  return makeEvent(dtag, tags, '');
+}
+
+/** Create a vouch event authored by a specific pubkey. */
+export function makeVouch(authorPubkey, vouchedPubkey, { scope = 'all', canVouch = false, name = '' } = {}) {
+  const dtag = `${WORLD}:vouch:${name || `${authorPubkey.slice(0, 8)}-vouches-${vouchedPubkey.slice(0, 8)}`}`;
+  const tags = [
+    ['type', 'vouch'],
+    ['t', WORLD],
+    ['pubkey', vouchedPubkey],
+    ['scope', scope],
+    ['can-vouch', canVouch ? 'true' : 'false'],
+  ];
+  return makeEventAs(authorPubkey, dtag, tags, '');
 }
