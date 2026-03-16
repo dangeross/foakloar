@@ -80,7 +80,7 @@ The message comes from transition text, not from the tag. Example:
 ["transition",  "on", "flickering", "The lantern flickers ominously."]
 ```
 
-Spec-defined actions: `unlock`, `set-state`, `traverse`, `give-item`, `consume-item`, `deal-damage`, `deal-damage-npc`, `heal`, `consequence`, `steals-item`, `deposits`, `flees`, `decrement`, `increment`, `set-counter`
+Spec-defined actions: `set-state`, `traverse`, `give-item`, `consume-item`, `deal-damage`, `deal-damage-npc`, `heal`, `consequence`, `steals-item`, `deposits`, `flees`, `decrement`, `increment`, `set-counter`
 
 ### state & transition
 

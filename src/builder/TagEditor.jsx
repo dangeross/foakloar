@@ -5,8 +5,9 @@
  * Supports add/remove tags, field editing, and event-ref search.
  */
 
-import React, { useState, useMemo } from 'react';
-import { TAG_SCHEMAS, TAGS_BY_EVENT_TYPE, getTagSchema, valuesToTag, tagToValues } from './tagSchema.js';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import { TAG_SCHEMAS, TAGS_BY_EVENT_TYPE, getTagSchema, valuesToTag, tagToValues, ACTION_TARGET_FIELD } from './tagSchema.js';
 import DOSButton from './DOSButton.jsx';
 
 /** Input styled for DOS aesthetic */
@@ -45,43 +46,131 @@ function DOSTextarea({ value, onChange, placeholder, rows = 3, style = {} }) {
   );
 }
 
+/** Themed dropdown replacing native <select> — portaled to float above panel */
 function DOSSelect({ value, onChange, options, placeholder }) {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const [pos, setPos] = useState(null);
+
+  // Measure trigger position when opening
+  useEffect(() => {
+    if (!open || !triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    // Open upward: position bottom of dropdown at top of trigger
+    setPos({ left: rect.left, bottom: window.innerHeight - rect.top, width: rect.width });
+  }, [open]);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e) {
+      if (triggerRef.current?.contains(e.target)) return;
+      if (dropdownRef.current?.contains(e.target)) return;
+      setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [open]);
+
   return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="bg-transparent outline-none font-mono text-xs px-1 cursor-pointer"
-      style={{
-        color: 'var(--colour-text)',
-        border: '1px solid var(--colour-dim)',
-        backgroundColor: 'var(--colour-bg)',
-        width: '100%',
-      }}
-    >
-      {placeholder && <option value="">{placeholder}</option>}
-      {options.map((opt) => (
-        <option key={opt} value={opt}>{opt}</option>
-      ))}
-    </select>
+    <>
+      <div
+        ref={triggerRef}
+        className="flex items-center cursor-pointer px-1 w-full"
+        style={{ border: '1px solid var(--colour-dim)', minHeight: '1.5em' }}
+        onClick={() => setOpen(!open)}
+      >
+        <span className="flex-1 text-xs truncate" style={{ color: value ? 'var(--colour-text)' : 'var(--colour-dim)' }}>
+          {value || placeholder || 'Select...'}
+        </span>
+        <span style={{ color: 'var(--colour-dim)' }}>{open ? '▲' : '▼'}</span>
+      </div>
+
+      {open && pos && ReactDOM.createPortal(
+        <div
+          ref={dropdownRef}
+          className="font-mono text-xs"
+          style={{
+            position: 'fixed',
+            left: pos.left,
+            bottom: pos.bottom,
+            width: pos.width,
+            backgroundColor: 'var(--colour-bg)',
+            border: '1px solid var(--colour-dim)',
+            maxHeight: '12em',
+            overflowY: 'auto',
+            zIndex: 200,
+            boxShadow: '2px -2px 0 var(--colour-dim)',
+          }}
+        >
+          {placeholder && (
+            <div
+              className="px-1 py-0.5 cursor-pointer hover:opacity-80"
+              style={{ color: 'var(--colour-dim)' }}
+              onClick={() => { onChange(''); setOpen(false); }}
+            >
+              {placeholder}
+            </div>
+          )}
+          {options.map((opt) => (
+            <div
+              key={opt}
+              className="px-1 py-0.5 cursor-pointer hover:opacity-80"
+              style={{
+                color: opt === value ? 'var(--colour-highlight)' : 'var(--colour-text)',
+                backgroundColor: opt === value ? 'var(--colour-dim)' : 'transparent',
+              }}
+              onClick={() => { onChange(opt); setOpen(false); }}
+            >
+              {opt}
+            </div>
+          ))}
+        </div>,
+        document.body
+      )}
+    </>
   );
 }
 
-/** Event ref selector — searchable dropdown of known events */
-function EventRefSelect({ value, onChange, events, eventTypeFilter }) {
+/** Event ref selector — searchable dropdown portaled to float above panel */
+function EventRefSelect({ value, onChange, events, eventTypeFilter, placeholder: placeholderProp }) {
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const [pos, setPos] = useState(null);
+
+  // Measure trigger position when opening
+  useEffect(() => {
+    if (!open || !triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setPos({ left: rect.left, bottom: window.innerHeight - rect.top, width: rect.width });
+  }, [open]);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e) {
+      if (triggerRef.current?.contains(e.target)) return;
+      if (dropdownRef.current?.contains(e.target)) return;
+      setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [open]);
 
   const options = useMemo(() => {
     if (!events) return [];
     const results = [];
     for (const [aTag, event] of events) {
       const typeTag = event.tags.find((t) => t[0] === 'type')?.[1];
+      if (typeTag === 'player-state') continue;
       if (eventTypeFilter && typeTag !== eventTypeFilter) continue;
       const title = event.tags.find((t) => t[0] === 'title')?.[1] || '';
       const dTag = event.tags.find((t) => t[0] === 'd')?.[1] || '';
       results.push({ aTag, title, dTag, type: typeTag });
     }
-    // Sort by type then title
     results.sort((a, b) => (a.type || '').localeCompare(b.type || '') || (a.title || '').localeCompare(b.title || ''));
     return results;
   }, [events, eventTypeFilter]);
@@ -103,26 +192,34 @@ function EventRefSelect({ value, onChange, events, eventTypeFilter }) {
   }, [value, options]);
 
   return (
-    <div className="relative w-full">
+    <>
       <div
-        className="flex items-center cursor-pointer px-1"
+        ref={triggerRef}
+        className="flex items-center cursor-pointer px-1 w-full"
         style={{ border: '1px solid var(--colour-dim)', minHeight: '1.5em' }}
         onClick={() => setOpen(!open)}
       >
         <span className="flex-1 text-xs truncate" style={{ color: value ? 'var(--colour-text)' : 'var(--colour-dim)' }}>
-          {selectedLabel || 'Select event...'}
+          {selectedLabel || placeholderProp || 'Select event...'}
         </span>
         <span style={{ color: 'var(--colour-dim)' }}>{open ? '▲' : '▼'}</span>
       </div>
 
-      {open && (
+      {open && pos && ReactDOM.createPortal(
         <div
-          className="absolute left-0 right-0 z-50"
+          ref={dropdownRef}
+          className="font-mono text-xs"
           style={{
+            position: 'fixed',
+            left: pos.left,
+            bottom: pos.bottom,
+            width: pos.width,
             backgroundColor: 'var(--colour-bg)',
             border: '1px solid var(--colour-dim)',
             maxHeight: '12em',
             overflowY: 'auto',
+            zIndex: 200,
+            boxShadow: '2px -2px 0 var(--colour-dim)',
           }}
         >
           <DOSInput
@@ -147,9 +244,10 @@ function EventRefSelect({ value, onChange, events, eventTypeFilter }) {
               <span style={{ color: 'var(--colour-dim)' }}>[{opt.type}]</span> {opt.title || opt.dTag}
             </div>
           ))}
-        </div>
+        </div>,
+        document.body
       )}
-    </div>
+    </>
   );
 }
 
@@ -166,10 +264,33 @@ function TagField({ field, value, onChange, events }) {
     case 'select':
       return <DOSSelect value={value} onChange={onChange} options={field.options} placeholder="Select..." />;
     case 'event-ref':
-      return <EventRefSelect value={value} onChange={onChange} events={events} eventTypeFilter={field.eventTypeFilter} />;
+      return <EventRefSelect value={value} onChange={onChange} events={events} eventTypeFilter={field.eventTypeFilter} placeholder={field.placeholder} />;
     default:
       return <DOSInput value={value} onChange={onChange} placeholder={field.placeholder} />;
   }
+}
+
+/**
+ * Resolve dynamic field override for trigger target fields.
+ * When a trigger tag has an 'action' select, the 'target' field adapts
+ * its type and placeholder based on the selected action.
+ */
+function resolveField(field, fieldName, values) {
+  if (fieldName !== 'target') return field;
+  const action = values.action;
+  if (!action) return field;
+  const override = ACTION_TARGET_FIELD[action];
+  if (!override) return field;
+  return { ...field, type: override.type, placeholder: override.placeholder, eventTypeFilter: override.eventTypeFilter };
+}
+
+/** Check if the event-ref field should be hidden based on the selected action */
+function shouldHideField(field, values) {
+  if (field.name !== 'event-ref') return false;
+  const action = values.action;
+  if (!action) return false;
+  const override = ACTION_TARGET_FIELD[action];
+  return override?.hidesEventRef === true;
 }
 
 /** A single tag row with its fields */
@@ -190,16 +311,20 @@ function TagRow({ tagName, tag, fields, onChange, onRemove, events }) {
         {tagName}
       </span>
       <div className="flex-1 flex flex-col gap-0.5">
-        {fields.map((field) => (
-          <div key={field.name}>
-            <TagField
-              field={field}
-              value={values[field.name] || ''}
-              onChange={(v) => updateField(field.name, v)}
-              events={events}
-            />
-          </div>
-        ))}
+        {fields.map((field) => {
+          if (shouldHideField(field, values)) return null;
+          const resolved = resolveField(field, field.name, values);
+          return (
+            <div key={field.name}>
+              <TagField
+                field={resolved}
+                value={values[field.name] || ''}
+                onChange={(v) => updateField(field.name, v)}
+                events={events}
+              />
+            </div>
+          );
+        })}
       </div>
       <button
         onClick={onRemove}
@@ -221,9 +346,92 @@ function TagRow({ tagName, tag, fields, onChange, onRemove, events }) {
  * @param {function} props.onChange - called with updated tags array
  * @param {Map} props.events - known events for event-ref dropdowns
  */
-export default function TagEditor({ eventType, tags, onChange, events }) {
-  const [addTagName, setAddTagName] = useState('');
+/** Custom themed dropdown for adding tags — portaled to float above panel */
+function AddTagDropdown({ options, onSelect }) {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const [pos, setPos] = useState(null);
 
+  // Measure trigger position when opening
+  useEffect(() => {
+    if (!open || !triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    // Open upward: position bottom of dropdown at top of trigger
+    setPos({ left: rect.left, bottom: window.innerHeight - rect.top, width: rect.width });
+  }, [open]);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e) {
+      if (triggerRef.current?.contains(e.target)) return;
+      if (dropdownRef.current?.contains(e.target)) return;
+      setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [open]);
+
+  return (
+    <>
+      <div
+        ref={triggerRef}
+        className="flex items-center cursor-pointer px-1 py-0.5"
+        style={{
+          border: '1px solid var(--colour-dim)',
+          color: 'var(--colour-dim)',
+        }}
+        onClick={() => setOpen(!open)}
+      >
+        <span className="flex-1 text-xs">+ Add tag...</span>
+        <span>{open ? '▲' : '▼'}</span>
+      </div>
+
+      {open && pos && ReactDOM.createPortal(
+        <div
+          ref={dropdownRef}
+          className="font-mono text-xs"
+          style={{
+            position: 'fixed',
+            left: pos.left,
+            bottom: pos.bottom,
+            width: pos.width,
+            backgroundColor: 'var(--colour-bg)',
+            border: '1px solid var(--colour-dim)',
+            maxHeight: '16em',
+            overflowY: 'auto',
+            zIndex: 200,
+            boxShadow: '2px -2px 0 var(--colour-dim)',
+          }}
+        >
+          {options.map((name) => {
+            const schema = TAG_SCHEMAS[name];
+            const desc = schema?.desc || schema?.label || name;
+            return (
+              <div
+                key={name}
+                className="px-1 py-0.5 cursor-pointer hover:opacity-80"
+                style={{
+                  color: 'var(--colour-text)',
+                  backgroundColor: 'transparent',
+                }}
+                onClick={() => { onSelect(name); setOpen(false); }}
+                title={desc}
+              >
+                <span style={{ color: 'var(--colour-highlight)' }}>{name}</span>
+                <span style={{ color: 'var(--colour-dim)', marginLeft: '0.5em', fontSize: '0.6rem' }}>{schema?.label || name}</span>
+              </div>
+            );
+          })}
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}
+
+export default function TagEditor({ eventType, tags, onChange, events }) {
   // Available tags for this event type (excluding auto-managed ones)
   const availableTags = useMemo(() => {
     const allowed = TAGS_BY_EVENT_TYPE[eventType] || [];
@@ -246,7 +454,6 @@ export default function TagEditor({ eventType, tags, onChange, events }) {
     // Create empty tag with correct number of fields
     const emptyTag = [tagName, ...schema.fields.map(() => '')];
     onChange([...tags, emptyTag]);
-    setAddTagName('');
   }
 
   function updateTag(index, newTag) {
@@ -297,20 +504,10 @@ export default function TagEditor({ eventType, tags, onChange, events }) {
         );
       })}
 
-      {/* Add tag dropdown */}
+      {/* Add tag — themed dropdown, adds immediately on selection */}
       {availableTags.length > 0 && (
-        <div className="flex gap-1 mt-2">
-          <DOSSelect
-            value={addTagName}
-            onChange={setAddTagName}
-            options={availableTags}
-            placeholder="+ Add tag..."
-          />
-          {addTagName && (
-            <DOSButton onClick={() => addTag(addTagName)} colour="text">
-              Add
-            </DOSButton>
-          )}
+        <div className="mt-2">
+          <AddTagDropdown options={availableTags} onSelect={addTag} />
         </div>
       )}
     </div>

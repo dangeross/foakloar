@@ -473,7 +473,6 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 
 | Action | Target | Effect |
 |--------|--------|--------|
-| `unlock` | Lock `a`-tag | Satisfies a lock condition |
 | `set-state` | State string, optional event `a`-tag | Transitions this event (or a referenced event) to a new state. External target on `on-interact`: `["on-interact", "insert", "set-state", "amulet-placed", "30078:<pubkey>:the-lake:feature:mechanism"]` |
 | `traverse` | Portal `a`-tag | Sends the player through a portal |
 | `give-item` | Item `a`-tag | Adds an item to player inventory |
@@ -490,6 +489,32 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 | `set-counter` | Counter name, value | Sets named counter to a specific value |
 
 New action types can be added without changing the tag structure — the dispatcher is intentionally open-ended.
+
+**Trigger × Action compatibility matrix:**
+
+✓ = valid and meaningful  —  = not applicable or nonsensical in this context
+
+| Trigger | `set-state` | `give-item` | `consume-item` | `traverse` | `deal-damage` | `deal-damage-npc` | `heal` | `consequence` | `steals-item` | `deposits` | `flees` | `decrement` | `increment` | `set-counter` |
+|---------|-------------|-------------|----------------|------------|---------------|-------------------|--------|---------------|---------------|------------|---------|-------------|-------------|---------------|
+| `on-interact` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ |
+| `on-complete` | ✓ | ✓ | ✓ | ✓ | — | — | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ |
+| `on-enter` | ✓ | ✓ | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ |
+| `on-encounter` | ✓ | — | — | — | ✓ | — | — | ✓ | ✓ | ✓ | ✓ | ✓ | — | — |
+| `on-attacked` | ✓ | — | — | — | ✓ | ✓ | — | ✓ | ✓ | — | ✓ | — | — | — |
+| `on-health-zero` | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — | — | — | — |
+| `on-player-health-zero` | ✓ | — | — | ✓ | — | — | — | ✓ | — | — | — | — | — | — |
+| `on-move` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ |
+| `on-counter` | ✓ | ✓ | — | — | ✓ | — | ✓ | ✓ | — | — | — | — | — | — |
+| `on-move` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ | |
+| `on-counter` | ✓ | ✓ | — | — | ✓ | — | ✓ | ✓ | — | — | — | — | — | — | |
+
+**Notes:**
+- `steals-item`, `deposits`, `flees` are NPC-only actions — only meaningful on `on-encounter` and `on-attacked` where an NPC is the actor
+- `traverse` on `on-player-health-zero` is the respawn pattern — fire when health reaches zero, send player to a respawn place
+- `deal-damage` on `on-enter` / `on-move` — damage traps and hazardous terrain
+- `consume-item` on `on-interact` — single-use items consumed on use
+- `give-item` on `on-health-zero` — NPC drops loot on death
+- The matrix reflects intent, not hard enforcement. The client should handle unexpected combinations gracefully rather than erroring.
 
 #### counter
 

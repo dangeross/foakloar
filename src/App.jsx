@@ -160,19 +160,23 @@ export default function App() {
     logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [log]);
 
-  // Keep input focused
+  // Keep input focused (skip when builder panels are open)
+  const panelOpen = showDrafts || editorState || showLogin;
+
   useEffect(() => {
-    inputRef.current?.focus();
-  }, [status, log]);
+    if (!panelOpen) inputRef.current?.focus();
+  }, [status, log, panelOpen]);
 
   useEffect(() => {
     function refocus(e) {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (panelOpen) return;
+      const tag = e.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'BUTTON') return;
       inputRef.current?.focus();
     }
     document.addEventListener('mouseup', refocus);
     return () => document.removeEventListener('mouseup', refocus);
-  }, []);
+  }, [panelOpen]);
 
   // Initial room on ready
   useEffect(() => {

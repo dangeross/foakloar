@@ -87,7 +87,7 @@ export default function ModeDropdown({
                 if (buildMode) onToggleBuild();
                 setOpen(false);
               }}
-              className="block w-full text-left px-2 py-1 cursor-pointer"
+              className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
               style={{
                 color: !buildMode && mode === effectiveMode
                   ? 'var(--colour-highlight)'
@@ -115,7 +115,7 @@ export default function ModeDropdown({
                   if (!buildMode) onToggleBuild();
                   setOpen(false);
                 }}
-                className="block w-full text-left px-2 py-1 cursor-pointer"
+                className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
                 style={{
                   color: buildMode ? 'var(--colour-highlight)' : 'var(--colour-text)',
                   background: 'none',
@@ -131,7 +131,7 @@ export default function ModeDropdown({
                     onOpenDrafts();
                     setOpen(false);
                   }}
-                  className="block w-full text-left px-2 py-1 cursor-pointer"
+                  className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
                   style={{
                     color: 'var(--colour-text)',
                     background: 'none',

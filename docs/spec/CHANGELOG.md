@@ -106,6 +106,12 @@ Portal always uses extended form. Portal wins if conflict. Hidden portals still 
 
 **`plaintext-type` tag proposed and removed before shipping** — replaced by three-element `content-type`.
 
+**`unlock` action removed** — holdover from a pre-`requires` model. No `type: lock` event exists in the schema. All locking behaviour is expressed through `requires` on portals/features/places, `set-state` to change conditions, and `give-item` to satisfy item requirements. Removed from action types table and trigger × action matrix.
+
+**Trigger × Action compatibility matrix added** — documents which action types are valid on each trigger tag. Lives in spec alongside the action types table.
+
+**Contested exit UI model added (spec section 6.7)** — `south` navigates immediately if one trusted portal; short list if contested. `look south` shows full list. Unverified portals require confirmation. `[+N unverified]` hint on arrival when alternatives exist.
+
 **`on-counter-zero` / `on-counter-low` removed** — replaced by unified `on-counter` with threshold argument.
 
 **`requires` shape — no type argument**
