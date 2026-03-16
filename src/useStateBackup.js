@@ -11,10 +11,10 @@
  */
 
 import { useState, useCallback } from 'react';
-import { WORLD_TAG } from './config.js';
 
 /**
  * @param {{
+ *   worldTag: string,
  *   signer: { signEvent, encrypt?, decrypt?, pubkey } | null,
  *   relay: { current: Relay | null },
  *   playerState: object,
@@ -22,7 +22,7 @@ import { WORLD_TAG } from './config.js';
  *   replaceState: (playerState, npcStates) => void,
  * }} opts
  */
-export function useStateBackup({ signer, relay, playerState, npcStates, replaceState }) {
+export function useStateBackup({ worldTag, signer, relay, playerState, npcStates, replaceState }) {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
@@ -50,7 +50,7 @@ export function useStateBackup({ signer, relay, playerState, npcStates, replaceS
     try {
       // Build state blob
       const blob = {
-        world: WORLD_TAG,
+        world: worldTag,
         player: playerState,
         npcStates: npcStates,
         savedAt: Math.floor(Date.now() / 1000),
@@ -63,8 +63,8 @@ export function useStateBackup({ signer, relay, playerState, npcStates, replaceS
         kind: 30078,
         created_at: Math.floor(Date.now() / 1000),
         tags: [
-          ['d', `${WORLD_TAG}:player-state:${signer.pubkey}`],
-          ['t', WORLD_TAG],
+          ['d', `${worldTag}:player-state:${signer.pubkey}`],
+          ['t', worldTag],
           ['type', 'player-state'],
         ],
         content: ciphertext,
@@ -101,7 +101,7 @@ export function useStateBackup({ signer, relay, playerState, npcStates, replaceS
     setError('');
 
     try {
-      const dTag = `${WORLD_TAG}:player-state:${signer.pubkey}`;
+      const dTag = `${worldTag}:player-state:${signer.pubkey}`;
 
       // Fetch the player-state event
       const event = await new Promise((resolve, reject) => {
@@ -135,7 +135,7 @@ export function useStateBackup({ signer, relay, playerState, npcStates, replaceS
       const plaintext = await signer.decrypt(event.content);
       const blob = JSON.parse(plaintext);
 
-      if (blob.world !== WORLD_TAG) {
+      if (blob.world !== worldTag) {
         setError('State is for a different world.');
         setLoading(false);
         return { ok: false };

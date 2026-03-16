@@ -1,7 +1,5 @@
-import { useState } from 'react';
-import { WORLD_TAG } from './config.js';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
-const STORAGE_KEY = WORLD_TAG;
 const OLD_STORAGE_KEY = 'the-lake:player';
 
 function freshPlayerState() {
@@ -22,7 +20,7 @@ function freshPlayerState() {
  * Migrate from old flat storage (pre Phase 11) to new world-keyed structure.
  * Returns the migrated store or null if no old data.
  */
-function migrateOldState() {
+function migrateOldState(storageKey) {
   try {
     const raw = localStorage.getItem(OLD_STORAGE_KEY);
     if (!raw) return null;
@@ -59,7 +57,7 @@ function migrateOldState() {
     };
 
     const store = { player: migrated };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+    localStorage.setItem(storageKey, JSON.stringify(store));
     localStorage.removeItem(OLD_STORAGE_KEY);
 
     return store;
@@ -71,9 +69,9 @@ function migrateOldState() {
 /**
  * Load the full store: { player: {...}, "npc-dtag": {...}, ... }
  */
-function loadStore() {
+function loadStore(storageKey) {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(storageKey);
     if (raw) {
       const store = JSON.parse(raw);
       if (store?.player) {
@@ -83,8 +81,11 @@ function loadStore() {
       }
     }
 
-    const migrated = migrateOldState();
-    if (migrated) return migrated;
+    // Only attempt migration for the-lake (the only world with old format)
+    if (storageKey === 'the-lake') {
+      const migrated = migrateOldState(storageKey);
+      if (migrated) return migrated;
+    }
   } catch {}
   return { player: freshPlayerState() };
 }
@@ -100,22 +101,36 @@ function extractNpcStates(store) {
   return npcStates;
 }
 
-function saveStore(store) {
+function saveStore(storageKey, store) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+    localStorage.setItem(storageKey, JSON.stringify(store));
   } catch {}
 }
 
-export function usePlayerState() {
-  const [store, setStore] = useState(loadStore);
+/**
+ * Player state hook, scoped to a world tag (used as localStorage key).
+ * @param {string} worldTag - world slug used as storage key
+ */
+export function usePlayerState(worldTag) {
+  const storageKey = worldTag || 'default';
+  const keyRef = useRef(storageKey);
+  const [store, setStore] = useState(() => loadStore(storageKey));
 
-  function update(fn) {
+  // Re-load when world tag changes
+  useEffect(() => {
+    if (keyRef.current !== storageKey) {
+      keyRef.current = storageKey;
+      setStore(loadStore(storageKey));
+    }
+  }, [storageKey]);
+
+  const update = useCallback((fn) => {
     setStore((prev) => {
       const next = { ...prev, player: fn(prev.player) };
-      saveStore(next);
+      saveStore(keyRef.current, next);
       return next;
     });
-  }
+  }, []);
 
   const state = store.player;
   const npcStates = extractNpcStates(store);
@@ -174,12 +189,12 @@ export function usePlayerState() {
           next[key] = val;
         }
       }
-      saveStore(next);
+      saveStore(keyRef.current, next);
       setStore(next);
     },
     reset: () => {
       const fresh = { player: freshPlayerState() };
-      saveStore(fresh);
+      saveStore(keyRef.current, fresh);
       setStore(fresh);
     },
   };

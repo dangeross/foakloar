@@ -1,13 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 import { Relay } from 'nostr-tools/relay';
-import { RELAY_URLS, WORLD_TAG } from './config.js';
+import { RELAY_URLS } from './config.js';
 
-export function useRelay() {
+/**
+ * Subscribe to all kind:30078 events for a given world tag.
+ * @param {string} worldTag - the world slug to subscribe to
+ */
+export function useRelay(worldTag) {
   const [events, setEvents] = useState(new Map());
-  const [status, setStatus] = useState('connecting');
+  const [status, setStatus] = useState(worldTag ? 'connecting' : 'idle');
   const relayRef = useRef(null);
 
   useEffect(() => {
+    if (!worldTag) {
+      setStatus('idle');
+      return;
+    }
+
+    setStatus('connecting');
+    setEvents(new Map());
     let cancelled = false;
 
     async function connect() {
@@ -22,7 +33,7 @@ export function useRelay() {
           console.log(`Connected to ${url}`);
 
           relay.subscribe(
-            [{ kinds: [30078], '#t': [WORLD_TAG] }],
+            [{ kinds: [30078], '#t': [worldTag] }],
             {
               onevent(event) {
                 const d = event.tags.find((t) => t[0] === 'd')?.[1];
@@ -53,7 +64,7 @@ export function useRelay() {
       cancelled = true;
       relayRef.current?.close();
     };
-  }, []);
+  }, [worldTag]);
 
   return { events, status, relay: relayRef };
 }

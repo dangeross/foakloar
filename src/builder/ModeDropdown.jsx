@@ -23,6 +23,7 @@ export default function ModeDropdown({
   showBuildOption,
   draftsCount,
   onOpenDrafts,
+  onNewWorld,
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -140,6 +141,23 @@ export default function ModeDropdown({
                   }}
                 >
                   {'  '}drafts{draftsCount > 0 ? ` (${draftsCount})` : ''}
+                </button>
+              )}
+              {buildMode && onNewWorld && (
+                <button
+                  onClick={() => {
+                    onNewWorld();
+                    setOpen(false);
+                  }}
+                  className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                  style={{
+                    color: 'var(--colour-text)',
+                    background: 'none',
+                    border: 'none',
+                    font: 'inherit',
+                  }}
+                >
+                  {'  '}+ new world
                 </button>
               )}
             </>

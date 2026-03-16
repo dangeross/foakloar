@@ -1,3 +1,8 @@
-export const RELAY_URLS = ['wss://relay.primal.net', 'wss://nos.lol'];
-export const WORLD_TAG = 'the-lake';
-export const AUTHOR_PUBKEY = 'c08d7b5a79cc4b1a6a1a2d0ff73c422661e333b8a9df48f8b20650c06fbe3e2f';
+// Default relay URLs (used when world event doesn't specify relays)
+export const DEFAULT_RELAY_URLS = ['wss://relay.primal.net', 'wss://nos.lol'];
+
+// Legacy default — used only as fallback when no route is matched
+export const DEFAULT_WORLD_TAG = 'the-lake';
+
+// Re-export for backwards compat with modules that import RELAY_URLS
+export const RELAY_URLS = DEFAULT_RELAY_URLS;

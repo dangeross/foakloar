@@ -144,7 +144,7 @@ export default function EventEditor({
   // Determine if this event type has a title field
   const hasTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest'].includes(eventType);
   // Determine if this event type has content
-  const hasContent = ['place', 'item', 'feature', 'clue', 'puzzle', 'world'].includes(eventType);
+  const hasContent = ['place', 'item', 'feature', 'npc', 'clue', 'puzzle', 'world'].includes(eventType);
 
   return (
     <DOSPanel

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { useRelay } from './useRelay.js';
 import { usePlayerState } from './usePlayerState.js';
 import { useSigner } from './useSigner.js';
-import { AUTHOR_PUBKEY, WORLD_TAG } from './config.js';
+import { parseRoute, navigateToWorld } from './router.js';
 import { GameEngine } from './engine/engine.js';
 import { PlayerStateMutator } from './engine/player-state.js';
 import { getTag, getTags } from './world.js';
@@ -14,6 +14,8 @@ import BuildModeOverlay from './builder/BuildModeOverlay.jsx';
 import EventEditor from './builder/EventEditor.jsx';
 import DraftListPanel from './builder/DraftListPanel.jsx';
 import ModeDropdown from './builder/ModeDropdown.jsx';
+import WorldCreator from './builder/WorldCreator.jsx';
+import Lobby from './Lobby.jsx';
 import { loadDrafts, saveDraft, updateDraft, deleteDraft, importEvents, exportDrafts, bulkPublish } from './builder/draftStore.js';
 
 /** Map entry types to colour slots */
@@ -70,10 +72,23 @@ const TYPE_CLASS = {
 };
 
 export default function App() {
-  const { events, status, relay } = useRelay();
-  const player = usePlayerState();
+  // ── Route state ──────────────────────────────────────────────────────────
+  const [route, setRoute] = useState(parseRoute);
+
+  useEffect(() => {
+    function onNav() { setRoute(parseRoute()); }
+    window.addEventListener('popstate', onNav);
+    return () => window.removeEventListener('popstate', onNav);
+  }, []);
+
+  const worldTag = route.worldSlug;
+
+  // ── Core hooks (worldTag-scoped) ─────────────────────────────────────────
+  const { events, status, relay } = useRelay(worldTag);
+  const player = usePlayerState(worldTag);
   const identity = useSigner();
   const backup = useStateBackup({
+    worldTag,
     signer: identity.signer,
     relay,
     playerState: player.state,
@@ -90,7 +105,8 @@ export default function App() {
   const [buildMode, setBuildMode] = useState(false);
   const [showDrafts, setShowDrafts] = useState(false);
   const [editorState, setEditorState] = useState(null); // { eventType, draft?, initialTags?, ... }
-  const [drafts, setDrafts] = useState(() => loadDrafts(WORLD_TAG));
+  const [showWorldCreator, setShowWorldCreator] = useState(false);
+  const [drafts, setDrafts] = useState(() => loadDrafts(worldTag || ''));
   const engineRef = useRef(null);
   const inputRef = useRef(null);
   const logEndRef = useRef(null);
@@ -98,28 +114,88 @@ export default function App() {
   const historyIndexRef = useRef(-1);
   const draftRef = useRef('');
 
-  // Resolve world event config from events
+  // Reset game state when world changes
+  const prevWorldRef = useRef(worldTag);
+  useEffect(() => {
+    if (prevWorldRef.current !== worldTag) {
+      prevWorldRef.current = worldTag;
+      engineRef.current = null;
+      setLog([]);
+      setGeneration((g) => g + 1);
+      setDrafts(loadDrafts(worldTag || ''));
+    }
+  }, [worldTag]);
+
+  // Auto-enable build mode when drafts exist for this world
+  useEffect(() => {
+    if (drafts.length > 0 && !buildMode) setBuildMode(true);
+  }, [drafts.length]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Merge drafts into events so the engine can preview unpublished content.
+  // Draft events become synthetic events keyed by their a-tag, with the
+  // current user's pubkey (or a placeholder). Relay events always win.
+  const mergedEvents = useMemo(() => {
+    if (drafts.length === 0) return events;
+    const pubkey = identity.pubkey || '0'.repeat(64);
+    const merged = new Map(events);
+    for (const draft of drafts) {
+      const dTag = draft.tags?.find((t) => t[0] === 'd')?.[1];
+      if (!dTag) continue;
+      // Resolve <PUBKEY> placeholders in tags
+      const resolvedTags = draft.tags.map((tag) =>
+        tag.map((v) => (typeof v === 'string' ? v.replaceAll('<PUBKEY>', pubkey) : v))
+      );
+      const aTag = `30078:${pubkey}:${dTag}`;
+      // Don't overwrite real relay events
+      if (merged.has(aTag)) continue;
+      merged.set(aTag, {
+        kind: 30078,
+        pubkey,
+        id: `draft-${draft._draft?.id || dTag}`,
+        sig: '',
+        created_at: Math.floor((draft._draft?.updatedAt || Date.now()) / 1000),
+        tags: resolvedTags,
+        content: draft.content || '',
+        _isDraft: true,
+      });
+    }
+    return merged;
+  }, [events, drafts, identity.pubkey]);
+
+  // Resolve world event config by scanning events for type=world
   const worldConfig = useMemo(() => {
-    if (events.size === 0) return null;
-    const worldEvent = events.get(`30078:${AUTHOR_PUBKEY}:${WORLD_TAG}:world`);
+    if (mergedEvents.size === 0 || !worldTag) return null;
+
+    // Find the world event: d-tag = "<slug>:world", type = "world"
+    const expectedDTag = `${worldTag}:world`;
+    let worldEvent = null;
+    for (const [, ev] of mergedEvents) {
+      const dTag = ev.tags.find((t) => t[0] === 'd')?.[1];
+      const typeTag = ev.tags.find((t) => t[0] === 'type')?.[1];
+      if (dTag === expectedDTag && typeTag === 'world') {
+        worldEvent = ev;
+        break;
+      }
+    }
     if (!worldEvent) return null;
 
+    const authorPubkey = worldEvent.pubkey;
     const startRef = getTag(worldEvent, 'start');
-    const genesisPlace = startRef || `30078:${AUTHOR_PUBKEY}:${WORLD_TAG}:place:clearing`;
+    const genesisPlace = startRef || `30078:${authorPubkey}:${worldTag}:place:clearing`;
     const inventoryRefs = getTags(worldEvent, 'inventory').map((t) => t[1]);
-    const title = getTag(worldEvent, 'title') || WORLD_TAG;
+    const title = getTag(worldEvent, 'title') || worldTag;
     const cwTags = getTags(worldEvent, 'cw').map((t) => t[1]);
 
-    return { genesisPlace, inventoryRefs, title, cwTags, worldEvent };
-  }, [events]);
+    return { genesisPlace, inventoryRefs, title, cwTags, worldEvent, authorPubkey };
+  }, [mergedEvents, worldTag]);
 
   // Build trust set from world event + vouch events
   const trustInfo = useMemo(() => {
     if (!worldConfig?.worldEvent) return null;
-    const trustSet = buildTrustSet(worldConfig.worldEvent, events);
+    const trustSet = buildTrustSet(worldConfig.worldEvent, mergedEvents);
     const { availableModes, effectiveMode } = resolveClientMode(trustSet.collaboration, clientMode);
     return { trustSet, availableModes, effectiveMode };
-  }, [worldConfig, events, clientMode]);
+  }, [worldConfig, mergedEvents, clientMode]);
 
   // Apply theme from world event
   useEffect(() => {
@@ -130,22 +206,23 @@ export default function App() {
   // Lazily create or update engine with latest events
   const getEngine = useCallback(() => {
     const mutator = new PlayerStateMutator(player.state, player.npcStates);
-    const genesisPlace = worldConfig?.genesisPlace || `30078:${AUTHOR_PUBKEY}:${WORLD_TAG}:place:clearing`;
+    const authorPubkey = worldConfig?.authorPubkey || '';
+    const genesisPlace = worldConfig?.genesisPlace || '';
     const trustSet = trustInfo?.trustSet || null;
     const effectiveMode = trustInfo?.effectiveMode || 'community';
     if (!engineRef.current) {
       engineRef.current = new GameEngine({
-        events,
+        events: mergedEvents,
         player: mutator,
-        config: { GENESIS_PLACE: genesisPlace, AUTHOR_PUBKEY, trustSet, clientMode: effectiveMode },
+        config: { GENESIS_PLACE: genesisPlace, AUTHOR_PUBKEY: authorPubkey, trustSet, clientMode: effectiveMode },
       });
     } else {
-      engineRef.current.events = events;
+      engineRef.current.events = mergedEvents;
       engineRef.current.player = mutator;
-      engineRef.current.config = { ...engineRef.current.config, trustSet, clientMode: effectiveMode };
+      engineRef.current.config = { ...engineRef.current.config, AUTHOR_PUBKEY: authorPubkey, trustSet, clientMode: effectiveMode };
     }
     return engineRef.current;
-  }, [events, player.state, worldConfig, trustInfo]);
+  }, [mergedEvents, player.state, worldConfig, trustInfo]);
 
   // Flush engine output into React log state and commit player state
   const commitEngine = useCallback((engine) => {
@@ -178,9 +255,9 @@ export default function App() {
     return () => document.removeEventListener('mouseup', refocus);
   }, [panelOpen]);
 
-  // Initial room on ready
+  // Initial room on ready (mergedEvents includes drafts in build mode)
   useEffect(() => {
-    if (status === 'ready' && events.size > 0 && log.length === 0) {
+    if (status === 'ready' && mergedEvents.size > 0 && log.length === 0) {
       const engine = getEngine();
 
       engine.reconcileCounterLow();
@@ -191,7 +268,7 @@ export default function App() {
         for (const ref of worldConfig.inventoryRefs) {
           if (!engine.player.hasItem(ref)) {
             engine.player.pickUp(ref);
-            const itemEvent = events.get(ref);
+            const itemEvent = mergedEvents.get(ref);
             if (itemEvent) {
               const defaultState = getTag(itemEvent, 'state');
               if (defaultState) engine.player.setState(ref, defaultState);
@@ -206,7 +283,7 @@ export default function App() {
       engine.enterRoom(engine.currentPlace);
       commitEngine(engine);
     }
-  }, [status, generation]);
+  }, [status, generation, mergedEvents]);
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -257,12 +334,45 @@ export default function App() {
   const puzzleActive = engine?.puzzleActive ?? null;
   const dialogueActive = engine?.dialogueActive ?? null;
   const paymentActive = engine?.paymentActive ?? null;
-  const worldTitle = worldConfig?.title || WORLD_TAG;
+  // Title: relay world event → draft world event → slug → fallback
+  const worldTitle = useMemo(() => {
+    if (worldConfig?.title) return worldConfig.title;
+    // Check drafts for a world event title (pre-publish)
+    const worldDraft = drafts.find((d) => d.tags?.find((t) => t[0] === 'type')?.[1] === 'world');
+    const draftTitle = worldDraft?.tags?.find((t) => t[0] === 'title')?.[1];
+    return draftTitle || worldTag || 'foakloar';
+  }, [worldConfig, drafts, worldTag]);
   const availableModes = trustInfo?.availableModes || [];
   const effectiveMode = trustInfo?.effectiveMode || 'community';
 
   const shortPubkey = identity.pubkey ? identity.pubkey.slice(0, 8) + '...' : '';
   const isLoggedIn = identity.method !== 'ephemeral';
+
+  // ── Lobby route ────────────────────────────────────────────────────────
+  if (route.page === 'lobby') {
+    return (
+      <Lobby
+        identity={identity}
+        onSelectWorld={(slug) => navigateToWorld(slug)}
+        onCreateWorld={() => setShowWorldCreator(true)}
+        showWorldCreator={showWorldCreator}
+        worldCreatorNode={showWorldCreator && (
+          <WorldCreator
+            onClose={() => setShowWorldCreator(false)}
+            onSaveDrafts={(worldSlug, templates) => {
+              for (const tmpl of templates) {
+                saveDraft(worldSlug, tmpl);
+              }
+              setShowWorldCreator(false);
+              // Auto-enter build mode on the new world
+              setBuildMode(true);
+              navigateToWorld(worldSlug);
+            }}
+          />
+        )}
+      />
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto p-6 flex flex-col h-screen"
@@ -535,7 +645,7 @@ export default function App() {
       {/* Build mode overlay */}
       {buildMode && status === 'ready' && (
         <BuildModeOverlay
-          events={events}
+          events={mergedEvents}
           currentPlace={engineRef.current?.currentPlace || player.state.place}
           onNewEvent={(eventType) => setEditorState({ eventType })}
           onEditPortal={(slot) => {
@@ -560,8 +670,8 @@ export default function App() {
             setShowDrafts(false);
           }}
           onDelete={(id) => {
-            deleteDraft(WORLD_TAG, id);
-            setDrafts(loadDrafts(WORLD_TAG));
+            deleteDraft(worldTag, id);
+            setDrafts(loadDrafts(worldTag));
           }}
           onPublish={(draft) => {
             const eventType = draft.tags?.find((t) => t[0] === 'type')?.[1] || 'place';
@@ -573,24 +683,24 @@ export default function App() {
             setShowDrafts(false);
           }}
           onImport={(data) => {
-            const result = importEvents(WORLD_TAG, data);
-            setDrafts(loadDrafts(WORLD_TAG));
+            const result = importEvents(worldTag, data);
+            setDrafts(loadDrafts(worldTag));
             // TODO: show result.imported / result.skipped feedback
           }}
           onExport={() => {
-            const data = exportDrafts(WORLD_TAG);
+            const data = exportDrafts(worldTag);
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${WORLD_TAG}-drafts.json`;
+            a.download = `${worldTag}-drafts.json`;
             a.click();
             URL.revokeObjectURL(url);
           }}
           onBulkPublish={async () => {
             if (!identity.signer || !identity.pubkey) return;
-            const result = await bulkPublish(WORLD_TAG, identity.pubkey, identity.signer, relay);
-            setDrafts(loadDrafts(WORLD_TAG));
+            const result = await bulkPublish(worldTag, identity.pubkey, identity.signer, relay);
+            setDrafts(loadDrafts(worldTag));
             // TODO: show result.published / result.failed feedback
           }}
         />
@@ -600,29 +710,29 @@ export default function App() {
       {editorState && (
         <EventEditor
           eventType={editorState.eventType}
-          worldSlug={WORLD_TAG}
+          worldSlug={worldTag}
           pubkey={identity.pubkey}
           signer={identity.signer}
           relay={relay}
-          events={events}
+          events={mergedEvents}
           eventTemplate={editorState.eventTemplate || null}
           initialTags={editorState.initialTags || []}
           startInPreview={editorState.showPreview || false}
           onSaveDraft={(eventTemplate) => {
             const draftId = editorState.eventTemplate?._draft?.id;
             if (draftId) {
-              updateDraft(WORLD_TAG, draftId, eventTemplate);
+              updateDraft(worldTag, draftId, eventTemplate);
             } else {
-              saveDraft(WORLD_TAG, eventTemplate);
+              saveDraft(worldTag, eventTemplate);
             }
-            setDrafts(loadDrafts(WORLD_TAG));
+            setDrafts(loadDrafts(worldTag));
           }}
           onPublished={() => {
             // If was a draft, remove it
             const draftId = editorState.eventTemplate?._draft?.id;
             if (draftId) {
-              deleteDraft(WORLD_TAG, draftId);
-              setDrafts(loadDrafts(WORLD_TAG));
+              deleteDraft(worldTag, draftId);
+              setDrafts(loadDrafts(worldTag));
             }
           }}
           onClose={() => setEditorState(null)}

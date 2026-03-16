@@ -19,6 +19,8 @@ export function slugify(str) {
  * Build a d-tag from components.
  */
 export function buildDTag(worldSlug, eventType, name) {
+  // World events use <slug>:world (no name suffix)
+  if (eventType === 'world') return `${worldSlug}:world`;
   return `${worldSlug}:${eventType}:${slugify(name)}`;
 }
 
@@ -87,6 +89,8 @@ export function validateEvent(template) {
   for (const tag of template.tags) {
     for (let i = 1; i < tag.length; i++) {
       if (typeof tag[i] === 'string' && tag[i].startsWith('30078:')) {
+        // Skip validation for refs with <PUBKEY> placeholder (resolved at publish time)
+        if (tag[i].includes('<PUBKEY>')) continue;
         const parts = tag[i].split(':');
         if (parts.length < 3 || parts[1].length !== 64) {
           errors.push(`Invalid event ref in ${tag[0]}: ${tag[i]}`);
@@ -117,8 +121,9 @@ export function validateEvent(template) {
       errors.push('Missing title tag');
     }
 
-    // Content field required on most event types (optional on portals)
-    if (typeTag !== 'portal' && !template.content) {
+    // Content field required on most event types (optional on portals and world events)
+    const contentOptionalTypes = ['portal', 'world', 'vouch', 'consequence', 'dialogue', 'recipe', 'payment', 'quest'];
+    if (!contentOptionalTypes.includes(typeTag) && !template.content) {
       errors.push('Missing content — add a description in the content field');
     }
 
