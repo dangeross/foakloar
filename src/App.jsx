@@ -10,6 +10,11 @@ import { resolveTheme, applyTheme } from './theme.js';
 import { buildTrustSet, resolveClientMode } from './trust.js';
 import { useStateBackup } from './useStateBackup.js';
 import PaymentPanel from './PaymentPanel.jsx';
+import BuildModeOverlay from './builder/BuildModeOverlay.jsx';
+import EventEditor from './builder/EventEditor.jsx';
+import DraftListPanel from './builder/DraftListPanel.jsx';
+import ModeDropdown from './builder/ModeDropdown.jsx';
+import { loadDrafts, saveDraft, updateDraft, deleteDraft, importEvents, exportDrafts, bulkPublish } from './builder/draftStore.js';
 
 /** Map entry types to colour slots */
 const TYPE_COLOUR = {
@@ -81,6 +86,11 @@ export default function App() {
   const [loginError, setLoginError] = useState('');
   const [showNsec, setShowNsec] = useState(false);
   const [generation, setGeneration] = useState(0);
+  // Build mode state
+  const [buildMode, setBuildMode] = useState(false);
+  const [showDrafts, setShowDrafts] = useState(false);
+  const [editorState, setEditorState] = useState(null); // { eventType, draft?, initialTags?, ... }
+  const [drafts, setDrafts] = useState(() => loadDrafts(WORLD_TAG));
   const engineRef = useRef(null);
   const inputRef = useRef(null);
   const logEndRef = useRef(null);
@@ -256,27 +266,16 @@ export default function App() {
       <div className="text-sm mb-2 flex justify-between" style={{ color: 'var(--colour-dim)' }}>
         <span>{worldTitle}{status !== 'ready' ? ` | ${status}` : ''}</span>
         <span className="flex items-center gap-2">
-          {availableModes.length > 1 && (
-            <span>
-              {availableModes.map((mode) => (
-                <button
-                  key={mode}
-                  onClick={() => setClientMode(mode)}
-                  className="ml-2 cursor-pointer"
-                  style={{
-                    color: mode === effectiveMode ? 'var(--colour-highlight)' : 'var(--colour-dim)',
-                    textDecoration: mode === effectiveMode ? 'underline' : 'none',
-                    background: 'none',
-                    border: 'none',
-                    font: 'inherit',
-                    padding: 0,
-                  }}
-                >
-                  {mode}
-                </button>
-              ))}
-            </span>
-          )}
+          <ModeDropdown
+            availableModes={availableModes.length > 0 ? availableModes : [effectiveMode]}
+            effectiveMode={effectiveMode}
+            onSelectMode={setClientMode}
+            buildMode={buildMode}
+            onToggleBuild={() => setBuildMode(!buildMode)}
+            showBuildOption={identity.isProperIdentity}
+            draftsCount={drafts.length}
+            onOpenDrafts={() => setShowDrafts(true)}
+          />
           <button
             onClick={() => setShowLogin(!showLogin)}
             className="cursor-pointer"
@@ -526,6 +525,103 @@ export default function App() {
             // Force re-render
             setLog((prev) => [...prev]);
           }}
+        />
+      )}
+
+      {/* Build mode overlay */}
+      {buildMode && status === 'ready' && (
+        <BuildModeOverlay
+          events={events}
+          currentPlace={engineRef.current?.currentPlace || player.state.place}
+          onNewEvent={(eventType) => setEditorState({ eventType })}
+          onEditPortal={(slot) => {
+            // Pre-fill portal editor with current place and slot
+            const currentPlaceRef = engineRef.current?.currentPlace || player.state.place;
+            setEditorState({
+              eventType: 'portal',
+              initialTags: [['exit', currentPlaceRef, slot, '']],
+            });
+          }}
+        />
+      )}
+
+      {/* Draft list panel */}
+      {showDrafts && (
+        <DraftListPanel
+          drafts={drafts}
+          onClose={() => setShowDrafts(false)}
+          onEdit={(draft) => {
+            const eventType = draft.tags?.find((t) => t[0] === 'type')?.[1] || 'place';
+            setEditorState({ eventType, eventTemplate: draft });
+            setShowDrafts(false);
+          }}
+          onDelete={(id) => {
+            deleteDraft(WORLD_TAG, id);
+            setDrafts(loadDrafts(WORLD_TAG));
+          }}
+          onPublish={(draft) => {
+            const eventType = draft.tags?.find((t) => t[0] === 'type')?.[1] || 'place';
+            setEditorState({ eventType, eventTemplate: draft, showPreview: true });
+            setShowDrafts(false);
+          }}
+          onNew={() => {
+            setEditorState({ eventType: 'place' });
+            setShowDrafts(false);
+          }}
+          onImport={(data) => {
+            const result = importEvents(WORLD_TAG, data);
+            setDrafts(loadDrafts(WORLD_TAG));
+            // TODO: show result.imported / result.skipped feedback
+          }}
+          onExport={() => {
+            const data = exportDrafts(WORLD_TAG);
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${WORLD_TAG}-drafts.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+          }}
+          onBulkPublish={async () => {
+            if (!identity.signer || !identity.pubkey) return;
+            const result = await bulkPublish(WORLD_TAG, identity.pubkey, identity.signer, relay);
+            setDrafts(loadDrafts(WORLD_TAG));
+            // TODO: show result.published / result.failed feedback
+          }}
+        />
+      )}
+
+      {/* Event editor */}
+      {editorState && (
+        <EventEditor
+          eventType={editorState.eventType}
+          worldSlug={WORLD_TAG}
+          pubkey={identity.pubkey}
+          signer={identity.signer}
+          relay={relay}
+          events={events}
+          eventTemplate={editorState.eventTemplate || null}
+          initialTags={editorState.initialTags || []}
+          startInPreview={editorState.showPreview || false}
+          onSaveDraft={(eventTemplate) => {
+            const draftId = editorState.eventTemplate?._draft?.id;
+            if (draftId) {
+              updateDraft(WORLD_TAG, draftId, eventTemplate);
+            } else {
+              saveDraft(WORLD_TAG, eventTemplate);
+            }
+            setDrafts(loadDrafts(WORLD_TAG));
+          }}
+          onPublished={() => {
+            // If was a draft, remove it
+            const draftId = editorState.eventTemplate?._draft?.id;
+            if (draftId) {
+              deleteDraft(WORLD_TAG, draftId);
+              setDrafts(loadDrafts(WORLD_TAG));
+            }
+          }}
+          onClose={() => setEditorState(null)}
         />
       )}
 
