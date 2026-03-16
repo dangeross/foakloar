@@ -27,10 +27,13 @@ export default function EventPreview({ template, onPublish, onBack, onClose }) {
 
   return (
     <DOSPanel title="EVENT PREVIEW" onClose={onClose} minWidth="32em" maxWidth="95vw">
-      {!validation.valid && (
+      {(!validation.valid || validation.warnings?.length > 0) && (
         <div className="mb-2">
           {validation.errors.map((err, i) => (
-            <div key={i} style={{ color: 'var(--colour-error)' }}>⚠ {err}</div>
+            <div key={`e${i}`} style={{ color: 'var(--colour-error)' }}>✗ {err}</div>
+          ))}
+          {validation.warnings?.map((warn, i) => (
+            <div key={`w${i}`} style={{ color: 'var(--colour-dim)' }}>⚠ {warn}</div>
           ))}
         </div>
       )}

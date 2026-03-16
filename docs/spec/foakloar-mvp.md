@@ -128,8 +128,7 @@ The iron gate feature — visual representation of the blocked exit:
     ["state",       "locked"],
     ["transition",  "locked", "locked", "The gate holds fast."],
     ["requires", "chapel-solved", "The gate holds fast. Something is missing."],
-    ["on-interact", "open", "set-state", "open"],
-    ["description", "A heavy iron gate, cold to the touch. There is no visible lock."]
+    ["on-interact", "open", "set-state", "open"]
   ]
 }
 ```

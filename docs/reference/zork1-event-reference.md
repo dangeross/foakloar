@@ -538,10 +538,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",       "examine","look"],
     ["verb",       "enter",  "climb through", "go through"],
     ["on-interact","open",  "set-state", "open"],
-    ["on-interact","enter", "traverse",  "30078:<ZA>:zork1:portal:window-to-kitchen"],
-    ["description", "The window is slightly ajar."]
-  ]
-}
+    ["on-interact","enter", "traverse",  "30078:<ZA>:zork1:portal:window-to-kitchen"]
+  ],
+  "content": "The kitchen window is slightly ajar."
+}}
 
 // Small Mailbox
 {
@@ -556,10 +556,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",       "close",  "shut"],
     ["verb",       "examine","look"],
     ["on-interact","open",  "set-state", "open"],
-    ["contains", "30078:<ZA>:zork1:item:leaflet"],
-    ["description", "A small mailbox stands here."]
-  ]
-}
+    ["contains", "30078:<ZA>:zork1:item:leaflet"]
+  ],
+  "content": "A small mailbox stands by the road."
+}}
 
 // Trophy Case
 {
@@ -568,10 +568,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["title", "Trophy Case"],
     ["noun",  "case", "trophy case", "cabinet"],
     ["verb",  "examine", "look"],
-    ["verb",  "put",     "place", "deposit"],
-    ["description", "A trophy case, built into the wall. It is unlocked."]
-  ]
-}
+    ["verb",  "put",     "place", "deposit"]
+  ],
+  "content": "A large trophy case stands against the wall. It is empty."
+}}
 
 // Large Rug
 {
@@ -587,10 +587,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",       "look under"],
     ["on-interact","move",       "set-state", "moved"],
     ["on-interact","move",       "set-state", "visible", "30078:<ZA>:zork1:feature:trapdoor"],
-    ["on-interact","look under", "set-state", "visible", "30078:<ZA>:zork1:feature:trapdoor"],
-    ["description", "A large oriental rug covers most of the floor."]
-  ]
-}
+    ["on-interact","look under", "set-state", "visible", "30078:<ZA>:zork1:feature:trapdoor"]
+  ],
+  "content": "A large oriental rug covers the floor. Something lies beneath it."
+}}
 
 // Trapdoor (hidden until rug moved)
 {
@@ -606,10 +606,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",       "examine", "look"],
     ["verb",       "enter",   "go down", "down"],
     ["on-interact","open",  "set-state", "open"],
-    ["on-interact","enter", "traverse",  "30078:<ZA>:zork1:portal:living-room-to-cellar"],
-    ["description", "A trapdoor is set into the floor."]
-  ]
-}
+    ["on-interact","enter", "traverse",  "30078:<ZA>:zork1:portal:living-room-to-cellar"]
+  ],
+  "content": "A trapdoor is set into the floor."
+}}
 
 // Grating (forest clearing)
 {
@@ -625,10 +625,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",       "examine","look"],
     ["verb",       "enter",  "go down", "down"],
     ["on-interact","open",  "set-state", "open"],
-    ["on-interact","enter", "traverse",  "30078:<ZA>:zork1:portal:clearing-to-grating-room"],
-    ["description", "The grating is locked."]
-  ]
-}
+    ["on-interact","enter", "traverse",  "30078:<ZA>:zork1:portal:clearing-to-grating-room"]
+  ],
+  "content": "A metal grating is set into the floor."
+}}
 
 // Control Panel (dam)
 {
@@ -641,10 +641,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["transition", "on",  "on", "The panel is already active."],
     ["verb",       "press", "push", "activate"],
     ["verb",       "examine","look"],
-    ["on-interact","press", "set-state", "on"],
-    ["description", "The control panel has a single large button and a dial."]
-  ]
-}
+    ["on-interact","press", "set-state", "on"]
+  ],
+  "content": "A control panel with a large button and several switches."
+}}
 
 // Altar
 {
@@ -660,10 +660,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",       "pray",    "kneel", "worship"],
     ["verb",       "place",   "put", "put on"],
     ["on-interact","examine", "set-state", "visible", "30078:<ZA>:zork1:clue:altar-inscription"],
-    ["on-interact","pray",    "set-state", "prayed"],
-    ["description", "A highly polished black stone altar."]
-  ]
-}
+    ["on-interact","pray",    "set-state", "prayed"]
+  ],
+  "content": "An ancient altar stands in the centre of the room."
+}}
 
 // Engravings
 {
@@ -673,10 +673,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["noun",  "engravings", "writing", "inscription", "walls"],
     ["verb",  "examine", "read", "look"],
     ["on-interact","examine", "set-state", "visible", "30078:<ZA>:zork1:clue:engravings-text"],
-    ["on-interact","read",    "set-state", "visible", "30078:<ZA>:zork1:clue:engravings-text"],
-    ["description", "Ancient engravings cover the cave walls."]
-  ]
-}
+    ["on-interact","read",    "set-state", "visible", "30078:<ZA>:zork1:clue:engravings-text"]
+  ],
+  "content": "Ancient engravings cover the walls."
+}}
 
 // Torch Sconce
 {
@@ -689,10 +689,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",  "take",    "grab", "get"],
     ["verb",  "examine", "look"],
     ["on-interact","take", "give-item", "30078:<ZA>:zork1:item:torch"],
-    ["on-interact","take", "set-state", "taken"],
-    ["description", "A torch burns steadily in an iron sconce."]
-  ]
-}
+    ["on-interact","take", "set-state", "taken"]
+  ],
+  "content": "A torch burns in an iron sconce on the wall."
+}}
 ```
 
 ---
@@ -721,10 +721,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["on-move",         "on",       "decrement",   "battery"],
     ["on-counter",  "battery",  "50",  "set-state",   "flickering"],
     ["on-counter", "battery", "0",         "set-state",   "dead"],
-    ["on-counter", "battery", "0",  "consequence", "30078:<ZA>:zork1:consequence:lamp-dies"],
-    ["description", "A battery-powered brass lantern."]
-  ]
-}
+    ["on-counter", "battery", "0",  "consequence", "30078:<ZA>:zork1:consequence:lamp-dies"]
+  ],
+  "content": "A battery-powered brass lantern."
+}}
 
 // Elvish Sword
 {
@@ -735,10 +735,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["damage",      "4"],
     ["hit-chance",  "0.75"],
     ["verb",        "attack", "fight", "hit", "strike"],
-    ["on-interact", "attack", "deal-damage-npc", ""],
-    ["description", "A blade of elvish steel, glowing faintly blue near grue-inhabited areas."]
-  ]
-}
+    ["on-interact", "attack", "deal-damage-npc", ""]
+  ],
+  "content": "An elvish sword of great antiquity."
+}}
 
 // Knife
 {
@@ -749,10 +749,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["damage",      "2"],
     ["hit-chance",  "0.6"],
     ["verb",        "attack", "fight", "hit", "stab"],
-    ["on-interact", "attack", "deal-damage-npc", ""],
-    ["description", "A nasty-looking knife."]
-  ]
-}
+    ["on-interact", "attack", "deal-damage-npc", ""]
+  ],
+  "content": "A nasty-looking knife."
+}}
 
 // Rope
 {
@@ -765,10 +765,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["transition",  "tied",   "tied", "The rope is already tied."],
     ["verb",        "tie", "attach", "fasten"],
     ["verb",        "examine", "look"],
-    ["on-interact", "tie", "set-state", "tied"],
-    ["description", "A large coil of rope."]
-  ]
-}
+    ["on-interact", "tie", "set-state", "tied"]
+  ],
+  "content": "A coil of rope."
+}}
 
 // Brown Sack (container)
 {
@@ -777,10 +777,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["title", "Brown Sack"],
     ["noun",  "sack", "bag", "brown sack"],
     ["contains", "30078:<ZA>:zork1:item:lunch"],
-    ["contains", "30078:<ZA>:zork1:item:garlic"],
-    ["description", "A brown sack, smelling strongly of garlic."]
-  ]
-}
+    ["contains", "30078:<ZA>:zork1:item:garlic"]
+  ],
+  "content": "A brown sack, smelling of garlic."
+}}
 
 // Bottle of Water
 {
@@ -794,10 +794,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",        "pour",  "empty", "use"],
     ["verb",        "examine","look"],
     ["on-interact", "pour", "set-state", "empty"],
-    ["on-interact", "pour", "set-state", "watered", "30078:<ZA>:zork1:feature:altar"],
-    ["description", "A glass bottle filled with water."]
-  ]
-}
+    ["on-interact", "pour", "set-state", "watered", "30078:<ZA>:zork1:feature:altar"]
+  ],
+  "content": "A glass bottle filled with water."
+}}
 
 // Candles
 {
@@ -814,10 +814,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",            "examine","look"],
     ["on-interact",     "light", "set-state",   "lit"],
     ["on-move",         "lit",   "decrement",   "burn-time"],
-    ["on-counter", "burn-time", "0", "set-state","dead"],
-    ["description", "A pair of white candles."]
-  ]
-}
+    ["on-counter", "burn-time", "0", "set-state","dead"]
+  ],
+  "content": "Two white candles."
+}}
 
 // Matches
 {
@@ -830,20 +830,20 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",            "examine","look"],
     ["on-interact",     "strike",  "set-state",  "lit", "30078:<ZA>:zork1:item:candles"],
     ["on-interact",     "strike",  "decrement",  "matches"],
-    ["on-counter", "matches", "0", "consequence","30078:<ZA>:zork1:consequence:out-of-matches"],
-    ["description", "A small book of matches."]
-  ]
-}
+    ["on-counter", "matches", "0", "consequence","30078:<ZA>:zork1:consequence:out-of-matches"]
+  ],
+  "content": "A book of matches."
+}}
 
 // Skeleton Key
 {
   "kind": 30078, "tags": [
     ["d", "zork1:item:skeleton-key"], ["t", "zork1"], ["type", "item"],
     ["title", "Skeleton Key"],
-    ["noun",  "key", "skeleton key"],
-    ["description", "A small skeleton key."]
-  ]
-}
+    ["noun",  "key", "skeleton key"]
+  ],
+  "content": "A skeleton key."
+}}
 
 // Scarecrow Staff
 {
@@ -857,10 +857,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",        "wave",  "use", "brandish"],
     ["verb",        "examine","look"],
     ["on-interact", "wave", "set-state", "used"],
-    ["on-interact", "wave", "set-state", "visible", "30078:<ZA>:zork1:portal:canyon-to-rainbow"],
-    ["description", "A gnarled wooden staff that belonged to a scarecrow."]
-  ]
-}
+    ["on-interact", "wave", "set-state", "visible", "30078:<ZA>:zork1:portal:canyon-to-rainbow"]
+  ],
+  "content": "A gnarled staff."
+}}
 
 // Treasures (abbreviated — all portable items with noun tags)
 // painting, platinum-bar, jewel-encrusted-egg, large-emerald, sapphire-bracelet,
@@ -873,10 +873,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["d", "zork1:item:torch"], ["t", "zork1"], ["type", "item"],
     ["title", "Burning Torch"],
     ["noun",  "torch", "flame", "light"],
-    ["state", "lit"],
-    ["description", "A burning torch taken from the sconce."]
-  ]
-}
+    ["state", "lit"]
+  ],
+  "content": "A torch."
+}}
 
 // Leaflet
 {
@@ -885,7 +885,6 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["title", "Leaflet"],
     ["noun",  "leaflet", "pamphlet", "paper", "note"],
     ["verb",  "read", "examine", "look"],
-    ["description", "A small leaflet."],
     ["content", "WELCOME TO ZORK! ZORK is a game of adventure, danger and low cunning..."]
   ]
 }
@@ -905,10 +904,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["title", "Grue"],
     ["noun",  "grue"],
     ["requires-not", "30078:<ZA>:zork1:item:brass-lantern", "on", ""],
-    ["on-encounter", "player", "consequence", "30078:<ZA>:zork1:consequence:death"],
-    ["description", "A sinister, lurking presence in the dark. Its favourite diet is adventurers."]
-  ]
-}
+    ["on-encounter", "player", "consequence", "30078:<ZA>:zork1:consequence:death"]
+  ],
+  "content": "A sinister, lurking presence in the dark."
+}}
 
 // Thief — roaming, steals, has combat
 {
@@ -936,10 +935,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["on-attacked",  "player",  "deal-damage",  "3"],
     ["on-health-zero","consequence","30078:<ZA>:zork1:consequence:thief-dies"],
     ["stash",        "30078:<ZA>:zork1:place:treasure-room"],
-    ["dialogue",     "30078:<ZA>:zork1:dialogue:thief:greeting"],
-    ["description",  "A seedy-looking individual wearing a trench coat."]
-  ]
-}
+    ["dialogue",     "30078:<ZA>:zork1:dialogue:thief:greeting"]
+  ],
+  "content": "A seedy-looking individual with a large bag."
+}}
 
 // Cyclops — guards exit, flees on condition
 {
@@ -956,10 +955,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["on-encounter", "player",   "deal-damage",   "10"],
     ["on-attacked",  "player",   "deal-damage",   "10"],
     ["on-health-zero","consequence","30078:<ZA>:zork1:consequence:cyclops-flees"],
-    ["dialogue",     "30078:<ZA>:zork1:dialogue:cyclops:greeting"],
-    ["description",  "A large and extremely ugly giant cyclops."]
-  ]
-}
+    ["dialogue",     "30078:<ZA>:zork1:dialogue:cyclops:greeting"]
+  ],
+  "content": "A massive one-eyed creature blocks the passage."
+}}
 
 // Troll — guards bridge, combat
 {
@@ -974,10 +973,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["transition",   "blocking", "dead", "The troll slumps to the ground with a final roar."],
     ["on-encounter", "player",   "deal-damage",   "3"],
     ["on-attacked",  "player",   "deal-damage",   "3"],
-    ["on-health-zero","consequence","30078:<ZA>:zork1:consequence:troll-dies"],
-    ["description",  "A nasty-looking troll, brandishing a bloody axe."]
-  ]
-}
+    ["on-health-zero","consequence","30078:<ZA>:zork1:consequence:troll-dies"]
+  ],
+  "content": "A nasty-looking troll, brandishing a bloody axe."
+}}
 
 // Bat — roaming, steals items, scared by garlic
 {
@@ -993,10 +992,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["requires-not", "30078:<ZA>:zork1:item:garlic", "", ""],
     ["on-encounter", "player",   "steals-item", "any"],
     ["on-enter",     "30078:<ZA>:zork1:place:bat-room", "deposits"],
-    ["stash",        "30078:<ZA>:zork1:place:bat-room"],
-    ["description",  "A large bat swoops around erratically."]
-  ]
-}
+    ["stash",        "30078:<ZA>:zork1:place:bat-room"]
+  ],
+  "content": "A large bat circles overhead."
+}}
 
 // Cerberus — invincible, guards Hades exit
 {
@@ -1006,10 +1005,10 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["noun",  "cerberus", "dog", "hound", "beast"],
     ["health",       "999"],
     ["damage",       "999"],
-    ["on-encounter", "player", "deal-damage", "999"],
-    ["description",  "A three-headed dog guards the exit from Hades."]
-  ]
-}
+    ["on-encounter", "player", "deal-damage", "999"]
+  ],
+  "content": "A three-headed dog guards the gate."
+}}
 ```
 
 ---
@@ -1029,32 +1028,36 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["d", "zork1:portal:west-to-north"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:west-of-house", "north", "The path curves around the house."],
     ["exit", "30078:<ZA>:zork1:place:north-of-house", "west", "The path curves around the house."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "zork1:portal:west-to-south"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:west-of-house", "south", "The path curves around the house."],
     ["exit", "30078:<ZA>:zork1:place:south-of-house", "west", "The path curves around the house."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "zork1:portal:north-to-behind"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:north-of-house", "east", "The path continues east."],
     ["exit", "30078:<ZA>:zork1:place:behind-house", "west", "The path continues west."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "zork1:portal:south-to-behind"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:south-of-house", "east", "The path continues east."],
     ["exit", "30078:<ZA>:zork1:place:behind-house", "west", "The path continues west."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Behind House to Kitchen — window portal, hidden until window opened
 {
@@ -1064,24 +1067,27 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["exit", "30078:<ZA>:zork1:place:kitchen", "out", "The window leads back outside."],
     ["state",    "hidden"],
     ["requires", "30078:<ZA>:zork1:feature:kitchen-window", "open", "The window is not open enough to enter."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "zork1:portal:kitchen-to-living-room"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:kitchen", "west", "A passage leads west."],
     ["exit", "30078:<ZA>:zork1:place:living-room", "east", "A passage leads east."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "zork1:portal:kitchen-to-attic"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:kitchen", "up", "A dark staircase leads up."],
     ["exit", "30078:<ZA>:zork1:place:attic", "down", "The staircase leads back down."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Living Room to Cellar — hidden until trapdoor revealed, requires trapdoor open
 {
@@ -1091,24 +1097,27 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["exit", "30078:<ZA>:zork1:place:cellar", "up", "The metal ramp leads back up."],
     ["state",    "hidden"],
     ["requires", "30078:<ZA>:zork1:feature:trapdoor", "open", "The trapdoor is closed."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "zork1:portal:west-house-to-forest"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:west-of-house", "west", "The forest lies to the west."],
     ["exit", "30078:<ZA>:zork1:place:forest-1", "east", "Sunlight filters through the trees to the east."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "zork1:portal:north-house-to-forest"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:north-of-house", "path", "The path leads back to the house."],
     ["exit", "30078:<ZA>:zork1:place:forest-2", "south", "A narrow path winds south toward the house."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Grating portal — requires skeleton key
 {
@@ -1117,24 +1126,27 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["exit", "30078:<ZA>:zork1:place:forest-clearing", "down", "The grating leads below."],
     ["exit", "30078:<ZA>:zork1:place:grating-room", "up", "A grating leads up to the surface."],
     ["requires","30078:<ZA>:zork1:feature:grating",       "open", "The grating is locked."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "zork1:portal:canyon-view-to-ledge"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:canyon-view", "down", "A path descends into the canyon."],
     ["exit", "30078:<ZA>:zork1:place:rocky-ledge", "up", "The path climbs back up."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "zork1:portal:ledge-to-canyon-bottom"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:rocky-ledge", "down", "The path descends to the canyon floor."],
     ["exit", "30078:<ZA>:zork1:place:canyon-bottom", "up", "The path climbs the canyon wall."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Canyon to Rainbow — hidden until staff waved
 {
@@ -1144,8 +1156,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["exit", "30078:<ZA>:zork1:place:end-of-rainbow", "south", "The rainbow fades behind you."],
     ["state",    "hidden"],
     ["requires", "30078:<ZA>:zork1:item:scarecrow-staff", "used", "There is nothing at the end of the rainbow."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── UPPER DUNGEON ─────────────────────────────────────────────────────────────
 
@@ -1154,24 +1167,27 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["d", "zork1:portal:cellar-to-east-chasm"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:cellar", "east", "A crawlway leads east."],
     ["exit", "30078:<ZA>:zork1:place:east-of-chasm", "west", "A crawlway leads west."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "zork1:portal:cellar-to-gallery"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:cellar", "north", "A narrow passageway leads north."],
     ["exit", "30078:<ZA>:zork1:place:gallery", "south", "The passageway leads south."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "zork1:portal:gallery-to-studio"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:gallery", "north", "A passage leads north."],
     ["exit", "30078:<ZA>:zork1:place:studio", "south", "The passage leads south."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Troll Bridge — requires troll defeated
 {
@@ -1180,8 +1196,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["exit", "30078:<ZA>:zork1:place:east-of-chasm", "west", "A rickety bridge crosses the chasm."],
     ["exit", "30078:<ZA>:zork1:place:west-of-chasm", "east", "A rickety bridge crosses the chasm."],
     ["requires","30078:<ZA>:zork1:npc:troll",            "gone", "The troll blocks your passage."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Chasm Ledge — lethal if bridge not extended (uses room state for bridge condition)
 {
@@ -1191,8 +1208,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["exit", "30078:<ZA>:zork1:place:west-of-chasm", "east", "A narrow ledge crosses the chasm."],
     ["requires",    "30078:<ZA>:zork1:place:east-of-chasm", "bridged", "The ledge crumbles beneath you."],
     ["consequence", "30078:<ZA>:zork1:consequence:fell-into-chasm"]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Cyclops to Treasure — requires cyclops gone
 {
@@ -1201,8 +1219,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["exit", "30078:<ZA>:zork1:place:cyclops-room", "west", "A passage leads west."],
     ["exit", "30078:<ZA>:zork1:place:treasure-room", "east", "A passage leads east."],
     ["requires","30078:<ZA>:zork1:npc:cyclops",          "gone", "The cyclops blocks your way."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── MAZE (asymmetric by design — selected) ────────────────────────────────────
 
@@ -1212,8 +1231,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["d", "zork1:portal:maze-1-north"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:maze-1", "north", "A twisty passage."],
     ["exit", "30078:<ZA>:zork1:place:maze-2", "east", "A twisty passage."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // (maze-2 through maze-10 follow same asymmetric pattern)
 
@@ -1223,8 +1243,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["d", "zork1:portal:maze-to-cyclops"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:maze-5", "northeast", "A twisty passage."],
     ["exit", "30078:<ZA>:zork1:place:cyclops-room", "west", "The maze lies to the west."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── TORCH ROOM / ALTAR ────────────────────────────────────────────────────────
 
@@ -1233,8 +1254,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["d", "zork1:portal:torch-to-altar"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:torch-room", "south", "The torch room lies to the south."],
     ["exit", "30078:<ZA>:zork1:place:altar", "north", "The altar room lies to the north."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── DAM / RESERVOIR ───────────────────────────────────────────────────────────
 
@@ -1243,8 +1265,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["d", "zork1:portal:dam-to-reservoir-south"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:dam", "north", "The reservoir lies to the north."],
     ["exit", "30078:<ZA>:zork1:place:reservoir-south", "south", "The dam is to the south."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Reservoir South to Drained Reservoir — hidden until dam opened
 {
@@ -1254,8 +1277,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["exit", "30078:<ZA>:zork1:place:reservoir", "south", "The entrance is to the south."],
     ["state",    "hidden"],
     ["requires", "30078:<ZA>:zork1:feature:control-panel", "on", "The reservoir is still full of water."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── DOME ──────────────────────────────────────────────────────────────────────
 
@@ -1267,8 +1291,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["exit", "30078:<ZA>:zork1:place:dome-below", "up", "The rope leads back up."],
     ["state",    "hidden"],
     ["requires", "30078:<ZA>:zork1:item:rope", "tied", "There is nothing to climb down."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── HADES ─────────────────────────────────────────────────────────────────────
 
@@ -1280,16 +1305,18 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label>"]`
     ["exit", "30078:<ZA>:zork1:place:entrance-hades", "south", "The way back into darkness."],
     ["requires","30078:<ZA>:zork1:item:candles",          "lit",   "The altar is cold. The spirits will not let you pass."],
     ["requires","30078:<ZA>:zork1:feature:altar",         "prayed","You have not said the words."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Death respawn — one-way, fired by consequence
 {
   "kind": 30078, "tags": [
     ["d", "zork1:portal:respawn-to-hades"], ["t", "zork1"], ["type", "portal"],
     ["exit", "30078:<ZA>:zork1:place:hades", "death", "You have died."]
-  ]
-}
+  ],
+  "content": ""
+}}
 ```
 
 ---
@@ -1387,8 +1414,9 @@ Nodes grouped by `d` tag prefix. Client fetches all nodes for an NPC in one quer
     ["text",   "The thief eyes you suspiciously but says nothing."],
     ["option", "Attack",     "30078:<ZA>:zork1:dialogue:thief:attacked"],
     ["option", "Ignore him", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
@@ -1396,8 +1424,9 @@ Nodes grouped by `d` tag prefix. Client fetches all nodes for an NPC in one quer
     ["text",     "The thief draws his stiletto with a practiced hand."],
     ["on-enter", "player", "deal-damage", "3"],
     ["option",   "", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── CYCLOPS ───────────────────────────────────────────────────────────────────
 
@@ -1409,8 +1438,9 @@ Nodes grouped by `d` tag prefix. Client fetches all nodes for an NPC in one quer
     ["option",      "Offer peanut butter", "30078:<ZA>:zork1:dialogue:cyclops:peanut-butter"],
     ["option",      "Attack",              "30078:<ZA>:zork1:dialogue:cyclops:attack"],
     ["option",      "Flee",                ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
@@ -1419,8 +1449,9 @@ Nodes grouped by `d` tag prefix. Client fetches all nodes for an NPC in one quer
     ["text",     "The cyclops recoils in terror and crashes through the western door."],
     ["on-enter", "player", "consequence", "30078:<ZA>:zork1:consequence:cyclops-flees"],
     ["option",   "", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
@@ -1428,8 +1459,9 @@ Nodes grouped by `d` tag prefix. Client fetches all nodes for an NPC in one quer
     ["text",    "The cyclops bellows and raises its fist."],
     ["on-enter","player", "deal-damage", "10"],
     ["option",  "", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── OLD HERMIT ────────────────────────────────────────────────────────────────
 
@@ -1442,8 +1474,9 @@ Nodes grouped by `d` tag prefix. Client fetches all nodes for an NPC in one quer
     ["option", "Ask about the key",   "30078:<ZA>:zork1:dialogue:hermit:key"],
     ["option", "Ask about the staff", "30078:<ZA>:zork1:dialogue:hermit:staff"],
     ["option", "Leave",               ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // After cave — entry point if player has visited cave node
 {
@@ -1453,8 +1486,9 @@ Nodes grouped by `d` tag prefix. Client fetches all nodes for an NPC in one quer
     ["option", "Ask about the blessing", "30078:<ZA>:zork1:dialogue:hermit:blessing"],
     ["option", "Ask about the key",      "30078:<ZA>:zork1:dialogue:hermit:key"],
     ["option", "Leave",                  ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Cave info
 {
@@ -1464,8 +1498,9 @@ Nodes grouped by `d` tag prefix. Client fetches all nodes for an NPC in one quer
     ["on-enter","player", "set-state", "visited"],
     ["option", "Ask what the blessing is", "30078:<ZA>:zork1:dialogue:hermit:blessing"],
     ["option", "Thank him and leave",       ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Key — only offered if player holds map fragment
 {
@@ -1476,8 +1511,9 @@ Nodes grouped by `d` tag prefix. Client fetches all nodes for an NPC in one quer
     ["on-enter", "player", "set-state", "visible", "30078:<ZA>:zork1:clue:hermit-key-hint"],
     ["option",   "Ask about the altar", "30078:<ZA>:zork1:dialogue:hermit:blessing"],
     ["option",   "Thank him and leave", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Staff — only offered if player has scarecrow staff
 {
@@ -1486,8 +1522,9 @@ Nodes grouped by `d` tag prefix. Client fetches all nodes for an NPC in one quer
     ["requires", "30078:<ZA>:zork1:item:scarecrow-staff", "", ""],
     ["text",     "'The scarecrow's staff? Wave it at the rainbow. But mind the chasm.'"],
     ["option",   "Thank him and leave", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Blessing
 {
@@ -1497,8 +1534,9 @@ Nodes grouped by `d` tag prefix. Client fetches all nodes for an NPC in one quer
     ["on-enter","player", "set-state", "visited"],
     ["option",  "Ask about the words", "30078:<ZA>:zork1:dialogue:hermit:words"],
     ["option",  "Thank him and leave", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // After blessing — deepest entry point
 {
@@ -1506,8 +1544,9 @@ Nodes grouped by `d` tag prefix. Client fetches all nodes for an NPC in one quer
     ["d",      "zork1:dialogue:hermit:after-blessing"], ["t", "zork1"], ["type", "dialogue"],
     ["text",   "'You know what to do. Go — the cave awaits.'"],
     ["option", "Leave", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 ```
 
 ---

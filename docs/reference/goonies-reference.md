@@ -314,10 +314,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["verb",  "examine", "look", "search"],
     ["on-interact","open", "set-state", "open"],
     ["on-interact","open", "give-item", "30078:<GA>:goonies:item:doubloon"],
-    ["on-interact","open", "give-item", "30078:<GA>:goonies:item:map"],
-    ["description", "A battered wooden trunk. The lock is rusted but weak."]
-  ]
-}
+    ["on-interact","open", "give-item", "30078:<GA>:goonies:item:map"]
+  ],
+  "content": "A battered wooden trunk. The lock is rusted but weak."
+}}
 
 // Spanish Warning — Mouth must translate
 {
@@ -330,10 +330,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["transition", "translated", "translated", "You know what it says."],
     ["verb",  "examine", "read", "look"],
     ["requires",   "30078:<GA>:goonies:npc:mouth", "present", "It's in Spanish. You can't read it."],
-    ["on-interact","examine", "set-state", "translated"],
-    ["description", "A painted warning in Spanish. Red letters, urgent."]
-  ]
-}
+    ["on-interact","examine", "set-state", "translated"]
+  ],
+  "content": "A painted warning in Spanish. Red letters, urgent."
+}}
 
 // Sloth's Chain
 {
@@ -347,10 +347,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["verb",  "unlock",   "break", "free", "release"],
     ["requires",   "30078:<GA>:goonies:npc:chunk", "befriended-sloth", "Sloth eyes you warily. He doesn't trust you yet."],
     ["on-interact","unlock", "set-state", "broken"],
-    ["on-interact","unlock", "set-state", "ally", "30078:<GA>:goonies:npc:sloth"],
-    ["description", "Enormous iron chains bolted to the wall. Whatever is chained here is very large."]
-  ]
-}
+    ["on-interact","unlock", "set-state", "ally", "30078:<GA>:goonies:npc:sloth"]
+  ],
+  "content": "Enormous iron chains bolted to the wall. Whatever is chained here is very large."
+}}
 
 // Wishing Well
 {
@@ -368,10 +368,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["on-interact","take",    "set-state", "drained"],
     ["on-interact","take",    "consequence","30078:<GA>:goonies:consequence:bad-karma"],
     ["on-interact","leave",   "set-state", "left"],
-    ["on-interact","leave",   "consequence","30078:<GA>:goonies:consequence:good-karma"],
-    ["description", "A stone wishing well. Coins glint at the bottom. Years of wishes."]
-  ]
-}
+    ["on-interact","leave",   "consequence","30078:<GA>:goonies:consequence:good-karma"]
+  ],
+  "content": "A stone wishing well. Coins glint at the bottom. Years of wishes."
+}}
 
 // Blade Pendulum trap
 {
@@ -385,10 +385,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["verb",  "disable",  "stop", "use"],
     ["requires",   "30078:<GA>:goonies:item:pinchers-of-peril", "", "Nothing to stop it with."],
     ["on-interact","disable", "set-state",   "disabled"],
-    ["on-interact","disable", "consume-item","30078:<GA>:goonies:item:pinchers-of-peril"],
-    ["description", "A huge pendulum blade swings across the passage. Timing it seems impossible."]
-  ]
-}
+    ["on-interact","disable", "consume-item","30078:<GA>:goonies:item:pinchers-of-peril"]
+  ],
+  "content": "A huge pendulum blade swings across the passage. Timing it seems impossible."
+}}
 
 // Water Jet trap
 {
@@ -402,10 +402,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["verb",  "disable",  "block", "use"],
     ["requires",   "30078:<GA>:goonies:item:slick-shoes", "", "Nothing to redirect it with."],
     ["on-interact","disable", "set-state",   "disabled"],
-    ["on-interact","disable", "consume-item","30078:<GA>:goonies:item:slick-shoes"],
-    ["description", "A pressurised water jet blasts from the wall at irregular intervals."]
-  ]
-}
+    ["on-interact","disable", "consume-item","30078:<GA>:goonies:item:slick-shoes"]
+  ],
+  "content": "A pressurised water jet blasts from the wall at irregular intervals."
+}}
 
 // Spike Floor trap
 {
@@ -419,10 +419,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["verb",  "disable",  "cross", "use"],
     ["requires",   "30078:<GA>:goonies:item:bully-blinders", "", "Nothing to deal with the spikes."],
     ["on-interact","disable", "set-state",   "disabled"],
-    ["on-interact","disable", "consume-item","30078:<GA>:goonies:item:bully-blinders"],
-    ["description", "The floor ahead is riddled with pressure plates. One wrong step triggers the spikes."]
-  ]
-}
+    ["on-interact","disable", "consume-item","30078:<GA>:goonies:item:bully-blinders"]
+  ],
+  "content": "The floor ahead is riddled with pressure plates. One wrong step triggers the spikes."
+}}
 
 // False Wall (map chamber)
 {
@@ -438,10 +438,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["requires",   "30078:<GA>:goonies:npc:steph", "present", "Something seems off about this wall but you can't tell what."],
     ["on-interact","examine", "set-state", "visible"],
     ["on-interact","open",    "set-state", "open"],
-    ["on-interact","open",    "set-state", "visible", "30078:<GA>:goonies:portal:map-chamber-to-waterfall"],
-    ["description", "One section of the wall looks slightly different. The stones don't quite match."]
-  ]
-}
+    ["on-interact","open",    "set-state", "visible", "30078:<GA>:goonies:portal:map-chamber-to-waterfall"]
+  ],
+  "content": "One section of the wall looks slightly different. The stones don't quite match."
+}}
 
 // Bone Organ
 {
@@ -458,10 +458,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["verb",  "play",     "use", "touch"],
     ["requires",   "30078:<GA>:goonies:npc:andy", "present", "Nobody here can play this."],
     ["requires",   "30078:<GA>:goonies:item:map", "full", "The map's note sequence isn't fully revealed yet."],
-    ["on-interact","play", "set-state", "playing"],
-    ["description", "An organ built from human bones. Keys of finger bones. Pipes of femurs. Beautiful and terrible."]
-  ]
-}
+    ["on-interact","play", "set-state", "playing"]
+  ],
+  "content": "An organ built from human bones. Keys of finger bones. Pipes of femurs. Beautiful and terrible."
+}}
 
 // One-Eyed Willy's skeleton
 {
@@ -470,10 +470,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["title", "One-Eyed Willy"],
     ["noun",  "willy", "skeleton", "pirate", "captain"],
     ["verb",  "examine", "look", "talk to"],
-    ["on-interact","examine", "set-state", "visible", "30078:<GA>:goonies:clue:willy-message"],
-    ["description", "One-Eyed Willy sits at the helm. He's been waiting a long time. He looks... content."]
-  ]
-}
+    ["on-interact","examine", "set-state", "visible", "30078:<GA>:goonies:clue:willy-message"]
+  ],
+  "content": "One-Eyed Willy sits at the helm. He's been waiting a long time. He looks... content."
+}}
 
 // Treasure Hold
 {
@@ -490,10 +490,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["on-interact","take",  "set-state",  "taken"],
     ["on-interact","take",  "consequence","30078:<GA>:goonies:consequence:treasure-taken"],
     ["on-interact","leave", "set-state",  "left"],
-    ["on-interact","leave", "consequence","30078:<GA>:goonies:consequence:treasure-left"],
-    ["description", "Mountains of gold coins, jewels, and artefacts. More wealth than you can imagine. Centuries of piracy."]
-  ]
-}
+    ["on-interact","leave", "consequence","30078:<GA>:goonies:consequence:treasure-left"]
+  ],
+  "content": "Mountains of gold coins, jewels, and artefacts. More wealth than you can imagine. Centuries of piracy."
+}}
 ```
 
 ---
@@ -515,10 +515,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["transition",   "partial", "full",    "The organ chamber reveals the final section. The ship awaits."],
     ["verb",         "examine", "look", "read", "unfold"],
     ["verb",         "use",     "open"],
-    ["on-interact",  "examine", "set-state", "visible", "30078:<GA>:goonies:clue:map-current-section"],
-    ["description",  "An old leather map case. Something is sealed inside."]
-  ]
-}
+    ["on-interact",  "examine", "set-state", "visible", "30078:<GA>:goonies:clue:map-current-section"]
+  ],
+  "content": "An old leather map case. Something is sealed inside."
+}}
 
 // Doubloon — key for the map and wishing well descent
 {
@@ -531,10 +531,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["verb",  "examine", "look"],
     ["verb",  "use",     "insert", "place"],
     ["on-interact","use", "set-state", "used"],
-    ["on-interact","use", "set-state", "partial", "30078:<GA>:goonies:item:map"],
-    ["description", "A gold doubloon. One side shows a skull with one eye. This is the key."]
-  ]
-}
+    ["on-interact","use", "set-state", "partial", "30078:<GA>:goonies:item:map"]
+  ],
+  "content": "A gold doubloon. One side shows a skull with one eye. This is the key."
+}}
 
 // Data's Gadgets — single use items, counter: 1
 {
@@ -547,10 +547,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["state",           "ready"],
     ["verb",            "use", "attach", "deploy"],
     ["verb",            "examine", "look"],
-    ["on-counter", "uses", "0", "set-state", "spent"],
-    ["description", "One of Data's inventions. A spring-loaded clamping device. Single use."]
-  ]
-}
+    ["on-counter", "uses", "0", "set-state", "spent"]
+  ],
+  "content": "One of Data's inventions. A spring-loaded clamping device. Single use."
+}}
 
 {
   "kind": 30078, "tags": [
@@ -562,10 +562,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["transition",      "ready", "spent", "The Slick Shoes are used up."],
     ["verb",            "use",     "wear", "deploy"],
     ["verb",            "examine", "look"],
-    ["on-counter", "uses", "0", "set-state", "spent"],
-    ["description", "Data's rocket-powered shoes. Redirects water jets. Single use."]
-  ]
-}
+    ["on-counter", "uses", "0", "set-state", "spent"]
+  ],
+  "content": "Data's rocket-powered shoes. Redirects water jets. Single use."
+}}
 
 {
   "kind": 30078, "tags": [
@@ -577,20 +577,20 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["transition",      "ready", "spent", "The Bully Blinders are used up."],
     ["verb",            "use",     "deploy", "throw"],
     ["verb",            "examine", "look"],
-    ["on-counter", "uses", "0", "set-state", "spent"],
-    ["description", "Data's sensor-confusing goggles. Disables pressure-plate traps. Single use."]
-  ]
-}
+    ["on-counter", "uses", "0", "set-state", "spent"]
+  ],
+  "content": "Data's sensor-confusing goggles. Disables pressure-plate traps. Single use."
+}}
 
 // Map clue items
 {
   "kind": 30078, "tags": [
     ["d", "goonies:item:marble-bag"], ["t", "goonies"], ["type", "item"],
     ["title", "Bag of Marbles"],
-    ["noun",  "marbles", "bag", "bag of marbles"],
-    ["description", "A bag of Mikey's marbles. A childhood treasure. Useless — but you'd never throw them away."]
-  ]
-}
+    ["noun",  "marbles", "bag", "bag of marbles"]
+  ],
+  "content": "A bag of Mikey's marbles. A childhood treasure. Useless — but you'd never throw them away."
+}}
 ```
 
 ---
@@ -608,10 +608,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["noun",  "mouth", "clark", "kid"],
     ["state",      "present"],
     ["transition", "present", "gone", "Mouth runs off ahead."],
-    ["dialogue",   "30078:<GA>:goonies:dialogue:mouth:greeting"],
-    ["description","Clark 'Mouth' Devereaux. Talks too much. Speaks fluent Spanish — which is about to be very useful."]
-  ]
-}
+    ["dialogue",   "30078:<GA>:goonies:dialogue:mouth:greeting"]
+  ],
+  "content": "Clark 'Mouth' Devereaux. Talks too much. Speaks fluent Spanish — which is about to be very useful."
+}}
 
 // Data — gadgets
 {
@@ -620,10 +620,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["title", "Data"],
     ["noun",  "data", "richard", "kid"],
     ["state",      "present"],
-    ["dialogue",   "30078:<GA>:goonies:dialogue:data:greeting"],
-    ["description","Richard 'Data' Wang. His gadgets have never once worked perfectly. Today might be different."]
-  ]
-}
+    ["dialogue",   "30078:<GA>:goonies:dialogue:data:greeting"]
+  ],
+  "content": "Richard 'Data' Wang. His gadgets have never once worked perfectly. Today might be different."
+}}
 
 // Chunk — the distraction, then captured
 {
@@ -638,10 +638,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["transition",   "befriended-sloth", "reunited",        "Chunk and Sloth arrive together. Best friends."],
     ["dialogue",     "30078:<GA>:goonies:dialogue:chunk:greeting"],
     ["dialogue",     "30078:<GA>:goonies:dialogue:chunk:captured",   "30078:<GA>:goonies:npc:chunk", "captured"],
-    ["dialogue",     "30078:<GA>:goonies:dialogue:chunk:reunited",   "30078:<GA>:goonies:npc:chunk", "reunited"],
-    ["description",  "Lawrence 'Chunk' Cohen. His stomach has gotten him into trouble before. This time it might save everyone."]
-  ]
-}
+    ["dialogue",     "30078:<GA>:goonies:dialogue:chunk:reunited",   "30078:<GA>:goonies:npc:chunk", "reunited"]
+  ],
+  "content": "Lawrence 'Chunk' Cohen. His stomach has gotten him into trouble before. This time it might save everyone."
+}}
 
 // Brand — strength
 {
@@ -650,10 +650,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["title", "Brand"],
     ["noun",  "brand", "walsh", "mikey's brother", "brother"],
     ["state",      "present"],
-    ["dialogue",   "30078:<GA>:goonies:dialogue:brand:greeting"],
-    ["description","Brand Walsh. Mikey's older brother. Strong, overprotective, occasionally useful."]
-  ]
-}
+    ["dialogue",   "30078:<GA>:goonies:dialogue:brand:greeting"]
+  ],
+  "content": "Brand Walsh. Mikey's older brother. Strong, overprotective, occasionally useful."
+}}
 
 // Andy — musician
 {
@@ -662,10 +662,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["title", "Andy"],
     ["noun",  "andy", "cornwall", "girl"],
     ["state",      "present"],
-    ["dialogue",   "30078:<GA>:goonies:dialogue:andy:greeting"],
-    ["description","Andrea 'Andy' Carmichael. Brand's love interest. Piano lessons turn out to be unexpectedly critical."]
-  ]
-}
+    ["dialogue",   "30078:<GA>:goonies:dialogue:andy:greeting"]
+  ],
+  "content": "Andrea 'Andy' Carmichael. Brand's love interest. Piano lessons turn out to be unexpectedly critical."
+}}
 
 // Steph — observer
 {
@@ -674,10 +674,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["title", "Steph"],
     ["noun",  "steph", "stephanie", "girl"],
     ["state",      "present"],
-    ["dialogue",   "30078:<GA>:goonies:dialogue:steph:greeting"],
-    ["description","Stephanie Steinbrenner. Sharp eyes. She notices things others miss."]
-  ]
-}
+    ["dialogue",   "30078:<GA>:goonies:dialogue:steph:greeting"]
+  ],
+  "content": "Stephanie Steinbrenner. Sharp eyes. She notices things others miss."
+}}
 
 // Sloth — hostile until freed by Chunk
 {
@@ -698,10 +698,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["route",      "30078:<GA>:goonies:place:willy-ship"],
     ["on-encounter","player",  "deal-damage", "0"],
     ["dialogue",    "30078:<GA>:goonies:dialogue:sloth:greeting"],
-    ["dialogue",    "30078:<GA>:goonies:dialogue:sloth:ally",  "30078:<GA>:goonies:npc:sloth", "ally"],
-    ["description", "The misshapen giant chained to the wall. One eye stares at you. There's something kind behind it."]
-  ]
-}
+    ["dialogue",    "30078:<GA>:goonies:dialogue:sloth:ally",  "30078:<GA>:goonies:npc:sloth", "ally"]
+  ],
+  "content": "The misshapen giant chained to the wall. One eye stares at you. There's something kind behind it."
+}}
 
 // Mama Fratelli — roaming antagonist
 {
@@ -722,10 +722,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["route",      "30078:<GA>:goonies:place:lower-tunnels"],
     ["route",      "30078:<GA>:goonies:place:underground-cove"],
     ["on-encounter","player",  "consequence", "30078:<GA>:goonies:consequence:caught-by-fratellis"],
-    ["dialogue",    "30078:<GA>:goonies:dialogue:mama:greeting"],
-    ["description", "Mama Fratelli. Iron-haired and iron-willed. She runs the family. The family runs crime."]
-  ]
-}
+    ["dialogue",    "30078:<GA>:goonies:dialogue:mama:greeting"]
+  ],
+  "content": "Mama Fratelli. Iron-haired and iron-willed. She runs the family. The family runs crime."
+}}
 
 // Francis Fratelli
 {
@@ -741,10 +741,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["order",      "random"],
     ["route",      "30078:<GA>:goonies:place:fratelli-basement"],
     ["route",      "30078:<GA>:goonies:place:upper-tunnels"],
-    ["on-encounter","player", "consequence","30078:<GA>:goonies:consequence:caught-by-fratellis"],
-    ["description", "Francis Fratelli. Mean, slow, and currently very interested in finding you."]
-  ]
-}
+    ["on-encounter","player", "consequence","30078:<GA>:goonies:consequence:caught-by-fratellis"]
+  ],
+  "content": "Francis Fratelli. Mean, slow, and currently very interested in finding you."
+}}
 
 // Jake Fratelli
 {
@@ -761,10 +761,10 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["route",      "30078:<GA>:goonies:place:restaurant-exterior"],
     ["route",      "30078:<GA>:goonies:place:restaurant-interior"],
     ["route",      "30078:<GA>:goonies:place:fratelli-basement"],
-    ["on-encounter","player", "consequence","30078:<GA>:goonies:consequence:caught-by-fratellis"],
-    ["description", "Jake Fratelli. The younger brother. Jumpier than Francis. No less dangerous."]
-  ]
-}
+    ["on-encounter","player", "consequence","30078:<GA>:goonies:consequence:caught-by-fratellis"]
+  ],
+  "content": "Jake Fratelli. The younger brother. Jumpier than Francis. No less dangerous."
+}}
 ```
 
 ---
@@ -781,16 +781,18 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["d", "goonies:portal:attic-to-garage"], ["t", "goonies"], ["type", "portal"],
     ["exit", "30078:<GA>:goonies:place:attic", "down", "The stairs lead down to the garage."],
     ["exit", "30078:<GA>:goonies:place:garage", "up", "The attic stairs."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "goonies:portal:garage-to-docks"], ["t", "goonies"], ["type", "portal"],
     ["exit", "30078:<GA>:goonies:place:garage", "south", "The street outside."],
     ["exit", "30078:<GA>:goonies:place:goon-docks", "north", "Back to the house."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── STREET & RESTAURANT ───────────────────────────────────────────────────────
 
@@ -799,16 +801,18 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["d", "goonies:portal:docks-to-restaurant"], ["t", "goonies"], ["type", "portal"],
     ["exit", "30078:<GA>:goonies:place:goon-docks", "east", "The old restaurant is to the east."],
     ["exit", "30078:<GA>:goonies:place:restaurant-exterior", "west", "The docks lie to the west."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "goonies:portal:exterior-to-restaurant"], ["t", "goonies"], ["type", "portal"],
     ["exit", "30078:<GA>:goonies:place:restaurant-exterior", "enter", "Push through the door."],
     ["exit", "30078:<GA>:goonies:place:restaurant-interior", "out", "Back outside."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Restaurant to Basement — hidden until Chunk creates distraction
 {
@@ -818,8 +822,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["exit", "30078:<GA>:goonies:place:fratelli-basement", "up", "The hatch leads back up."],
     ["state",    "hidden"],
     ["requires", "30078:<GA>:goonies:npc:chunk", "distracted", "The Fratellis are watching. No way through while they're here."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── UNDERGROUND ───────────────────────────────────────────────────────────────
 
@@ -829,8 +834,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["exit", "30078:<GA>:goonies:place:fratelli-basement", "north", "The tunnel leads north."],
     ["exit", "30078:<GA>:goonies:place:wishing-well", "south", "Back to the basement."],
     ["requires","30078:<GA>:goonies:feature:spanish-warning", "translated", "A warning you can't read blocks the way."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Wishing Well descent — requires doubloon
 {
@@ -840,24 +846,27 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["exit", "30078:<GA>:goonies:place:upper-tunnels", "up", "Back up to the well."],
     ["state",    "hidden"],
     ["requires", "30078:<GA>:goonies:item:doubloon", "used", "The well mechanism needs the doubloon."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "goonies:portal:tunnels-to-trap-room"], ["t", "goonies"], ["type", "portal"],
     ["exit", "30078:<GA>:goonies:place:upper-tunnels", "west", "A passage leads west."],
     ["exit", "30078:<GA>:goonies:place:trap-room", "east", "Back to the junction."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "goonies:portal:tunnels-to-map-chamber"], ["t", "goonies"], ["type", "portal"],
     ["exit", "30078:<GA>:goonies:place:upper-tunnels", "east", "A passage leads east."],
     ["exit", "30078:<GA>:goonies:place:map-chamber", "west", "Back to the junction."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Trap Room to Waterfall — all traps must be disabled
 {
@@ -868,8 +877,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["requires","30078:<GA>:goonies:feature:blade-pendulum","disabled","The blade pendulum still swings."],
     ["requires","30078:<GA>:goonies:feature:water-jet",    "disabled","The water jet is still firing."],
     ["requires","30078:<GA>:goonies:feature:spike-floor",  "disabled","The spike floor is still active."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Map Chamber to Waterfall — hidden until false wall opened
 {
@@ -879,16 +889,18 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["exit", "30078:<GA>:goonies:place:waterfall-cave", "north", "Back through the wall."],
     ["state",    "hidden"],
     ["requires", "30078:<GA>:goonies:feature:false-wall", "open", "The wall is solid."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "goonies:portal:waterfall-to-organ"], ["t", "goonies"], ["type", "portal"],
     ["exit", "30078:<GA>:goonies:place:waterfall-cave", "down", "A passage descends."],
     ["exit", "30078:<GA>:goonies:place:bone-organ-chamber", "up", "Back up."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Organ Chamber to Lower Tunnels — sealed until organ solved
 {
@@ -898,24 +910,27 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["exit", "30078:<GA>:goonies:place:lower-tunnels", "south", "Back to the organ chamber."],
     ["state",    "hidden"],
     ["requires", "30078:<GA>:goonies:puzzle:organ-password", "solved", "The passage is sealed. The organ holds the key."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "goonies:portal:lower-tunnels-to-chase"], ["t", "goonies"], ["type", "portal"],
     ["exit", "30078:<GA>:goonies:place:lower-tunnels", "north", "The tunnel continues north."],
     ["exit", "30078:<GA>:goonies:place:chase-corridor", "south", "Back south."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "goonies:portal:chase-to-cove"], ["t", "goonies"], ["type", "portal"],
     ["exit", "30078:<GA>:goonies:place:chase-corridor", "north", "The cove is ahead!"],
     ["exit", "30078:<GA>:goonies:place:underground-cove", "south", "Back into the tunnels."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Cove to Ship — requires Sloth as ally
 {
@@ -924,8 +939,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["exit", "30078:<GA>:goonies:place:underground-cove", "board", "Board the ship."],
     ["exit", "30078:<GA>:goonies:place:willy-ship", "off", "Back to the cove."],
     ["requires","30078:<GA>:goonies:npc:sloth", "ally", "The ship's door is sealed. You need something enormously strong."]
-  ]
-}
+  ],
+  "content": ""
+}}
 ```
 
 ---
@@ -1042,8 +1058,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["option", "Show him the map",    "30078:<GA>:goonies:dialogue:mouth:map"],
     ["option", "Ask about Spanish",   "30078:<GA>:goonies:dialogue:mouth:spanish"],
     ["option", "Leave",               ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
@@ -1053,8 +1070,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["on-enter", "player", "set-state", "visited"],
     ["option",   "Tell him about the doubloon", "30078:<GA>:goonies:dialogue:mouth:doubloon"],
     ["option",   "Leave", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── CHUNK ─────────────────────────────────────────────────────────────────────
 
@@ -1065,8 +1083,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["option", "Show him the map",    "30078:<GA>:goonies:dialogue:chunk:map"],
     ["option", "Ask him to distract the Fratellis", "30078:<GA>:goonies:dialogue:chunk:distract"],
     ["option", "Leave",               ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
@@ -1074,8 +1093,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["text",     "'Distract them? With what? ...Oh no. Not the Truffle Shuffle. Mikey, come on...'"],
     ["option",   "Tell him it's the only way", "30078:<GA>:goonies:dialogue:chunk:truffle-shuffle"],
     ["option",   "Leave", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
@@ -1085,8 +1105,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["on-enter","player", "consequence","30078:<GA>:goonies:consequence:chunk-captured"],
     ["on-enter","player", "set-state", "visible",   "30078:<GA>:goonies:portal:restaurant-to-basement"],
     ["option",  "", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // After capture
 {
@@ -1095,8 +1116,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["requires", "30078:<GA>:goonies:npc:chunk", "captured", ""],
     ["text",     "Chunk is gone. Taken by the Fratellis."],
     ["option",   "", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── SLOTH ─────────────────────────────────────────────────────────────────────
 
@@ -1106,8 +1128,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["text",   "The giant stares at you. One eye. A crooked face. A sound like a foghorn. He's not threatening you — he's terrified of you."],
     ["option", "Offer food",   "30078:<GA>:goonies:dialogue:sloth:food"],
     ["option", "Back away",    ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
@@ -1117,8 +1140,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["on-enter", "player", "set-state", "befriended-sloth", "30078:<GA>:goonies:npc:chunk"],
     ["on-enter", "player", "set-state", "neutral", "30078:<GA>:goonies:npc:sloth"],
     ["option",   "", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
@@ -1127,8 +1151,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["text",     "'HEY YOU GUYS!' Sloth grins. He's with you now."],
     ["option",   "Ask him to open the ship door", "30078:<GA>:goonies:dialogue:sloth:door"],
     ["option",   "Leave", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── MAMA FRATELLI ─────────────────────────────────────────────────────────────
 
@@ -1138,8 +1163,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["text",   "Mama Fratelli fixes you with a stare that could stop a clock. 'What are you doing in my restaurant, kid?'"],
     ["option", "Run",               "30078:<GA>:goonies:dialogue:mama:run"],
     ["option", "Make up a story",   "30078:<GA>:goonies:dialogue:mama:story"]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
@@ -1147,8 +1173,9 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["text",    "'BOYS! Get them!'"],
     ["on-enter","player", "consequence", "30078:<GA>:goonies:consequence:caught-by-fratellis"],
     ["option",  "", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 ```
 
 ---

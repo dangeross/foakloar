@@ -200,8 +200,9 @@ derive key → decrypt keeper's final log
     ["type", "portal"],
     ["exit", "30078:<PUBKEY>:lighthouse:place:shore-path",        "north", "The lighthouse."],
     ["exit", "30078:<PUBKEY>:lighthouse:place:lighthouse-base",   "south", "The shore path."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Lighthouse Base ↔ Lamp Room
 {
@@ -211,8 +212,9 @@ derive key → decrypt keeper's final log
     ["type", "portal"],
     ["exit", "30078:<PUBKEY>:lighthouse:place:lighthouse-base", "up",   "Up the spiral stair."],
     ["exit", "30078:<PUBKEY>:lighthouse:place:lamp-room",       "down", "Down to the base."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Lighthouse Base ↔ Cottage
 {
@@ -222,8 +224,9 @@ derive key → decrypt keeper's final log
     ["type", "portal"],
     ["exit", "30078:<PUBKEY>:lighthouse:place:lighthouse-base",  "west", "The keeper's cottage."],
     ["exit", "30078:<PUBKEY>:lighthouse:place:keepers-cottage",  "east", "The lighthouse."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Lamp Room → Signal Alcove (hidden until lamp runs)
 {
@@ -235,8 +238,9 @@ derive key → decrypt keeper's final log
     ["exit",    "30078:<PUBKEY>:lighthouse:place:lamp-room",      "east", "A panel in the wall, previously invisible. It slides open."],
     ["exit",    "30078:<PUBKEY>:lighthouse:place:signal-alcove",  "west", "Back to the lamp room."],
     ["requires","30078:<PUBKEY>:lighthouse:feature:lamp", "running", "The lamp is dark. Nothing is visible."]
-  ]
-}
+  ],
+  "content": ""
+}}
 ```
 
 ---
@@ -253,9 +257,9 @@ derive key → decrypt keeper's final log
     ["title", "Crank Handle"],
     ["noun",  "crank", "handle", "crank handle"],
     ["verb",  "examine", "look"],
-    ["verb",  "use",     "insert", "turn", "fit"],
-    ["description", "A heavy iron handle, hexagonal socket at one end. Made to fit something specific."]
-  ]
+    ["verb",  "use",     "insert", "turn", "fit"]
+  ],
+  "content": "A heavy iron handle, hexagonal socket at one end. Made to fit something specific."
 }
 ```
 
@@ -277,9 +281,9 @@ derive key → decrypt keeper's final log
     ["transition", "searched",   "searched", "You've already been through it."],
     ["verb",       "examine",    "look", "search", "rummage"],
     ["on-interact","examine",    "set-state",   "searched"],
-    ["on-interact","examine",    "give-item",   "30078:<PUBKEY>:lighthouse:item:crank-handle"],
-    ["description","A line of seaweed and debris left by the last high tide."]
-  ]
+    ["on-interact","examine",    "give-item",   "30078:<PUBKEY>:lighthouse:item:crank-handle"]
+  ],
+  "content": "A line of seaweed and debris left by the last high tide."
 }
 
 // Mechanism — lighthouse base, requires crank handle
@@ -301,10 +305,10 @@ derive key → decrypt keeper's final log
     ["on-interact","use",      "set-state",  "running",    "30078:<PUBKEY>:lighthouse:feature:lamp"],
     ["on-interact","use",      "set-state",  "visible",    "30078:<PUBKEY>:lighthouse:portal:lamp-to-alcove"],
     ["on-interact","use",      "consume-item","30078:<PUBKEY>:lighthouse:item:crank-handle"],
-    ["description","The lamp drive. A crank socket gapes at its side."]
     // Note: the portal reveal fires here — on the action that causes the lamp to run.
     // Never use on-interact with a state value as the verb — states are not player commands.
-  ]
+  ],
+  "content": "The lamp drive. A crank socket gapes at its side."
 }
 
 // Lamp — lamp room, state driven by mechanism
@@ -322,8 +326,8 @@ derive key → decrypt keeper's final log
     ["on-interact","examine",  "set-state",  "visible", "30078:<PUBKEY>:lighthouse:clue:lamp-dark"],
     ["on-interact","examine",  "set-state",  "visible", "30078:<PUBKEY>:lighthouse:clue:lamp-running"],
     // lamp-running clue visibility is gated by requires on the clue itself (state: hidden until lamp running)
-    ["description","The great lamp. Cold and dark."]
-  ]
+  ],
+  "content": "The great lamp. Cold and dark."
 }
 
 // Logbook Shelf — lighthouse base
@@ -338,9 +342,9 @@ derive key → decrypt keeper's final log
     ["transition", "unread", "read", "Thirty years of entries. The last one ends mid-sentence."],
     ["verb",       "examine", "look", "read"],
     ["on-interact","examine", "set-state", "read"],
-    ["on-interact","examine", "set-state", "visible", "30078:<PUBKEY>:lighthouse:clue:logbook-entry"],
-    ["description","A shelf of logbooks. Thirty years of them. The last spine is blank."]
-  ]
+    ["on-interact","examine", "set-state", "visible", "30078:<PUBKEY>:lighthouse:clue:logbook-entry"]
+  ],
+  "content": "A shelf of logbooks. Thirty years of them. The last spine is blank."
 }
 
 // Writing Desk — cottage, clue about the keeper
@@ -355,9 +359,9 @@ derive key → decrypt keeper's final log
     ["transition", "unread", "read", "A letter, begun and abandoned. 'If you find this, the light is dark. You know what to do.'"],
     ["verb",       "examine", "look", "read", "search"],
     ["on-interact","examine", "set-state", "read"],
-    ["on-interact","examine", "set-state", "visible", "30078:<PUBKEY>:lighthouse:clue:desk-letter"],
-    ["description","A writing desk. Something was written here and left."]
-  ]
+    ["on-interact","examine", "set-state", "visible", "30078:<PUBKEY>:lighthouse:clue:desk-letter"]
+  ],
+  "content": "A writing desk. Something was written here and left."
 }
 
 // Cold Hearth — cottage, atmospheric
@@ -369,9 +373,9 @@ derive key → decrypt keeper's final log
     ["title",      "Cold Hearth"],
     ["noun",       "hearth", "fireplace", "fire"],
     ["verb",       "examine", "look"],
-    ["on-interact","examine", "set-state", "visible", "30078:<PUBKEY>:lighthouse:clue:hearth-ash"],
-    ["description","A fireplace, cold for years. Ash in the grate."]
-  ]
+    ["on-interact","examine", "set-state", "visible", "30078:<PUBKEY>:lighthouse:clue:hearth-ash"]
+  ],
+  "content": "A fireplace, cold for years. Ash in the grate."
 }
 
 // Lens — lamp room, atmospheric / reinforces lamp mechanic
@@ -383,9 +387,9 @@ derive key → decrypt keeper's final log
     ["title",      "The Fresnel Lens"],
     ["noun",       "lens", "fresnel", "glass"],
     ["verb",       "examine", "look"],
-    ["on-interact","examine", "set-state", "visible", "30078:<PUBKEY>:lighthouse:clue:lamp-dark"],
-    ["description","A great Fresnel lens, intact and dust-filmed. If the lamp ran, this would be visible for twenty miles."]
-  ]
+    ["on-interact","examine", "set-state", "visible", "30078:<PUBKEY>:lighthouse:clue:lamp-dark"]
+  ],
+  "content": "A great Fresnel lens, intact and dust-filmed. If the lamp ran, this would be visible for twenty miles."
 }
 
 // Signal Panel — alcove, the puzzle
@@ -402,9 +406,9 @@ derive key → decrypt keeper's final log
     ["verb",       "examine","look"],
     ["verb",       "use",    "decode", "read", "tune"],
     ["on-interact","examine","set-state", "lit"],
-    ["on-interact","examine","set-state", "visible", "30078:<PUBKEY>:lighthouse:clue:signal-instructions"],
-    ["description","A signal panel, hidden behind the sliding wall. Active."]
-  ]
+    ["on-interact","examine","set-state", "visible", "30078:<PUBKEY>:lighthouse:clue:signal-instructions"]
+  ],
+  "content": "A signal panel, hidden behind the sliding wall. Active."
 }
 
 // Final Log — alcove, NIP-44 sealed
@@ -416,9 +420,9 @@ derive key → decrypt keeper's final log
     ["title",      "Final Log"],
     ["noun",       "log", "logbook", "journal", "book"],
     ["state",      "sealed"],
-    ["verb",       "examine", "look", "read", "open"],
-    ["description","The blank-spined logbook from the shelf — it was here all along. Sealed."]
-  ]
+    ["verb",       "examine", "look", "read", "open"]
+  ],
+  "content": "The blank-spined logbook from the shelf — it was here all along. Sealed."
 }
 ```
 

@@ -2,6 +2,8 @@
  * eventBuilder.js — Construct valid NOSTR dungeon events from form data.
  */
 
+import { TAG_SCHEMAS, TAGS_BY_EVENT_TYPE, getTagSchema, tagToValues } from './tagSchema.js';
+
 /**
  * Slugify a title for use in d-tags.
  * Lowercases, replaces spaces/special chars with hyphens, trims.
@@ -68,33 +70,105 @@ export function buildEventTemplate({ eventType, worldSlug, dTag, tags, content }
  */
 export function validateEvent(template) {
   const errors = [];
+  const warnings = [];
 
-  // Check required tags
+  // ── Identity tags ────────────────────────────────────────────────────────
   const tagNames = new Set(template.tags.map((t) => t[0]));
   if (!tagNames.has('d')) errors.push('Missing d-tag');
   if (!tagNames.has('t')) errors.push('Missing t-tag (world)');
   if (!tagNames.has('type')) errors.push('Missing type tag');
 
-  // Check d-tag is non-empty
   const dTag = template.tags.find((t) => t[0] === 'd');
   if (dTag && !dTag[1]) errors.push('D-tag value is empty');
 
-  // Check event refs are well-formed
+  const typeTag = template.tags.find((t) => t[0] === 'type')?.[1];
+
+  // ── Event ref format ─────────────────────────────────────────────────────
   for (const tag of template.tags) {
     for (let i = 1; i < tag.length; i++) {
       if (typeof tag[i] === 'string' && tag[i].startsWith('30078:')) {
-        // Looks like an a-tag ref — validate format
         const parts = tag[i].split(':');
         if (parts.length < 3 || parts[1].length !== 64) {
-          errors.push(`Invalid event ref in ${tag[0]} tag: ${tag[i]}`);
+          errors.push(`Invalid event ref in ${tag[0]}: ${tag[i]}`);
         }
       }
     }
   }
 
-  return errors.length === 0
-    ? { valid: true }
-    : { valid: false, errors };
+  // ── Schema-based field validation ────────────────────────────────────────
+  if (typeTag) {
+    // Check required fields on each tag
+    for (const tag of template.tags) {
+      const tagName = tag[0];
+      const schema = getTagSchema(tagName, typeTag);
+      if (!schema) continue;
+
+      const values = tagToValues(tag, schema.fields);
+      for (const field of schema.fields) {
+        if (field.required && !values[field.name]) {
+          errors.push(`${schema.label || tagName}: "${field.name}" is required`);
+        }
+      }
+    }
+
+    // Check event type has at least a title (for types that use one)
+    const typesWithTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest'];
+    if (typesWithTitle.includes(typeTag) && !tagNames.has('title')) {
+      errors.push('Missing title tag');
+    }
+
+    // Content field required on most event types (optional on portals)
+    if (typeTag !== 'portal' && !template.content) {
+      errors.push('Missing content — add a description in the content field');
+    }
+
+    // Portal must have at least one exit
+    if (typeTag === 'portal' && !tagNames.has('exit')) {
+      errors.push('Portal must have at least one exit');
+    }
+
+    // Place should have at least one exit (warning, not error)
+    if (typeTag === 'place' && !tagNames.has('exit')) {
+      warnings.push('Place has no exits — players cannot leave');
+    }
+
+    // Items/features/NPCs need at least one noun for parser
+    const typesWithNoun = ['item', 'feature', 'npc'];
+    if (typesWithNoun.includes(typeTag) && !tagNames.has('noun')) {
+      warnings.push(`${typeTag} has no noun — players cannot refer to it`);
+    }
+
+    // Triggers with no action selected
+    const triggerNames = ['on-interact', 'on-enter', 'on-encounter', 'on-attacked',
+      'on-health-zero', 'on-player-health-zero', 'on-move', 'on-counter', 'on-complete'];
+    for (const tag of template.tags) {
+      if (triggerNames.includes(tag[0])) {
+        const schema = getTagSchema(tag[0], typeTag);
+        if (schema) {
+          const values = tagToValues(tag, schema.fields);
+          if (!values.action) {
+            errors.push(`${schema.label}: no action type selected`);
+          }
+        }
+      }
+    }
+
+    // State machine: transitions without initial state
+    if (tagNames.has('transition') && !tagNames.has('state')) {
+      warnings.push('Has transitions but no initial state');
+    }
+
+    // Warn about unknown tags for this event type
+    const allowedTags = new Set([...(TAGS_BY_EVENT_TYPE[typeTag] || []), 'd', 't', 'type']);
+    for (const tag of template.tags) {
+      if (!allowedTags.has(tag[0])) {
+        warnings.push(`"${tag[0]}" is not expected on ${typeTag} events`);
+      }
+    }
+  }
+
+  const valid = errors.length === 0;
+  return { valid, errors, warnings };
 }
 
 /**

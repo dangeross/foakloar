@@ -530,10 +530,10 @@ Path-conditional content uses standard `requires`:
     ["title", "Cluttered Desk"],
     ["noun",  "desk", "table"],
     ["verb",  "examine", "look", "search"],
-    ["on-interact","examine", "set-state", "visible", "30078:<FA>:fate:clue:desk-note"],
-    ["description", "Your desk, buried under papers and artefacts."]
-  ]
-}
+    ["on-interact","examine", "set-state", "visible", "30078:<FA>:fate:clue:desk-note"]
+  ],
+  "content": "Your desk, buried under papers and artefacts."
+}}
 
 // Path Stone (Tikal choice chamber — the most important feature in the game)
 {
@@ -546,10 +546,10 @@ Path-conditional content uses standard `requires`:
     ["verb",  "examine",  "look"],
     ["verb",  "touch",    "press", "use"],
     ["on-interact","examine", "set-state", "visible", "30078:<FA>:fate:clue:path-description"],
-    ["on-interact","touch",   "set-state", "chosen"],
-    ["description", "Three ancient symbols carved into the floor. Each glows faintly."]
-  ]
-}
+    ["on-interact","touch",   "set-state", "chosen"]
+  ],
+  "content": "Three ancient symbols carved into the floor. Each glows faintly."
+}}
 
 // Nur-Ab-Sal Necklace Display
 {
@@ -562,10 +562,10 @@ Path-conditional content uses standard `requires`:
     ["verb",  "open",    "unlock"],
     ["verb",  "examine", "look"],
     ["on-interact","open", "set-state", "open"],
-    ["on-interact","open", "give-item", "30078:<FA>:fate:item:nur-ab-sal-necklace"],
-    ["description", "A glass display case containing an Atlantean necklace."]
-  ]
-}
+    ["on-interact","open", "give-item", "30078:<FA>:fate:item:nur-ab-sal-necklace"]
+  ],
+  "content": "A glass display case containing an Atlantean necklace."
+}}
 
 // Bead Machine (key puzzle feature)
 {
@@ -583,10 +583,10 @@ Path-conditional content uses standard `requires`:
     ["on-interact","examine", "set-state", "visible", "30078:<FA>:fate:clue:machine-instructions"],
     ["on-interact","use",     "set-state", "loaded"],
     ["on-interact","turn",    "set-state", "aligned"],
-    ["requires",   "30078:<FA>:fate:item:orichalcum-beads", "shaped", "The beads don't fit yet."],
-    ["description", "An ancient machine with slots arranged in a precise pattern."]
-  ]
-}
+    ["requires",   "30078:<FA>:fate:item:orichalcum-beads", "shaped", "The beads don't fit yet."]
+  ],
+  "content": "An ancient machine with slots arranged in a precise pattern."
+}}
 
 // Stone Mechanism (Iceland)
 {
@@ -601,10 +601,10 @@ Path-conditional content uses standard `requires`:
     ["verb",  "use",     "turn", "push", "pull"],
     ["requires",   "30078:<FA>:fate:item:stone-disk", "", "Something is missing from the mechanism."],
     ["on-interact","use", "set-state", "open"],
-    ["on-interact","use", "set-state", "visible", "30078:<FA>:fate:portal:iceland-to-chamber"],
-    ["description", "A circular stone mechanism set into the wall. A disc-shaped recess sits at its centre."]
-  ]
-}
+    ["on-interact","use", "set-state", "visible", "30078:<FA>:fate:portal:iceland-to-chamber"]
+  ],
+  "content": "A circular stone mechanism set into the wall. A disc-shaped recess sits at its centre."
+}}
 
 // Omphalos Stone
 {
@@ -620,10 +620,10 @@ Path-conditional content uses standard `requires`:
     ["verb",  "place",    "put"],
     ["requires",   "30078:<FA>:fate:item:stone-tablet", "", "The stone responds to nothing."],
     ["on-interact","use",  "set-state", "resonating"],
-    ["on-interact","use",  "set-state", "visible", "30078:<FA>:fate:portal:crete-to-atlantis"],
-    ["description", "A rounded stone carved with concentric circles. The navel of the world."]
-  ]
-}
+    ["on-interact","use",  "set-state", "visible", "30078:<FA>:fate:portal:crete-to-atlantis"]
+  ],
+  "content": "A rounded stone carved with concentric circles. The navel of the world."
+}}
 
 // God Machine (endgame — three paths diverge here)
 {
@@ -641,10 +641,10 @@ Path-conditional content uses standard `requires`:
     ["on-interact","activate", "set-state", "active"],
     ["on-interact","activate", "consequence","30078:<FA>:fate:consequence:atlantis-sinks"],
     ["on-interact","destroy",  "set-state",  "destroyed"],
-    ["on-interact","destroy",  "consequence","30078:<FA>:fate:consequence:atlantis-survives"],
-    ["description", "An enormous machine of orichalcum and stone. Its purpose is unclear — and terrifying."]
-  ]
-}
+    ["on-interact","destroy",  "consequence","30078:<FA>:fate:consequence:atlantis-survives"]
+  ],
+  "content": "An enormous machine of orichalcum and stone. Its purpose is unclear — and terrifying."
+}}
 ```
 
 ---
@@ -661,10 +661,10 @@ Path-conditional content uses standard `requires`:
     ["title", "Indy's Journal"],
     ["noun",  "journal", "diary", "notebook", "book"],
     ["verb",  "read", "examine", "open"],
-    ["on-interact","read", "set-state", "visible", "30078:<FA>:fate:clue:journal-contents"],
-    ["description", "Your battered field journal. Years of notes and sketches fill its pages."]
-  ]
-}
+    ["on-interact","read", "set-state", "visible", "30078:<FA>:fate:clue:journal-contents"]
+  ],
+  "content": "Your battered field journal. Years of notes and sketches fill its pages."
+}}
 
 // Plato's Lost Dialogue
 {
@@ -673,10 +673,10 @@ Path-conditional content uses standard `requires`:
     ["title", "Plato's Lost Dialogue"],
     ["noun",  "dialogue", "plato", "manuscript", "text", "book"],
     ["verb",  "read",    "examine"],
-    ["on-interact","read", "set-state", "visible", "30078:<FA>:fate:clue:plato-atlantis-clue"],
-    ["description", "A previously unknown dialogue by Plato. It contains detailed descriptions of Atlantis."]
-  ]
-}
+    ["on-interact","read", "set-state", "visible", "30078:<FA>:fate:clue:plato-atlantis-clue"]
+  ],
+  "content": "A transcript of Plato's lost dialogue on Atlantis."
+}}
 
 // Nur-Ab-Sal Necklace
 {
@@ -689,20 +689,20 @@ Path-conditional content uses standard `requires`:
     ["verb",  "wear",    "put on", "use"],
     ["verb",  "examine", "look"],
     ["on-interact","wear", "set-state", "active"],
-    ["on-interact","wear", "consequence", "30078:<FA>:fate:consequence:nur-ab-sal-speaks"],
-    ["description", "An Atlantean necklace. It hums faintly when held."]
-  ]
-}
+    ["on-interact","wear", "consequence", "30078:<FA>:fate:consequence:nur-ab-sal-speaks"]
+  ],
+  "content": "An Atlantean necklace that hums with ancient power."
+}}
 
 // Stone Disk
 {
   "kind": 30078, "tags": [
     ["d", "fate:item:stone-disk"], ["t", "fate"], ["type", "item"],
     ["title", "Stone Disk"],
-    ["noun",  "disk", "stone disk", "disc"],
-    ["description", "A perfectly circular stone disk. Symbols are carved into its face."]
-  ]
-}
+    ["noun",  "disk", "stone disk", "disc"]
+  ],
+  "content": "A perfectly circular stone disk. Symbols are carved into its face."
+}}
 
 // Orichalcum Beads — the central puzzle item
 {
@@ -715,10 +715,10 @@ Path-conditional content uses standard `requires`:
     ["transition",  "shaped", "used",    "You insert the beads into the machine."],
     ["verb",        "examine","look"],
     ["verb",        "shape",  "work",   "carve", "mould"],
-    ["on-interact", "shape",  "set-state", "shaped"],
-    ["description", "Beads of raw orichalcum. The metal glows faintly orange."]
-  ]
-}
+    ["on-interact", "shape",  "set-state", "shaped"]
+  ],
+  "content": "Beads of raw orichalcum. The metal glows faintly orange."
+}}
 
 // Stone Tablet (Crete)
 {
@@ -727,20 +727,20 @@ Path-conditional content uses standard `requires`:
     ["title", "Stone Tablet"],
     ["noun",  "tablet", "stone tablet", "slab"],
     ["verb",  "read",    "examine"],
-    ["on-interact","read", "set-state", "visible", "30078:<FA>:fate:clue:tablet-inscription"],
-    ["description", "A stone tablet covered in Atlantean script."]
-  ]
-}
+    ["on-interact","read", "set-state", "visible", "30078:<FA>:fate:clue:tablet-inscription"]
+  ],
+  "content": "A stone tablet covered in Atlantean script."
+}}
 
 // Trident Key
 {
   "kind": 30078, "tags": [
     ["d", "fate:item:trident-key"], ["t", "fate"], ["type", "item"],
     ["title", "Trident Key"],
-    ["noun",  "key", "trident", "trident key"],
-    ["description", "A key shaped like a trident. Clearly Atlantean in origin."]
-  ]
-}
+    ["noun",  "key", "trident", "trident key"]
+  ],
+  "content": "A key shaped like a trident. Clearly Atlantean in origin."
+}}
 
 // Whip (Indy's signature item — always carried)
 {
@@ -749,10 +749,10 @@ Path-conditional content uses standard `requires`:
     ["title", "Bullwhip"],
     ["noun",  "whip", "bullwhip", "lash"],
     ["verb",  "use",   "swing", "crack", "throw"],
-    ["verb",  "examine","look"],
-    ["description", "Your trusty bullwhip. It's gotten you out of more than a few scrapes."]
-  ]
-}
+    ["verb",  "examine","look"]
+  ],
+  "content": "Your trusty bullwhip. It's gotten you out of more than a few scrapes."
+}}
 
 // Revolver
 {
@@ -767,38 +767,38 @@ Path-conditional content uses standard `requires`:
     ["verb",            "examine","look"],
     ["on-interact",     "use",    "deal-damage-npc", ""],
     ["on-interact",     "use",    "decrement",       "bullets"],
-    ["on-counter", "bullets", "0","set-state",       "empty"],
-    ["description", "A standard .38 revolver."]
-  ]
-}
+    ["on-counter", "bullets", "0","set-state",       "empty"]
+  ],
+  "content": "A standard .38 revolver."
+}}
 
 // Path items (given on path choice)
 {
   "kind": 30078, "tags": [
     ["d", "fate:item:path-wits"], ["t", "fate"], ["type", "item"],
     ["title", "Wits Path"],
-    ["noun",  "wits"],
-    ["description", "You have chosen the path of the mind."]
-  ]
-}
+    ["noun",  "wits"]
+  ],
+  "content": "You have chosen the path of the mind."
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "fate:item:path-fists"], ["t", "fate"], ["type", "item"],
     ["title", "Fists Path"],
-    ["noun",  "fists"],
-    ["description", "You have chosen the path of brawn."]
-  ]
-}
+    ["noun",  "fists"]
+  ],
+  "content": "You have chosen the path of brawn."
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "fate:item:path-team"], ["t", "fate"], ["type", "item"],
     ["title", "Team Path"],
-    ["noun",  "team"],
-    ["description", "You have chosen the path of partnership."]
-  ]
-}
+    ["noun",  "team"]
+  ],
+  "content": "You have chosen the path of partnership."
+}}
 ```
 
 ---
@@ -824,10 +824,10 @@ Path-conditional content uses standard `requires`:
     ["on-health-zero","consequence","30078:<FA>:fate:consequence:sophia-freed"],
     ["dialogue",     "30078:<FA>:fate:dialogue:sophia:greeting"],
     ["dialogue",     "30078:<FA>:fate:dialogue:sophia:after-necklace",  "30078:<FA>:fate:item:nur-ab-sal-necklace",  "active"],
-    ["dialogue",     "30078:<FA>:fate:dialogue:sophia:possessed",       "30078:<FA>:fate:npc:sophia",               "possessed"],
-    ["description",  "Sophia Hapgood. Former adventurer and psychic. She knows more about Atlantis than she lets on."]
-  ]
-}
+    ["dialogue",     "30078:<FA>:fate:dialogue:sophia:possessed",       "30078:<FA>:fate:npc:sophia",               "possessed"]
+  ],
+  "content": "Sophia Hapgood. Former adventurer and psychic. She knows more about Atlantis than she lets on."
+}}
 
 // Klaus Kerner — primary antagonist
 {
@@ -845,10 +845,10 @@ Path-conditional content uses standard `requires`:
     ["on-encounter", "player",   "deal-damage",  "4"],
     ["on-attacked",  "player",   "deal-damage",  "4"],
     ["on-health-zero","consequence","30078:<FA>:fate:consequence:kerner-defeated"],
-    ["dialogue",     "30078:<FA>:fate:dialogue:kerner:greeting"],
-    ["description",  "Klaus Kerner. A cold-eyed Nazi agent. He wants Atlantis for the Reich."]
-  ]
-}
+    ["dialogue",     "30078:<FA>:fate:dialogue:kerner:greeting"]
+  ],
+  "content": "Klaus Kerner. A cold-eyed Nazi agent. He wants Atlantis for the Reich."
+}}
 
 // Nur-Ab-Sal — Atlantean spirit, possesses Sophia
 {
@@ -862,10 +862,10 @@ Path-conditional content uses standard `requires`:
     ["transition",   "expelled", "expelled", "Nur-Ab-Sal is gone."],
     ["requires",     "30078:<FA>:fate:item:nur-ab-sal-necklace", "active", ""],
     ["on-encounter", "player",    "deal-damage", "0"],
-    ["dialogue",     "30078:<FA>:fate:dialogue:nur-ab-sal:greeting"],
-    ["description",  "An ancient Atlantean spirit. Bound to the necklace. Not entirely unfriendly — yet."]
-  ]
-}
+    ["dialogue",     "30078:<FA>:fate:dialogue:nur-ab-sal:greeting"]
+  ],
+  "content": "An ancient Atlantean spirit. Bound to the necklace. Not entirely unfriendly — yet."
+}}
 
 // Sophia Possessed — separate NPC state for endgame
 {
@@ -876,10 +876,10 @@ Path-conditional content uses standard `requires`:
     ["requires",     "30078:<FA>:fate:npc:sophia", "possessed", ""],
     ["health",       "1"],
     ["on-health-zero","consequence","30078:<FA>:fate:consequence:sophia-freed"],
-    ["dialogue",     "30078:<FA>:fate:dialogue:sophia:possessed"],
-    ["description",  "Sophia stands motionless. Nur-Ab-Sal speaks from behind her eyes."]
-  ]
-}
+    ["dialogue",     "30078:<FA>:fate:dialogue:sophia:possessed"]
+  ],
+  "content": "Sophia stands motionless. Nur-Ab-Sal speaks from behind her eyes."
+}}
 
 // Marcus Brody — mentor, Barnett College
 {
@@ -887,10 +887,10 @@ Path-conditional content uses standard `requires`:
     ["d", "fate:npc:marcus"], ["t", "fate"], ["type", "npc"],
     ["title", "Marcus Brody"],
     ["noun",  "marcus", "brody", "dean"],
-    ["dialogue",    "30078:<FA>:fate:dialogue:marcus:greeting"],
-    ["description", "Dean Marcus Brody. Your friend and colleague at Barnett College."]
-  ]
-}
+    ["dialogue",    "30078:<FA>:fate:dialogue:marcus:greeting"]
+  ],
+  "content": "Marcus Brody. Your friend and colleague. Hopelessly lost in any marketplace."
+}}
 
 // Sternhart — double agent, Iceland
 {
@@ -901,10 +901,10 @@ Path-conditional content uses standard `requires`:
     ["state",     "friendly"],
     ["transition","friendly", "hostile", "Sternhart drops the pretence."],
     ["dialogue",  "30078:<FA>:fate:dialogue:sternhart:greeting"],
-    ["dialogue",  "30078:<FA>:fate:dialogue:sternhart:revealed", "30078:<FA>:fate:puzzle:sternhart-reveal", "solved"],
-    ["description","A fellow archaeologist at the Icelandic dig. Something about him feels off."]
-  ]
-}
+    ["dialogue",  "30078:<FA>:fate:dialogue:sternhart:revealed", "30078:<FA>:fate:puzzle:sternhart-reveal", "solved"]
+  ],
+  "content": "A collector of antiquities with murky motivations."
+}}
 ```
 
 ---
@@ -923,16 +923,18 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["d", "fate:portal:office-to-hallway"], ["t", "fate"], ["type", "portal"],
     ["exit", "30078:<FA>:fate:place:barnett-office", "south", "The hallway lies to the south."],
     ["exit", "30078:<FA>:fate:place:barnett-hallway", "north", "Your office is to the north."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "fate:portal:hallway-to-library"], ["t", "fate"], ["type", "portal"],
     ["exit", "30078:<FA>:fate:place:barnett-hallway", "east", "The library lies to the east."],
     ["exit", "30078:<FA>:fate:place:barnett-library", "west", "The hallway lies to the west."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── NEW YORK ──────────────────────────────────────────────────────────────────
 
@@ -941,8 +943,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["d", "fate:portal:apartment-to-study"], ["t", "fate"], ["type", "portal"],
     ["exit", "30078:<FA>:fate:place:sophia-apartment", "east", "The study is through the east door."],
     ["exit", "30078:<FA>:fate:place:sophia-study", "west", "The living room lies to the west."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── ICELAND ───────────────────────────────────────────────────────────────────
 
@@ -954,8 +957,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["exit", "30078:<FA>:fate:place:iceland-chamber", "up", "The surface is above."],
     ["state",    "hidden"],
     ["requires", "30078:<FA>:fate:feature:stone-mechanism", "open", "There is no passage here."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── TIKAL ─────────────────────────────────────────────────────────────────────
 
@@ -964,16 +968,18 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["d", "fate:portal:tikal-to-ruins"], ["t", "fate"], ["type", "portal"],
     ["exit", "30078:<FA>:fate:place:tikal-exterior", "north", "The ruins lie to the north."],
     ["exit", "30078:<FA>:fate:place:tikal-ruins", "south", "The jungle exterior is to the south."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "fate:portal:ruins-to-choice"], ["t", "fate"], ["type", "portal"],
     ["exit", "30078:<FA>:fate:place:tikal-ruins", "down", "A passage leads deeper."],
     ["exit", "30078:<FA>:fate:place:tikal-choice", "up", "The ruins above."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── CRETE ─────────────────────────────────────────────────────────────────────
 
@@ -982,8 +988,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["d", "fate:portal:crete-to-labyrinth-entrance"], ["t", "fate"], ["type", "portal"],
     ["exit", "30078:<FA>:fate:place:crete-exterior", "east", "The labyrinth entrance lies to the east."],
     ["exit", "30078:<FA>:fate:place:crete-labyrinth-entrance", "west", "The exterior is to the west."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Labyrinth Entry — requires key for some paths
 {
@@ -992,8 +999,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["exit", "30078:<FA>:fate:place:crete-labyrinth-entrance", "down", "The labyrinth descends."],
     ["exit", "30078:<FA>:fate:place:labyrinth-1", "up", "The entrance is above."],
     ["requires","30078:<FA>:fate:item:trident-key", "", "The labyrinth is sealed."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Crete to Atlantis — hidden until omphalos activated
 {
@@ -1003,8 +1011,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["exit", "30078:<FA>:fate:place:atlantis-gate", "up", "The passage leads back up."],
     ["state",    "hidden"],
     ["requires", "30078:<FA>:fate:feature:omphalos-stone", "activated", "There is no way forward."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Minotaur Chamber (Fists path only)
 {
@@ -1013,8 +1022,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["exit", "30078:<FA>:fate:place:labyrinth-4", "north", "A heavy door leads north."],
     ["exit", "30078:<FA>:fate:place:minotaur-chamber", "south", "The labyrinth lies to the south."],
     ["requires","30078:<FA>:fate:item:path-fists", "", "This path is not available to you."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── THERA ─────────────────────────────────────────────────────────────────────
 
@@ -1023,16 +1033,18 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["d", "fate:portal:thera-to-cave"], ["t", "fate"], ["type", "portal"],
     ["exit", "30078:<FA>:fate:place:thera-exterior", "down", "The cave entrance is below."],
     ["exit", "30078:<FA>:fate:place:thera-cave", "up", "The surface is above."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "fate:portal:thera-cave-to-ruins"], ["t", "fate"], ["type", "portal"],
     ["exit", "30078:<FA>:fate:place:thera-cave", "east", "The ruins lie to the east."],
     ["exit", "30078:<FA>:fate:place:thera-ruins", "west", "The cave is to the west."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── ATLANTIS ──────────────────────────────────────────────────────────────────
 
@@ -1042,16 +1054,18 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["exit", "30078:<FA>:fate:place:atlantis-gate", "north", "The city lies beyond."],
     ["exit", "30078:<FA>:fate:place:atlantis-plaza", "south", "The gate is to the south."],
     ["requires","30078:<FA>:fate:puzzle:gate-bead-lock", "solved", "The gate is sealed. Orichalcum beads are needed."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
     ["d", "fate:portal:plaza-to-bead-chamber"], ["t", "fate"], ["type", "portal"],
     ["exit", "30078:<FA>:fate:place:atlantis-plaza", "north", "The machine chamber lies north."],
     ["exit", "30078:<FA>:fate:place:bead-machine-chamber", "south", "The plaza is to the south."]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
@@ -1059,8 +1073,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["exit", "30078:<FA>:fate:place:atlantis-plaza", "east", "The throne room lies east."],
     ["exit", "30078:<FA>:fate:place:atlantis-throne", "west", "The plaza is to the west."],
     ["requires","30078:<FA>:fate:feature:bead-machine",  "aligned", "The path to the throne room is sealed."]
-  ]
-}
+  ],
+  "content": ""
+}}
 ```
 
 ---
@@ -1157,8 +1172,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["requires",    "30078:<FA>:fate:item:stone-tablet",     "",     "The tablet shows the required shapes."],
     ["on-complete", "", "set-state", "shaped", "30078:<FA>:fate:item:orichalcum-beads"],
     ["ordered",     "false"]
-  ]
-}
+  ],
+  "content": ""
+}}
 ```
 
 ---
@@ -1230,8 +1246,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["option", "Ask about the necklace",  "30078:<FA>:fate:dialogue:sophia:necklace"],
     ["option", "Ask her to join you",     "30078:<FA>:fate:dialogue:sophia:join"],
     ["option", "Leave",                   ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
@@ -1241,8 +1258,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["option",  "Ask about Nur-Ab-Sal", "30078:<FA>:fate:dialogue:sophia:nur-ab-sal"],
     ["option",  "Ask about the visions","30078:<FA>:fate:dialogue:sophia:visions"],
     ["option",  "Leave",                ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
@@ -1251,8 +1269,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["text",     "'Join you? ...All right, Indy. But you owe me.'"],
     ["on-enter", "player", "consequence", "30078:<FA>:fate:consequence:sophia-joins"],
     ["option",   "", ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // Sophia possessed — entry point when NPC in possessed state
 {
@@ -1262,8 +1281,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["option", "Attack",      "30078:<FA>:fate:dialogue:sophia:possessed-fight"],
     ["option", "Reason with her", "30078:<FA>:fate:dialogue:sophia:possessed-reason"],
     ["option", "Back away",   ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── NUR-AB-SAL ────────────────────────────────────────────────────────────────
 
@@ -1276,8 +1296,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["option",   "Ask about the God Machine","30078:<FA>:fate:dialogue:nur-ab-sal:machine"],
     ["option",   "Ask about Sophia",         "30078:<FA>:fate:dialogue:nur-ab-sal:sophia"],
     ["option",   "Leave",                    ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 {
   "kind": 30078, "tags": [
@@ -1286,8 +1307,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["on-enter","player", "set-state", "visible", "30078:<FA>:fate:clue:god-machine-warning"],
     ["option",  "Ask what happened",   "30078:<FA>:fate:dialogue:nur-ab-sal:history"],
     ["option",  "Leave",               ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── KERNER ────────────────────────────────────────────────────────────────────
 
@@ -1298,8 +1320,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["option", "Refuse",          "30078:<FA>:fate:dialogue:kerner:refused"],
     ["option", "Ask what he wants","30078:<FA>:fate:dialogue:kerner:wants"],
     ["option", "Fight",           "30078:<FA>:fate:dialogue:kerner:fight"]
-  ]
-}
+  ],
+  "content": ""
+}}
 
 // ── MARCUS ────────────────────────────────────────────────────────────────────
 
@@ -1310,8 +1333,9 @@ Exit shape: `["exit", "<place-ref>", "<slot>", "<label?>"]`
     ["option", "Ask about Kerner",           "30078:<FA>:fate:dialogue:marcus:kerner"],
     ["option", "Ask about Plato's Atlantis", "30078:<FA>:fate:dialogue:marcus:atlantis"],
     ["option", "Leave",                       ""]
-  ]
-}
+  ],
+  "content": ""
+}}
 ```
 
 ---

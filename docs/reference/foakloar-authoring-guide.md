@@ -10,11 +10,11 @@ All FOAKLOAR documentation lives at:
 
 | Folder | Contents |
 |--------|---------|
-| `spec/` | `nostr-dungeon-design.md` — full schema spec and tag reference |
+| `spec/` | `foakloar-design.md` — full schema spec and tag reference |
 | `the-lake/` | The Lake world — a complete worked example of a medium-sized world |
 | `reference/` | Zork, Fate of Atlantis, Goonies reference implementations. This authoring guide. Micro-world example. |
 
-For a new authoring session: this guide is the starting point. For full tag reference: `nostr-dungeon-design.md`. For worked examples: see the `reference/` folder.
+For a new authoring session: this guide is the starting point. For full tag reference: `foakloar-design.md`. For worked examples: see the `reference/` folder.
 
 ---
 
@@ -145,7 +145,7 @@ A place with no interactions is a corridor. A place where every interaction matt
 
 ### Step 5 — Write events
 
-> **Before writing any JSON:** open `nostr-dungeon-design.md` (in `spec/` in the repo). All concrete tag shapes, action types, and trigger names live there. This guide covers how to think about authoring — the spec covers exact syntax. You will need both.
+> **Before writing any JSON:** open `foakloar-design.md` (in `spec/` in the repo). All concrete tag shapes, action types, and trigger names live there. This guide covers how to think about authoring — the spec covers exact syntax. You will need both.
 
 Now write the JSON. Order matters:
 

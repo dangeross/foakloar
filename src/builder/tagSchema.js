@@ -64,7 +64,6 @@ export const TAG_SCHEMAS = {
 
   // ── Display ──────────────────────────────────────────────────────────────
   title:          { label: 'Title', desc: 'Display name shown to the player', fields: [{ name: 'value', type: 'text', required: true, placeholder: 'Display title' }] },
-  description:    { label: 'Description', desc: 'Short text shown when the player examines this', fields: [{ name: 'value', type: 'textarea', required: false, placeholder: 'Short description text' }] },
   'content-type': {
     label: 'Content Type',
     desc: 'How the content body is formatted (plain text, markdown, or NIP-44 encrypted)',
@@ -360,13 +359,13 @@ export const TAG_SCHEMAS = {
 export const TAGS_BY_EVENT_TYPE = {
   place:       ['title', 'content-type', 'exit', 'item', 'feature', 'npc', 'clue', 'noun', 'state', 'transition', 'requires', 'requires-not', 'on-enter', 'on-player-health-zero', 'media', 'cw', 'puzzle'],
   portal:      ['exit', 'state', 'transition', 'requires', 'requires-not', 'consequence', 'cw'],
-  item:        ['title', 'noun', 'verb', 'description', 'state', 'transition', 'on-interact', 'on-move', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'damage', 'hit-chance', 'media'],
-  feature:     ['title', 'noun', 'verb', 'description', 'state', 'transition', 'on-interact', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'media'],
+  item:        ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-move', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'damage', 'hit-chance', 'media'],
+  feature:     ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'media'],
   clue:        ['title', 'noun', 'state', 'transition', 'content-type', 'requires', 'requires-not', 'media', 'puzzle'],
   puzzle:      ['puzzle-type', 'answer-hash', 'salt', 'ordered', 'requires', 'on-complete', 'content-type'],
   recipe:      ['state', 'transition', 'requires', 'on-complete', 'ordered'],
-  payment:     ['title', 'description', 'amount', 'unit', 'lnurl', 'on-complete'],
-  npc:         ['title', 'noun', 'verb', 'description', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health-zero', 'on-player-health-zero', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not'],
+  payment:     ['title', 'amount', 'unit', 'lnurl', 'on-complete'],
+  npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health-zero', 'on-player-health-zero', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not'],
   dialogue:    ['text', 'option', 'requires', 'requires-not', 'on-enter'],
   consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage'],
   world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'theme', 'colour', 'font', 'cursor', 'content-type', 'media'],

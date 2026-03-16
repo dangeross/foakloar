@@ -123,7 +123,7 @@ describe('portal tags', () => {
 describe('npc tags', () => {
   const npcTags = TAGS_BY_EVENT_TYPE.npc;
   it.each([
-    'title', 'noun', 'verb', 'description', 'state', 'transition', 'dialogue',
+    'title', 'noun', 'verb', 'state', 'transition', 'dialogue',
     'on-interact', 'on-encounter', 'on-attacked', 'on-health-zero',
     'on-player-health-zero', 'on-enter', 'on-move', 'on-counter', 'counter',
     'speed', 'order', 'route', 'stash', 'roams-when', 'inventory',

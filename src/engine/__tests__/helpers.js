@@ -44,7 +44,7 @@ export function makePlace(name, { features = [], items = [], npcs = [], portals 
 }
 
 /** Create a feature event. */
-export function makeFeature(name, { state, transitions = [], verbs = [], nouns = [], onInteract = [], requires = [], description, extraTags = [] } = {}) {
+export function makeFeature(name, { state, transitions = [], verbs = [], nouns = [], onInteract = [], requires = [], content = '', extraTags = [] } = {}) {
   const dtag = `${WORLD}:feature:${name}`;
   const tags = [
     ['type', 'feature'],
@@ -55,14 +55,13 @@ export function makeFeature(name, { state, transitions = [], verbs = [], nouns =
     ...nouns.map((n) => ['noun', ...n]),
     ...onInteract.map((oi) => ['on-interact', ...oi]),
     ...requires.map((r) => ['requires', ...r]),
-    ...(description ? [['description', description]] : []),
     ...extraTags,
   ];
-  return makeEvent(dtag, tags, '');
+  return makeEvent(dtag, tags, content);
 }
 
 /** Create an item event. */
-export function makeItem(name, { state, counters = [], verbs = [], nouns = [], onInteract = [], onMove = [], onCounter = [], transitions = [], description, extraTags = [] } = {}) {
+export function makeItem(name, { state, counters = [], verbs = [], nouns = [], onInteract = [], onMove = [], onCounter = [], transitions = [], content = '', extraTags = [] } = {}) {
   const dtag = `${WORLD}:item:${name}`;
   const tags = [
     ['type', 'item'],
@@ -75,10 +74,9 @@ export function makeItem(name, { state, counters = [], verbs = [], nouns = [], o
     ...onInteract.map((oi) => ['on-interact', ...oi]),
     ...onMove.map((om) => ['on-move', ...om]),
     ...onCounter.map((oc) => ['on-counter', ...oc]),
-    ...(description ? [['description', description]] : []),
     ...extraTags,
   ];
-  return makeEvent(dtag, tags, '');
+  return makeEvent(dtag, tags, content);
 }
 
 /** Create a portal event. */
@@ -118,7 +116,7 @@ export function makeClue(name, content = 'A mysterious clue.') {
 }
 
 /** Create an NPC event. */
-export function makeNPC(name, { dialogue = [], requires = [], description, extraTags = [] } = {}) {
+export function makeNPC(name, { dialogue = [], requires = [], content = '', extraTags = [] } = {}) {
   const dtag = `${WORLD}:npc:${name}`;
   const tags = [
     ['type', 'npc'],
@@ -126,10 +124,9 @@ export function makeNPC(name, { dialogue = [], requires = [], description, extra
     ['noun', name],
     ...dialogue.map((d) => ['dialogue', ...d]),
     ...requires.map((r) => ['requires', ...r]),
-    ...(description ? [['description', description]] : []),
     ...extraTags,
   ];
-  return makeEvent(dtag, tags, '');
+  return makeEvent(dtag, tags, content);
 }
 
 /** Create a dialogue node event. */
@@ -157,7 +154,7 @@ export function buildEvents(...eventList) {
 }
 
 /** Create a roaming NPC event. */
-export function makeRoamingNPC(name, { speed = 3, order = 'sequential', routes = [], stash, roamsWhen, inventory = [], onEncounter = [], onEnter = [], state, health, dialogue = [], requires = [], description, extraTags = [] } = {}) {
+export function makeRoamingNPC(name, { speed = 3, order = 'sequential', routes = [], stash, roamsWhen, inventory = [], onEncounter = [], onEnter = [], state, health, dialogue = [], requires = [], content = '', extraTags = [] } = {}) {
   const dtag = `${WORLD}:npc:${name}`;
   const tags = [
     ['type', 'npc'],
@@ -175,10 +172,9 @@ export function makeRoamingNPC(name, { speed = 3, order = 'sequential', routes =
     ...(health ? [['health', String(health)]] : []),
     ...dialogue.map((d) => ['dialogue', ...d]),
     ...requires.map((r) => ['requires', ...r]),
-    ...(description ? [['description', description]] : []),
     ...extraTags,
   ];
-  return makeEvent(dtag, tags, '');
+  return makeEvent(dtag, tags, content);
 }
 
 /** Create a fresh player state. */

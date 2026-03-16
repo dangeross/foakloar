@@ -382,7 +382,7 @@ export class GameEngine {
   // ── Examine inventory item ────────────────────────────────────────────
 
   examineInventoryItem(invMatch) {
-    const desc = getTag(invMatch.event, 'description');
+    const desc = invMatch.event.content;
     if (desc) this._emit(desc, 'narrative');
     const itemState = this.player.getState(invMatch.dtag);
     if (itemState) this._emit(`It is currently ${itemState}.`, 'narrative');
@@ -512,7 +512,7 @@ export class GameEngine {
     const defaultState = getDefaultState(event);
     const currentState = this.player.getState(dtag) || defaultState;
 
-    const desc = getTag(event, 'description');
+    const desc = event.content;
     if (desc) this._emit(desc, 'narrative');
 
     this.processFeatureInteract(event, dtag, 'examine', currentState);
@@ -1173,7 +1173,7 @@ export class GameEngine {
       if (!req.allowed) { this._emit(req.reason, 'error'); return; }
 
       if (verb === 'examine') {
-        const desc = getTag(event, 'description');
+        const desc = event.content;
         if (desc) this._emit(desc, 'narrative');
       }
 
@@ -1183,7 +1183,7 @@ export class GameEngine {
       }
     } else if (type === 'npc') {
       if (verb === 'examine') {
-        const desc = getTag(event, 'description');
+        const desc = event.content;
         if (desc) this._emit(desc, 'narrative');
       } else if (verb === 'talk') {
         this.startDialogue(dtag);
@@ -1199,7 +1199,7 @@ export class GameEngine {
         }
       } else {
         if (verb === 'examine') {
-          const desc = getTag(event, 'description');
+          const desc = event.content;
           if (desc) this._emit(desc, 'narrative');
         } else {
           this._emit("You need to pick that up first.", 'error');

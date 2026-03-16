@@ -257,10 +257,9 @@ Items support the same `state`, `verb`, and `on-interact` tags as features — s
     ["t",           "the-lake"],
     ["type",        "item"],
     ["title",       "An Iron Key"],
-    ["noun",        "key",    "iron key"],
-    ["description", "Heavy and cold. The bow is shaped like a serpent."]
+    ["noun",        "key",    "iron key"]
   ],
-  "content": ""
+  "content": "Heavy and cold. The bow is shaped like a serpent."
 }
 ```
 
@@ -279,10 +278,9 @@ An item with state and verbs:
     ["verb", "turn off", "switch off", "off"],
     ["state",       "off"],
     ["on-interact", "turn on",  "set-state", "on"],
-    ["on-interact", "turn off", "set-state", "off"],
-    ["description", "A battery-powered brass lantern."]
+    ["on-interact", "turn off", "set-state", "off"]
   ],
-  "content": ""
+  "content": "A battery-powered brass lantern."
 }
 ```
 
@@ -299,10 +297,9 @@ Items can contain other items via `contains` tags. If an item has `contains` tag
     ["title",       "A Brown Sack"],
     ["noun",        "sack",   "bag",   "brown sack"],
     ["contains",    "30078:<pubkey>:the-lake:item:lunch"],
-    ["contains",    "30078:<pubkey>:the-lake:item:garlic"],
-    ["description", "A brown sack, smelling of garlic."]
+    ["contains",    "30078:<pubkey>:the-lake:item:garlic"]
   ],
-  "content": ""
+  "content": "A brown sack, smelling of garlic."
 }
 ```
 
@@ -614,10 +611,9 @@ The optional fourth element is **transition text** — rendered to the player wh
     ["state",       "ajar"],
     ["on-interact", "open",  "set-state", "open"],
     ["on-interact", "open",  "set-state", "open"],
-    ["on-interact", "enter", "traverse",  "30078:<pubkey>:the-lake:portal:window-to-kitchen"],
-    ["description", "The window is slightly ajar."]
+    ["on-interact", "enter", "traverse",  "30078:<pubkey>:the-lake:portal:window-to-kitchen"]
   ],
-  "content": ""
+  "content": "The window is slightly ajar."
 }
 ```
 
@@ -633,10 +629,9 @@ A stateless feature:
     ["type",        "feature"],
     ["title",       "A Bronze Altar"],
     ["verb", "examine", "place"],
-    ["on-interact", "examine", "set-state", "visible", "30078:<pubkey>:the-lake:clue:altar-inscription"],
-    ["description", "A heavy bronze altar, worn smooth by many hands."]
+    ["on-interact", "examine", "set-state", "visible", "30078:<pubkey>:the-lake:clue:altar-inscription"]
   ],
-  "content": ""
+  "content": "A heavy bronze altar, worn smooth by many hands."
 }
 ```
 
@@ -656,10 +651,9 @@ A chest with state, contents, and a lock:
     ["requires", "30078:<pubkey>:the-lake:item:iron-key", "", "The chest is sealed with a serpent-shaped lock."],
     ["on-interact", "open", "set-state", "open"],
     ["contains",    "30078:<pubkey>:the-lake:item:iron-key"],
-    ["contains",    "30078:<pubkey>:the-lake:item:map-fragment"],
-    ["description", "A heavy oak chest bound with iron. The lock is shaped like a serpent."]
+    ["contains",    "30078:<pubkey>:the-lake:item:map-fragment"]
   ],
-  "content": ""
+  "content": "A heavy oak chest bound with iron. The lock is shaped like a serpent."
 }
 ```
 
@@ -928,10 +922,9 @@ A static NPC:
     ["noun",        "hermit", "old man", "man"],
     ["on-interact", "talk", "give-item", "30078:<pubkey>:the-lake:item:map-fragment"],
     ["on-interact", "talk", "set-state", "visible", "30078:<pubkey>:the-lake:clue:hermit-warning"],
-    ["dialogue",    "30078:<pubkey>:the-lake:dialogue:hermit:greeting"],
-    ["description", "A weathered old man sits by a dying fire."]
+    ["dialogue",    "30078:<pubkey>:the-lake:dialogue:hermit:greeting"]
   ],
-  "content": ""
+  "content": "A weathered old man sits by a dying fire."
 }
 ```
 
@@ -956,10 +949,9 @@ A roaming NPC with autonomous behaviour:
     ["on-enter",    "30078:<pubkey>:the-lake:place:treasure-room", "deposits"],
     ["on-attacked",  "consequence","30078:<pubkey>:the-lake:consequence:thief-flees"],
     ["stash",        "30078:<pubkey>:the-lake:place:treasure-room"],
-    ["dialogue",     "30078:<pubkey>:the-lake:dialogue:thief-tree"],
-    ["description",  "A seedy-looking individual in a trench coat."]
+    ["dialogue",     "30078:<pubkey>:the-lake:dialogue:thief-tree"]
   ],
-  "content": ""
+  "content": "A seedy-looking individual in a trench coat."
 }
 ```
 
@@ -975,10 +967,9 @@ A lethal NPC (grue):
     ["type",         "npc"],
     ["title",        "Grue"],
     ["requires-not", "30078:<pubkey>:the-lake:item:brass-lantern", "on", ""],
-    ["on-encounter", "player", "consequence", "30078:<pubkey>:the-lake:consequence:death"],
-    ["description",  "A sinister, lurking presence in the dark."]
+    ["on-encounter", "player", "consequence", "30078:<pubkey>:the-lake:consequence:death"]
   ],
-  "content": ""
+  "content": "A sinister, lurking presence in the dark."
 }
 ```
 
@@ -1236,10 +1227,9 @@ Combat is not a separate system — it is the `on-*` dispatcher applied to healt
     ["damage",           "3"],
     ["on-encounter",     "player",      "deal-damage",   "3"],
     ["on-attacked",      "player",      "deal-damage",   "3"],
-    ["on-health-zero",   "consequence", "30078:<pubkey>:the-lake:consequence:troll-dies"],
-    ["description",      "A nasty troll brandishing a bloody axe."]
+    ["on-health-zero",   "consequence", "30078:<pubkey>:the-lake:consequence:troll-dies"]
   ],
-  "content": ""
+  "content": "A nasty troll brandishing a bloody axe."
 }
 ```
 
@@ -1257,10 +1247,9 @@ Combat is not a separate system — it is the `on-*` dispatcher applied to healt
     ["damage",      "4"],
     ["hit-chance",  "0.8"],
     ["verb", "attack"],
-    ["on-interact", "attack", "deal-damage-npc", ""],
-    ["description", "A blade of elvish steel, glowing faintly blue."]
+    ["on-interact", "attack", "deal-damage-npc", ""]
   ],
-  "content": ""
+  "content": "A blade of elvish steel, glowing faintly blue."
 }
 ```
 
@@ -1288,8 +1277,7 @@ Combat is not a separate system — it is the `on-*` dispatcher applied to healt
     ["title",       "Healing Potion"],
     ["verb", "drink"],
     ["on-interact", "drink", "heal",         "6"],
-    ["on-interact", "drink", "consume-item", ""],
-    ["description", "A vial of glowing green liquid."]
+    ["on-interact", "drink", "consume-item", ""]
   ]
 }
 ```
@@ -1316,8 +1304,7 @@ Any item, feature, or NPC can carry a named counter — a numeric value tracked 
     ["on-interact",     "turn off", "set-state",   "off"],
     ["on-move",         "on",       "decrement",   "battery"],
     ["on-counter", "battery", "0",  "set-state",   "dead"],
-    ["on-counter", "battery", "0",  "consequence", "30078:<pubkey>:the-lake:consequence:lamp-dies"],
-    ["description",     "A battery-powered brass lantern."]
+    ["on-counter", "battery", "0",  "consequence", "30078:<pubkey>:the-lake:consequence:lamp-dies"]
   ]
 }
 ```

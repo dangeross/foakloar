@@ -439,7 +439,7 @@ describe('examine', () => {
     const altar = makeFeature('altar', {
       nouns: [['altar']],
       verbs: [['examine', 'x']],
-      description: 'An ancient stone altar covered in runes.',
+      content: 'An ancient stone altar covered in runes.',
     });
     const place = makePlace('room', { features: [`${WORLD}:feature:altar`] });
     const events = buildEvents(place, altar);
@@ -456,7 +456,7 @@ describe('examine', () => {
     const lantern = makeItem('lantern', {
       nouns: [['lantern']],
       verbs: [['examine']],
-      description: 'A brass lantern.',
+      content: 'A brass lantern.',
     });
     const place = makePlace('room');
     const events = buildEvents(place, lantern);
