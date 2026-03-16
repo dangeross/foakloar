@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 import QRCode from 'qrcode';
 import { fetchPayMetadata, fetchInvoice, checkPaymentStatus, satsToMsats } from './payment.js';
 
-const POLL_INTERVAL = 3000; // 3 seconds
+const POLL_INTERVAL = 10000; // 10 seconds
 const INVOICE_TIMEOUT = 120000; // 2 minutes
 
 export default function PaymentPanel({ payment, onPaid, onClose }) {
@@ -85,6 +85,7 @@ export default function PaymentPanel({ payment, onPaid, onClose }) {
       try {
         const result = await checkPaymentStatus(verifyUrl);
         if (result.settled) {
+          setQrDataUrl(null);
           setStage('paid');
           clearInterval(pollRef.current);
           clearTimeout(timeoutRef.current);
@@ -99,6 +100,7 @@ export default function PaymentPanel({ payment, onPaid, onClose }) {
     // Timeout — offer to refresh
     timeoutRef.current = setTimeout(() => {
       clearInterval(pollRef.current);
+      setQrDataUrl(null);
       setStage('error');
       setError('Invoice expired. Close and try again.');
     }, INVOICE_TIMEOUT);
