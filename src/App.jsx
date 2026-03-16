@@ -9,6 +9,7 @@ import { getTag, getTags } from './world.js';
 import { resolveTheme, applyTheme } from './theme.js';
 import { buildTrustSet, resolveClientMode } from './trust.js';
 import { useStateBackup } from './useStateBackup.js';
+import PaymentPanel from './PaymentPanel.jsx';
 
 /** Map entry types to colour slots */
 const TYPE_COLOUR = {
@@ -240,6 +241,7 @@ export default function App() {
   const engine = engineRef.current;
   const puzzleActive = engine?.puzzleActive ?? null;
   const dialogueActive = engine?.dialogueActive ?? null;
+  const paymentActive = engine?.paymentActive ?? null;
   const worldTitle = worldConfig?.title || WORLD_TAG;
   const availableModes = trustInfo?.availableModes || [];
   const effectiveMode = trustInfo?.effectiveMode || 'community';
@@ -450,6 +452,24 @@ export default function App() {
             </div>
           </div>
         </>
+      )}
+
+      {paymentActive && (
+        <PaymentPanel
+          payment={paymentActive}
+          onPaid={() => {
+            const engine = getEngine();
+            engine.completePayment(paymentActive.dtag);
+            commitEngine(engine);
+          }}
+          onClose={() => {
+            if (engineRef.current) {
+              engineRef.current.paymentActive = null;
+            }
+            // Force re-render
+            setLog((prev) => [...prev]);
+          }}
+        />
       )}
 
       {status === 'connecting' && <p>Connecting to relay...</p>}

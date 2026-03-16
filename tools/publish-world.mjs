@@ -16,6 +16,7 @@ import { world } from '../lib/events/world.mjs';
 import {
   collaboratorEvents, vouchEvents, vouchedEvents, untrustedEvents,
 } from '../lib/events/trust-test.mjs';
+import { paymentEvents } from '../lib/events/payment.mjs';
 
 function bytesToHex(bytes) {
   return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
@@ -105,6 +106,7 @@ const genesisUnsigned = [
   ...puzzle(author.pubkey, answerHash, derivedPubKey),
   ...npcs(author.pubkey),
   ...dialogue(author.pubkey),
+  ...paymentEvents(author.pubkey),
 ];
 
 console.log(`Genesis events (${genesisUnsigned.length}):\n`);

@@ -32,6 +32,7 @@ export class GameEngine {
     this.currentPlace = player.state.place || config.GENESIS_PLACE;
     this.puzzleActive = null;
     this.dialogueActive = null;
+    this.paymentActive = null;   // { dtag, lnurl, amount, unit, description }
     this.pendingConfirm = null;
     this.pendingChoice = null;  // { direction, exits } — disambiguation list awaiting numeric input
 
@@ -1034,7 +1035,16 @@ export class GameEngine {
       this._emit('The conversation ends.', 'narrative');
       this.dialogueActive = null;
     } else {
-      this.enterDialogueNode(this.dialogueActive.npcDtag, selected.nextDtag);
+      // Check if the target is a payment event
+      const targetEvent = this.events.get(selected.nextDtag);
+      const targetType = targetEvent ? getTag(targetEvent, 'type') : null;
+
+      if (targetType === 'payment') {
+        this._activatePayment(selected.nextDtag, targetEvent);
+        this.dialogueActive = null;
+      } else {
+        this.enterDialogueNode(this.dialogueActive.npcDtag, selected.nextDtag);
+      }
     }
   }
 
@@ -1051,6 +1061,62 @@ export class GameEngine {
     const npcTitle = getTag(npc, 'title');
     this._emit(`\n— ${npcTitle} —`, 'npc-title');
     this.enterDialogueNode(npcDtag, entryDtag);
+  }
+
+  // ── Payment ─────────────────────────────────────────────────────────
+
+  _activatePayment(dtag, paymentEvent) {
+    const lnurl = getTag(paymentEvent, 'lnurl');
+    const amount = getTag(paymentEvent, 'amount');
+    const unit = getTag(paymentEvent, 'unit') || 'sats';
+
+    if (!lnurl || !amount) {
+      this._emit('Payment misconfigured.', 'error');
+      return;
+    }
+
+    // Check if already completed
+    const attempt = this.player.state.paymentAttempts?.[dtag];
+    if (attempt?.status === 'complete') {
+      this._emit('Already paid.', 'narrative');
+      return;
+    }
+
+    this.paymentActive = {
+      dtag,
+      lnurl,
+      amount,
+      unit,
+      description: paymentEvent.content || `Pay ${amount} ${unit}`,
+    };
+  }
+
+  /**
+   * Called by the UI when payment is confirmed.
+   * Fires on-complete actions and marks payment as complete.
+   */
+  completePayment(dtag) {
+    const paymentEvent = this.events.get(dtag);
+    if (!paymentEvent) return;
+
+    // Mark as complete
+    this.player.setPaymentStatus(dtag, 'complete');
+
+    // Fire on-complete actions
+    for (const tag of getTags(paymentEvent, 'on-complete')) {
+      const action = tag[2];
+      const actionTarget = tag[3];
+
+      if (action === 'give-item' && actionTarget) {
+        giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty));
+      } else if (action === 'set-state') {
+        if (actionTarget) {
+          this.player.setState(dtag, actionTarget);
+        }
+      }
+    }
+
+    this.paymentActive = null;
   }
 
   // ── Resolve noun ──────────────────────────────────────────────────────

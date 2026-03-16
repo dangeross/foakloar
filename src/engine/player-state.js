@@ -187,6 +187,22 @@ export class PlayerStateMutator {
     return items;
   }
 
+  // ── Payments ────────────────────────────────────────────────────────────
+
+  getPaymentStatus(dtag) {
+    return this.state.paymentAttempts?.[dtag]?.status || null;
+  }
+
+  setPaymentStatus(dtag, status, verifyUrl) {
+    if (!this.state.paymentAttempts) this.state.paymentAttempts = {};
+    const existing = this.state.paymentAttempts[dtag] || {};
+    this.state.paymentAttempts[dtag] = {
+      ...existing,
+      status,
+      ...(verifyUrl ? { verifyUrl } : {}),
+    };
+  }
+
   // ── Reset ───────────────────────────────────────────────────────────────
 
   reset() {
