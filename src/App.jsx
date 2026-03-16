@@ -79,6 +79,7 @@ export default function App() {
   const [clientMode, setClientMode] = useState('community');
   const [showLogin, setShowLogin] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const [showNsec, setShowNsec] = useState(false);
   const [generation, setGeneration] = useState(0);
   const engineRef = useRef(null);
   const inputRef = useRef(null);
@@ -302,7 +303,7 @@ export default function App() {
         <>
           <div
             className="fixed inset-0 z-40"
-            onClick={() => { setShowLogin(false); setLoginError(''); }}
+            onClick={() => { setShowLogin(false); setLoginError(''); setShowNsec(false); }}
           />
           <div
             className="fixed z-50 font-mono text-xs"
@@ -326,7 +327,7 @@ export default function App() {
             >
               <span>IDENTITY</span>
               <button
-                onClick={() => { setShowLogin(false); setLoginError(''); }}
+                onClick={() => { setShowLogin(false); setLoginError(''); setShowNsec(false); }}
                 className="cursor-pointer"
                 style={{ background: 'none', border: 'none', font: 'inherit', color: 'var(--colour-bg)', padding: 0 }}
               >
@@ -337,11 +338,67 @@ export default function App() {
             {/* Content */}
             <div className="p-3">
               <div className="mb-2" style={{ color: 'var(--colour-dim)' }}>
-                Status: {isLoggedIn ? identity.method : 'anonymous (ephemeral key)'}
+                Status: {isLoggedIn ? identity.method : identity.backedUp ? 'ephemeral (backed up)' : 'anonymous (ephemeral key)'}
               </div>
               <div className="mb-3" style={{ color: 'var(--colour-dim)', wordBreak: 'break-all' }}>
                 Pubkey: {identity.pubkey || 'none'}
               </div>
+
+              {identity.method === 'ephemeral' && (
+                <div className="mb-3 pt-2" style={{ borderTop: '1px solid var(--colour-dim)' }}>
+                  {!showNsec ? (
+                    <button
+                      onClick={() => setShowNsec(true)}
+                      className="cursor-pointer"
+                      style={{ color: 'var(--colour-item)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
+                    >
+                      Show Secret Key
+                    </button>
+                  ) : (
+                    <>
+                      <div className="mb-1" style={{ color: 'var(--colour-error)' }}>
+                        Save this key to keep your identity:
+                      </div>
+                      <div
+                        className="mb-2 p-1"
+                        style={{
+                          color: 'var(--colour-highlight)',
+                          wordBreak: 'break-all',
+                          border: '1px solid var(--colour-dim)',
+                          fontSize: '0.65rem',
+                          userSelect: 'all',
+                        }}
+                      >
+                        {identity.getNsec()}
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => {
+                            const nsec = identity.getNsec();
+                            if (nsec) navigator.clipboard.writeText(nsec);
+                          }}
+                          className="cursor-pointer"
+                          style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
+                        >
+                          Copy
+                        </button>
+                        {!identity.backedUp && (
+                          <button
+                            onClick={() => { identity.confirmBackup(); }}
+                            className="cursor-pointer"
+                            style={{ color: 'var(--colour-text)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
+                          >
+                            I've saved it
+                          </button>
+                        )}
+                        {identity.backedUp && (
+                          <span style={{ color: 'var(--colour-text)', padding: '2px 0' }}>Backed up</span>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
 
               {identity.method !== 'extension' && identity.nip07Available && (
                 <div className="mb-2">

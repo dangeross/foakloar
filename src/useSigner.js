@@ -11,7 +11,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { generateSecretKey, getPublicKey, finalizeEvent } from 'nostr-tools/pure';
-import { decode as nip19Decode } from 'nostr-tools/nip19';
+import { decode as nip19Decode, nsecEncode } from 'nostr-tools/nip19';
 import * as nip44 from 'nostr-tools/nip44';
 
 function hexToBytes(hex) {
@@ -116,6 +116,9 @@ export function useSigner() {
   // method: 'extension' | 'nsec' | 'ephemeral'
   const [method, setMethod] = useState('ephemeral');
   const [pubkey, setPubkey] = useState(null);
+  const [backedUp, setBackedUp] = useState(
+    () => localStorage.getItem('nostr-ephemeral-backed-up') === 'true'
+  );
   const signerRef = useRef(null);
 
   const savedMethodRef = useRef(localStorage.getItem('nostr-auth-method'));
@@ -228,6 +231,34 @@ export function useSigner() {
     initEphemeral();
   }, []);
 
+  /**
+   * Get the ephemeral key as an nsec string (for export/upgrade).
+   * Only works when method is 'ephemeral'.
+   */
+  const getNsec = useCallback(() => {
+    if (method !== 'ephemeral') return null;
+    const hex = localStorage.getItem(EPHEMERAL_KEY);
+    if (!hex) return null;
+    try {
+      return nsecEncode(hexToBytes(hex));
+    } catch {
+      return null;
+    }
+  }, [method]);
+
+  /**
+   * Mark the ephemeral key as backed up (user has saved the nsec).
+   * Promotes it to a "proper" identity for build mode.
+   */
+  const confirmBackup = useCallback(() => {
+    localStorage.setItem('nostr-ephemeral-backed-up', 'true');
+    setBackedUp(true);
+  }, []);
+
+  // A "proper" identity can publish events (build mode).
+  // Extension and nsec are always proper. Ephemeral is proper only if backed up.
+  const isProperIdentity = method === 'extension' || method === 'nsec' || backedUp;
+
   return {
     signer: signerRef.current,
     pubkey,
@@ -235,6 +266,10 @@ export function useSigner() {
     login,
     loginExtension,
     logout,
+    getNsec,
+    confirmBackup,
+    backedUp,
+    isProperIdentity,
     nip07Available,
   };
 }
