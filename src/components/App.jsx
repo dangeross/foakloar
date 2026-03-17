@@ -15,6 +15,7 @@ import EventEditor from '../builder/EventEditor.jsx';
 import DraftListPanel from '../builder/DraftListPanel.jsx';
 import ModeDropdown from '../builder/ModeDropdown.jsx';
 import WorldCreator from '../builder/WorldCreator.jsx';
+import VouchPanel from '../builder/VouchPanel.jsx';
 import Lobby from './Lobby.jsx';
 import AuthorProfile from './AuthorProfile.jsx';
 import TipPanel from './TipPanel.jsx';
@@ -113,6 +114,7 @@ export default function App() {
   const [editorState, setEditorState] = useState(null); // { eventType, draft?, initialTags?, ... }
   const [showWorldCreator, setShowWorldCreator] = useState(false);
   const [showZap, setShowZap] = useState(false);
+  const [vouchTarget, setVouchTarget] = useState(null); // pubkey to vouch for
   const [drafts, setDrafts] = useState(() => loadDrafts(worldTag || ''));
   const engineRef = useRef(null);
   const inputRef = useRef(null);
@@ -534,6 +536,17 @@ export default function App() {
         />
       )}
 
+      {/* Vouch panel */}
+      {vouchTarget && identity?.signer && (
+        <VouchPanel
+          targetPubkey={vouchTarget}
+          worldSlug={worldTag}
+          signer={identity.signer}
+          relay={relay}
+          onClose={() => setVouchTarget(null)}
+        />
+      )}
+
       {/* Build mode overlay */}
       {buildMode && status === 'ready' && (
         <BuildModeOverlay
@@ -558,6 +571,9 @@ export default function App() {
               eventTemplate: { kind: 30078, tags: [...event.tags], content: event.content || '' },
             });
           }}
+          trustSet={trustInfo?.trustSet}
+          clientMode={trustInfo?.effectiveMode}
+          onVouch={(targetPubkey) => setVouchTarget(targetPubkey)}
         />
       )}
 

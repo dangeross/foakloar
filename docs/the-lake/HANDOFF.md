@@ -26,6 +26,14 @@ Next: Phase 11 — world event bootstrap.
 
 ---
 
+## Current Status
+
+Phases 11-18 complete. The Lake is fully playable. See `the-lake-client-plan-3.md` for Phase 19+ work.
+
+**Next: Phase 19 — Consequence dispatch** (start here)
+
+---
+
 ## Contested Exit UI Model — Design Decision
 
 **Design before building.** Portal conflict resolution is now specced in `foakloar-design.md` section 6.7. Key decisions:
@@ -172,7 +180,8 @@ All docs at `https://github.com/dangeross/foakloar/tree/main/docs`
 | `HANDOFF.md` | `the-lake/` | This file |
 | `the-lake-world.md` | `the-lake/` | World design — 12 places, full narrative |
 | `the-lake-client-plan.md` | `the-lake/` | Phases 1-10 — complete ✓ |
-| `the-lake-client-plan-2.md` | `the-lake/` | Phases 11-18 — current work |
+| `the-lake-client-plan-2.md` | `the-lake/` | Phases 11-18 — complete ✓ |
+| `the-lake-client-plan-3.md` | `the-lake/` | Phases 19-26 — current work |
 | `ideas.md` | `the-lake/` | Use cases, payment mechanics, story ideas |
 | `zork1-event-reference.md` | `reference/` | Worked example — all schema patterns |
 | `fate-of-atlantis-reference.md` | `reference/` | Fate of Atlantis reference |

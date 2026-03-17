@@ -9,6 +9,7 @@
 import React, { useMemo } from 'react';
 import { nip19 } from 'nostr-tools';
 import { getTag, getTags } from '../engine/world.js';
+import { getTrustLevel } from '../engine/trust.js';
 import { navigateToProfile } from '../services/router.js';
 import DOSButton from './DOSButton.jsx';
 
@@ -109,12 +110,42 @@ export default function BuildModeOverlay({
   onNewEvent,
   onEditPortal,
   onEditEvent,
+  trustSet,
+  clientMode,
+  onVouch,
 }) {
   const annotation = useRoomAnnotation(events, currentPlace);
 
   if (!annotation) return null;
 
   const { placeDtag, placeAuthor, title, exits, entities } = annotation;
+
+  // Check if the current user can vouch and whether a pubkey needs vouching
+  const canUserVouch = trustSet && trustSet.collaboration === 'vouched' && pubkey && (
+    pubkey === trustSet.genesisPubkey ||
+    trustSet.collaborators.has(pubkey) ||
+    (trustSet.vouched.get(pubkey)?.canVouch)
+  );
+
+  const isVouchable = (targetPubkey) => {
+    if (!canUserVouch || !onVouch || !targetPubkey) return false;
+    if (targetPubkey === pubkey) return false;
+    const level = getTrustLevel(trustSet, targetPubkey, 'all', clientMode || 'community');
+    return level !== 'trusted';
+  };
+
+  const VouchButton = ({ targetPubkey }) => {
+    if (!isVouchable(targetPubkey)) return null;
+    return (
+      <button
+        onClick={(e) => { e.stopPropagation(); onVouch(targetPubkey); }}
+        className="cursor-pointer hover:opacity-80"
+        style={{ color: 'var(--colour-item)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', padding: 0 }}
+      >
+        [vouch]
+      </button>
+    );
+  };
 
   return (
     <div
@@ -149,7 +180,7 @@ export default function BuildModeOverlay({
         id: {placeDtag}
       </div>
       <div style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
-        author: <PubkeyLink pubkey={placeAuthor} />
+        author: <PubkeyLink pubkey={placeAuthor} /> <VouchButton targetPubkey={placeAuthor} />
       </div>
 
       {/* Exits */}
@@ -165,7 +196,7 @@ export default function BuildModeOverlay({
                 → {exit.portals.map((p) => p.destTitle).join(', ')}
                 {' '}[{exit.portals.map((p, i) => (
                   <React.Fragment key={p.portalATag}>
-                    {i > 0 && ', '}<PubkeyLink pubkey={p.portalAuthor} />
+                    {i > 0 && ', '}<PubkeyLink pubkey={p.portalAuthor} /> <VouchButton targetPubkey={p.portalAuthor} />
                   </React.Fragment>
                 ))}]
                 {onEditEvent && pubkey && exit.portals.filter((p) => p.portalAuthor === pubkey).map((p) => (
@@ -197,7 +228,7 @@ export default function BuildModeOverlay({
           <div style={{ color: 'var(--colour-dim)' }}>Entities:</div>
           {entities.map((ent, i) => (
             <div key={i} className="ml-2 flex items-center gap-1" style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
-              <span>[{ent.type}] {ent.title} — <PubkeyLink pubkey={ent.author} /></span>
+              <span>[{ent.type}] {ent.title} — <PubkeyLink pubkey={ent.author} /> <VouchButton targetPubkey={ent.author} /></span>
               {onEditEvent && pubkey && ent.author === pubkey && (
                 <button
                   onClick={() => onEditEvent(ent.ref)}
