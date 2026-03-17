@@ -4,8 +4,8 @@
  */
 
 import { marked } from 'marked';
-import { decryptNip44 } from '../nip44-client.js';
-import { getTag, getTags } from '../world.js';
+import { decryptNip44 } from './nip44-client.js';
+import { getTag, getTags } from './world.js';
 
 // Configure marked for safe inline rendering (no raw HTML)
 marked.setOptions({ breaks: true, gfm: true });

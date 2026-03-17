@@ -8,7 +8,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import QRCode from 'qrcode';
-import { fetchPayMetadata, fetchInvoice, checkPaymentStatus, satsToMsats } from './payment.js';
+import { fetchPayMetadata, fetchInvoice, checkPaymentStatus, satsToMsats } from '../services/payment.js';
 
 const POLL_INTERVAL = 10000; // 10 seconds
 const INVOICE_TIMEOUT = 120000; // 2 minutes

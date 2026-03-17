@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import DOSPanel from './DOSPanel.jsx';
+import DOSPanel from '../components/ui/DOSPanel.jsx';
 import DOSButton from './DOSButton.jsx';
 import { slugify, buildEventTemplate } from './eventBuilder.js';
 import { DEFAULT_RELAY_URLS } from '../config.js';

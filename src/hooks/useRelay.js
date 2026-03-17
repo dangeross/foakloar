@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Relay } from 'nostr-tools/relay';
-import { RELAY_URLS } from './config.js';
+import { RELAY_URLS } from '../config.js';
 
 /**
  * Subscribe to all kind:30078 events for a given world tag.

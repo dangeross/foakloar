@@ -7,7 +7,7 @@
  */
 
 import React, { useState } from 'react';
-import DOSPanel from './builder/DOSPanel.jsx';
+import DOSPanel from './ui/DOSPanel.jsx';
 
 export default function Lobby({
   identity,

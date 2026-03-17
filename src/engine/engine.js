@@ -6,9 +6,9 @@
 import {
   getTag, getTags, resolveExits, resolveExitsWithTrust, checkRequires,
   findByNoun, aTagOf, getDefaultState, findTransition,
-} from '../world.js';
-import { getTrustLevel } from '../trust.js';
-import { derivePrivateKey } from '../nip44-client.js';
+} from './world.js';
+import { getTrustLevel } from './trust.js';
+import { derivePrivateKey } from './nip44-client.js';
 import { renderRoomContent } from './content.js';
 import { stripArticles, buildVerbMap, parseInput, findInventoryItem } from './parser.js';
 import {

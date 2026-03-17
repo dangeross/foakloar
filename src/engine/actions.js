@@ -6,7 +6,7 @@
 import {
   getTag, getTags, getDefaultState, findTransition,
   checkRequires,
-} from '../world.js';
+} from './world.js';
 
 /**
  * Apply a set-state action on an external target event.

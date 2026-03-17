@@ -24,18 +24,23 @@ A decentralised text adventure built on NOSTR (kind 30078). The world is a graph
 | `docs/the-lake/the-lake-client-plan.md` | Phase 1–10 client implementation plan |
 | `docs/the-lake/the-lake-client-plan-2.md` | Phase 11–18 client implementation plan |
 | `docs/the-lake/the-lake-world.md` | Full world design (places, items, puzzles) |
-| `src/App.jsx` | Main game component — rendering, theme, world bootstrap |
-| `src/usePlayerState.js` | Player state hook with world-keyed localStorage persistence |
-| `src/world.js` | World query helpers (requires check, noun lookup, exits with trust) |
-| `src/trust.js` | Trust model — buildTrustSet, getTrustLevel, resolveClientMode |
-| `src/theme.js` | Theme resolver — presets + world event colour overrides |
-| `src/config.js` | Relay URLs, world tag, author pubkey |
+| `src/components/App.jsx` | Main game component — rendering, theme, world bootstrap |
+| `src/components/Lobby.jsx` | Landing page — world slug input, identity, world creator |
+| `src/hooks/usePlayerState.js` | Player state hook with world-keyed localStorage persistence |
+| `src/hooks/useRelay.js` | Relay subscription hook — world-scoped kind:30078 events |
+| `src/services/router.js` | SPA routing — parseRoute, navigateToWorld, navigateToLobby |
+| `src/services/theme.js` | Theme resolver — presets + world event colour overrides |
+| `src/config.js` | Relay URLs, default world tag |
+| `src/engine/world.js` | World query helpers (requires check, noun lookup, exits with trust) |
+| `src/engine/trust.js` | Trust model — buildTrustSet, getTrustLevel, resolveClientMode |
 | `src/engine/engine.js` | GameEngine class — command dispatch, room entry, movement, contested exits |
 | `src/engine/player-state.js` | PlayerStateMutator — synchronous state wrapper |
 | `src/engine/parser.js` | Verb/noun parser — verb map, article stripping |
 | `src/engine/actions.js` | Action resolution — set-state, give-item, counters |
 | `src/engine/content.js` | Content rendering — markdown, media, NIP-44 |
+| `src/engine/nip44-client.js` | NIP-44 encryption — key derivation, sealed content |
 | `src/engine/__tests__/` | Vitest unit tests for engine, parser, actions, world, trust |
+| `src/components/ui/DOSPanel.jsx` | Shared UI primitive — modal panel with title bar |
 | `lib/events/*.mjs` | World event definitions (places, portals, items, features, clues) |
 | `lib/events/trust-test.mjs` | Trust test events — collaborator, vouched, untrusted authors |
 | `tools/publish-world.mjs` | Publishes events to relays (4 author keypairs) |

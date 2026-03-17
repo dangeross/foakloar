@@ -3,7 +3,7 @@
  * No React imports. No side effects.
  */
 
-import { getTag, getTags } from '../world.js';
+import { getTag, getTags } from './world.js';
 
 /**
  * Simple deterministic hash for NPC position seeding.

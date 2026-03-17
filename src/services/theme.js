@@ -3,7 +3,7 @@
  * Built-in presets provide defaults; `colour` tags override individual slots.
  */
 
-import { getTag, getTags } from './world.js';
+import { getTag, getTags } from '../engine/world.js';
 
 const PRESETS = {
   'terminal-green': {

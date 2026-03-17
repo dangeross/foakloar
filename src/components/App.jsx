@@ -1,22 +1,22 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { useRelay } from './useRelay.js';
-import { usePlayerState } from './usePlayerState.js';
-import { useSigner } from './useSigner.js';
-import { parseRoute, navigateToWorld } from './router.js';
-import { GameEngine } from './engine/engine.js';
-import { PlayerStateMutator } from './engine/player-state.js';
-import { getTag, getTags } from './world.js';
-import { resolveTheme, applyTheme } from './theme.js';
-import { buildTrustSet, resolveClientMode } from './trust.js';
-import { useStateBackup } from './useStateBackup.js';
+import { useRelay } from '../hooks/useRelay.js';
+import { usePlayerState } from '../hooks/usePlayerState.js';
+import { useSigner } from '../hooks/useSigner.js';
+import { parseRoute, navigateToWorld } from '../services/router.js';
+import { GameEngine } from '../engine/engine.js';
+import { PlayerStateMutator } from '../engine/player-state.js';
+import { getTag, getTags } from '../engine/world.js';
+import { resolveTheme, applyTheme } from '../services/theme.js';
+import { buildTrustSet, resolveClientMode } from '../engine/trust.js';
+import { useStateBackup } from '../hooks/useStateBackup.js';
 import PaymentPanel from './PaymentPanel.jsx';
-import BuildModeOverlay from './builder/BuildModeOverlay.jsx';
-import EventEditor from './builder/EventEditor.jsx';
-import DraftListPanel from './builder/DraftListPanel.jsx';
-import ModeDropdown from './builder/ModeDropdown.jsx';
-import WorldCreator from './builder/WorldCreator.jsx';
+import BuildModeOverlay from '../builder/BuildModeOverlay.jsx';
+import EventEditor from '../builder/EventEditor.jsx';
+import DraftListPanel from '../builder/DraftListPanel.jsx';
+import ModeDropdown from '../builder/ModeDropdown.jsx';
+import WorldCreator from '../builder/WorldCreator.jsx';
 import Lobby from './Lobby.jsx';
-import { loadDrafts, saveDraft, updateDraft, deleteDraft, importEvents, exportDrafts, bulkPublish } from './builder/draftStore.js';
+import { loadDrafts, saveDraft, updateDraft, deleteDraft, importEvents, exportDrafts, bulkPublish } from '../builder/draftStore.js';
 
 /** Map entry types to colour slots */
 const TYPE_COLOUR = {

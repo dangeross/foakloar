@@ -69,7 +69,7 @@ describe('renderRoomContent', () => {
   it('renders decrypted NIP-44 as plain text when no inner format', async () => {
     // Mock the decryptNip44 function to simulate successful decryption
     const content = await import('../content.js');
-    const originalFn = (await import('../../nip44-client.js')).decryptNip44;
+    const originalFn = (await import('../nip44-client.js')).decryptNip44;
 
     // We can't easily mock ESM imports, so we test the logic indirectly
     // by verifying the content-type tag parsing

@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo, useState } from 'react';
-import DOSPanel from './DOSPanel.jsx';
+import DOSPanel from '../components/ui/DOSPanel.jsx';
 import DOSButton from './DOSButton.jsx';
 import { validateEvent } from './eventBuilder.js';
 

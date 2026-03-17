@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { buildTrustSet, isPubkeyTrusted, getTrustLevel, resolveClientMode } from '../../trust.js';
-import { resolveExitsWithTrust } from '../../world.js';
+import { buildTrustSet, isPubkeyTrusted, getTrustLevel, resolveClientMode } from '../trust.js';
+import { resolveExitsWithTrust } from '../world.js';
 import { GameEngine } from '../engine.js';
 import { PlayerStateMutator } from '../player-state.js';
 import {

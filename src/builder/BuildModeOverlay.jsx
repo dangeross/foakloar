@@ -7,7 +7,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { getTag, getTags } from '../world.js';
+import { getTag, getTags } from '../engine/world.js';
 import DOSButton from './DOSButton.jsx';
 
 /**

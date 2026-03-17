@@ -9,7 +9,7 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import DOSPanel from './DOSPanel.jsx';
+import DOSPanel from '../components/ui/DOSPanel.jsx';
 import DOSButton from './DOSButton.jsx';
 import TagEditor from './TagEditor.jsx';
 import EventPreview from './EventPreview.jsx';

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   getTag, getTags, dtagFromRef, aTagOf, getDefaultState, findTransition,
   checkRequires, findByNoun, resolveExits,
-} from '../../world.js';
+} from '../world.js';
 import {
   ref, PUBKEY, WORLD,
   makeEvent, makePlace, makeFeature, makeItem, makePortal, makePuzzle,
