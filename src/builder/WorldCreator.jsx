@@ -6,11 +6,99 @@
  * drafts. The user can then review, edit, and publish from the drafts panel.
  */
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import DOSPanel from '../components/ui/DOSPanel.jsx';
 import DOSButton from './DOSButton.jsx';
 import { slugify, buildEventTemplate } from './eventBuilder.js';
 import { DEFAULT_RELAY_URLS } from '../config.js';
+
+/** Themed dropdown replacing native <select> — portaled, opens upward */
+function DOSSelect({ value, onChange, options }) {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const [pos, setPos] = useState(null);
+
+  const selected = options.find((o) => o.value === value);
+
+  // Reposition on open, scroll, and resize
+  useEffect(() => {
+    if (!open || !triggerRef.current) return;
+    function updatePos() {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setPos({ left: rect.left, bottom: window.innerHeight - rect.top, width: rect.width });
+    }
+    updatePos();
+    window.addEventListener('scroll', updatePos, true);
+    window.addEventListener('resize', updatePos);
+    return () => {
+      window.removeEventListener('scroll', updatePos, true);
+      window.removeEventListener('resize', updatePos);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e) {
+      if (triggerRef.current?.contains(e.target)) return;
+      if (dropdownRef.current?.contains(e.target)) return;
+      setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [open]);
+
+  return (
+    <>
+      <div
+        ref={triggerRef}
+        className="flex items-center cursor-pointer px-1 w-full"
+        style={{ border: '1px solid var(--colour-dim)', minHeight: '1.5em' }}
+        onClick={() => setOpen(!open)}
+      >
+        <span className="flex-1 text-xs truncate" style={{ color: 'var(--colour-text)' }}>
+          {selected?.label || value}
+        </span>
+        <span style={{ color: 'var(--colour-dim)' }}>{open ? '▲' : '▼'}</span>
+      </div>
+
+      {open && pos && ReactDOM.createPortal(
+        <div
+          ref={dropdownRef}
+          className="font-mono text-xs"
+          style={{
+            position: 'fixed',
+            left: pos.left,
+            bottom: pos.bottom,
+            width: pos.width,
+            backgroundColor: 'var(--colour-bg)',
+            border: '1px solid var(--colour-dim)',
+            maxHeight: '12em',
+            overflowY: 'auto',
+            zIndex: 200,
+            boxShadow: '2px -2px 0 var(--colour-dim)',
+          }}
+        >
+          {options.map((opt) => (
+            <div
+              key={opt.value}
+              className="px-1 py-0.5 cursor-pointer hover:opacity-80"
+              style={{
+                color: opt.value === value ? 'var(--colour-highlight)' : 'var(--colour-text)',
+                backgroundColor: opt.value === value ? 'var(--colour-dim)' : 'transparent',
+              }}
+              onClick={() => { onChange(opt.value); setOpen(false); }}
+            >
+              {opt.label}
+            </div>
+          ))}
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}
 
 const THEME_OPTIONS = [
   { value: 'terminal-green', label: 'Terminal Green' },
@@ -146,7 +234,7 @@ export default function WorldCreator({
           style={{ color: 'var(--colour-text)', border: '1px solid var(--colour-dim)' }}
         />
         <div style={{ color: 'var(--colour-dim)', fontSize: '0.55rem' }}>
-          Used in d-tags and URLs. Auto-derived from title.
+          Used in ids and URLs. Auto-derived from title.
         </div>
       </div>
 
@@ -193,31 +281,13 @@ export default function WorldCreator({
       {/* Theme */}
       <div className="mb-2">
         <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Theme:</div>
-        <select
-          value={theme}
-          onChange={(e) => setTheme(e.target.value)}
-          className="w-full bg-transparent font-mono text-xs px-1"
-          style={{ color: 'var(--colour-text)', border: '1px solid var(--colour-dim)', backgroundColor: 'var(--colour-bg)' }}
-        >
-          {THEME_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
+        <DOSSelect value={theme} onChange={setTheme} options={THEME_OPTIONS} />
       </div>
 
       {/* Collaboration mode */}
       <div className="mb-2">
         <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Collaboration:</div>
-        <select
-          value={collaboration}
-          onChange={(e) => setCollaboration(e.target.value)}
-          className="w-full bg-transparent font-mono text-xs px-1"
-          style={{ color: 'var(--colour-text)', border: '1px solid var(--colour-dim)', backgroundColor: 'var(--colour-bg)' }}
-        >
-          {COLLAB_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
+        <DOSSelect value={collaboration} onChange={setCollaboration} options={COLLAB_OPTIONS} />
       </div>
 
       {/* Relay URLs */}
@@ -251,7 +321,7 @@ export default function WorldCreator({
         />
         {startPlaceDTag && (
           <div style={{ color: 'var(--colour-dim)', fontSize: '0.55rem' }}>
-            d-tag: {startPlaceDTag}
+            id: {startPlaceDTag}
           </div>
         )}
       </div>

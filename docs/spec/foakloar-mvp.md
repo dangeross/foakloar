@@ -109,8 +109,9 @@ The portal to the Sanctum — inline `requires` replaces any separate lock event
     ["exit", "30078:<pubkey>:the-lake:place:sanctum", "south", "The way back south."],
     ["requires", "chapel-solved", "The gate holds fast. Something is missing."],
     ["state",    "visible"]
-  ]
-}
+  ],
+  "content": ""
+}}
 ```
 
 The iron gate feature — visual representation of the blocked exit:
@@ -129,8 +130,9 @@ The iron gate feature — visual representation of the blocked exit:
     ["transition",  "locked", "locked", "The gate holds fast."],
     ["requires", "chapel-solved", "The gate holds fast. Something is missing."],
     ["on-interact", "open", "set-state", "open"]
-  ]
-}
+  ],
+  "content": "A heavy iron gate, rusted shut."
+}}
 ```
 
 The chapel puzzle — on-complete sets the flag and stores the crypto key:

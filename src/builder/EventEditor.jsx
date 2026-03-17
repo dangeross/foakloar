@@ -142,7 +142,7 @@ export default function EventEditor({
   }
 
   // Determine if this event type has a title field
-  const hasTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest'].includes(eventType);
+  const hasTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest', 'portal'].includes(eventType);
   // Determine if this event type has content
   const hasContent = ['place', 'item', 'feature', 'npc', 'clue', 'puzzle', 'world'].includes(eventType);
 
@@ -155,7 +155,7 @@ export default function EventEditor({
     >
       {/* D-tag */}
       <div className="mb-2">
-        <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>d-tag:</div>
+        <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>id:</div>
         <input
           value={dTag}
           onChange={(e) => setDTagOverride(e.target.value)}
@@ -164,7 +164,7 @@ export default function EventEditor({
         />
         {dTagCollision && (
           <div className="mt-0.5" style={{ color: 'var(--colour-error)', fontSize: '0.6rem' }}>
-            This d-tag already exists — publishing will replace the existing event.
+            This id already exists — publishing will replace the existing event.
           </div>
         )}
       </div>

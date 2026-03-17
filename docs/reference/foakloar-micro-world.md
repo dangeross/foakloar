@@ -50,6 +50,7 @@ derive key → decrypt keeper's final log
   "tags": [
     ["d",            "lighthouse:world"],
     ["t",            "lighthouse"],
+        ["w",             "foakloar"]
     ["type",         "world"],
     ["title",        "The Lighthouse Keeper"],
     ["author",       "FOAKLOAR Example"],

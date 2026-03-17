@@ -90,8 +90,10 @@ function shortKey(pubkey) {
 export default function BuildModeOverlay({
   events,
   currentPlace,
+  pubkey,
   onNewEvent,
   onEditPortal,
+  onEditEvent,
 }) {
   const annotation = useRoomAnnotation(events, currentPlace);
 
@@ -112,6 +114,15 @@ export default function BuildModeOverlay({
         <div>
           <span style={{ color: 'var(--colour-title)' }}>BUILD</span>
           <span style={{ color: 'var(--colour-dim)' }}> | {title}</span>
+          {onEditEvent && pubkey && placeAuthor === pubkey && (
+            <button
+              onClick={() => onEditEvent(currentPlace)}
+              className="cursor-pointer hover:opacity-80 ml-1"
+              style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', padding: 0 }}
+            >
+              [edit]
+            </button>
+          )}
         </div>
         <DOSButton onClick={() => onNewEvent?.('place')} colour="text">
           + Place
@@ -120,7 +131,7 @@ export default function BuildModeOverlay({
 
       {/* Place metadata */}
       <div style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
-        d: {placeDtag}
+        id: {placeDtag}
       </div>
       <div style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
         author: {shortKey(placeAuthor)}
@@ -138,6 +149,16 @@ export default function BuildModeOverlay({
               <span style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
                 → {exit.portals.map((p) => p.destTitle).join(', ')}
                 {' '}[{exit.portals.map((p) => shortKey(p.portalAuthor)).join(', ')}]
+                {onEditEvent && pubkey && exit.portals.filter((p) => p.portalAuthor === pubkey).map((p) => (
+                  <button
+                    key={p.portalATag}
+                    onClick={() => onEditEvent(p.portalATag)}
+                    className="cursor-pointer hover:opacity-80 ml-1"
+                    style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', padding: 0 }}
+                  >
+                    [edit]
+                  </button>
+                ))}
               </span>
             ) : (
               <DOSButton
@@ -156,8 +177,17 @@ export default function BuildModeOverlay({
         <div className="mt-1">
           <div style={{ color: 'var(--colour-dim)' }}>Entities:</div>
           {entities.map((ent, i) => (
-            <div key={i} className="ml-2" style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
-              [{ent.type}] {ent.title} — {shortKey(ent.author)}
+            <div key={i} className="ml-2 flex items-center gap-1" style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
+              <span>[{ent.type}] {ent.title} — {shortKey(ent.author)}</span>
+              {onEditEvent && pubkey && ent.author === pubkey && (
+                <button
+                  onClick={() => onEditEvent(ent.ref)}
+                  className="cursor-pointer hover:opacity-80"
+                  style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', padding: 0 }}
+                >
+                  [edit]
+                </button>
+              )}
             </div>
           ))}
         </div>

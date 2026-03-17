@@ -53,12 +53,20 @@ function DOSSelect({ value, onChange, options, placeholder }) {
   const dropdownRef = useRef(null);
   const [pos, setPos] = useState(null);
 
-  // Measure trigger position when opening
+  // Reposition on open, scroll, and resize
   useEffect(() => {
     if (!open || !triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-    // Open upward: position bottom of dropdown at top of trigger
-    setPos({ left: rect.left, bottom: window.innerHeight - rect.top, width: rect.width });
+    function updatePos() {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setPos({ left: rect.left, bottom: window.innerHeight - rect.top, width: rect.width });
+    }
+    updatePos();
+    window.addEventListener('scroll', updatePos, true);
+    window.addEventListener('resize', updatePos);
+    return () => {
+      window.removeEventListener('scroll', updatePos, true);
+      window.removeEventListener('resize', updatePos);
+    };
   }, [open]);
 
   // Close on outside click
@@ -141,11 +149,20 @@ function EventRefSelect({ value, onChange, events, eventTypeFilter, placeholder:
   const dropdownRef = useRef(null);
   const [pos, setPos] = useState(null);
 
-  // Measure trigger position when opening
+  // Reposition on open, scroll, and resize
   useEffect(() => {
     if (!open || !triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-    setPos({ left: rect.left, bottom: window.innerHeight - rect.top, width: rect.width });
+    function updatePos() {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setPos({ left: rect.left, bottom: window.innerHeight - rect.top, width: rect.width });
+    }
+    updatePos();
+    window.addEventListener('scroll', updatePos, true);
+    window.addEventListener('resize', updatePos);
+    return () => {
+      window.removeEventListener('scroll', updatePos, true);
+      window.removeEventListener('resize', updatePos);
+    };
   }, [open]);
 
   // Close on outside click
@@ -241,7 +258,7 @@ function EventRefSelect({ value, onChange, events, eventTypeFilter, placeholder:
               }}
               onClick={() => { onChange(opt.aTag); setOpen(false); setSearch(''); }}
             >
-              <span style={{ color: 'var(--colour-dim)' }}>[{opt.type}]</span> {opt.title || opt.dTag}
+              <span style={{ color: opt.aTag === value ? 'var(--colour-bg)' : 'var(--colour-dim)' }}>[{opt.type}]</span> {opt.title || opt.dTag}
             </div>
           ))}
         </div>,
@@ -353,12 +370,20 @@ function AddTagDropdown({ options, onSelect }) {
   const dropdownRef = useRef(null);
   const [pos, setPos] = useState(null);
 
-  // Measure trigger position when opening
+  // Reposition on open, scroll, and resize
   useEffect(() => {
     if (!open || !triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-    // Open upward: position bottom of dropdown at top of trigger
-    setPos({ left: rect.left, bottom: window.innerHeight - rect.top, width: rect.width });
+    function updatePos() {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setPos({ left: rect.left, bottom: window.innerHeight - rect.top, width: rect.width });
+    }
+    updatePos();
+    window.addEventListener('scroll', updatePos, true);
+    window.addEventListener('resize', updatePos);
+    return () => {
+      window.removeEventListener('scroll', updatePos, true);
+      window.removeEventListener('resize', updatePos);
+    };
   }, [open]);
 
   // Close on outside click

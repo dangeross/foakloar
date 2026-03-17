@@ -8,9 +8,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 const MODE_LABELS = {
-  canonical: 'canonical',
-  community: 'community',
-  explorer: 'explorer',
+  canonical: 'original',
+  community: 'collaborative',
+  explorer: 'open',
   build: 'build',
 };
 
@@ -40,7 +40,7 @@ export default function ModeDropdown({
     return () => document.removeEventListener('mousedown', handleClick);
   }, [open]);
 
-  const currentLabel = buildMode ? 'build' : effectiveMode;
+  const currentLabel = buildMode ? MODE_LABELS.build : (MODE_LABELS[effectiveMode] || effectiveMode);
 
   return (
     <span ref={ref} style={{ position: 'relative' }}>
@@ -70,7 +70,8 @@ export default function ModeDropdown({
             backgroundColor: 'var(--colour-bg)',
             boxShadow: '2px 2px 0 var(--colour-dim)',
             zIndex: 100,
-            minWidth: '10em',
+            minWidth: '12em',
+            whiteSpace: 'nowrap',
           }}
         >
           {/* Play modes */}
@@ -98,34 +99,30 @@ export default function ModeDropdown({
                 font: 'inherit',
               }}
             >
-              {!buildMode && mode === effectiveMode ? '> ' : '  '}{mode}
+              {!buildMode && mode === effectiveMode ? '> ' : '  '}{MODE_LABELS[mode] || mode}
             </button>
           ))}
 
           {/* Build mode */}
           {showBuildOption && (
             <>
-              <div
-                className="px-2 py-1"
-                style={{ color: 'var(--colour-dim)', borderTop: '1px solid var(--colour-dim)' }}
-              >
-                author
+              <div style={{ borderTop: '1px solid var(--colour-dim)' }}>
+                <button
+                  onClick={() => {
+                    if (!buildMode) onToggleBuild();
+                    setOpen(false);
+                  }}
+                  className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                  style={{
+                    color: 'var(--colour-item)',
+                    background: 'none',
+                    border: 'none',
+                    font: 'inherit',
+                  }}
+                >
+                  {buildMode ? '> ' : '  '}+ build
+                </button>
               </div>
-              <button
-                onClick={() => {
-                  if (!buildMode) onToggleBuild();
-                  setOpen(false);
-                }}
-                className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
-                style={{
-                  color: buildMode ? 'var(--colour-highlight)' : 'var(--colour-text)',
-                  background: 'none',
-                  border: 'none',
-                  font: 'inherit',
-                }}
-              >
-                {buildMode ? '> ' : '  '}build
-              </button>
               {buildMode && (
                 <button
                   onClick={() => {

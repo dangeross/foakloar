@@ -96,7 +96,10 @@ export default function App() {
     replaceState: player.replaceState,
   });
   const [log, setLog] = useState([]);
-  const [clientMode, setClientMode] = useState('community');
+  const [clientMode, setClientMode] = useState(() => {
+    if (!worldTag) return 'community';
+    try { return localStorage.getItem(`foakloar:mode:${worldTag}`) || 'community'; } catch { return 'community'; }
+  });
   const [showLogin, setShowLogin] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [showNsec, setShowNsec] = useState(false);
@@ -123,6 +126,7 @@ export default function App() {
       setLog([]);
       setGeneration((g) => g + 1);
       setDrafts(loadDrafts(worldTag || ''));
+      try { setClientMode(localStorage.getItem(`foakloar:mode:${worldTag}`) || 'community'); } catch { setClientMode('community'); }
     }
   }, [worldTag]);
 
@@ -392,7 +396,7 @@ export default function App() {
           <ModeDropdown
             availableModes={availableModes.length > 0 ? availableModes : [effectiveMode]}
             effectiveMode={effectiveMode}
-            onSelectMode={setClientMode}
+            onSelectMode={(mode) => { setClientMode(mode); try { localStorage.setItem(`foakloar:mode:${worldTag}`, mode); } catch {} }}
             buildMode={buildMode}
             onToggleBuild={() => setBuildMode(!buildMode)}
             showBuildOption={identity.isProperIdentity}
@@ -656,6 +660,7 @@ export default function App() {
         <BuildModeOverlay
           events={mergedEvents}
           currentPlace={engineRef.current?.currentPlace || player.state.place}
+          pubkey={identity.pubkey}
           onNewEvent={(eventType) => setEditorState({ eventType })}
           onEditPortal={(slot) => {
             // Pre-fill portal editor with current place and slot
@@ -663,6 +668,15 @@ export default function App() {
             setEditorState({
               eventType: 'portal',
               initialTags: [['exit', currentPlaceRef, slot, '']],
+            });
+          }}
+          onEditEvent={(aTag) => {
+            const event = mergedEvents.get(aTag);
+            if (!event) return;
+            const eventType = getTag(event, 'type') || 'place';
+            setEditorState({
+              eventType,
+              eventTemplate: { kind: 30078, tags: [...event.tags], content: event.content || '' },
             });
           }}
         />

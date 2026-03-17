@@ -249,6 +249,7 @@ export function makeWorldEvent({ collaboration = 'closed', collaborators = [], s
   const dtag = `${WORLD}:world`;
   const tags = [
     ['type', 'world'],
+    ['w', 'foakloar'],
     ['title', title || 'Test World'],
     ['collaboration', collaboration],
     ...collaborators.map((pk) => ['collaborator', pk]),

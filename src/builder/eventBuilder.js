@@ -48,11 +48,12 @@ export function buildEventTemplate({ eventType, worldSlug, dTag, tags, content }
   const allTags = [
     ['d', dTag],
     ['t', worldSlug],
+    ...(eventType === 'world' ? [['w', 'foakloar']] : []),
     ['type', eventType],
   ];
 
   // Add user-defined tags (skip any that duplicate identity tags)
-  const identityNames = new Set(['d', 't', 'type']);
+  const identityNames = new Set(['d', 't', 'type', 'w']);
   for (const tag of tags) {
     if (!identityNames.has(tag[0])) {
       allTags.push(tag);

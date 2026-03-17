@@ -658,6 +658,7 @@ The output JSON has two top-level keys — `answers` and `events`. The `answers`
       "tags": [
         ["d",    "my-world:world"],
         ["t",    "my-world"],
+    ["w",             "foakloar"],
         ["type", "world"],
         ["title","My World"]
       ],

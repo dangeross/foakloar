@@ -1175,8 +1175,9 @@ A lethal portal fires its consequence on traversal attempt when `requires` condi
     ["exit", "30078:<pubkey>:the-lake:place:west-of-chasm", "east", "A narrow ledge crosses the chasm."],
     ["requires", "30078:<pubkey>:the-lake:place:east-of-chasm", "bridged", "The ledge crumbles beneath you."],
     ["consequence", "30078:<pubkey>:the-lake:consequence:fell-into-chasm"]
-  ]
-}
+  ],
+  "content": ""
+}}
 ```
 
 If `requires` passes — player crosses. If it fails — consequence fires instead of blocking. This replaces the old `lethal` flag idea with something more expressive: the portal author decides exactly what happens on a failed crossing.
@@ -1278,8 +1279,9 @@ Combat is not a separate system — it is the `on-*` dispatcher applied to healt
     ["verb", "drink"],
     ["on-interact", "drink", "heal",         "6"],
     ["on-interact", "drink", "consume-item", ""]
-  ]
-}
+  ],
+  "content": "A small vial of healing potion."
+}}
 ```
 
 **Counters and consumable resources:**
@@ -1305,8 +1307,9 @@ Any item, feature, or NPC can carry a named counter — a numeric value tracked 
     ["on-move",         "on",       "decrement",   "battery"],
     ["on-counter", "battery", "0",  "set-state",   "dead"],
     ["on-counter", "battery", "0",  "consequence", "30078:<pubkey>:the-lake:consequence:lamp-dies"]
-  ]
-}
+  ],
+  "content": "A battery-powered brass lantern."
+}}
 ```
 
 The `transition` table enforces legal state changes — the client blocks any `set-state` not listed. `["transition", "dead", "dead", "..."]` is a terminal state declaration. The optional fourth element is **transition text**, rendered to the player when the transition fires. It applies universally to items, features, and NPCs — a door groaning open, a troll staggering, an altar going dark.
@@ -1631,6 +1634,7 @@ The world event is a replaceable event (`kind: 30078`). The genesis author can u
   "tags": [
     ["d",             "the-lake:world"],
     ["t",             "the-lake"],
+    ["w",             "foakloar"],   // indexed tag — enables relay discovery
     ["type",          "world"],
 
     // Identity
@@ -1681,6 +1685,7 @@ The world event is a replaceable event (`kind: 30078`). The genesis author can u
 
 | Tag | Value | Purpose |
 |-----|-------|---------|
+| `w` | `"foakloar"` | Protocol identifier — always this exact lowercase value. Single-letter indexed tag enabling relay discovery: `{ kinds: [30078], '#w': ['foakloar'] }`. Only on world events. |
 | `title` | String | Display name |
 | `author` | String | World author display name |
 | `version` | Semver string | World version |
@@ -1781,6 +1786,24 @@ Both models coexist. The platform provides friendly slugs for its featured world
 
 ---
 
+### 6.2.0 Relay Discovery — `#w` Tag
+
+NOSTR relays only index single-letter tags. Custom tags like `type` are not indexed, making "find all FOAKLOAR worlds on this relay" impossible with a standard query.
+
+World events carry a `["w", "foakloar"]` tag — a single-letter indexed tag that enables open discovery:
+
+```javascript
+// Find all FOAKLOAR world events on a relay
+{ kinds: [30078], '#w': ['foakloar'] }
+```
+
+Rules:
+- **Only world events** carry `["w", "foakloar"]`. Content events (places, items, features, NPCs) do not — discovery works from the world event outward via the genesis pubkey.
+- **Always lowercase `"foakloar"`** — the canonical value. Any other casing is invisible to the standard query.
+- `#w` enables open discovery. NIP-51 curated lists (section 6.2.1) layer curation on top.
+
+---
+
 ### 6.2.1 World Discovery — NIP-51 Curated Lists
 
 Platforms and curators publish world lists using **NIP-51** (`kind: 30001`) — NOSTR's standard list format. A curated worlds list is a replaceable event containing `a`-tags referencing world events:
@@ -1874,8 +1897,9 @@ For delegated trust — when a collaborator wants to vouch for someone without r
     ["pubkey",    "<Dave's pubkey>"],
     ["scope",     "portal"],
     ["can-vouch", "false"]
-  ]
-}
+  ],
+  "content": ""
+}}
 ```
 
 **`scope`** — what the vouched pubkey is trusted for:

@@ -31,7 +31,9 @@ export default function WorldCard({ world, onClick }) {
           <span style={{ color: 'var(--colour-dim)' }}>v{world.version}</span>
         )}
         {world.collaboration && world.collaboration !== 'closed' && (
-          <span style={{ color: 'var(--colour-dim)' }}>({world.collaboration})</span>
+          <span style={{ color: 'var(--colour-dim)' }}>
+            ({world.collaboration === 'vouched' ? 'collaborative' : world.collaboration})
+          </span>
         )}
       </div>
 
@@ -56,8 +58,10 @@ export default function WorldCard({ world, onClick }) {
       )}
 
       {world.cw?.length > 0 && (
-        <div style={{ color: 'var(--colour-error)' }}>
-          cw: {world.cw.join(', ')}
+        <div className="flex gap-1 flex-wrap">
+          {world.cw.map((cw) => (
+            <span key={cw} style={{ color: 'var(--colour-error)' }}>[{cw}]</span>
+          ))}
         </div>
       )}
 

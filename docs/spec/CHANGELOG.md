@@ -106,6 +106,14 @@ Portal always uses extended form. Portal wins if conflict. Hidden portals still 
 
 **`plaintext-type` tag proposed and removed before shipping** — replaced by three-element `content-type`.
 
+**`["w", "foakloar"]` tag on world events — relay discovery**
+Single-letter indexed tag enabling relay-level discovery of all FOAKLOAR world events:
+`{ kinds: [30078], '#w': ['foakloar'] }`
+Only world events carry this tag — content events do not. Value is always lowercase `"foakloar"`. Complements NIP-51 curated lists: `#w` is open discovery, curated lists are curation. See spec section 6.2.0.
+
+**`description` tag removed — use `content` field universally**
+`["description", "..."]` was an undocumented tag used on items, features, and NPCs. Replaced throughout with the standard `content` field, consistent with places, clues, and all other event types. `content-type` declares the format as before.
+
 **`unlock` action removed** — holdover from a pre-`requires` model. No `type: lock` event exists in the schema. All locking behaviour is expressed through `requires` on portals/features/places, `set-state` to change conditions, and `give-item` to satisfy item requirements. Removed from action types table and trigger × action matrix.
 
 **Trigger × Action compatibility matrix added** — documents which action types are valid on each trigger tag. Lives in spec alongside the action types table.
