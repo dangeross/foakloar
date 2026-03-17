@@ -12,6 +12,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import DOSPanel from './ui/DOSPanel.jsx';
 import WorldCard from './WorldCard.jsx';
+import TipPanel from './TipPanel.jsx';
 import { useWorldDiscovery } from '../hooks/useWorldDiscovery.js';
 import { listDraftWorlds } from '../builder/draftStore.js';
 import { APP_PUBKEY } from '../config.js';
@@ -37,6 +38,7 @@ export default function Lobby({
   const [filter, setFilter] = useState('');
   const [visibleCount, setVisibleCount] = useState(10);
   const [pendingWorld, setPendingWorld] = useState(null);
+  const [zapTarget, setZapTarget] = useState(null);
   const dropdownRef = useRef(null);
 
   // Close dropdown on outside click
@@ -414,7 +416,12 @@ export default function Lobby({
             <div style={{ color: 'var(--colour-dim)' }}>No matches for "{filter}".</div>
           )}
           {visibleWorlds.map((w) => (
-            <WorldCard key={w.aTag} world={w} onClick={() => handleSelectWorld(w)} />
+            <WorldCard
+              key={w.aTag}
+              world={w}
+              onClick={() => handleSelectWorld(w)}
+              onZap={(world) => setZapTarget({ eventId: world.eventId, pubkey: world.pubkey, title: world.title })}
+            />
           ))}
           {hasMore && (
             <div className="mt-2 flex justify-between items-center" style={{ color: 'var(--colour-dim)' }}>
@@ -471,6 +478,18 @@ export default function Lobby({
             </button>
           </div>
         </DOSPanel>
+      )}
+
+      {/* Zap panel (world event) */}
+      {zapTarget && (
+        <TipPanel
+          recipientPubkey={zapTarget.pubkey}
+          recipientName={zapTarget.title}
+          eventId={zapTarget.eventId}
+          signer={identity?.signer}
+          senderPubkey={identity?.pubkey}
+          onClose={() => setZapTarget(null)}
+        />
       )}
 
       {/* World creator panel (rendered as overlay) */}

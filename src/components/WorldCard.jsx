@@ -6,7 +6,7 @@ import React from 'react';
 import { nip19 } from 'nostr-tools';
 import { navigateToProfile } from '../services/router.js';
 
-export default function WorldCard({ world, onClick }) {
+export default function WorldCard({ world, onClick, onZap }) {
   const snippet = world.description?.length > 140
     ? world.description.slice(0, 140) + '...'
     : world.description;
@@ -41,21 +41,42 @@ export default function WorldCard({ world, onClick }) {
       </div>
 
       {(world.author || world.pubkey) && (
-        <div className="mb-1" style={{ color: 'var(--colour-dim)' }}>
-          by{' '}
-          {world.pubkey ? (
+        <div className="mb-1 flex items-center gap-2" style={{ color: 'var(--colour-dim)' }}>
+          <span>
+            by{' '}
+            {world.pubkey ? (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateToProfile(nip19.npubEncode(world.pubkey));
+                }}
+                className="cursor-pointer hover:opacity-80"
+                style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: 0, textDecoration: 'underline' }}
+              >
+                {world.author || world.pubkey.slice(0, 12) + '...'}
+              </button>
+            ) : (
+              world.author
+            )}
+          </span>
+          {onZap && world.pubkey && world.eventId && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                navigateToProfile(nip19.npubEncode(world.pubkey));
+                onZap(world);
               }}
-              className="cursor-pointer hover:opacity-80"
-              style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: 0, textDecoration: 'underline' }}
+              className="cursor-pointer"
+              style={{
+                color: 'var(--colour-item)',
+                background: 'none',
+                border: '1px solid var(--colour-dim)',
+                font: 'inherit',
+                padding: '1px 6px',
+                fontSize: '0.6rem',
+              }}
             >
-              {world.author || world.pubkey.slice(0, 12) + '...'}
+              zap
             </button>
-          ) : (
-            world.author
           )}
         </div>
       )}

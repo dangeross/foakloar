@@ -24,6 +24,7 @@ function extractWorldInfo(event) {
   const slug = get('t') || dTag.replace(/:world$/, '');
 
   return {
+    eventId: event.id || '',
     aTag: `30078:${event.pubkey}:${dTag}`,
     slug,
     title: get('title') || slug,

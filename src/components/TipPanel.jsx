@@ -13,6 +13,7 @@ import ReactDOM from 'react-dom';
 import QRCode from 'qrcode';
 import DOSPanel from './ui/DOSPanel.jsx';
 import { fetchPayMetadata, fetchInvoice, checkPaymentStatus, satsToMsats } from '../services/payment.js';
+import { useProfile } from '../hooks/useProfile.js';
 import { RELAY_URLS } from '../config.js';
 
 const POLL_INTERVAL = 10000;
@@ -22,22 +23,30 @@ const PRESET_AMOUNTS = [1, 10, 100, 1000];
 /**
  * Build a NIP-57 zap request event (kind:9734).
  */
-async function buildZapRequest({ signer, recipientPubkey, amountMsats, relays }) {
+async function buildZapRequest({ signer, recipientPubkey, amountMsats, relays, eventId, comment }) {
+  const tags = [
+    ['p', recipientPubkey],
+    ['amount', String(amountMsats)],
+    ['relays', ...relays],
+  ];
+  if (eventId) tags.push(['e', eventId]);
+
   const event = {
     kind: 9734,
     created_at: Math.floor(Date.now() / 1000),
-    content: '',
-    tags: [
-      ['p', recipientPubkey],
-      ['amount', String(amountMsats)],
-      ['relays', ...relays],
-    ],
+    content: comment || '',
+    tags,
   };
   return await signer.signEvent(event);
 }
 
-export default function TipPanel({ lud16, recipientName, recipientPubkey, signer, senderPubkey, onClose }) {
-  const [stage, setStage] = useState('amount'); // amount | loading | invoice | paid | error
+export default function TipPanel({ lud16: lud16Prop, recipientName, recipientPubkey, signer, senderPubkey, eventId, onClose }) {
+  // If no lud16 provided, resolve it from the recipient's kind:0 profile
+  const { profile: resolvedProfile, status: profileStatus } = useProfile(lud16Prop ? null : recipientPubkey);
+  const lud16 = lud16Prop || resolvedProfile?.lud16;
+  const displayName = recipientName || resolvedProfile?.displayName || resolvedProfile?.name || '';
+
+  const [stage, setStage] = useState('amount'); // amount | loading | invoice | paid | error | no-address
   const [meta, setMeta] = useState(null);
   const [amount, setAmount] = useState('');
   const [invoice, setInvoice] = useState(null);
@@ -46,13 +55,15 @@ export default function TipPanel({ lud16, recipientName, recipientPubkey, signer
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
   const [isZap, setIsZap] = useState(false);
+  const [comment, setComment] = useState('');
   const pollRef = useRef(null);
   const timeoutRef = useRef(null);
   const qrPlaceholderRef = useRef(null);
   const [qrRect, setQrRect] = useState(null);
 
-  // Fetch LNURL-pay metadata on mount
+  // Fetch LNURL-pay metadata when lud16 is available
   useEffect(() => {
+    if (!lud16) return;
     let cancelled = false;
     async function init() {
       try {
@@ -68,6 +79,14 @@ export default function TipPanel({ lud16, recipientName, recipientPubkey, signer
     init();
     return () => { cancelled = true; };
   }, [lud16]);
+
+  // If profile resolved but has no lud16 (or no profile found), show message
+  useEffect(() => {
+    if (!lud16Prop && (profileStatus === 'empty' || profileStatus === 'failed' ||
+        (profileStatus === 'ready' && !resolvedProfile?.lud16))) {
+      setStage('no-address');
+    }
+  }, [lud16Prop, profileStatus, resolvedProfile]);
 
   // Measure QR placeholder
   useEffect(() => {
@@ -101,6 +120,8 @@ export default function TipPanel({ lud16, recipientName, recipientPubkey, signer
             recipientPubkey,
             amountMsats: msats,
             relays: RELAY_URLS,
+            eventId,
+            comment,
           });
           invoiceOptions.nostr = JSON.stringify(zapRequest);
           setIsZap(true);
@@ -125,7 +146,7 @@ export default function TipPanel({ lud16, recipientName, recipientPubkey, signer
       setError(err.message || 'Failed to generate invoice.');
       setStage('error');
     }
-  }, [meta, canZap, signer, recipientPubkey]);
+  }, [meta, canZap, signer, recipientPubkey, eventId, comment]);
 
   // Poll verify endpoint
   useEffect(() => {
@@ -173,32 +194,66 @@ export default function TipPanel({ lud16, recipientName, recipientPubkey, signer
 
   return (
     <>
-      <DOSPanel title={`${isZap ? 'ZAP' : 'TIP'} — ${recipientName || lud16}`} onClose={onClose}>
+      <DOSPanel title={`${isZap ? 'ZAP' : 'TIP'} — ${displayName || lud16 || 'loading...'}`} onClose={onClose}>
+        {/* No Lightning address */}
+        {stage === 'no-address' && (
+          <div className="py-2 text-center">
+            <div style={{ color: 'var(--colour-dim)' }}>
+              This author has no Lightning address.
+            </div>
+            <button
+              onClick={onClose}
+              className="cursor-pointer mt-2 px-2 py-1"
+              style={{
+                color: 'var(--colour-dim)',
+                background: 'none',
+                border: '1px solid var(--colour-dim)',
+                font: 'inherit',
+              }}
+            >
+              Close
+            </button>
+          </div>
+        )}
+
         {/* Amount selection */}
         {stage === 'amount' && (
           <>
-            <div className="mb-2" style={{ color: 'var(--colour-dim)' }}>
-              {lud16}
-              {canZap && (
-                <span style={{ color: 'var(--colour-highlight)' }}> [zap]</span>
-              )}
-            </div>
+            {lud16 && (
+              <div className="mb-2" style={{ color: 'var(--colour-dim)' }}>
+                {lud16}
+                {canZap && (
+                  <span style={{ color: 'var(--colour-highlight)' }}> [zap]</span>
+                )}
+              </div>
+            )}
             {!meta ? (
               <div style={{ color: 'var(--colour-dim)' }}>Resolving...</div>
             ) : (
               <>
-                <div className="flex gap-1 flex-wrap mb-2">
+                {canZap && (
+                  <input
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="comment (optional)"
+                    className="w-full bg-transparent outline-none font-mono text-xs px-1 mb-2"
+                    style={{ color: 'var(--colour-text)', border: '1px solid var(--colour-dim)' }}
+                    maxLength={280}
+                  />
+                )}
+                <div className="flex gap-1 mb-2">
                   {PRESET_AMOUNTS.filter((a) => a >= minSats && a <= maxSats).map((a) => (
                     <button
                       key={a}
                       onClick={() => requestInvoice(a)}
-                      className="cursor-pointer"
+                      className="cursor-pointer text-center flex-1"
                       style={{
                         color: 'var(--colour-highlight)',
                         background: 'none',
                         border: '1px solid var(--colour-dim)',
                         font: 'inherit',
-                        padding: '2px 8px',
+                        padding: '2px 4px',
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {a} sats

@@ -17,6 +17,7 @@ import ModeDropdown from '../builder/ModeDropdown.jsx';
 import WorldCreator from '../builder/WorldCreator.jsx';
 import Lobby from './Lobby.jsx';
 import AuthorProfile from './AuthorProfile.jsx';
+import TipPanel from './TipPanel.jsx';
 import { loadDrafts, saveDraft, updateDraft, deleteDraft, importEvents, exportDrafts, bulkPublish } from '../builder/draftStore.js';
 
 /** Map entry types to colour slots */
@@ -110,6 +111,7 @@ export default function App() {
   const [showDrafts, setShowDrafts] = useState(false);
   const [editorState, setEditorState] = useState(null); // { eventType, draft?, initialTags?, ... }
   const [showWorldCreator, setShowWorldCreator] = useState(false);
+  const [showZap, setShowZap] = useState(false);
   const [drafts, setDrafts] = useState(() => loadDrafts(worldTag || ''));
   const engineRef = useRef(null);
   const inputRef = useRef(null);
@@ -396,6 +398,23 @@ export default function App() {
           >w</button>
           {' / '}
           <span style={{ color: 'var(--colour-title)' }}>{worldTitle}</span>
+          {worldConfig?.authorPubkey && worldConfig?.worldEvent?.id && (
+            <button
+              onClick={() => setShowZap(true)}
+              className="cursor-pointer"
+              style={{
+                color: 'var(--colour-item)',
+                background: 'none',
+                border: '1px solid var(--colour-dim)',
+                font: 'inherit',
+                padding: '0 4px',
+                fontSize: '0.6rem',
+                marginLeft: '0.5em',
+              }}
+            >
+              zap
+            </button>
+          )}
           {status !== 'ready' ? <span style={{ color: 'var(--colour-dim)' }}>{' | '}{status}</span> : ''}
         </span>
         <span className="flex items-center gap-2">
@@ -658,6 +677,18 @@ export default function App() {
             // Force re-render
             setLog((prev) => [...prev]);
           }}
+        />
+      )}
+
+      {/* Zap world author */}
+      {showZap && worldConfig?.authorPubkey && (
+        <TipPanel
+          recipientPubkey={worldConfig.authorPubkey}
+          recipientName={worldTitle}
+          eventId={worldConfig.worldEvent?.id}
+          signer={identity?.signer}
+          senderPubkey={identity?.pubkey}
+          onClose={() => setShowZap(false)}
         />
       )}
 

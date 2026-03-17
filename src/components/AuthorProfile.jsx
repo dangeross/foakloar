@@ -17,6 +17,7 @@ export default function AuthorProfile({ npub, pubkeyHex, identity }) {
   const { profile } = useProfile(pubkeyHex);
   const [copied, setCopied] = useState(false);
   const [showTip, setShowTip] = useState(false);
+  const [zapTarget, setZapTarget] = useState(null); // { eventId, pubkey }
 
   const shortNpub = npub.length > 20
     ? npub.slice(0, 12) + '...' + npub.slice(-8)
@@ -68,7 +69,7 @@ export default function AuthorProfile({ npub, pubkeyHex, identity }) {
                 fontSize: '0.6rem',
               }}
             >
-              tip
+              zap
             </button>
           </div>
         )}
@@ -111,11 +112,16 @@ export default function AuthorProfile({ npub, pubkeyHex, identity }) {
           <div style={{ color: 'var(--colour-dim)' }}>No worlds found for this author.</div>
         )}
         {worlds.map((w) => (
-          <WorldCard key={w.aTag} world={w} onClick={() => navigateToWorld(w.slug)} />
+          <WorldCard
+            key={w.aTag}
+            world={w}
+            onClick={() => navigateToWorld(w.slug)}
+            onZap={(world) => setZapTarget({ eventId: world.eventId, pubkey: world.pubkey, title: world.title })}
+          />
         ))}
       </div>
 
-      {/* Tip panel */}
+      {/* Tip panel (author) */}
       {showTip && profile?.lud16 && (
         <TipPanel
           lud16={profile.lud16}
@@ -124,6 +130,18 @@ export default function AuthorProfile({ npub, pubkeyHex, identity }) {
           signer={identity?.signer}
           senderPubkey={identity?.pubkey}
           onClose={() => setShowTip(false)}
+        />
+      )}
+
+      {/* Zap panel (world event) */}
+      {zapTarget && (
+        <TipPanel
+          recipientPubkey={zapTarget.pubkey}
+          recipientName={zapTarget.title}
+          eventId={zapTarget.eventId}
+          signer={identity?.signer}
+          senderPubkey={identity?.pubkey}
+          onClose={() => setZapTarget(null)}
         />
       )}
     </div>
