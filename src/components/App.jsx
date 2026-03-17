@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { useRelay } from '../hooks/useRelay.js';
 import { usePlayerState } from '../hooks/usePlayerState.js';
 import { useSigner } from '../hooks/useSigner.js';
-import { parseRoute, navigateToWorld } from '../services/router.js';
+import { parseRoute, navigateToWorld, navigateToLobby } from '../services/router.js';
 import { GameEngine } from '../engine/engine.js';
 import { PlayerStateMutator } from '../engine/player-state.js';
 import { getTag, getTags } from '../engine/world.js';
@@ -378,7 +378,16 @@ export default function App() {
     <div className="max-w-2xl mx-auto p-6 flex flex-col h-screen"
          style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}>
       <div className="text-sm mb-2 flex justify-between" style={{ color: 'var(--colour-dim)' }}>
-        <span>{worldTitle}{status !== 'ready' ? ` | ${status}` : ''}</span>
+        <span>
+          <button
+            onClick={navigateToLobby}
+            className="cursor-pointer"
+            style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: 0 }}
+          >w</button>
+          {' / '}
+          <span style={{ color: 'var(--colour-title)' }}>{worldTitle}</span>
+          {status !== 'ready' ? <span style={{ color: 'var(--colour-dim)' }}>{' | '}{status}</span> : ''}
+        </span>
         <span className="flex items-center gap-2">
           <ModeDropdown
             availableModes={availableModes.length > 0 ? availableModes : [effectiveMode]}

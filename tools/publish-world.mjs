@@ -133,10 +133,26 @@ for (const evt of trustUnsigned) {
   console.log(`  [${type}] ${d}  (${pk}...)`);
 }
 
+// ── NIP-51 curated world list ────────────────────────────────────────────────
+
+const curatedList = {
+  kind: 30001,
+  pubkey: author.pubkey,
+  created_at: Math.floor(Date.now() / 1000),
+  tags: [
+    ['d', 'foakloar:worlds'],
+    ['title', 'foakloar — Featured Worlds'],
+    ['a', `30078:${author.pubkey}:the-lake:world`],
+  ],
+  content: '',
+};
+
+console.log(`\nCurated list (foakloar:worlds): 1 world reference\n`);
+
 // ── Sign ────────────────────────────────────────────────────────────────────
 
-// Sign genesis events with author key
-const signedGenesis = genesisUnsigned.map((evt) => finalizeEvent(evt, author.secretKeyBytes));
+// Sign genesis events + curated list with author key
+const signedGenesis = [...genesisUnsigned, curatedList].map((evt) => finalizeEvent(evt, author.secretKeyBytes));
 
 // Sign trust test events with their respective keys
 const keyMap = {

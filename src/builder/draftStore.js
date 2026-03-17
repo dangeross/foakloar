@@ -159,6 +159,40 @@ export function saveAnswer(worldSlug, dTag, answer) {
   writeStore(worldSlug, store);
 }
 
+// ── Discovery ─────────────────────────────────────────────────────────────
+
+/**
+ * Scan localStorage for all worlds that have local drafts.
+ * Returns metadata for each draft world (slug, title, etc.).
+ */
+export function listDraftWorlds() {
+  const results = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key.startsWith(STORAGE_PREFIX)) continue;
+    const slug = key.slice(STORAGE_PREFIX.length);
+    if (!slug) continue;
+    const store = readStore(slug);
+    const worldDraft = store.events.find(
+      (e) => e.tags?.find((t) => t[0] === 'type')?.[1] === 'world'
+    );
+    if (worldDraft) {
+      results.push({
+        slug,
+        title: getTagValue(worldDraft, 'title') || slug,
+        author: getTagValue(worldDraft, 'author') || '',
+        description: worldDraft.content || '',
+        tags: worldDraft.tags.filter((t) => t[0] === 'tag').map((t) => t[1]),
+        cw: worldDraft.tags.filter((t) => t[0] === 'cw').map((t) => t[1]),
+        collaboration: getTagValue(worldDraft, 'collaboration') || 'closed',
+        isDraft: true,
+        draftCount: store.events.length,
+      });
+    }
+  }
+  return results;
+}
+
 // ── Import / Export ────────────────────────────────────────────────────────
 
 /**

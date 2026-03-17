@@ -1,13 +1,15 @@
 /**
- * Lobby — Minimal landing page shown at /w.
+ * Lobby — World browser at /w.
  *
- * Lets the user enter a world slug to navigate to, or create a new world.
- * Header mirrors the game view: identity button + world creator shortcut.
- * Phase 18b will add NIP-51 discovery / search here.
+ * Discovers published worlds from relays and lists local draft worlds.
+ * Manual slug entry for direct navigation.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import DOSPanel from './ui/DOSPanel.jsx';
+import WorldCard from './WorldCard.jsx';
+import { useWorldDiscovery } from '../hooks/useWorldDiscovery.js';
+import { listDraftWorlds } from '../builder/draftStore.js';
 
 export default function Lobby({
   identity,
@@ -20,6 +22,19 @@ export default function Lobby({
   const [showLogin, setShowLogin] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [showNsec, setShowNsec] = useState(false);
+
+  const { worlds: publishedWorlds, status: discoveryStatus } = useWorldDiscovery();
+  const draftWorlds = useMemo(() => listDraftWorlds(), []);
+
+  // Merge: published worlds win over drafts with the same slug
+  const publishedSlugs = useMemo(
+    () => new Set(publishedWorlds.map((w) => w.slug)),
+    [publishedWorlds]
+  );
+  const uniqueDraftWorlds = useMemo(
+    () => draftWorlds.filter((d) => !publishedSlugs.has(d.slug)),
+    [draftWorlds, publishedSlugs]
+  );
 
   const isLoggedIn = identity?.method !== 'ephemeral';
   const shortPubkey = identity?.pubkey ? identity.pubkey.slice(0, 8) + '...' : '';
@@ -200,20 +215,18 @@ export default function Lobby({
       )}
 
       {/* ── Body ────────────────────────────────────────────────────────── */}
-      <div className="flex-1">
+      <div className="flex-1 overflow-y-auto">
+        {/* Manual slug input */}
         <div className="mb-6">
-          <div className="mb-2" style={{ color: 'var(--colour-title)' }}>
-            Enter a world:
-          </div>
           <form
             onSubmit={(e) => {
               e.preventDefault();
               const s = slug.trim().toLowerCase();
               if (s) onSelectWorld(s);
             }}
-            className="flex gap-2"
+            className="flex gap-2 items-center"
           >
-            <span style={{ color: 'var(--colour-text)' }}>/w/</span>
+            <span style={{ color: 'var(--colour-dim)' }}>/w/</span>
             <input
               value={slug}
               onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
@@ -239,24 +252,35 @@ export default function Lobby({
           </form>
         </div>
 
-        <div className="mb-4" style={{ color: 'var(--colour-dim)' }}>
-          — or —
-        </div>
+        {/* Draft worlds */}
+        {uniqueDraftWorlds.length > 0 && (
+          <div className="mb-6">
+            <div className="mb-2" style={{ color: 'var(--colour-dim)', borderBottom: '1px solid var(--colour-dim)', paddingBottom: '2px' }}>
+              Your Drafts
+            </div>
+            {uniqueDraftWorlds.map((w) => (
+              <WorldCard key={w.slug} world={w} onClick={() => onSelectWorld(w.slug)} />
+            ))}
+          </div>
+        )}
 
-        <div className="mb-4">
-          <button
-            onClick={() => onSelectWorld('the-lake')}
-            className="cursor-pointer block mb-2"
-            style={{
-              color: 'var(--colour-highlight)',
-              background: 'none',
-              border: 'none',
-              font: 'inherit',
-              padding: 0,
-            }}
-          >
-            {'>'} The Lake (default world)
-          </button>
+        {/* Published worlds */}
+        <div className="mb-6">
+          <div className="mb-2" style={{ color: 'var(--colour-dim)', borderBottom: '1px solid var(--colour-dim)', paddingBottom: '2px' }}>
+            Published Worlds
+          </div>
+          {discoveryStatus === 'loading' && (
+            <div style={{ color: 'var(--colour-dim)' }}>Searching relays...</div>
+          )}
+          {discoveryStatus === 'failed' && (
+            <div style={{ color: 'var(--colour-error)' }}>Failed to connect to relays.</div>
+          )}
+          {discoveryStatus === 'ready' && publishedWorlds.length === 0 && (
+            <div style={{ color: 'var(--colour-dim)' }}>No worlds found.</div>
+          )}
+          {publishedWorlds.map((w) => (
+            <WorldCard key={w.aTag} world={w} onClick={() => onSelectWorld(w.slug)} />
+          ))}
         </div>
       </div>
 
