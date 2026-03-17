@@ -214,7 +214,7 @@ export default function BuildModeOverlay({
 
       {/* Quick create buttons */}
       <div className="flex gap-1 mt-2 flex-wrap">
-        {['portal', 'item', 'feature', 'npc', 'clue'].map((type) => (
+        {['portal', 'item', 'feature', 'npc', 'clue', 'puzzle', 'payment'].map((type) => (
           <DOSButton key={type} onClick={() => onNewEvent?.(type)} colour="dim">
             + {type}
           </DOSButton>

@@ -671,6 +671,23 @@ The place event references both items and features it contains:
 
 A self-contained piece of information with its own state lifecycle. Clues start `hidden` and are set to `visible` by whatever discovers them — a feature interaction, an NPC, a place entry. They can be referenced independently by multiple events. The `sealed` state means the content is NIP-44 encrypted — visible but unreadable without the right key.
 
+**Conditional clue visibility:** a `requires` tag on a clue gates its visibility even after `set-state visible` has fired. If the `requires` condition is not met, the client suppresses the clue regardless of its state. This is the correct pattern for clues that should only appear under specific world conditions — not inline `requires` strings on `on-interact` tags (which are not valid schema):
+
+```json
+// Clue only shows when lamp is running — requires gates visibility
+{
+  "kind": 30078, "tags": [
+    ["d",       "lighthouse:clue:lamp-running"],
+    ["type",    "clue"],
+    ["state",   "hidden"],
+    ["requires","30078:<PUBKEY>:lighthouse:feature:lamp", "running", ""]
+  ],
+  "content": "The light cuts out to sea. Something answers back."
+}
+```
+
+The `on-interact` that fires `set-state visible` on this clue can run unconditionally — the `requires` on the clue itself is the gate.
+
 ```json
 {
   "kind": 30078,
@@ -767,6 +784,28 @@ The answer is never stored. `SHA256(answer + salt)` means the client hashes the 
 | `cipher` | Decode an encrypted message | Uses NIP-44 sealed content |
 | `observe` | Notice something in place/clue descriptions | Client surfaces on player action |
 | `map` | Navigate a sub-maze | Client-side spatial challenge |
+
+**`observe` puzzles** are a named variant of `sequence` — the player must have examined or visited specific things rather than manipulated them. The `requires` tags check for `visited` or `read` states on places, clues, or features. Auto-evaluated after any state change, same as sequence puzzles. No answer input required — completion is automatic when all conditions pass:
+
+```json
+{
+  "kind": 30078, "tags": [
+    ["d",           "lighthouse:puzzle:read-clues"],
+    ["t",           "lighthouse"],
+    ["type",        "puzzle"],
+    ["puzzle-type", "observe"],
+    ["requires",    "30078:<PUBKEY>:lighthouse:clue:logbook-entry",  "visible", "Read the logbook first."],
+    ["requires",    "30078:<PUBKEY>:lighthouse:clue:desk-letter",    "visible", "Find the letter in the cottage."],
+    ["requires",    "30078:<PUBKEY>:lighthouse:clue:hearth-ash",     "visible", "Examine the hearth."],
+    ["on-complete", "", "give-item", "30078:<PUBKEY>:lighthouse:item:insight"]
+  ],
+  "content": "The pieces are coming together."
+}
+```
+
+**`cipher` puzzles** use NIP-44 sealed clue content. The clue is visible but unreadable — the puzzle answer derives the decryption key. Same hash verification as `riddle`: `answer-hash = SHA256(answer + salt)`. On solve, `on-complete` gives the player the derived key which the client uses to decrypt the clue's content.
+
+**`map` puzzle type — deferred.** Originally specced as "navigate a sub-maze" but requires significant client-side spatial UI that is not yet defined. Removed from the type list pending a future extension. Do not use.
 
 **Sequence puzzles** are structurally identical to recipes with `ordered: true` — the only difference is what the `requires` tags reference. A recipe requires inventory items; a sequence puzzle requires world event states. Both use `ordered: true` to enforce evaluation order:
 
@@ -1341,7 +1380,9 @@ A sealed place or clue has its `content` encrypted via NIP-44 and declares `cont
 }
 ```
 
-The client detects `content-type: application/nip44`, attempts decryption using the key derived from the solved puzzle's answer, and renders the decrypted content on success. On failure the place description is withheld — the player knows they're missing something.
+The client detects `content-type: application/nip44`, attempts decryption using the key derived from the solved puzzle's answer, and renders the decrypted content on success.
+
+**Note on the `puzzle` tag at runtime:** the `puzzle` tag on a sealed place is used by the publishing tool to know which answer to use for encryption. It is not read by the client engine at runtime — riddle puzzles are activated via feature `on-interact` → `set-state` targeting the puzzle event, not by the place's `puzzle` tag. On failure the place description is withheld — the player knows they're missing something.
 
 When the sealed content is not plain text, declare the plaintext format with a `content-type third element` tag:
 
@@ -1672,6 +1713,7 @@ The world event is a replaceable event (`kind: 30078`). The genesis author can u
     ["colour",  "exits",     "#16a34a"],
     ["font",    "ibm-plex-mono"],
     ["cursor",  "block"],
+    ["effects", "crt"],        // optional — defaults from theme if absent
 
     // Cover media
     ["content-type",  "text/markdown"],
@@ -1701,6 +1743,12 @@ The world event is a replaceable event (`kind: 30078`). The genesis author can u
 | `colour` | Slot + hex | Override a specific colour slot — multiple allowed |
 | `font` | Font string | Preferred font — named option or CSS font-family string |
 | `cursor` | `block` \| `underline` \| `beam` | Cursor style |
+| `effects` | Bundle string | Visual effect bundle. Default determined by `theme` if absent. |
+| `scanlines` | 0.0–1.0 | Override scanline intensity (0 = off, 1 = heavy) |
+| `glow` | 0.0–1.0 | Override phosphor glow intensity |
+| `flicker` | `on` \| `off` | Override screen flicker |
+| `vignette` | 0.0–1.0 | Override edge vignette intensity |
+| `noise` | 0.0–1.0 | Grain/static overlay — adds texture without full CRT feel |
 | `content-type` | MIME type | Format of `content` field |
 | `media` | Type + value | Cover art or world image |
 
@@ -1722,14 +1770,14 @@ The world event is a replaceable event (`kind: 30078`). The genesis author can u
 
 **Built-in theme presets:**
 
-| Theme | Feel | bg | text |
-|-------|------|----|------|
-| `terminal-green` | Classic CRT | `#000000` | `#00ff41` |
-| `parchment` | Ancient manuscript | `#f5e6c8` | `#3d2b1f` |
-| `void-blue` | Sci-fi cold | `#000814` | `#00b4d8` |
-| `blood-red` | Horror | `#0a0000` | `#ff2020` |
-| `monochrome` | Clean minimal | `#111111` | `#eeeeee` |
-| `custom` | No defaults — all `colour` tags required | — | — |
+| Theme | Feel | bg | text | Default effects |
+|-------|------|----|------|-----------------|
+| `terminal-green` | Classic CRT | `#000000` | `#00ff41` | `crt` |
+| `void-blue` | Sci-fi cold | `#000814` | `#00b4d8` | `crt` |
+| `blood-red` | Horror | `#0a0000` | `#ff2020` | `static` |
+| `parchment` | Ancient manuscript | `#f5e6c8` | `#3d2b1f` | `typewriter` |
+| `monochrome` | Clean minimal | `#111111` | `#eeeeee` | `clean` |
+| `custom` | No defaults — all `colour` tags required | — | — | `clean` |
 
 Each preset defines a full colour map. `colour` tags override individual slots. Use `theme: custom` with all `colour` tags for total control.
 
@@ -1739,9 +1787,33 @@ Each preset defines a full colour map. `colour` tags override individual slots. 
 |-------|-------------|
 | `ibm-plex-mono` | Current default — clean technical monospace |
 | `courier` | Classic typewriter feel |
-| `pixel` | Retro pixel font |
+| `pixel` | 8-bit pixel font (Pixelify Sans) |
+| `arcade` | Arcade bitmap font (Silkscreen) |
 | `serif` | Parchment/manuscript feel |
 | Any CSS `font-family` string | Custom font — client applies directly |
+
+**Effect bundles:**
+
+| Bundle | Effects active | Suits |
+|--------|---------------|-------|
+| `crt` | scanlines + glow + flicker + vignette | `terminal-green`, `void-blue` |
+| `static` | scanlines + glow + flicker + vignette + noise | `blood-red`, horror/glitch worlds |
+| `typewriter` | vignette only | `parchment` |
+| `clean` | no effects | `monochrome`, `custom`, museum/gallery use cases |
+| `none` | alias for `clean` | |
+
+The `effects` tag selects a bundle. Individual tags override specific effects within the bundle:
+
+```json
+["effects",   "crt"],      // bundle — all four CRT effects
+["flicker",   "off"],      // override — disable flicker
+["glow",      "0.3"],      // override — reduce glow intensity
+["vignette",  "0.8"]       // override — strong vignette
+```
+
+If `effects` is absent, the bundle defaults from the active `theme` preset (see preset table above). Individual effect tags without an `effects` tag override the preset's default bundle.
+
+Intensity values (0.0–1.0) give fine control. `scanlines` intensity controls line opacity (0 = off, 1 = heavy black lines). `glow` controls phosphor text-shadow spread. `vignette` controls edge darkening. `flicker` is boolean (`on`/`off`). `noise` adds grain/static for texture without the full CRT aesthetic — useful for horror, aged documents, or abstract worlds.
 
 Content warnings use a `cw` tag with a short string. Clients display these before the world loads — the player can choose not to enter. Common values: `violence`, `horror`, `mild-peril`, `adult`, `flashing-lights`. No enforced vocabulary — world authors choose their own, clients can filter on known values.
 

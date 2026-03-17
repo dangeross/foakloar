@@ -142,6 +142,15 @@ export function deleteDraft(worldSlug, id) {
 }
 
 /**
+ * Delete all drafts for a world.
+ */
+export function clearDrafts(worldSlug) {
+  const store = readStore(worldSlug);
+  store.events = [];
+  writeStore(worldSlug, store);
+}
+
+/**
  * Get a single draft by id.
  */
 export function getDraft(worldSlug, id) {
@@ -191,6 +200,75 @@ export function listDraftWorlds() {
     }
   }
   return results;
+}
+
+// ── Import Validation ─────────────────────────────────────────────────────
+
+/**
+ * Validate import data before importing.
+ * Checks structure, world slug consistency, and d-tag duplicates.
+ *
+ * @param {string} worldSlug - expected world slug (from current world context)
+ * @param {{ events?: Array, answers?: Object }} data
+ * @returns {{ valid: Array, rejected: Array<{event, reason}>, warnings: string[], worldSlug: string|null }}
+ */
+export function validateImport(worldSlug, data) {
+  const warnings = [];
+  const valid = [];
+  const rejected = [];
+
+  if (!data || !Array.isArray(data.events)) {
+    return { valid: [], rejected: [], warnings: ['Invalid format: expected { events: [...] }'], worldSlug: null };
+  }
+
+  if (data.events.length === 0) {
+    return { valid: [], rejected: [], warnings: ['No events found in file'], worldSlug: null };
+  }
+
+  // Detect the world slug from the data (from the world event's t-tag, or first event's t-tag)
+  const worldEvent = data.events.find((e) =>
+    e.tags?.find((t) => t[0] === 'type')?.[1] === 'world'
+  );
+  const detectedSlug = worldEvent
+    ? getTagValue(worldEvent, 't')
+    : getTagValue(data.events[0], 't');
+
+  const store = readStore(worldSlug);
+  const existingDTags = new Set(store.events.map((e) => getTagValue(e, 'd')).filter(Boolean));
+
+  for (const event of data.events) {
+    if (!event.tags || !Array.isArray(event.tags)) {
+      rejected.push({ event, reason: 'Missing or invalid tags array' });
+      continue;
+    }
+
+    const dTag = getTagValue(event, 'd');
+    if (!dTag) {
+      rejected.push({ event, reason: 'Missing d-tag' });
+      continue;
+    }
+
+    const tTag = getTagValue(event, 't');
+    if (tTag && worldSlug && tTag !== worldSlug) {
+      rejected.push({ event, reason: `World mismatch: "${tTag}" (expected "${worldSlug}")` });
+      continue;
+    }
+
+    if (existingDTags.has(dTag)) {
+      rejected.push({ event, reason: `Duplicate d-tag: ${dTag}` });
+      continue;
+    }
+
+    const typeTag = getTagValue(event, 'type');
+    if (!typeTag) {
+      warnings.push(`${dTag}: missing type tag`);
+    }
+
+    valid.push(event);
+    existingDTags.add(dTag); // prevent intra-import duplicates
+  }
+
+  return { valid, rejected, warnings, worldSlug: detectedSlug };
 }
 
 // ── Import / Export ────────────────────────────────────────────────────────
@@ -280,14 +358,19 @@ export function resolvePubkeyPlaceholder(event, pubkey) {
 /**
  * Bulk publish all drafts.
  *
+ * Handles NIP-44 encryption: events with content-type application/nip44
+ * are encrypted using the puzzle answer from the answers store before publishing.
+ *
  * @param {string} worldSlug
  * @param {string} pubkey - publisher's pubkey (for placeholder substitution)
- * @param {Object} signer - { signEvent(event) }
+ * @param {Object} signer - { signEvent(event), encryptTo?(pubkey, plaintext) }
  * @param {Object} relay - relay ref (.current)
  * @returns {Promise<{ published: number, failed: number, errors: string[] }>}
  */
 export async function bulkPublish(worldSlug, pubkey, signer, relay) {
+  const { publishEvent } = await import('./eventBuilder.js');
   const store = readStore(worldSlug);
+  const answers = store.answers || {};
   let published = 0;
   let failed = 0;
   const errors = [];
@@ -296,16 +379,16 @@ export async function bulkPublish(worldSlug, pubkey, signer, relay) {
   for (const event of store.events) {
     try {
       const resolved = resolvePubkeyPlaceholder(event, pubkey);
-      const unsigned = {
-        kind: resolved.kind,
-        tags: resolved.tags,
-        content: resolved.content,
-        created_at: Math.floor(Date.now() / 1000),
-      };
-      const signed = await signer.signEvent(unsigned);
-      await relay.current.publish(signed);
-      published++;
-      if (event._draft?.id) publishedIds.push(event._draft.id);
+      const res = await publishEvent(signer, relay, resolved, {
+        answers,
+        allEvents: store.events.map((e) => resolvePubkeyPlaceholder(e, pubkey)),
+      });
+      if (res.ok) {
+        published++;
+        if (event._draft?.id) publishedIds.push(event._draft.id);
+      } else {
+        throw new Error(res.error);
+      }
     } catch (err) {
       failed++;
       const dTag = getTagValue(event, 'd') || '?';

@@ -14,7 +14,8 @@ import DOSButton from './DOSButton.jsx';
 import TagEditor from './TagEditor.jsx';
 import EventPreview from './EventPreview.jsx';
 import { buildEventTemplate, buildDTag, publishEvent } from './eventBuilder.js';
-import { resolvePubkeyPlaceholder } from './draftStore.js';
+import { resolvePubkeyPlaceholder, loadAnswers, saveAnswer } from './draftStore.js';
+import { renderMarkdown } from '../engine/content.js';
 
 /**
  * Extract fields from an event template for editing.
@@ -60,6 +61,15 @@ export default function EventEditor({
   );
   const [dTagOverride, setDTagOverride] = useState(parsed.dTag || '');
   const [showPreview, setShowPreview] = useState(startInPreview);
+  const [mdPreview, setMdPreview] = useState(false);
+
+  // Puzzle answer — stored separately in the answers map, not in tags
+  const [puzzleAnswer, setPuzzleAnswer] = useState(() => {
+    if (eventType !== 'puzzle') return '';
+    const answers = loadAnswers(worldSlug);
+    const existingDTag = parsed.dTag || '';
+    return answers[existingDTag] || '';
+  });
 
   // Auto-generate d-tag from title
   const dTag = useMemo(() => {
@@ -110,20 +120,46 @@ export default function EventEditor({
   const handlePublish = useCallback(async () => {
     // Resolve <PUBKEY> placeholders before publishing
     const resolved = resolvePubkeyPlaceholder(template, pubkey);
-    const res = await publishEvent(signer, relay, resolved);
+    const answers = loadAnswers(worldSlug);
+    const res = await publishEvent(signer, relay, resolved, {
+      answers,
+      allEvents: events,
+    });
     if (res.ok) {
       onPublished?.(res.event);
       onClose();
     }
     return res;
-  }, [signer, relay, template, pubkey, onPublished, onClose]);
+  }, [signer, relay, template, pubkey, worldSlug, events, onPublished, onClose]);
 
-  const handleSaveDraft = useCallback(() => {
-    if (onSaveDraft) {
+  const handleSaveDraft = useCallback(async () => {
+    if (!onSaveDraft) return;
+
+    // For puzzle events: generate answer-hash, save answer
+    if (eventType === 'puzzle' && puzzleAnswer.trim()) {
+      const existingSalt = draftTemplate.tags.find((t) => t[0] === 'salt')?.[1];
+      const salt = existingSalt || crypto.randomUUID();
+      const answerTrimmed = puzzleAnswer.trim();
+      const data = new TextEncoder().encode(answerTrimmed + salt);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashHex = Array.from(new Uint8Array(hashBuffer))
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
+
+      // Update tags with generated hash and salt
+      const updatedTags = draftTemplate.tags.filter(
+        (t) => t[0] !== 'answer-hash' && t[0] !== 'salt'
+      );
+      updatedTags.push(['answer-hash', hashHex]);
+      updatedTags.push(['salt', salt]);
+
+      onSaveDraft({ ...draftTemplate, tags: updatedTags });
+      saveAnswer(worldSlug, dTag, answerTrimmed);
+    } else {
       onSaveDraft(draftTemplate);
-      onClose();
     }
-  }, [onSaveDraft, draftTemplate, onClose]);
+    onClose();
+  }, [onSaveDraft, draftTemplate, onClose, eventType, puzzleAnswer, dTag, worldSlug]);
 
   if (showPreview) {
     // Show with resolved pubkey for accurate preview
@@ -142,9 +178,21 @@ export default function EventEditor({
   }
 
   // Determine if this event type has a title field
-  const hasTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest', 'portal'].includes(eventType);
+  const hasTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest', 'portal', 'puzzle'].includes(eventType);
   // Determine if this event type has content
   const hasContent = ['place', 'item', 'feature', 'npc', 'clue', 'puzzle', 'world'].includes(eventType);
+  // Current content-type from tags (default: text/plain)
+  const contentTypeTag = tags.find((t) => t[0] === 'content-type');
+  const contentType = contentTypeTag?.[1] || 'text/plain';
+  const isMarkdown = contentType === 'text/markdown';
+  const toggleContentType = () => {
+    const newType = isMarkdown ? 'text/plain' : 'text/markdown';
+    if (contentTypeTag) {
+      setTags(tags.map((t) => t[0] === 'content-type' ? ['content-type', newType] : t));
+    } else {
+      setTags([...tags, ['content-type', newType]]);
+    }
+  };
 
   return (
     <DOSPanel
@@ -186,15 +234,101 @@ export default function EventEditor({
       {/* Content */}
       {hasContent && (
         <div className="mb-2">
-          <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Content:</div>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Prose description..."
-            rows={4}
-            className="w-full bg-transparent outline-none font-mono text-xs px-1 resize-y"
-            style={{ color: 'var(--colour-text)', border: '1px solid var(--colour-dim)' }}
+          <div className="mb-0.5 flex items-center justify-between" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>
+            <span>Content:</span>
+            <span className="flex gap-2">
+              <button
+                onClick={toggleContentType}
+                className="cursor-pointer"
+                style={{
+                  color: isMarkdown ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+                  background: 'none',
+                  border: 'none',
+                  font: 'inherit',
+                  padding: 0,
+                  fontSize: '0.6rem',
+                }}
+                title={`Content type: ${contentType}`}
+              >
+                [{isMarkdown ? 'markdown' : 'plain'}]
+              </button>
+              <button
+                onClick={() => setMdPreview(!mdPreview)}
+                className="cursor-pointer"
+                style={{
+                  color: mdPreview ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+                  background: 'none',
+                  border: 'none',
+                  font: 'inherit',
+                  padding: 0,
+                  fontSize: '0.6rem',
+                }}
+              >
+                [{mdPreview ? 'edit' : 'preview'}]
+              </button>
+            </span>
+          </div>
+          {mdPreview ? (
+            isMarkdown ? (
+              <div
+                className="w-full font-mono text-xs px-1 py-1 prose-dungeon"
+                style={{
+                  color: 'var(--colour-text)',
+                  border: '1px solid var(--colour-dim)',
+                  minHeight: '5em',
+                  overflowY: 'auto',
+                  maxHeight: '12em',
+                }}
+                dangerouslySetInnerHTML={{ __html: renderMarkdown(content || '*empty*') }}
+              />
+            ) : (
+              <div
+                className="w-full font-mono text-xs px-1 py-1 whitespace-pre-wrap"
+                style={{
+                  color: 'var(--colour-text)',
+                  border: '1px solid var(--colour-dim)',
+                  minHeight: '5em',
+                  overflowY: 'auto',
+                  maxHeight: '12em',
+                }}
+              >
+                {content || '(empty)'}
+              </div>
+            )
+          ) : (
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Prose description..."
+              rows={4}
+              className="w-full bg-transparent outline-none font-mono text-xs px-1 resize-y"
+              style={{ color: 'var(--colour-text)', border: '1px solid var(--colour-dim)' }}
+            />
+          )}
+        </div>
+      )}
+
+      {/* Puzzle answer — shown for riddle and cipher puzzles (not sequence) */}
+      {eventType === 'puzzle' && (() => {
+        const puzzleType = tags.find((t) => t[0] === 'puzzle-type')?.[1];
+        return puzzleType !== 'sequence';
+      })() && (
+        <div className="mb-2">
+          <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>
+            Answer (plain text — hashed on save):
+          </div>
+          <input
+            value={puzzleAnswer}
+            onChange={(e) => setPuzzleAnswer(e.target.value)}
+            placeholder="The answer players must type..."
+            className="w-full bg-transparent outline-none font-mono text-xs px-1"
+            style={{ color: 'var(--colour-puzzle, var(--colour-text))', border: '1px solid var(--colour-dim)' }}
           />
+          {!puzzleAnswer && tags.some((t) => t[0] === 'answer-hash') && (
+            <div style={{ color: 'var(--colour-dim)', fontSize: '0.55rem' }}>
+              Hash exists from import — enter answer to regenerate, or leave blank to keep existing.
+            </div>
+          )}
         </div>
       )}
 

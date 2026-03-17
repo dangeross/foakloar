@@ -272,4 +272,76 @@ describe('validateEvent — warnings', () => {
     const result = validateEvent(tmpl);
     expect(result.warnings).toHaveLength(0);
   });
+
+  it('warns when verb has no matching on-interact', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:feature:panel'], ['t', 'the-lake'], ['type', 'feature'],
+        ['title', 'Panel'], ['noun', 'panel'],
+        ['verb', 'examine'],
+        ['verb', 'use', 'decode'],
+        ['on-interact', 'examine', 'set-state', 'lit'],
+        // no on-interact for 'use'
+      ],
+      content: 'A panel.',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.warnings.some((w) => w.includes('Verb "use"') && w.includes('no matching on-interact'))).toBe(true);
+  });
+
+  it('does not warn when verb is examine (built-in fallback)', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:feature:lamp'], ['t', 'the-lake'], ['type', 'feature'],
+        ['title', 'Lamp'], ['noun', 'lamp'],
+        ['verb', 'examine'],
+        // no on-interact for examine — that's fine, examine shows content
+      ],
+      content: 'A lamp.',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.warnings.some((w) => w.includes('Verb "examine"'))).toBe(false);
+  });
+
+  it('warns when on-interact has too many elements', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:feature:lamp'], ['t', 'the-lake'], ['type', 'feature'],
+        ['title', 'Lamp'], ['noun', 'lamp'],
+        ['verb', 'examine'],
+        ['on-interact', 'examine', 'set-state', 'visible', '30078:<PUBKEY>:x:clue:y', 'requires: something'],
+      ],
+      content: 'A lamp.',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.warnings.some((w) => w.includes('on-interact') && w.includes('extra elements'))).toBe(true);
+  });
+
+  it('errors when NIP-44 content-type has no puzzle tag', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:place:secret'], ['t', 'the-lake'], ['type', 'place'],
+        ['title', 'Secret Room'], ['exit', 'north'],
+        ['content-type', 'application/nip44', 'text/markdown'],
+      ],
+      content: 'Sealed content.',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.valid).toBe(false);
+    expect(result.errors.some((e) => e.includes('NIP-44') && e.includes('puzzle tag'))).toBe(true);
+  });
+
+  it('no error when NIP-44 content-type has puzzle tag', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:place:secret'], ['t', 'the-lake'], ['type', 'place'],
+        ['title', 'Secret Room'], ['exit', 'north'],
+        ['content-type', 'application/nip44', 'text/markdown'],
+        ['puzzle', 'x:puzzle:riddle'],
+      ],
+      content: 'Sealed content.',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.errors.some((e) => e.includes('NIP-44'))).toBe(false);
+  });
 });

@@ -16,7 +16,8 @@ import LoginPanel from './ui/LoginPanel.jsx';
 import WorldCard from './WorldCard.jsx';
 import TipPanel from './TipPanel.jsx';
 import { useWorldDiscovery } from '../hooks/useWorldDiscovery.js';
-import { listDraftWorlds } from '../builder/draftStore.js';
+import { listDraftWorlds, validateImport, importEvents } from '../builder/draftStore.js';
+import ImportPreviewPanel from '../builder/ImportPreviewPanel.jsx';
 import { APP_PUBKEY } from '../config.js';
 
 const LOBBY_MODES = [
@@ -33,6 +34,8 @@ export default function Lobby({
 }) {
   const [slug, setSlug] = useState('');
   const [showLogin, setShowLogin] = useState(false);
+  const [importPreview, setImportPreview] = useState(null); // { validation, data }
+  const importFileRef = useRef(null);
   const [lobbyMode, setLobbyMode] = useState('curated');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [filter, setFilter] = useState('');
@@ -103,7 +106,7 @@ export default function Lobby({
 
   return (
     <div
-      className="max-w-2xl mx-auto p-6 flex flex-col h-screen font-mono text-xs"
+      className="max-w-2xl mx-auto p-6 flex flex-col h-screen font-mono text-xs game-text"
       style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}
     >
       {/* ── Header ──────────────────────────────────────────────────────── */}
@@ -177,6 +180,21 @@ export default function Lobby({
                   >
                     {'  '}+ world
                   </button>
+                  <button
+                    onClick={() => {
+                      importFileRef.current?.click();
+                      setDropdownOpen(false);
+                    }}
+                    className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                    style={{
+                      color: 'var(--colour-item)',
+                      background: 'none',
+                      border: 'none',
+                      font: 'inherit',
+                    }}
+                  >
+                    {'  '}import
+                  </button>
                 </div>
               </div>
             )}
@@ -185,6 +203,62 @@ export default function Lobby({
           <IdentityButton identity={identity} onClick={() => setShowLogin(!showLogin)} />
         </span>
       </div>
+
+      {/* ── Hidden file input for world import ────────────────────────── */}
+      <input
+        ref={importFileRef}
+        type="file"
+        accept=".json"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+              try {
+                const data = JSON.parse(reader.result);
+                // Detect world slug from the imported data
+                const worldEvent = data.events?.find((ev) =>
+                  ev.tags?.find((t) => t[0] === 'type')?.[1] === 'world'
+                );
+                const detectedSlug = worldEvent?.tags?.find((t) => t[0] === 't')?.[1] || '';
+                if (!detectedSlug) {
+                  setImportPreview({
+                    validation: { valid: [], rejected: [], warnings: ['No world event found — cannot determine world slug'], worldSlug: null },
+                    data,
+                  });
+                  return;
+                }
+                const validation = validateImport(detectedSlug, data);
+                setImportPreview({ validation, data, worldSlug: detectedSlug });
+              } catch {
+                // Invalid JSON
+              }
+            };
+            reader.readAsText(file);
+          }
+          e.target.value = '';
+        }}
+      />
+
+      {/* ── Import preview panel ──────────────────────────────────────── */}
+      {importPreview && (
+        <ImportPreviewPanel
+          validation={importPreview.validation}
+          onConfirm={() => {
+            const slug = importPreview.worldSlug;
+            const validData = {
+              events: importPreview.validation.valid,
+              answers: importPreview.data.answers || {},
+            };
+            importEvents(slug, validData);
+            setImportPreview(null);
+            // Navigate to the imported world in build mode
+            onSelectWorld(slug);
+          }}
+          onClose={() => setImportPreview(null)}
+        />
+      )}
 
       {/* ── Login panel ─────────────────────────────────────────────────── */}
       {showLogin && (

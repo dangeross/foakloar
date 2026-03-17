@@ -295,7 +295,7 @@ export const TAG_SCHEMAS = {
   text: { label: 'Dialogue Text', desc: 'The NPC\'s spoken text in this dialogue node', fields: [{ name: 'value', type: 'textarea', required: true, placeholder: 'NPC dialogue text' }] },
 
   // ── Puzzle ───────────────────────────────────────────────────────────────
-  'puzzle-type': { label: 'Puzzle Type', desc: 'Category of puzzle mechanic', fields: [{ name: 'value', type: 'select', required: true, options: ['riddle', 'sequence', 'cipher', 'observe', 'map'] }] },
+  'puzzle-type': { label: 'Puzzle Type', desc: 'Category of puzzle mechanic', fields: [{ name: 'value', type: 'select', required: true, options: ['riddle', 'sequence', 'cipher'] }] },
   'answer-hash': { label: 'Answer Hash', desc: 'SHA-256 hash of (salt + answer) — keeps the answer secret on relays', fields: [{ name: 'value', type: 'text', required: true, placeholder: 'SHA-256 hash' }] },
   salt:          { label: 'Salt', desc: 'Random salt prepended to the answer before hashing', fields: [{ name: 'value', type: 'text', required: true }] },
   ordered:       { label: 'Ordered', desc: 'Whether sequence puzzle steps must be completed in order', fields: [{ name: 'value', type: 'select', required: true, options: ['true', 'false'] }] },
@@ -349,10 +349,16 @@ export const TAG_SCHEMAS = {
   relay:         { label: 'Relay', desc: 'Nostr relay URL where world events are published', repeatable: true, fields: [{ name: 'url', type: 'text', required: true, placeholder: 'wss://...' }] },
   collaboration: { label: 'Collaboration', desc: 'Who can contribute: closed, vouched (invite-only), or open', fields: [{ name: 'value', type: 'select', required: true, options: ['closed', 'vouched', 'open'] }] },
   collaborator:  { label: 'Collaborator', desc: 'Hex pubkey of a trusted co-author', repeatable: true, fields: [{ name: 'pubkey', type: 'text', required: true, placeholder: 'hex pubkey' }] },
-  theme:         { label: 'Theme', desc: 'Visual theme preset for the client', fields: [{ name: 'value', type: 'select', required: false, options: ['terminal-green', 'amber-crt', 'frost', 'parchment', 'obsidian', 'blood-moon'] }] },
+  theme:         { label: 'Theme', desc: 'Visual theme preset for the client', fields: [{ name: 'value', type: 'select', required: false, options: ['terminal-green', 'parchment', 'void-blue', 'blood-red', 'monochrome', 'custom'] }] },
   colour:        { label: 'Colour Override', desc: 'Override a specific theme colour slot with a hex value', repeatable: true, fields: [{ name: 'slot', type: 'select', required: true, options: ['bg', 'text', 'title', 'dim', 'highlight', 'error', 'item', 'npc', 'clue', 'puzzle', 'exits'] }, { name: 'hex', type: 'text', required: true, placeholder: '#00ff41' }] },
-  font:          { label: 'Font', desc: 'Custom font family name for the client', fields: [{ name: 'value', type: 'text', required: false }] },
+  font:          { label: 'Font', desc: 'Preferred font for the client', fields: [{ name: 'value', type: 'select', required: false, options: ['ibm-plex-mono', 'courier', 'pixel', 'arcade', 'serif'] }] },
   cursor:        { label: 'Cursor', desc: 'Input cursor style: block, underline, or beam', fields: [{ name: 'value', type: 'select', required: false, options: ['block', 'underline', 'beam'] }] },
+  effects:       { label: 'Effect Bundle', desc: 'Visual effect preset (defaults from theme if absent)', fields: [{ name: 'value', type: 'select', required: false, options: ['crt', 'static', 'typewriter', 'clean', 'none'] }] },
+  scanlines:     { label: 'Scanlines', desc: 'Scanline intensity override (0.0–1.0)', fields: [{ name: 'value', type: 'text', required: false, placeholder: '0.35' }] },
+  glow:          { label: 'Glow', desc: 'Phosphor glow intensity override (0.0–1.0)', fields: [{ name: 'value', type: 'text', required: false, placeholder: '0.4' }] },
+  flicker:       { label: 'Flicker', desc: 'Screen flicker override', fields: [{ name: 'value', type: 'select', required: false, options: ['on', 'off'] }] },
+  vignette:      { label: 'Vignette', desc: 'Edge vignette intensity override (0.0–1.0)', fields: [{ name: 'value', type: 'text', required: false, placeholder: '0.6' }] },
+  noise:         { label: 'Noise', desc: 'Grain/static overlay intensity (0.0–1.0)', fields: [{ name: 'value', type: 'text', required: false, placeholder: '0.3' }] },
   puzzle:        { label: 'Puzzle NIP-44', desc: 'D-tag of the puzzle whose key decrypts NIP-44 content', fields: [{ name: 'ref', type: 'text', required: true, placeholder: 'puzzle d-tag for NIP-44' }] },
 };
 
@@ -369,7 +375,7 @@ export const TAGS_BY_EVENT_TYPE = {
   npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health-zero', 'on-player-health-zero', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not'],
   dialogue:    ['text', 'option', 'requires', 'requires-not', 'on-enter'],
   consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage'],
-  world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'theme', 'colour', 'font', 'cursor', 'content-type', 'media', 'w'],
+  world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'content-type', 'media', 'w'],
   vouch:       ['pubkey', 'scope', 'can-vouch'],
   quest:       ['title', 'involves', 'requires', 'requires-not'],
 };

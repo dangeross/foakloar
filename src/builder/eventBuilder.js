@@ -3,6 +3,7 @@
  */
 
 import { TAG_SCHEMAS, TAGS_BY_EVENT_TYPE, getTagSchema, tagToValues } from './tagSchema.js';
+import { derivePuzzleKeypair } from '../engine/nip44-client.js';
 
 /**
  * Slugify a title for use in d-tags.
@@ -86,6 +87,11 @@ export function validateEvent(template) {
 
   const typeTag = template.tags.find((t) => t[0] === 'type')?.[1];
 
+  // World events need the protocol tag for relay discovery
+  if (typeTag === 'world' && !tagNames.has('w')) {
+    warnings.push('World event missing w-tag (protocol identifier)');
+  }
+
   // ── Event ref format ─────────────────────────────────────────────────────
   for (const tag of template.tags) {
     for (let i = 1; i < tag.length; i++) {
@@ -164,6 +170,33 @@ export function validateEvent(template) {
       warnings.push('Has transitions but no initial state');
     }
 
+    // Verb declared but no matching on-interact
+    const interactableTypes = ['feature', 'item', 'npc'];
+    if (interactableTypes.includes(typeTag)) {
+      const verbs = template.tags.filter((t) => t[0] === 'verb').map((t) => t[1]);
+      const onInteractVerbs = new Set(
+        template.tags.filter((t) => t[0] === 'on-interact').map((t) => t[1])
+      );
+      for (const verb of verbs) {
+        if (verb && verb !== 'examine' && !onInteractVerbs.has(verb)) {
+          warnings.push(`Verb "${verb}" has no matching on-interact — players can type it but nothing happens`);
+        }
+      }
+    }
+
+    // on-interact tag with unexpected element count (>5)
+    for (const tag of template.tags) {
+      if (tag[0] === 'on-interact' && tag.length > 5) {
+        warnings.push(`on-interact "${tag[1]}" has ${tag.length - 1} fields (expected max 4) — extra elements are ignored`);
+      }
+    }
+
+    // NIP-44 content-type without puzzle tag
+    const contentTypeTag = template.tags.find((t) => t[0] === 'content-type');
+    if (contentTypeTag?.[1] === 'application/nip44' && !tagNames.has('puzzle')) {
+      errors.push('NIP-44 encrypted content requires a puzzle tag to determine the encryption key');
+    }
+
     // Warn about unknown tags for this event type
     const allowedTags = new Set([...(TAGS_BY_EVENT_TYPE[typeTag] || []), 'd', 't', 'type']);
     for (const tag of template.tags) {
@@ -178,17 +211,89 @@ export function validateEvent(template) {
 }
 
 /**
+ * Encrypt NIP-44 content if the event requires it.
+ *
+ * Checks for content-type: application/nip44, looks up the puzzle answer
+ * from the answers map, derives the puzzle keypair, and encrypts the content
+ * using the signer's encryptTo method.
+ *
+ * @param {Object} template - event template { kind, tags, content }
+ * @param {Object} signer - signer with encryptTo(pubkey, plaintext)
+ * @param {Object} answers - { puzzleDTag: answer } map
+ * @param {Map|Object} allEvents - events map to look up puzzle salt
+ * @returns {Promise<Object>} - template with encrypted content (or unchanged)
+ */
+async function maybeEncryptContent(template, signer, answers, allEvents) {
+  const contentTypeTag = template.tags.find((t) => t[0] === 'content-type');
+  if (!contentTypeTag || contentTypeTag[1] !== 'application/nip44') return template;
+  if (!template.content) return template;
+  if (!signer?.encryptTo) {
+    throw new Error('NIP-44 encryption requires a signer with encryptTo support');
+  }
+
+  // Find puzzle d-tag — either from a "puzzle" tag on this event or matching puzzle event
+  const puzzleTag = template.tags.find((t) => t[0] === 'puzzle');
+  const puzzleDTag = puzzleTag?.[1];
+  if (!puzzleDTag) {
+    throw new Error('NIP-44 event has no puzzle tag — cannot determine encryption key');
+  }
+
+  // Look up the answer
+  const answer = answers?.[puzzleDTag];
+  if (!answer) {
+    throw new Error(`No answer found for puzzle "${puzzleDTag}" — cannot encrypt content`);
+  }
+
+  // Find the puzzle event to get its salt
+  let salt = null;
+  if (allEvents instanceof Map) {
+    for (const [, evt] of allEvents) {
+      const d = evt.tags?.find((t) => t[0] === 'd')?.[1];
+      if (d === puzzleDTag) {
+        salt = evt.tags?.find((t) => t[0] === 'salt')?.[1];
+        break;
+      }
+    }
+  }
+  // Also check if allEvents is an array-like (draft events)
+  if (!salt && Array.isArray(allEvents)) {
+    for (const evt of allEvents) {
+      const d = evt.tags?.find((t) => t[0] === 'd')?.[1];
+      if (d === puzzleDTag) {
+        salt = evt.tags?.find((t) => t[0] === 'salt')?.[1];
+        break;
+      }
+    }
+  }
+  if (!salt) {
+    throw new Error(`Puzzle "${puzzleDTag}" has no salt — cannot derive encryption key`);
+  }
+
+  // Derive puzzle keypair and encrypt
+  const { pubKeyHex } = await derivePuzzleKeypair(answer, salt);
+  const ciphertext = await signer.encryptTo(pubKeyHex, template.content);
+
+  return { ...template, content: ciphertext };
+}
+
+/**
  * Sign and publish an event template to a relay.
  *
- * @param {Object} signer - { signEvent(event) }
+ * @param {Object} signer - { signEvent(event), encryptTo?(pubkey, plaintext) }
  * @param {Object} relay - relay ref (.current is the connected relay)
  * @param {Object} template - from buildEventTemplate
+ * @param {Object} [options] - { answers, allEvents } for NIP-44 encryption
  * @returns {Promise<{ ok: boolean, event?: Object, error?: string }>}
  */
-export async function publishEvent(signer, relay, template) {
+export async function publishEvent(signer, relay, template, options = {}) {
   try {
+    // Encrypt NIP-44 content if needed
+    const prepared = await maybeEncryptContent(
+      template, signer, options.answers, options.allEvents
+    );
+
     const unsigned = {
-      ...template,
+      ...prepared,
       created_at: Math.floor(Date.now() / 1000),
     };
 

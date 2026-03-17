@@ -1,4 +1,5 @@
 import * as nip44 from 'nostr-tools/nip44';
+import { getPublicKey } from 'nostr-tools/pure';
 
 function hexToBytes(hex) {
   const bytes = new Uint8Array(hex.length / 2);
@@ -24,6 +25,16 @@ export async function derivePrivateKey(answer, salt) {
 }
 
 /**
+ * Derive a puzzle keypair from answer + salt.
+ * Returns { privKeyHex, pubKeyHex }.
+ */
+export async function derivePuzzleKeypair(answer, salt) {
+  const privKeyHex = await derivePrivateKey(answer, salt);
+  const pubKeyHex = getPublicKey(hexToBytes(privKeyHex));
+  return { privKeyHex, pubKeyHex };
+}
+
+/**
  * Decrypt NIP-44 ciphertext using a derived private key and the author's pubkey.
  */
 export function decryptNip44(ciphertext, privKeyHex, authorPubKeyHex) {
@@ -32,4 +43,16 @@ export function decryptNip44(ciphertext, privKeyHex, authorPubKeyHex) {
     authorPubKeyHex
   );
   return nip44.v2.decrypt(ciphertext, conversationKey);
+}
+
+/**
+ * Encrypt plaintext using NIP-44 with the author's private key and derived pubkey.
+ * Used at publish time to seal puzzle-gated content.
+ */
+export function encryptNip44(plaintext, authorPrivKeyHex, derivedPubKeyHex) {
+  const conversationKey = nip44.v2.utils.getConversationKey(
+    hexToBytes(authorPrivKeyHex),
+    derivedPubKeyHex
+  );
+  return nip44.v2.encrypt(plaintext, conversationKey);
 }

@@ -434,6 +434,15 @@ export class GameEngine {
           giveItem(targetState, this.events, this.player, (t, ty) => this._emit(t, ty));
         }
         acted = true;
+      } else if (action === 'consume-item') {
+        const consumeDtag = targetState || targetRef;  // item a-tag ref
+        if (consumeDtag && this.player.hasItem(consumeDtag)) {
+          this.player.removeItem(consumeDtag);
+          const consumeEvent = this.events.get(consumeDtag);
+          const consumeTitle = consumeEvent ? getTag(consumeEvent, 'title') : consumeDtag;
+          this._emit(`${consumeTitle} is consumed.`, 'item');
+        }
+        acted = true;
       }
     }
     if (acted) evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty));
@@ -856,7 +865,7 @@ export class GameEngine {
     const expectedHash = getTag(puzzleEvent, 'answer-hash');
     const salt = getTag(puzzleEvent, 'salt');
 
-    const data = new TextEncoder().encode(answer.toLowerCase().trim() + salt);
+    const data = new TextEncoder().encode(answer.trim() + salt);
     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
     const hashHex = Array.from(new Uint8Array(hashBuffer))
       .map((b) => b.toString(16).padStart(2, '0'))
@@ -871,16 +880,30 @@ export class GameEngine {
     this.player.markPuzzleSolved(this.puzzleActive);
 
     const derivedPrivKey = await derivePrivateKey(
-      answer.toLowerCase().trim(),
+      answer.trim(),
       salt
     );
 
     for (const tag of getTags(puzzleEvent, 'on-complete')) {
       const action = tag[2];
       const value = tag[3];
+      const extRef = tag[4];
+
       if (action === 'give-crypto-key') {
         this.player.addCryptoKey(derivedPrivKey);
         this._emit('You feel a key take shape in your mind.', 'narrative');
+      } else if (action === 'set-state' && extRef) {
+        const targetEvent = this.events.get(extRef);
+        if (!targetEvent) continue;
+        const targetType = getTag(targetEvent, 'type');
+        if (targetType === 'portal' || targetType === 'feature') {
+          const currentState = this.player.getState(extRef) ?? getDefaultState(targetEvent);
+          if (currentState !== value) {
+            this.player.setState(extRef, value);
+            const transition = findTransition(targetEvent, currentState, value);
+            if (transition?.text) this._emit(transition.text, 'narrative');
+          }
+        }
       }
     }
 
@@ -1281,7 +1304,7 @@ export class GameEngine {
     if (this.dialogueActive) { this.handleDialogueChoice(trimmed); return; }
 
     // Puzzle mode
-    if (this.puzzleActive) { await this.handlePuzzleAnswer(trimmed); return; }
+    if (this.puzzleActive) { await this.handlePuzzleAnswer(input.trim()); return; }
 
     // Built-in: look <direction> — spec 6.7 portal listing
     const lookDirMatch = trimmed.match(/^(?:look|l)\s+(.+)$/);

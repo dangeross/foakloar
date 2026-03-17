@@ -6,7 +6,7 @@ import { parseRoute, navigateToWorld, navigateToLobby, navigateToProfile } from 
 import { GameEngine } from '../engine/engine.js';
 import { PlayerStateMutator } from '../engine/player-state.js';
 import { getTag, getTags } from '../engine/world.js';
-import { resolveTheme, applyTheme } from '../services/theme.js';
+import { resolveTheme, applyTheme, resolveEffects, applyEffects, resolveFont, resolveFontSize, resolveFontSizePanel, resolveCursor, applyFontAndCursor, loadFont } from '../services/theme.js';
 import { buildTrustSet, resolveClientMode } from '../engine/trust.js';
 import { useStateBackup } from '../hooks/useStateBackup.js';
 import PaymentPanel from './PaymentPanel.jsx';
@@ -20,7 +20,8 @@ import AuthorProfile from './AuthorProfile.jsx';
 import TipPanel from './TipPanel.jsx';
 import IdentityButton from './ui/IdentityButton.jsx';
 import LoginPanel from './ui/LoginPanel.jsx';
-import { loadDrafts, saveDraft, updateDraft, deleteDraft, importEvents, exportDrafts, bulkPublish } from '../builder/draftStore.js';
+import { loadDrafts, saveDraft, updateDraft, deleteDraft, clearDrafts, importEvents, exportDrafts, bulkPublish, loadAnswers } from '../builder/draftStore.js';
+import { validateWorld, verifyPuzzleHashes } from '../builder/validateWorld.js';
 
 /** Map entry types to colour slots */
 const TYPE_COLOUR = {
@@ -204,10 +205,28 @@ export default function App() {
     return { trustSet, availableModes, effectiveMode };
   }, [worldConfig, mergedEvents, clientMode]);
 
-  // Apply theme from world event
+  // Apply theme, effects, font, and cursor from world event
   useEffect(() => {
-    const colours = resolveTheme(worldConfig?.worldEvent || null);
-    applyTheme(colours);
+    const we = worldConfig?.worldEvent || null;
+    applyTheme(resolveTheme(we));
+    applyEffects(resolveEffects(we));
+    const fontFamily = resolveFont(we);
+    const fontSize = resolveFontSize(we);
+    const fontSizePanel = resolveFontSizePanel(we);
+    const cursorStyle = resolveCursor(we);
+    applyFontAndCursor(fontFamily, cursorStyle, fontSize, fontSizePanel);
+    loadFont(we);
+
+    // Toggle flicker class on #root
+    const root = document.getElementById('root');
+    if (root) {
+      const effects = resolveEffects(we);
+      root.classList.toggle('flicker-active', effects.flicker > 0);
+    }
+
+    // Set cursor class on body
+    document.body.classList.remove('cursor-beam', 'cursor-block', 'cursor-underline');
+    document.body.classList.add(`cursor-${cursorStyle}`);
   }, [worldConfig]);
 
   // Lazily create or update engine with latest events
@@ -352,15 +371,18 @@ export default function App() {
   const availableModes = trustInfo?.availableModes || [];
   const effectiveMode = trustInfo?.effectiveMode || 'community';
 
+  // Noise overlay — always present, controlled by --effect-noise CSS property
+  const noiseOverlay = <div className="noise-overlay" aria-hidden="true" />;
+
   // ── Profile route ──────────────────────────────────────────────────────
   if (route.page === 'profile') {
-    return <AuthorProfile npub={route.npub} pubkeyHex={route.pubkeyHex} identity={identity} />;
+    return <>{noiseOverlay}<AuthorProfile npub={route.npub} pubkeyHex={route.pubkeyHex} identity={identity} /></>;
   }
 
   // ── Lobby route ────────────────────────────────────────────────────────
   if (route.page === 'lobby') {
     return (
-      <Lobby
+      <>{noiseOverlay}<Lobby
         identity={identity}
         onSelectWorld={(slug) => navigateToWorld(slug)}
         onCreateWorld={() => setShowWorldCreator(true)}
@@ -379,12 +401,14 @@ export default function App() {
             }}
           />
         )}
-      />
+      /></>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 flex flex-col h-screen"
+    <>
+    {noiseOverlay}
+    <div className="max-w-2xl mx-auto p-6 flex flex-col h-screen game-text"
          style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}>
       <div className="text-sm mb-2 flex justify-between" style={{ color: 'var(--colour-dim)' }}>
         <span>
@@ -541,6 +565,7 @@ export default function App() {
       {showDrafts && (
         <DraftListPanel
           drafts={drafts}
+          worldSlug={worldTag}
           onClose={() => setShowDrafts(false)}
           onEdit={(draft) => {
             const eventType = draft.tags?.find((t) => t[0] === 'type')?.[1] || 'place';
@@ -577,9 +602,25 @@ export default function App() {
           }}
           onBulkPublish={async () => {
             if (!identity.signer || !identity.pubkey) return;
+            // Pre-flight world validation
+            const currentDrafts = loadDrafts(worldTag);
+            const answers = loadAnswers(worldTag);
+            const worldCheck = validateWorld(currentDrafts, answers);
+            // Also verify puzzle answer hashes
+            const hashErrors = await verifyPuzzleHashes(worldCheck.puzzlesToVerify || []);
+            const allErrors = [...worldCheck.errors, ...hashErrors];
+            if (allErrors.length > 0) {
+              const msgs = allErrors.map((e) => `${e.dTag}: ${e.message}`);
+              alert(`Cannot publish — ${allErrors.length} error(s):\n\n${msgs.join('\n')}`);
+              return;
+            }
             const result = await bulkPublish(worldTag, identity.pubkey, identity.signer, relay);
             setDrafts(loadDrafts(worldTag));
             // TODO: show result.published / result.failed feedback
+          }}
+          onDeleteAll={() => {
+            clearDrafts(worldTag);
+            setDrafts([]);
           }}
         />
       )}
@@ -651,5 +692,6 @@ export default function App() {
         </form>
       )}
     </div>
+    </>
   );
 }

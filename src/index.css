@@ -13,41 +13,76 @@
   --colour-clue:      #22d3ee;
   --colour-puzzle:    #c084fc;
   --colour-exits:     #16a34a;
+
+  /* Effect intensities (0.0–1.0, set by theme.js) */
+  --effect-scanlines: 0.35;
+  --effect-glow:      0.4;
+  --effect-flicker:   1;
+  --effect-vignette:  0.6;
+  --effect-noise:     0;
+
+  /* Font and cursor (set by theme.js) */
+  --font-family: 'IBM Plex Mono', monospace;
+  --font-size: 15px;
+  --cursor-style: beam;
 }
 
 body {
   background-color: var(--colour-bg);
   color: var(--colour-text);
+  font-family: var(--font-family);
+  font-size: var(--font-size);
 }
 
-/* CRT scanlines */
+/* Override Tailwind font-mono to use the world theme font */
+.font-mono {
+  font-family: var(--font-family) !important;
+}
+
+/* Game text inherits the themed font size */
+.game-text {
+  font-size: var(--font-size) !important;
+}
+
+/* Panel text — pixel fonts need a bump at small sizes to stay readable */
+.font-mono.text-xs {
+  font-size: var(--font-size-panel, 0.75rem) !important;
+}
+
+/* CRT scanlines — intensity controls opacity */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   background: repeating-linear-gradient(
     0deg,
-    rgba(0, 0, 0, 0.35) 0px,
-    rgba(0, 0, 0, 0.35) 1px,
+    rgba(0, 0, 0, var(--effect-scanlines)) 0px,
+    rgba(0, 0, 0, var(--effect-scanlines)) 1px,
     transparent 1px,
     transparent 3px
   );
   pointer-events: none;
   z-index: 9999;
+  /* Hide entirely when scanlines = 0 */
+  opacity: clamp(0, var(--effect-scanlines) * 100, 1);
 }
 
-/* CRT screen glow */
+/* Phosphor glow — intensity controls text-shadow spread */
 #root {
-  text-shadow: 0 0 5px color-mix(in srgb, var(--colour-text) 40%, transparent);
-  animation: flicker 0.03s infinite alternate;
+  text-shadow: 0 0 calc(var(--effect-glow) * 12px) color-mix(in srgb, var(--colour-text) calc(var(--effect-glow) * 100%), transparent);
 }
 
+/* Flicker animation — only active when flicker = 1 */
 @keyframes flicker {
   from { opacity: 0.97; }
   to { opacity: 1; }
 }
 
-/* CRT vignette */
+.flicker-active {
+  animation: flicker 0.03s infinite alternate;
+}
+
+/* Vignette — intensity controls edge darkening */
 body::before {
   content: "";
   position: fixed;
@@ -55,13 +90,83 @@ body::before {
   background: radial-gradient(
     ellipse at center,
     transparent 60%,
-    rgba(0, 0, 0, 0.6) 100%
+    rgba(0, 0, 0, var(--effect-vignette)) 100%
   );
   pointer-events: none;
   z-index: 9998;
+  opacity: clamp(0, var(--effect-vignette) * 100, 1);
 }
 
-/* Input caret color */
+/* Noise grain overlay */
+@keyframes noise-shift {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-2%, 1%); }
+  50%  { transform: translate(1%, -2%); }
+  75%  { transform: translate(-1%, 2%); }
+  100% { transform: translate(2%, -1%); }
+}
+
+.noise-overlay {
+  position: fixed;
+  inset: -10%;
+  width: 120%;
+  height: 120%;
+  z-index: 9997;
+  pointer-events: none;
+  opacity: var(--effect-noise);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  animation: noise-shift 0.15s steps(4) infinite;
+}
+
+/* Cursor styles */
+.cursor-beam input,
+.cursor-beam textarea {
+  caret-color: var(--colour-text);
+  caret-shape: bar;
+}
+
+.cursor-block input,
+.cursor-block textarea {
+  caret-color: var(--colour-text);
+  caret-shape: block;
+}
+
+.cursor-underline input,
+.cursor-underline textarea {
+  caret-color: var(--colour-text);
+  caret-shape: underscore;
+}
+
+/* Effect override sliders — thinner track */
+.effect-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: color-mix(in srgb, var(--colour-dim) 60%, transparent);
+  border-radius: 2px;
+  outline: none;
+  accent-color: var(--colour-text);
+}
+.effect-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--colour-text);
+  cursor: pointer;
+}
+.effect-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--colour-text);
+  border: none;
+  cursor: pointer;
+}
+
+/* Input caret color fallback */
 input {
   caret-color: var(--colour-text);
 }

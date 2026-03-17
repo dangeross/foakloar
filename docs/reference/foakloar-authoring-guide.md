@@ -333,6 +333,27 @@ The shape is always: `["requires", "<event-a-tag>", "<state-or-blank>", "<descri
 
 ---
 
+### Conditional clue visibility — use `requires` on the clue, not inline on `on-interact`
+
+`on-interact` takes four elements maximum. There is no inline `requires` argument:
+
+```json
+// WRONG — 6th element is not valid schema, will be ignored
+["on-interact", "examine", "set-state", "visible", "30078:<PUBKEY>:clue:lamp-running",
+  "requires: 30078:<PUBKEY>:feature:lamp running"]
+
+// CORRECT — put requires on the clue itself
+// The on-interact fires unconditionally; the clue's own requires gates visibility
+["on-interact", "examine", "set-state", "visible", "30078:<PUBKEY>:clue:lamp-running"]
+
+// On the clue event:
+["requires", "30078:<PUBKEY>:feature:lamp", "running", ""]
+```
+
+The client evaluates `requires` on the clue before rendering it — even after `set-state visible` has fired. The clue stays hidden until the condition passes.
+
+---
+
 ### Using a state value as an `on-interact` verb
 
 `on-interact` fires when the **player types a verb**. The first argument is always a verb string — something the player can input. State values (like `running`, `lit`, `open`) are never player commands and should never appear as the verb argument:

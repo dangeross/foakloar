@@ -106,6 +106,27 @@ Portal always uses extended form. Portal wins if conflict. Hidden portals still 
 
 **`plaintext-type` tag proposed and removed before shipping** — replaced by three-element `content-type`.
 
+**Visual effects system added to world event**
+`effects` tag selects a bundle; individual tags override specific effects.
+
+Bundles: `crt` (scanlines + glow + flicker + vignette), `typewriter` (vignette only), `clean`/`none` (no effects).
+
+Individual overrides: `scanlines` (on/off), `glow` (0.0–1.0), `flicker` (on/off), `vignette` (0.0–1.0), `noise` (0.0–1.0).
+
+Theme presets now have default bundles: `terminal-green`/`void-blue`/`blood-red` → `crt`, `parchment` → `typewriter`, `monochrome`/`custom` → `clean`. If `effects` absent, client uses preset default.
+
+**`observe` puzzle type fleshed out**
+Named variant of `sequence` — `requires` checks `visited` or `read` states. Auto-evaluated on state change. No answer input. `map` puzzle type removed as unspecced.
+
+**`cipher` puzzle type fleshed out**
+NIP-44 sealed clue. Answer derives decryption key. Same hash verification as `riddle`.
+
+**Conditional clue visibility via `requires` on clue events**
+`requires` on a clue gates visibility even after `set-state visible` fires. Correct pattern for conditional clues — inline `requires` strings on `on-interact` are not valid schema (max 4 elements).
+
+**`puzzle` tag on sealed places is publishing-tool only**
+Not read by client engine at runtime. Documents which answer to use for NIP-44 encryption. Riddle puzzles activated via feature `on-interact` → `set-state` on the puzzle event.
+
 **`["w", "foakloar"]` tag on world events — relay discovery**
 Single-letter indexed tag enabling relay-level discovery of all FOAKLOAR world events:
 `{ kinds: [30078], '#w': ['foakloar'] }`

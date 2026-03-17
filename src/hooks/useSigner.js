@@ -60,6 +60,11 @@ function makeKeySigner(secretKey) {
     signEvent: async (event) => finalizeEvent(event, secretKey),
     encrypt: async (plaintext) => nip44.v2.encrypt(plaintext, conversationKey),
     decrypt: async (ciphertext) => nip44.v2.decrypt(ciphertext, conversationKey),
+    /** Encrypt to an arbitrary pubkey (e.g. derived puzzle key) */
+    encryptTo: async (targetPubkey, plaintext) => {
+      const ck = nip44.v2.utils.getConversationKey(secretKey, targetPubkey);
+      return nip44.v2.encrypt(plaintext, ck);
+    },
     pubkey,
   };
 }
@@ -77,6 +82,10 @@ function makeExtensionSigner(pk) {
       : null,
     decrypt: nip44Ext
       ? async (ciphertext) => nip44Ext.decrypt(pk, ciphertext)
+      : null,
+    /** Encrypt to an arbitrary pubkey (e.g. derived puzzle key) */
+    encryptTo: nip44Ext
+      ? async (targetPubkey, plaintext) => nip44Ext.encrypt(targetPubkey, plaintext)
       : null,
     pubkey: pk,
   };
