@@ -10,6 +10,8 @@ import WorldCard from './WorldCard.jsx';
 import TipPanel from './TipPanel.jsx';
 import { useWorldDiscovery } from '../hooks/useWorldDiscovery.js';
 import { useProfile } from '../hooks/useProfile.js';
+import IdentityButton from './ui/IdentityButton.jsx';
+import LoginPanel from './ui/LoginPanel.jsx';
 import { navigateToLobby, navigateToWorld } from '../services/router.js';
 
 export default function AuthorProfile({ npub, pubkeyHex, identity }) {
@@ -18,6 +20,7 @@ export default function AuthorProfile({ npub, pubkeyHex, identity }) {
   const [copied, setCopied] = useState(false);
   const [showTip, setShowTip] = useState(false);
   const [zapTarget, setZapTarget] = useState(null); // { eventId, pubkey }
+  const [showLogin, setShowLogin] = useState(false);
 
   const shortNpub = npub.length > 20
     ? npub.slice(0, 12) + '...' + npub.slice(-8)
@@ -33,13 +36,16 @@ export default function AuthorProfile({ npub, pubkeyHex, identity }) {
       {/* Header */}
       <div className="text-sm mb-4 flex justify-between" style={{ color: 'var(--colour-dim)' }}>
         <span>foakloar</span>
-        <button
-          onClick={() => navigateToLobby()}
-          className="cursor-pointer"
-          style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: 0 }}
-        >
-          [worlds]
-        </button>
+        <span className="flex items-center gap-2">
+          <button
+            onClick={() => navigateToLobby()}
+            className="cursor-pointer"
+            style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: 0 }}
+          >
+            [worlds]
+          </button>
+          <IdentityButton identity={identity} onClick={() => setShowLogin(!showLogin)} />
+        </span>
       </div>
 
       {/* Author info */}
@@ -120,6 +126,11 @@ export default function AuthorProfile({ npub, pubkeyHex, identity }) {
           />
         ))}
       </div>
+
+      {/* Login panel */}
+      {showLogin && (
+        <LoginPanel identity={identity} onClose={() => setShowLogin(false)} />
+      )}
 
       {/* Tip panel (author) */}
       {showTip && profile?.lud16 && (

@@ -18,6 +18,8 @@ import WorldCreator from '../builder/WorldCreator.jsx';
 import Lobby from './Lobby.jsx';
 import AuthorProfile from './AuthorProfile.jsx';
 import TipPanel from './TipPanel.jsx';
+import IdentityButton from './ui/IdentityButton.jsx';
+import LoginPanel from './ui/LoginPanel.jsx';
 import { loadDrafts, saveDraft, updateDraft, deleteDraft, importEvents, exportDrafts, bulkPublish } from '../builder/draftStore.js';
 
 /** Map entry types to colour slots */
@@ -103,8 +105,6 @@ export default function App() {
     try { return localStorage.getItem(`foakloar:mode:${worldTag}`) || 'community'; } catch { return 'community'; }
   });
   const [showLogin, setShowLogin] = useState(false);
-  const [loginError, setLoginError] = useState('');
-  const [showNsec, setShowNsec] = useState(false);
   const [generation, setGeneration] = useState(0);
   // Build mode state
   const [buildMode, setBuildMode] = useState(false);
@@ -352,9 +352,6 @@ export default function App() {
   const availableModes = trustInfo?.availableModes || [];
   const effectiveMode = trustInfo?.effectiveMode || 'community';
 
-  const shortPubkey = identity.pubkey ? identity.pubkey.slice(0, 8) + '...' : '';
-  const isLoggedIn = identity.method !== 'ephemeral';
-
   // ── Profile route ──────────────────────────────────────────────────────
   if (route.page === 'profile') {
     return <AuthorProfile npub={route.npub} pubkeyHex={route.pubkeyHex} identity={identity} />;
@@ -428,20 +425,7 @@ export default function App() {
             draftsCount={drafts.length}
             onOpenDrafts={() => setShowDrafts(true)}
           />
-          <button
-            onClick={() => setShowLogin(!showLogin)}
-            className="cursor-pointer"
-            style={{
-              color: isLoggedIn ? 'var(--colour-highlight)' : 'var(--colour-dim)',
-              background: 'none',
-              border: 'none',
-              font: 'inherit',
-              padding: 0,
-            }}
-            title={`${identity.method}: ${identity.pubkey || 'none'}`}
-          >
-            {isLoggedIn ? `[${shortPubkey}]` : '[--]'}
-          </button>
+          <IdentityButton identity={identity} onClick={() => setShowLogin(!showLogin)} />
         </span>
       </div>
       {effectiveMode === 'explorer' && (
@@ -451,215 +435,49 @@ export default function App() {
       )}
 
       {showLogin && (
-        <>
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => { setShowLogin(false); setLoginError(''); setShowNsec(false); }}
-          />
-          <div
-            className="fixed z-50 font-mono text-xs"
-            style={{
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              backgroundColor: 'var(--colour-bg)',
-              color: 'var(--colour-text)',
-              border: '2px solid var(--colour-dim)',
-              boxShadow: '4px 4px 0 var(--colour-dim)',
-              padding: 0,
-              minWidth: '28em',
-              maxWidth: '90vw',
-            }}
-          >
-            {/* Title bar */}
-            <div
-              className="flex justify-between px-2 py-1"
-              style={{ backgroundColor: 'var(--colour-dim)', color: 'var(--colour-bg)' }}
-            >
-              <span>IDENTITY</span>
-              <button
-                onClick={() => { setShowLogin(false); setLoginError(''); setShowNsec(false); }}
-                className="cursor-pointer"
-                style={{ background: 'none', border: 'none', font: 'inherit', color: 'var(--colour-bg)', padding: 0 }}
-              >
-                [X]
-              </button>
-            </div>
-
-            {/* Content */}
-            <div className="p-3">
-              <div className="mb-2" style={{ color: 'var(--colour-dim)' }}>
-                Status: {isLoggedIn ? identity.method : identity.backedUp ? 'ephemeral (backed up)' : 'anonymous (ephemeral key)'}
-              </div>
-              <div className="mb-3" style={{ color: 'var(--colour-dim)', wordBreak: 'break-all' }}>
-                Pubkey: {identity.pubkey || 'none'}
-              </div>
-
-              {identity.method === 'ephemeral' && (
-                <div className="mb-3 pt-2" style={{ borderTop: '1px solid var(--colour-dim)' }}>
-                  {!showNsec ? (
-                    <button
-                      onClick={() => setShowNsec(true)}
-                      className="cursor-pointer"
-                      style={{ color: 'var(--colour-item)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
-                    >
-                      Show Secret Key
-                    </button>
-                  ) : (
-                    <>
-                      <div className="mb-1" style={{ color: 'var(--colour-error)' }}>
-                        Save this key to keep your identity:
-                      </div>
-                      <div
-                        className="mb-2 p-1"
-                        style={{
-                          color: 'var(--colour-highlight)',
-                          wordBreak: 'break-all',
-                          border: '1px solid var(--colour-dim)',
-                          fontSize: '0.65rem',
-                          userSelect: 'all',
-                        }}
-                      >
-                        {identity.getNsec()}
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => {
-                            const nsec = identity.getNsec();
-                            if (nsec) navigator.clipboard.writeText(nsec);
-                          }}
-                          className="cursor-pointer"
-                          style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
-                        >
-                          Copy
-                        </button>
-                        {!identity.backedUp && (
-                          <button
-                            onClick={() => { identity.confirmBackup(); }}
-                            className="cursor-pointer"
-                            style={{ color: 'var(--colour-text)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
-                          >
-                            I've saved it
-                          </button>
-                        )}
-                        {identity.backedUp && (
-                          <span style={{ color: 'var(--colour-text)', padding: '2px 0' }}>Backed up</span>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-
-              {identity.method !== 'extension' && identity.nip07Available && (
-                <div className="mb-2">
-                  <button
-                    onClick={async () => {
-                      const res = await identity.loginExtension();
-                      if (!res.ok) setLoginError(res.error);
-                      else { setLoginError(''); setShowLogin(false); }
-                    }}
-                    className="cursor-pointer"
-                    style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
-                  >
-                    Use Nostr Extension
-                  </button>
-                </div>
-              )}
-
-              {identity.method !== 'nsec' && (
-                <form
-                  className="mb-2"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    const nsec = e.target.elements.nsec.value.trim();
-                    const res = identity.login(nsec);
-                    if (!res.ok) setLoginError(res.error);
-                    else { setLoginError(''); setShowLogin(false); e.target.reset(); }
-                  }}
+        <LoginPanel identity={identity} onClose={() => setShowLogin(false)}>
+          {backup.canBackup && (
+            <div className="mt-3 pt-2" style={{ borderTop: '1px solid var(--colour-dim)' }}>
+              <div className="mb-1" style={{ color: 'var(--colour-dim)' }}>State Backup:</div>
+              <div className="flex gap-2">
+                <button
+                  onClick={async () => { await backup.saveToRelay(); }}
+                  disabled={backup.saving}
+                  className="cursor-pointer"
+                  style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
                 >
-                  <div className="mb-1" style={{ color: 'var(--colour-dim)' }}>Login with nsec:</div>
-                  <div className="flex gap-1">
-                    <input
-                      name="nsec"
-                      type="password"
-                      placeholder="nsec1..."
-                      className="flex-1 bg-transparent outline-none font-mono text-xs px-1"
-                      style={{ color: 'var(--colour-text)', border: '1px solid var(--colour-dim)' }}
-                    />
-                    <button
-                      type="submit"
-                      className="cursor-pointer"
-                      style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
-                    >
-                      OK
-                    </button>
-                  </div>
-                </form>
-              )}
-
-              {isLoggedIn && (
-                <div className="mt-2">
-                  <button
-                    onClick={() => { identity.logout(); setShowLogin(false); }}
-                    className="cursor-pointer"
-                    style={{ color: 'var(--colour-error)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-
-              {backup.canBackup && (
-                <div className="mt-3 pt-2" style={{ borderTop: '1px solid var(--colour-dim)' }}>
-                  <div className="mb-1" style={{ color: 'var(--colour-dim)' }}>State Backup:</div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={async () => {
-                        const res = await backup.saveToRelay();
-                        if (res.ok) setLoginError('');
-                      }}
-                      disabled={backup.saving}
-                      className="cursor-pointer"
-                      style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
-                    >
-                      {backup.saving ? 'Saving...' : 'Save'}
-                    </button>
-                    <button
-                      onClick={async () => {
-                        const res = await backup.loadFromRelay();
-                        if (res.ok) {
-                          setLoginError('');
-                          setShowLogin(false);
-                          // Reset game log and bump generation to force re-enter room
-                          engineRef.current = null;
-                          setLog([]);
-                          setGeneration((g) => g + 1);
-                        }
-                      }}
-                      disabled={backup.loading}
-                      className="cursor-pointer"
-                      style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
-                    >
-                      {backup.loading ? 'Loading...' : 'Restore'}
-                    </button>
-                  </div>
-                  {backup.lastSaved && (
-                    <div className="mt-1" style={{ color: 'var(--colour-dim)' }}>
-                      Last saved: {backup.lastSaved.toLocaleTimeString()}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {(loginError || backup.error) && (
-                <div className="mt-2" style={{ color: 'var(--colour-error)' }}>
-                  {loginError || backup.error}
+                  {backup.saving ? 'Saving...' : 'Save'}
+                </button>
+                <button
+                  onClick={async () => {
+                    const res = await backup.loadFromRelay();
+                    if (res.ok) {
+                      setShowLogin(false);
+                      engineRef.current = null;
+                      setLog([]);
+                      setGeneration((g) => g + 1);
+                    }
+                  }}
+                  disabled={backup.loading}
+                  className="cursor-pointer"
+                  style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
+                >
+                  {backup.loading ? 'Loading...' : 'Restore'}
+                </button>
+              </div>
+              {backup.lastSaved && (
+                <div className="mt-1" style={{ color: 'var(--colour-dim)' }}>
+                  Last saved: {backup.lastSaved.toLocaleTimeString()}
                 </div>
               )}
             </div>
-          </div>
-        </>
+          )}
+          {backup.error && (
+            <div className="mt-2" style={{ color: 'var(--colour-error)' }}>
+              {backup.error}
+            </div>
+          )}
+        </LoginPanel>
       )}
 
       {paymentActive && (
