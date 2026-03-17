@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { useRelay } from '../hooks/useRelay.js';
 import { usePlayerState } from '../hooks/usePlayerState.js';
 import { useSigner } from '../hooks/useSigner.js';
-import { parseRoute, navigateToWorld, navigateToLobby } from '../services/router.js';
+import { parseRoute, navigateToWorld, navigateToLobby, navigateToProfile } from '../services/router.js';
 import { GameEngine } from '../engine/engine.js';
 import { PlayerStateMutator } from '../engine/player-state.js';
 import { getTag, getTags } from '../engine/world.js';
@@ -16,6 +16,7 @@ import DraftListPanel from '../builder/DraftListPanel.jsx';
 import ModeDropdown from '../builder/ModeDropdown.jsx';
 import WorldCreator from '../builder/WorldCreator.jsx';
 import Lobby from './Lobby.jsx';
+import AuthorProfile from './AuthorProfile.jsx';
 import { loadDrafts, saveDraft, updateDraft, deleteDraft, importEvents, exportDrafts, bulkPublish } from '../builder/draftStore.js';
 
 /** Map entry types to colour slots */
@@ -351,6 +352,11 @@ export default function App() {
 
   const shortPubkey = identity.pubkey ? identity.pubkey.slice(0, 8) + '...' : '';
   const isLoggedIn = identity.method !== 'ephemeral';
+
+  // ── Profile route ──────────────────────────────────────────────────────
+  if (route.page === 'profile') {
+    return <AuthorProfile npub={route.npub} pubkeyHex={route.pubkeyHex} identity={identity} />;
+  }
 
   // ── Lobby route ────────────────────────────────────────────────────────
   if (route.page === 'lobby') {

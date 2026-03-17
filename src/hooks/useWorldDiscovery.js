@@ -166,10 +166,30 @@ async function discoverAll(collected, cancelled) {
 }
 
 /**
- * @param {'curated' | 'search'} mode
- * @param {string} [curatorPubkey] — required for 'curated' mode
+ * Author mode: find all foakloar worlds by a specific pubkey.
  */
-export function useWorldDiscovery(mode = 'curated', curatorPubkey) {
+async function discoverByAuthor(authorPubkey, collected, cancelled) {
+  for (const url of RELAY_URLS) {
+    if (cancelled.current) return;
+    try {
+      const found = await queryRelay(
+        url,
+        { kinds: [30078], authors: [authorPubkey], '#w': ['foakloar'] },
+        collected,
+        cancelled
+      );
+      if (found) return;
+    } catch (err) {
+      console.warn(`Author discovery failed on ${url}:`, err.message);
+    }
+  }
+}
+
+/**
+ * @param {'curated' | 'search' | 'author'} mode
+ * @param {string} [pubkey] — required for 'curated' and 'author' modes
+ */
+export function useWorldDiscovery(mode = 'curated', pubkey) {
   const [worlds, setWorlds] = useState([]);
   const [status, setStatus] = useState('loading');
 
@@ -181,8 +201,10 @@ export function useWorldDiscovery(mode = 'curated', curatorPubkey) {
     setStatus('loading');
 
     async function run() {
-      if (mode === 'curated' && curatorPubkey) {
-        await discoverCurated(curatorPubkey, collected, cancelled);
+      if (mode === 'author' && pubkey) {
+        await discoverByAuthor(pubkey, collected, cancelled);
+      } else if (mode === 'curated' && pubkey) {
+        await discoverCurated(pubkey, collected, cancelled);
       } else {
         await discoverAll(collected, cancelled);
       }
@@ -202,7 +224,7 @@ export function useWorldDiscovery(mode = 'curated', curatorPubkey) {
     });
 
     return () => { cancelled.current = true; };
-  }, [mode, curatorPubkey]);
+  }, [mode, pubkey]);
 
   return { worlds, status };
 }

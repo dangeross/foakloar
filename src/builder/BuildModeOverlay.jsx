@@ -7,7 +7,9 @@
  */
 
 import React, { useMemo } from 'react';
+import { nip19 } from 'nostr-tools';
 import { getTag, getTags } from '../engine/world.js';
+import { navigateToProfile } from '../services/router.js';
 import DOSButton from './DOSButton.jsx';
 
 /**
@@ -83,8 +85,21 @@ function useRoomAnnotation(events, currentPlace) {
   }, [events, currentPlace]);
 }
 
-function shortKey(pubkey) {
-  return pubkey ? pubkey.slice(0, 8) + '...' : '?';
+function PubkeyLink({ pubkey }) {
+  if (!pubkey) return '?';
+  const short = pubkey.slice(0, 8) + '...';
+  return (
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        navigateToProfile(nip19.npubEncode(pubkey));
+      }}
+      className="cursor-pointer hover:opacity-80"
+      style={{ color: 'inherit', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', padding: 0, textDecoration: 'underline' }}
+    >
+      {short}
+    </button>
+  );
 }
 
 export default function BuildModeOverlay({
@@ -134,7 +149,7 @@ export default function BuildModeOverlay({
         id: {placeDtag}
       </div>
       <div style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
-        author: {shortKey(placeAuthor)}
+        author: <PubkeyLink pubkey={placeAuthor} />
       </div>
 
       {/* Exits */}
@@ -148,7 +163,11 @@ export default function BuildModeOverlay({
             {exit.connected ? (
               <span style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
                 → {exit.portals.map((p) => p.destTitle).join(', ')}
-                {' '}[{exit.portals.map((p) => shortKey(p.portalAuthor)).join(', ')}]
+                {' '}[{exit.portals.map((p, i) => (
+                  <React.Fragment key={p.portalATag}>
+                    {i > 0 && ', '}<PubkeyLink pubkey={p.portalAuthor} />
+                  </React.Fragment>
+                ))}]
                 {onEditEvent && pubkey && exit.portals.filter((p) => p.portalAuthor === pubkey).map((p) => (
                   <button
                     key={p.portalATag}
@@ -178,7 +197,7 @@ export default function BuildModeOverlay({
           <div style={{ color: 'var(--colour-dim)' }}>Entities:</div>
           {entities.map((ent, i) => (
             <div key={i} className="ml-2 flex items-center gap-1" style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
-              <span>[{ent.type}] {ent.title} — {shortKey(ent.author)}</span>
+              <span>[{ent.type}] {ent.title} — <PubkeyLink pubkey={ent.author} /></span>
               {onEditEvent && pubkey && ent.author === pubkey && (
                 <button
                   onClick={() => onEditEvent(ent.ref)}

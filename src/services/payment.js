@@ -49,11 +49,16 @@ export async function fetchPayMetadata(lnurl) {
  * Request an invoice from the LNURL-pay callback.
  * @param {string} callback - The callback URL from metadata
  * @param {number} amountMsats - Amount in millisatoshis
+ * @param {object} [options]
+ * @param {string} [options.nostr] - JSON-encoded NIP-57 zap request event
  * @returns {{ pr: string, verify?: string }} - Payment request + optional verify URL
  */
-export async function fetchInvoice(callback, amountMsats) {
+export async function fetchInvoice(callback, amountMsats, options = {}) {
   const sep = callback.includes('?') ? '&' : '?';
-  const url = `${callback}${sep}amount=${amountMsats}`;
+  let url = `${callback}${sep}amount=${amountMsats}`;
+  if (options.nostr) {
+    url += `&nostr=${encodeURIComponent(options.nostr)}`;
+  }
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Invoice fetch failed: ${res.status}`);
   const data = await res.json();

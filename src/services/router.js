@@ -4,16 +4,19 @@
  * URL patterns:
  *   /w              → lobby (world index / create)
  *   /w/:slug        → load and play a world by its slug
+ *   /u/:npub        → author profile page
  *   /               → redirect to /w/the-lake (default world)
  *
  * No external router library — just pathname parsing + pushState.
  */
 
+import { nip19 } from 'nostr-tools';
+
 const DEFAULT_WORLD = 'the-lake';
 
 /**
  * Parse the current URL path into a route object.
- * @returns {{ page: 'lobby' | 'game', worldSlug: string | null }}
+ * @returns {{ page: 'lobby' | 'game' | 'profile', worldSlug?: string, pubkeyHex?: string, npub?: string }}
  */
 export function parseRoute() {
   const path = window.location.pathname;
@@ -27,6 +30,19 @@ export function parseRoute() {
   // /w or /w/ — lobby
   if (path === '/w' || path === '/w/') {
     return { page: 'lobby', worldSlug: null };
+  }
+
+  // /u/:npub — author profile
+  const profileMatch = path.match(/^\/u\/(npub1[a-z0-9]+)$/i);
+  if (profileMatch) {
+    try {
+      const decoded = nip19.decode(profileMatch[1]);
+      if (decoded.type === 'npub') {
+        return { page: 'profile', pubkeyHex: decoded.data, npub: profileMatch[1] };
+      }
+    } catch {
+      // Invalid npub — fall through to default
+    }
   }
 
   // Legacy: bare / or anything else → default world
@@ -48,5 +64,14 @@ export function navigateToWorld(slug) {
  */
 export function navigateToLobby() {
   window.history.pushState({}, '', '/w');
+  window.dispatchEvent(new PopStateEvent('popstate'));
+}
+
+/**
+ * Navigate to an author's profile page.
+ * @param {string} npub — bech32-encoded public key (npub1...)
+ */
+export function navigateToProfile(npub) {
+  window.history.pushState({}, '', `/u/${npub}`);
   window.dispatchEvent(new PopStateEvent('popstate'));
 }

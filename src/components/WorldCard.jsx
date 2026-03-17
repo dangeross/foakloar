@@ -3,6 +3,8 @@
  */
 
 import React from 'react';
+import { nip19 } from 'nostr-tools';
+import { navigateToProfile } from '../services/router.js';
 
 export default function WorldCard({ world, onClick }) {
   const snippet = world.description?.length > 140
@@ -10,13 +12,14 @@ export default function WorldCard({ world, onClick }) {
     : world.description;
 
   return (
-    <button
+    <div
       onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick?.(e); }}
       className="block w-full text-left p-3 mb-2 cursor-pointer"
       style={{
         border: '1px solid var(--colour-dim)',
-        background: 'none',
-        font: 'inherit',
         color: 'var(--colour-text)',
       }}
     >
@@ -39,7 +42,21 @@ export default function WorldCard({ world, onClick }) {
 
       {(world.author || world.pubkey) && (
         <div className="mb-1" style={{ color: 'var(--colour-dim)' }}>
-          by {world.author || world.pubkey?.slice(0, 12) + '...'}
+          by{' '}
+          {world.pubkey ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigateToProfile(nip19.npubEncode(world.pubkey));
+              }}
+              className="cursor-pointer hover:opacity-80"
+              style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: 0, textDecoration: 'underline' }}
+            >
+              {world.author || world.pubkey.slice(0, 12) + '...'}
+            </button>
+          ) : (
+            world.author
+          )}
         </div>
       )}
 
@@ -70,6 +87,6 @@ export default function WorldCard({ world, onClick }) {
           {world.draftCount} draft event{world.draftCount !== 1 ? 's' : ''}
         </div>
       )}
-    </button>
+    </div>
   );
 }
