@@ -1698,6 +1698,49 @@ export class GameEngine {
     }
   }
 
+  // ── Help ─────────────────────────────────────────────────────────────
+
+  _showHelp() {
+    this._emit('Commands:', 'title');
+    const cmds = [
+      ['look (l)', 'Look around'],
+      ['look &lt;direction&gt;', 'Examine exits in a direction'],
+      ['go &lt;direction&gt;', 'Move (or just type the direction)'],
+      ['examine &lt;thing&gt;', 'Examine something closely'],
+      ['take &lt;item&gt;', 'Pick up an item'],
+      ['inventory (i)', 'Show what you are carrying'],
+      ['talk &lt;npc&gt;', 'Talk to someone'],
+      ['quests (q)', 'Show quest log'],
+      ['help (h)', 'Show this help'],
+    ];
+    for (const [cmd, desc] of cmds) {
+      this._emitHtml(`<span style="color:var(--colour-highlight)">${cmd}</span> <span style="color:var(--colour-dim)">— ${desc}</span>`, 'narrative');
+    }
+
+    // Show context-specific verbs from the current place + inventory
+    const roamingHere = findRoamingNpcsAtPlace(
+      this.events, this.currentPlace, this.player.getMoveCount(),
+      (npcDtag) => this.player.getNpcState(npcDtag),
+    );
+    const roamingEvents = roamingHere.map((r) => r.npcEvent);
+    const recipeEvents = this._findRecipes().map((r) => r.event);
+    const verbMap = buildVerbMap(this.events, this.place, this.player.state.inventory, [...roamingEvents, ...recipeEvents]);
+
+    // Collect unique canonical verbs (exclude built-ins)
+    const builtIns = new Set(['examine', 'look', 'talk']);
+    const contextVerbs = new Set();
+    for (const [, canonical] of verbMap) {
+      if (!builtIns.has(canonical)) contextVerbs.add(canonical);
+    }
+
+    if (contextVerbs.size > 0) {
+      this._emit('', 'narrative');
+      this._emit('Available actions:', 'title');
+      this._emit(`  ${[...contextVerbs].join(', ')}`, 'highlight');
+      this._emit('  Use with a noun: <action> <thing>', 'dim');
+    }
+  }
+
   // ── Unified interaction dispatch ──────────────────────────────────────
 
   handleInteraction(verb, targetNoun, instrumentNoun) {
@@ -1883,6 +1926,12 @@ export class GameEngine {
     // Built-in: quests
     if (trimmed === 'quests' || trimmed === 'quest' || trimmed === 'q') {
       this._showQuestLog();
+      return;
+    }
+
+    // Built-in: help
+    if (trimmed === 'help' || trimmed === 'h' || trimmed === '?') {
+      this._showHelp();
       return;
     }
 
