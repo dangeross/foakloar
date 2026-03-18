@@ -736,6 +736,21 @@
           "recipe"
         ],
         [
+          "title",
+          "Iron Key"
+        ],
+        [
+          "noun",
+          "key",
+          "iron key"
+        ],
+        [
+          "verb",
+          "forge",
+          "craft",
+          "make"
+        ],
+        [
           "ordered",
           "true"
         ],

@@ -209,6 +209,24 @@ export function makeEngine(events, playerOverrides = {}, configOverrides = {}, n
   return new GameEngine({ events, player, config });
 }
 
+/** Create a recipe event. */
+export function makeRecipe(name, { ordered = false, requires = [], onComplete = [], verbs = [], nouns = [], state, transitions = [], content = '', extraTags = [] } = {}) {
+  const dtag = `${WORLD}:recipe:${name}`;
+  const tags = [
+    ['type', 'recipe'],
+    ['title', name.charAt(0).toUpperCase() + name.slice(1)],
+    ...(ordered ? [['ordered', 'true']] : []),
+    ...(state ? [['state', state]] : []),
+    ...transitions.map((t) => ['transition', t[0], t[1], t[2] || '']),
+    ...verbs.map((v) => ['verb', ...v]),
+    ...nouns.map((n) => ['noun', ...n]),
+    ...requires.map((r) => ['requires', ...r]),
+    ...onComplete.map((oc) => ['on-complete', ...oc]),
+    ...extraTags,
+  ];
+  return makeEvent(dtag, tags, content);
+}
+
 /** Create a consequence event. */
 export function makeConsequence(name, { respawn, clears = [], giveItems = [], consumeItems = [], content = '', extraTags = [] } = {}) {
   const dtag = `${WORLD}:consequence:${name}`;

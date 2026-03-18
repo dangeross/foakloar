@@ -464,7 +464,7 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 | `on-health-zero` | — | This NPC's health reaches zero |
 | `on-player-health-zero` | — | Player health reaches zero (on place or NPC) |
 | `on-move` | State string or `—` | Every player move; optional state guard |
-| `on-counter` | Counter name, threshold | Fires when counter reaches or crosses threshold — see counter section |
+| `on-counter` | Direction (`down`\|`up`), counter name, threshold | Fires when counter crosses threshold in declared direction — see counter section |
 
 **Action types** (shared across all `on-*` tags):
 
@@ -530,30 +530,55 @@ Follows the same action shape as all `on-*` tags — they fire actions, not inli
 ["counter",         "battery",  "300"],
 ["transition",      "on",        "flickering", "The lantern flickers ominously."],
 ["transition",      "flickering","dead",        "The lantern dies. Darkness closes in."],
-["on-counter",  "battery",  "50",  "set-state",   "flickering"],
-["on-counter", "battery", "0",         "set-state",   "dead"],
-["on-counter", "battery", "0",         "consequence", "30078:<pubkey>:the-lake:consequence:lamp-dies"]
+["on-counter",  "down",  "battery",  "50",  "set-state",   "flickering"],
+["on-counter", "down", "battery", "0",         "set-state",   "dead"],
+["on-counter", "down", "battery", "0",         "consequence", "30078:<pubkey>:the-lake:consequence:lamp-dies"]
 ```
 
 **Shape:**
 
 ```json
-["on-counter", "<counter>", "<threshold>", "<action-type>", "<action-target?>"]
+["on-counter", "<direction>", "<counter>", "<threshold>", "<action-type>", "<action-target?>"]
 ```
 
-Always four arguments: counter name, threshold, action type, optional action target. `0` is a valid threshold — not a special case.
+| Element | Values | Meaning |
+|---------|--------|---------|
+| direction | `down` \| `up` | Which crossing direction triggers the action |
+| counter | string | Counter name — must match a `counter` tag on this event |
+| threshold | integer string | The value at which to fire |
+| action-type | any action type | What to do |
+| action-target | optional | State value, item ref, etc. |
+
+`down` fires when the counter crosses at-or-below the threshold (decrements past it). `up` fires when the counter crosses at-or-above the threshold (increments past it). `0` is a valid threshold — not a special case.
 
 `on-counter` has three behavioural rules:
 
-1. **Threshold crossing** — counter decrements from above to at-or-below the threshold. Fires once per crossing. The client tracks this to avoid repeated firing on every subsequent decrement.
-2. **State entry** — whenever an event's state changes via any `set-state` action, the client immediately evaluates all `on-counter` tags. If the counter is already below threshold, the action fires immediately — unless the event's current state is already the result of that action (prevents loops).
-3. **Reconciliation on load** — when the client restores persisted player state, it re-evaluates all `on-counter` tags for all events in the current place. If a counter is below threshold and the event's state doesn't reflect it, the action fires immediately. This catches any inconsistency between saved counter values and saved event states — for example, if a session ended between a counter decrement and the resulting state change.
+1. **Threshold crossing** — counter crosses the threshold in the declared direction. Fires once per crossing. The client tracks this to avoid repeated firing on every subsequent change.
+2. **State entry** — whenever an event's state changes via any `set-state` action, the client immediately evaluates all `on-counter` tags. If the counter already satisfies the threshold condition, the action fires immediately — unless the event's current state is already the result of that action (prevents loops).
+3. **Reconciliation on load** — when the client restores persisted player state, it re-evaluates all `on-counter` tags for all events in the current place. If a counter satisfies a threshold and the event's state doesn't reflect it, the action fires immediately. Catches inconsistencies from sessions ending mid-sequence.
 
 This means a lantern turned off and back on at low battery will immediately enter `flickering` state — the correct physical behaviour. The player doesn't lose the warning cue because they cycled the lantern.
 
-The loop prevention guard applies to all three conditions: if the event is already in the action's target state, do not fire. This is the only thing preventing infinite loops on state entry and load reconciliation.
+The loop prevention guard applies to all three conditions: if the event is already in the action's target state, do not fire.
 
 The client tracks threshold crossings per counter per threshold value — multiple `on-counter` tags on the same counter with different thresholds each track and fire independently. State entry re-evaluation and load reconciliation always run regardless of prior crossing history.
+
+**Counter actions — tag positions:**
+
+Counter actions follow the same `on-interact` shape as all other actions. Counter name is always position 3, value (for `set-counter`) is position 4. External target is an optional final element — the `a`-tag of another event whose counter to modify:
+
+```json
+// Self-targeting (counter on this event)
+["on-interact", "use",    "increment",   "hits"],
+["on-interact", "use",    "decrement",   "battery"],
+["on-interact", "refill", "set-counter", "battery", "300"],
+
+// External targeting (counter on another event)
+["on-interact", "pump",   "increment",   "heat",    "30078:<PUBKEY>:forge:feature:forge"],
+["on-interact", "use",    "set-counter", "charge",  "50", "30078:<PUBKEY>:forge:item:battery"]
+```
+
+`increment` and `decrement` always change by 1. `set-counter` sets to the exact value in position 4. For external targets, the counter name must exist on the target event — if not, the action is silently ignored.
 
 Multiple counters on a single event:
 
@@ -856,6 +881,9 @@ Defines what items combine to produce a new item. Structurally identical to a se
     ["d",           "the-lake:recipe:serpent-staff"],
     ["t",           "the-lake"],
     ["type",        "recipe"],
+    ["title",       "Serpent Staff"],
+    ["noun",        "staff", "serpent staff"],
+    ["verb",        "craft", "assemble", "combine"],
     ["state",       "unknown"],
     ["transition",  "unknown", "known", "You piece together how the staff was made."],
     ["requires",    "30078:<pubkey>:the-lake:item:wooden-rod",   "", ""],
@@ -869,9 +897,21 @@ Defines what items combine to produce a new item. Structurally identical to a se
 }
 ```
 
-- `ordered: true` — ingredients must be combined in sequence; client evaluates `requires` in tag order
+**Crafting verbs and nouns:**
+
+Recipes use `verb` and `noun` tags, same as features and items. The player types `<verb> <noun>` to initiate crafting — e.g. `craft staff`, `forge key`, `brew potion`. If no `verb` tag is declared, the client falls back to `craft` and `combine` as built-in defaults. If no `noun` tag, the client matches by `title`.
+
+**Crafting flow:**
+
+- `ordered: false` (or absent) — the client checks all `requires` at once. If all pass, `on-complete` fires immediately. If any fail, the first failure message is shown.
+- `ordered: true` — the client enters crafting mode. The player selects inventory items one at a time, in `requires` tag order. If the wrong item is selected, crafting fails with a message and exits. Non-item requires (feature states) are checked silently.
+
+**Additional rules:**
+
 - Ingredients are consumed from inventory on completion; produced item is added
 - A feature can be required for crafting: `["requires", "30078:<pubkey>:the-lake:feature:forge", "lit", "You need a lit forge."]`
+- Recipes are not place-scoped — the player can craft anywhere if they have the items
+- A completed recipe is marked as solved and cannot be crafted again
 
 ---
 
@@ -1385,8 +1425,8 @@ Any item, feature, or NPC can carry a named counter — a numeric value tracked 
     ["on-interact",     "turn on",  "set-state",   "on"],
     ["on-interact",     "turn off", "set-state",   "off"],
     ["on-move",         "on",       "decrement",   "battery"],
-    ["on-counter", "battery", "0",  "set-state",   "dead"],
-    ["on-counter", "battery", "0",  "consequence", "30078:<pubkey>:the-lake:consequence:lamp-dies"]
+    ["on-counter", "down", "battery", "0",  "set-state",   "dead"],
+    ["on-counter", "down", "battery", "0",  "consequence", "30078:<pubkey>:the-lake:consequence:lamp-dies"]
   ],
   "content": "A battery-powered brass lantern."
 }}

@@ -35,6 +35,7 @@ export class GameEngine {
     this.paymentActive = null;   // { dtag, lnurl, amount, unit, description }
     this.pendingConfirm = null;
     this.pendingChoice = null;  // { direction, exits } — disambiguation list awaiting numeric input
+    this.craftingActive = null; // { recipeDtag, step, itemRequires } — ordered crafting mode
 
     /** @type {Array<{text?: string, html?: string, type: string}>} */
     this.output = [];
@@ -1404,7 +1405,222 @@ export class GameEngine {
     }
     const invMatch = findInventoryItem(this.events, this.player.state.inventory, noun);
     if (invMatch) return { ...invMatch, type: 'item' };
+
+    // Check recipes (not place-scoped)
+    const recipeMatch = this._findRecipeByNoun(noun);
+    if (recipeMatch) return recipeMatch;
+
     return null;
+  }
+
+  // ── Recipe helpers ──────────────────────────────────────────────────
+
+  /** Find all recipe events in the world. */
+  _findRecipes() {
+    const recipes = [];
+    for (const [dtag, event] of this.events) {
+      if (getTag(event, 'type') === 'recipe') {
+        recipes.push({ event, dtag });
+      }
+    }
+    return recipes;
+  }
+
+  /** Find a recipe by noun/title match. */
+  _findRecipeByNoun(noun) {
+    for (const [dtag, event] of this.events) {
+      if (getTag(event, 'type') !== 'recipe') continue;
+      const title = getTag(event, 'title')?.toLowerCase() || '';
+      if (title.includes(noun)) return { event, dtag, type: 'recipe' };
+      for (const nt of getTags(event, 'noun')) {
+        for (let i = 1; i < nt.length; i++) {
+          if (nt[i].toLowerCase() === noun) return { event, dtag, type: 'recipe' };
+        }
+      }
+    }
+    return null;
+  }
+
+  /** Examine a recipe — show content + shuffled ingredient list. */
+  _examineRecipe(event, dtag) {
+    if (event.content) this._emit(event.content, 'narrative');
+    const requires = getTags(event, 'requires');
+    if (requires.length > 0) {
+      this._emit('Requires:', 'narrative');
+      // Shuffle the requires list so ordered recipes don't reveal the sequence
+      const shuffled = [...requires].sort(() => Math.random() - 0.5);
+      for (const req of shuffled) {
+        const refEvent = this.events.get(req[1]);
+        const name = refEvent ? getTag(refEvent, 'title') : req[1];
+        const stateReq = req[2] ? ` (${req[2]})` : '';
+        const has = this._checkSingleRequire(req) ? '\u2713' : '\u2717';
+        this._emit(`  ${has} ${name}${stateReq}`, 'item');
+      }
+    }
+    if (this.player.isPuzzleSolved(dtag)) {
+      this._emit('Already crafted.', 'narrative');
+    }
+  }
+
+  /** Check a single requires tag against player state. */
+  _checkSingleRequire(reqTag) {
+    const ref = reqTag[1];
+    const reqState = reqTag[2];
+    const refEvent = this.events.get(ref);
+    if (!refEvent) return false;
+    const type = getTag(refEvent, 'type');
+    if (type === 'item') {
+      if (!this.player.hasItem(ref)) return false;
+      if (reqState) {
+        const itemState = this.player.getState(ref);
+        if (itemState !== reqState) return false;
+      }
+      return true;
+    }
+    // Feature/other state check
+    const currentState = this.player.getState(ref) ?? getDefaultState(refEvent);
+    if (reqState && currentState !== reqState) return false;
+    return !reqState || currentState === reqState;
+  }
+
+  /** Attempt to craft a recipe. */
+  _attemptCraft(event, dtag) {
+    if (this.player.isPuzzleSolved(dtag)) {
+      this._emit('Already crafted.', 'narrative');
+      return;
+    }
+
+    const ordered = getTag(event, 'ordered') === 'true';
+
+    if (ordered) {
+      // Check non-item requires first (feature states) — fail early
+      const requires = getTags(event, 'requires');
+      for (const req of requires) {
+        const refEvent = this.events.get(req[1]);
+        if (!refEvent) continue;
+        const type = getTag(refEvent, 'type');
+        if (type !== 'item' && !this._checkSingleRequire(req)) {
+          const desc = req[3] || "You're missing something.";
+          this._emit(desc, 'error');
+          return;
+        }
+      }
+
+      // Collect item requires in order
+      const itemRequires = requires.filter((req) => {
+        const refEvent = this.events.get(req[1]);
+        return refEvent && getTag(refEvent, 'type') === 'item';
+      });
+
+      if (itemRequires.length === 0) {
+        // No item requires — just fire on-complete
+        this._fireCraftComplete(event, dtag);
+        return;
+      }
+
+      this.craftingActive = { recipeDtag: dtag, step: 0, itemRequires };
+      this._emit('Combine items in order.', 'narrative');
+      this._emit('Select ingredient:', 'narrative');
+    } else {
+      // Unordered — check all requires at once
+      const reqResult = checkRequires(event, this.player.state, this.events);
+      if (!reqResult.allowed) {
+        this._emit(reqResult.reason, 'error');
+        return;
+      }
+      this._fireCraftComplete(event, dtag);
+    }
+  }
+
+  /** Handle ordered crafting step — player typed an item name. */
+  _handleCraftStep(input) {
+    if (!this.craftingActive) return false;
+
+    const noun = stripArticles(input.trim().toLowerCase());
+    const { recipeDtag, step, itemRequires } = this.craftingActive;
+    const recipeEvent = this.events.get(recipeDtag);
+
+    // Find item in inventory by noun
+    const invMatch = findInventoryItem(this.events, this.player.state.inventory, noun);
+    if (!invMatch) {
+      this._emit("You don't have that.", 'error');
+      return true; // consumed input but stay in crafting mode
+    }
+
+    // Check if this item matches the current step's requires ref
+    const expectedRef = itemRequires[step][1];
+    const expectedState = itemRequires[step][2];
+
+    if (invMatch.dtag !== expectedRef) {
+      this._emit("That's not right.", 'error');
+      this.craftingActive = null;
+      return true;
+    }
+
+    // Check item state if required
+    if (expectedState) {
+      const itemState = this.player.getState(invMatch.dtag);
+      if (itemState !== expectedState) {
+        const desc = itemRequires[step][3] || "That item isn't in the right state.";
+        this._emit(desc, 'error');
+        this.craftingActive = null;
+        return true;
+      }
+    }
+
+    // Advance
+    const nextStep = step + 1;
+    if (nextStep >= itemRequires.length) {
+      // All items selected — fire on-complete
+      this.craftingActive = null;
+      this._fireCraftComplete(recipeEvent, recipeDtag);
+    } else {
+      this.craftingActive = { ...this.craftingActive, step: nextStep };
+      this._emit('Next ingredient:', 'narrative');
+    }
+    return true;
+  }
+
+  /** Fire on-complete actions for a successfully crafted recipe. */
+  _fireCraftComplete(event, dtag) {
+    this.player.markPuzzleSolved(dtag);
+
+    const title = getTag(event, 'title') || 'something';
+    this._emit(`Crafted: ${title}`, 'success');
+
+    // Fire on-complete actions
+    for (const tag of getTags(event, 'on-complete')) {
+      const action = tag[2];
+      const value = tag[3];
+      const extRef = tag[4];
+
+      if (action === 'give-item') {
+        giveItem(value, this.events, this.player, (t, ty) => this._emit(t, ty));
+      } else if (action === 'consume-item') {
+        if (this.player.hasItem(value)) {
+          this.player.removeItem(value);
+        }
+      } else if (action === 'set-state' && extRef) {
+        const result = applyExternalSetState(
+          extRef, value, this.events, this.player,
+          (t, ty) => this._emit(t, ty),
+          (h, ty) => this._emitHtml(h, ty),
+        );
+        if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
+      } else if (action === 'consequence' && (value || extRef)) {
+        this._executeConsequence(extRef || value);
+      } else if (action === 'traverse' && (value || extRef)) {
+        this._traverse(extRef || value);
+      }
+    }
+
+    // Fire transition if recipe has state
+    const recipeState = this.player.getState(dtag) ?? getDefaultState(event);
+    const transition = findTransition(event, recipeState, 'known');
+    if (transition) {
+      this.player.setState(dtag, transition.to);
+      if (transition.text) this._emit(transition.text, 'narrative');
+    }
   }
 
   // ── Unified interaction dispatch ──────────────────────────────────────
@@ -1448,6 +1664,12 @@ export class GameEngine {
         this.startDialogue(dtag);
       } else {
         this._emit("You can't do that.", 'error');
+      }
+    } else if (type === 'recipe') {
+      if (verb === 'examine') {
+        this._examineRecipe(event, dtag);
+      } else {
+        this._attemptCraft(event, dtag);
       }
     } else if (type === 'item') {
       if (this.player.hasItem(dtag)) {
@@ -1536,6 +1758,11 @@ export class GameEngine {
       this.pendingChoice = null;
     }
 
+    // Crafting mode — ordered recipe step
+    if (this.craftingActive) {
+      if (this._handleCraftStep(trimmed)) return;
+    }
+
     // Dialogue mode
     if (this.dialogueActive) { this.handleDialogueChoice(trimmed); return; }
 
@@ -1594,7 +1821,8 @@ export class GameEngine {
       (npcDtag) => this.player.getNpcState(npcDtag),
     );
     const roamingEvents = roamingHere.map((r) => r.npcEvent);
-    const verbMap = buildVerbMap(this.events, this.place, this.player.state.inventory, roamingEvents);
+    const recipeEvents = this._findRecipes().map((r) => r.event);
+    const verbMap = buildVerbMap(this.events, this.place, this.player.state.inventory, [...roamingEvents, ...recipeEvents]);
     const parsed = parseInput(trimmed, verbMap);
 
     if (parsed && parsed.noun1) {
