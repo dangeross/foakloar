@@ -460,7 +460,10 @@ export class GameEngine {
         acted = true;
       }
     }
-    if (acted) evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty));
+    if (acted) {
+      evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty));
+      this._evalQuests();
+    }
     return acted;
   }
 
@@ -585,6 +588,7 @@ export class GameEngine {
     }
 
     this._emit(`Taken: ${getTag(match.event, 'title')}`, 'item');
+    this._evalQuests();
   }
 
   // ── Item interaction ──────────────────────────────────────────────────
@@ -1583,9 +1587,6 @@ export class GameEngine {
   _fireCraftComplete(event, dtag) {
     this.player.markPuzzleSolved(dtag);
 
-    const title = getTag(event, 'title') || 'something';
-    this._emit(`Crafted: ${title}`, 'success');
-
     // Fire on-complete actions
     for (const tag of getTags(event, 'on-complete')) {
       const action = tag[2];
@@ -1618,6 +1619,82 @@ export class GameEngine {
     if (transition) {
       this.player.setState(dtag, transition.to);
       if (transition.text) this._emit(transition.text, 'narrative');
+    }
+
+    this._evalQuests();
+  }
+
+  // ── Quest tracking ──────────────────────────────────────────────────
+
+  /** Find all quest events in the world. */
+  _findQuests() {
+    const quests = [];
+    for (const [dtag, event] of this.events) {
+      if (getTag(event, 'type') === 'quest') {
+        quests.push({ event, dtag });
+      }
+    }
+    return quests;
+  }
+
+  /** Evaluate all quests and mark newly completed ones. */
+  _evalQuests() {
+    for (const { event, dtag } of this._findQuests()) {
+      if (this.player.isPuzzleSolved(dtag)) continue;
+      const req = checkRequires(event, this.player.state, this.events);
+      if (req.allowed) {
+        this.player.markPuzzleSolved(dtag);
+        const title = getTag(event, 'title') || 'Quest';
+        this._emit(`Quest complete: ${title}`, 'success');
+      }
+    }
+  }
+
+  /** Show quest log — active and completed quests. */
+  _showQuestLog() {
+    const quests = this._findQuests();
+    if (quests.length === 0) {
+      this._emit('No quests.', 'narrative');
+      return;
+    }
+
+    const active = [];
+    const completed = [];
+    for (const { event, dtag } of quests) {
+      const title = getTag(event, 'title') || dtag;
+      if (this.player.isPuzzleSolved(dtag)) {
+        completed.push({ title, event, dtag });
+      } else {
+        active.push({ title, event, dtag });
+      }
+    }
+
+    if (active.length > 0) {
+      this._emit('Active quests:', 'narrative');
+      for (const q of active) {
+        this._emit(`  \u25cb ${q.title}`, 'puzzle');
+        // Show involves progress
+        for (const inv of getTags(q.event, 'involves')) {
+          const invRef = inv[1];
+          const invEvent = this.events.get(invRef);
+          if (!invEvent) continue;
+          const invTitle = getTag(invEvent, 'title') || invRef.split(':').pop();
+          const invType = getTag(invEvent, 'type');
+          // Check if this involved event is "done" in some way
+          const state = this.player.getState(invRef);
+          const solved = this.player.isPuzzleSolved(invRef);
+          const held = this.player.hasItem(invRef);
+          const done = solved || held || (state && state !== getDefaultState(invEvent));
+          this._emit(`    ${done ? '\u2713' : '\u2717'} ${invTitle}`, done ? 'item' : 'dim');
+        }
+      }
+    }
+
+    if (completed.length > 0) {
+      this._emit('Completed:', 'narrative');
+      for (const q of completed) {
+        this._emit(`  \u2713 ${q.title}`, 'dim');
+      }
     }
   }
 
@@ -1800,6 +1877,12 @@ export class GameEngine {
           this._emit(`  ${item ? getTag(item, 'title') : dtag}`, 'item');
         }
       }
+      return;
+    }
+
+    // Built-in: quests
+    if (trimmed === 'quests' || trimmed === 'quest' || trimmed === 'q') {
+      this._showQuestLog();
       return;
     }
 

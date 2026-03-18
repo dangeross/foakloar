@@ -152,7 +152,9 @@
         ["transition",  "full",  "empty", "The water pours out."],
         ["verb",        "examine", "look"],
         ["verb",        "fill",    "lower", "use"],
-        ["verb",        "pour",    "empty", "tip"]
+        ["verb",        "pour",    "empty", "tip"],
+        ["on-interact", "fill",    "set-state", "full"],
+        ["on-interact", "pour",    "set-state", "empty"]
       ],
       "content": "A wooden bucket, banded with iron. Empty."
     },
