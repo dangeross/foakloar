@@ -362,6 +362,7 @@ export default function App() {
   const puzzleActive = engine?.puzzleActive ?? null;
   const dialogueActive = engine?.dialogueActive ?? null;
   const paymentActive = engine?.paymentActive ?? null;
+  const craftingActive = engine?.craftingActive ?? null;
   // Title: relay world event → draft world event → slug → fallback
   const worldTitle = useMemo(() => {
     if (worldConfig?.title) return worldConfig.title;
@@ -693,15 +694,15 @@ export default function App() {
 
       {status === 'ready' && (
         <form onSubmit={onSubmit} className="flex gap-2">
-          <span style={{ color: 'var(--colour-text)' }}>
-            {dialogueActive ? '#' : puzzleActive ? '?' : '>'}
+          <span style={{ color: craftingActive ? 'var(--colour-puzzle)' : 'var(--colour-text)' }}>
+            {dialogueActive ? '#' : puzzleActive ? '?' : craftingActive ? '+' : '>'}
           </span>
           <input
             ref={inputRef}
             type="text"
             className="flex-1 bg-transparent border-none outline-none font-mono"
-            style={{ color: 'var(--colour-text)' }}
-            placeholder={dialogueActive ? 'Choose an option...' : puzzleActive ? 'Enter your answer...' : ''}
+            style={{ color: craftingActive ? 'var(--colour-puzzle)' : 'var(--colour-text)' }}
+            placeholder={dialogueActive ? 'Choose an option...' : puzzleActive ? 'Enter your answer...' : craftingActive ? 'Select an item...' : ''}
             onKeyDown={onKeyDown}
             autoFocus
           />

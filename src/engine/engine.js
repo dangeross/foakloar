@@ -1519,8 +1519,7 @@ export class GameEngine {
       }
 
       this.craftingActive = { recipeDtag: dtag, step: 0, itemRequires };
-      this._emit('Combine items in order.', 'narrative');
-      this._emit('Select ingredient:', 'narrative');
+      this._emit('Combine items in order.', 'puzzle');
     } else {
       // Unordered — check all requires at once
       const reqResult = checkRequires(event, this.player.state, this.events);
@@ -1576,7 +1575,6 @@ export class GameEngine {
       this._fireCraftComplete(recipeEvent, recipeDtag);
     } else {
       this.craftingActive = { ...this.craftingActive, step: nextStep };
-      this._emit('Next ingredient:', 'narrative');
     }
     return true;
   }

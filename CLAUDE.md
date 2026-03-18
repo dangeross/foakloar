@@ -196,6 +196,7 @@ All previously tracked deviations have been fixed:
 - Test helpers in `__tests__/helpers.js` provide factory functions for building events and engine instances
 - When adding new engine features, add corresponding tests
 - **Preview testing:** When changes affect UI rendering or depend on live relay events (e.g. new event types, visual styling, trust mode switching), also test with a browser preview before committing
+- **Build mode minimize:** The build overlay has a `[-]` toggle that collapses it to a single-line header. Use this when preview testing gameplay to see more game output. Click `[+]` to restore.
 
 ---
 

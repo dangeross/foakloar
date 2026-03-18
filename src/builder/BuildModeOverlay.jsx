@@ -6,7 +6,7 @@
  * portal editor.
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { nip19 } from 'nostr-tools';
 import { getTag, getTags } from '../engine/world.js';
 import { getTrustLevel } from '../engine/trust.js';
@@ -115,6 +115,7 @@ export default function BuildModeOverlay({
   onVouch,
 }) {
   const annotation = useRoomAnnotation(events, currentPlace);
+  const [minimized, setMinimized] = useState(false);
 
   if (!annotation) return null;
 
@@ -155,102 +156,121 @@ export default function BuildModeOverlay({
         backgroundColor: 'color-mix(in srgb, var(--colour-bg) 90%, var(--colour-dim))',
       }}
     >
-      {/* Header */}
-      <div className="flex justify-between items-start mb-1">
-        <div>
+      {/* Header — always visible */}
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setMinimized(!minimized)}
+            className="cursor-pointer hover:opacity-80"
+            style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: 0 }}
+          >
+            {minimized ? '[+]' : '[-]'}
+          </button>
           <span style={{ color: 'var(--colour-title)' }}>BUILD</span>
-          <span style={{ color: 'var(--colour-dim)' }}> | {title}</span>
+          <span style={{ color: 'var(--colour-dim)' }}>| {title}</span>
           {onEditEvent && pubkey && placeAuthor === pubkey && (
             <button
               onClick={() => onEditEvent(currentPlace)}
-              className="cursor-pointer hover:opacity-80 ml-1"
+              className="cursor-pointer hover:opacity-80"
               style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', padding: 0 }}
             >
               [edit]
             </button>
           )}
         </div>
-        <DOSButton onClick={() => onNewEvent?.('place')} colour="text">
-          + Place
-        </DOSButton>
       </div>
 
-      {/* Place metadata */}
-      <div style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
-        id: {placeDtag}
-      </div>
-      <div style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
-        author: <PubkeyLink pubkey={placeAuthor} /> <VouchButton targetPubkey={placeAuthor} />
-      </div>
-
-      {/* Exits */}
-      <div className="mt-1 mb-1">
-        <div style={{ color: 'var(--colour-dim)' }}>Exits:</div>
-        {exits.map((exit) => (
-          <div key={exit.slot} className="flex items-center gap-1 ml-2">
-            <span style={{ color: exit.connected ? 'var(--colour-text)' : 'var(--colour-error)' }}>
-              {exit.slot}
-            </span>
-            {exit.connected ? (
-              <span style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
-                → {exit.portals.map((p) => p.destTitle).join(', ')}
-                {' '}[{exit.portals.map((p, i) => (
-                  <React.Fragment key={p.portalATag}>
-                    {i > 0 && ', '}<PubkeyLink pubkey={p.portalAuthor} /> <VouchButton targetPubkey={p.portalAuthor} />
-                  </React.Fragment>
-                ))}]
-                {onEditEvent && pubkey && exit.portals.filter((p) => p.portalAuthor === pubkey).map((p) => (
-                  <button
-                    key={p.portalATag}
-                    onClick={() => onEditEvent(p.portalATag)}
-                    className="cursor-pointer hover:opacity-80 ml-1"
-                    style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', padding: 0 }}
-                  >
-                    [edit]
-                  </button>
-                ))}
-              </span>
-            ) : (
-              <DOSButton
-                onClick={() => onEditPortal?.(exit.slot)}
-                colour="error"
-              >
-                + Portal
-              </DOSButton>
-            )}
+      {minimized ? null : (
+        <>
+          {/* Place metadata */}
+          <div style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
+            id: {placeDtag}
           </div>
-        ))}
-      </div>
+          <div style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
+            author: <PubkeyLink pubkey={placeAuthor} /> <VouchButton targetPubkey={placeAuthor} />
+          </div>
 
-      {/* Entities */}
-      {entities.length > 0 && (
-        <div className="mt-1">
-          <div style={{ color: 'var(--colour-dim)' }}>Entities:</div>
-          {entities.map((ent, i) => (
-            <div key={i} className="ml-2 flex items-center gap-1" style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
-              <span>[{ent.type}] {ent.title} — <PubkeyLink pubkey={ent.author} /> <VouchButton targetPubkey={ent.author} /></span>
-              {onEditEvent && pubkey && ent.author === pubkey && (
-                <button
-                  onClick={() => onEditEvent(ent.ref)}
-                  className="cursor-pointer hover:opacity-80"
-                  style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', padding: 0 }}
-                >
-                  [edit]
-                </button>
-              )}
+          {/* Exits */}
+          <div className="mt-1 mb-1">
+            <div style={{ color: 'var(--colour-dim)' }}>Exits:</div>
+            {exits.map((exit) => (
+              <div key={exit.slot} className="flex items-center gap-1 ml-2">
+                <span style={{ color: exit.connected ? 'var(--colour-text)' : 'var(--colour-error)' }}>
+                  {exit.slot}
+                </span>
+                {exit.connected ? (
+                  <span style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
+                    → {exit.portals.map((p) => p.destTitle).join(', ')}
+                    {' '}[{exit.portals.map((p, i) => (
+                      <React.Fragment key={p.portalATag}>
+                        {i > 0 && ', '}<PubkeyLink pubkey={p.portalAuthor} /> <VouchButton targetPubkey={p.portalAuthor} />
+                      </React.Fragment>
+                    ))}]
+                    {onEditEvent && pubkey && exit.portals.filter((p) => p.portalAuthor === pubkey).map((p) => (
+                      <button
+                        key={p.portalATag}
+                        onClick={() => onEditEvent(p.portalATag)}
+                        className="cursor-pointer hover:opacity-80 ml-1"
+                        style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', padding: 0 }}
+                      >
+                        [edit]
+                      </button>
+                    ))}
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => onEditPortal?.(exit.slot)}
+                    className="cursor-pointer hover:opacity-80"
+                    style={{
+                      color: 'var(--colour-error)',
+                      background: 'none',
+                      border: '1px solid var(--colour-error)',
+                      font: 'inherit',
+                      fontSize: '0.6rem',
+                      padding: '0 4px',
+                    }}
+                  >
+                    + portal
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Entities */}
+          {entities.length > 0 && (
+            <div className="mt-1">
+              <div style={{ color: 'var(--colour-dim)' }}>Entities:</div>
+              {entities.map((ent, i) => (
+                <div key={i} className="ml-2 flex items-center gap-1" style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
+                  <span>[{ent.type}] {ent.title} — <PubkeyLink pubkey={ent.author} /> <VouchButton targetPubkey={ent.author} /></span>
+                  {onEditEvent && pubkey && ent.author === pubkey && (
+                    <button
+                      onClick={() => onEditEvent(ent.ref)}
+                      className="cursor-pointer hover:opacity-80"
+                      style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', padding: 0 }}
+                    >
+                      [edit]
+                    </button>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
+          )}
 
-      {/* Quick create buttons */}
-      <div className="flex gap-1 mt-2 flex-wrap">
-        {['portal', 'item', 'feature', 'npc', 'clue', 'puzzle', 'payment'].map((type) => (
-          <DOSButton key={type} onClick={() => onNewEvent?.(type)} colour="dim">
-            + {type}
-          </DOSButton>
-        ))}
-      </div>
+          {/* Quick create buttons */}
+          <div className="mt-2 flex gap-1 flex-wrap">
+            <DOSButton onClick={() => onNewEvent?.('place')} colour="text" className="text-xs">
+              + place
+            </DOSButton>
+            {['portal', 'item', 'feature', 'npc', 'clue', 'puzzle', 'payment'].map((type) => (
+              <DOSButton key={type} onClick={() => onNewEvent?.(type)} colour="dim" className="text-xs">
+                + {type}
+              </DOSButton>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
