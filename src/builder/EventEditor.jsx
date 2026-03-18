@@ -14,6 +14,8 @@ import DOSButton from './DOSButton.jsx';
 import TagEditor from './TagEditor.jsx';
 import EventPreview from './EventPreview.jsx';
 import { buildEventTemplate, buildDTag, publishEvent } from './eventBuilder.js';
+import { EVENT_TYPE_DESCRIPTIONS } from './tagSchema.js';
+import { Tooltip } from './TagEditor.jsx';
 import { resolvePubkeyPlaceholder, loadAnswers, saveAnswer } from './draftStore.js';
 import { renderMarkdown } from '../engine/content.js';
 
@@ -178,9 +180,9 @@ export default function EventEditor({
   }
 
   // Determine if this event type has a title field
-  const hasTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest', 'portal', 'puzzle'].includes(eventType);
+  const hasTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest', 'portal', 'puzzle', 'recipe', 'consequence'].includes(eventType);
   // Determine if this event type has content
-  const hasContent = ['place', 'item', 'feature', 'npc', 'clue', 'puzzle', 'world'].includes(eventType);
+  const hasContent = ['place', 'item', 'feature', 'npc', 'clue', 'puzzle', 'world', 'recipe', 'consequence', 'quest'].includes(eventType);
   // Current content-type from tags (default: text/plain)
   const contentTypeTag = tags.find((t) => t[0] === 'content-type');
   const contentType = contentTypeTag?.[1] || 'text/plain';
@@ -201,9 +203,18 @@ export default function EventEditor({
       minWidth="32em"
       maxWidth="95vw"
     >
+      {/* Event type description */}
+      {EVENT_TYPE_DESCRIPTIONS[eventType] && (
+        <div className="mb-3" style={{ color: 'var(--colour-text)', fontSize: '0.65rem', lineHeight: '1.4' }}>
+          {EVENT_TYPE_DESCRIPTIONS[eventType]}
+        </div>
+      )}
+
       {/* D-tag */}
       <div className="mb-2">
-        <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>id:</div>
+        <div className="mb-0.5" style={{ color: 'var(--colour-text)', fontSize: '0.65rem' }}>
+          id:<Tooltip text="Unique identifier for this event. Auto-generated from title, or set manually." />
+        </div>
         <input
           value={dTag}
           onChange={(e) => setDTagOverride(e.target.value)}
@@ -220,7 +231,9 @@ export default function EventEditor({
       {/* Title */}
       {hasTitle && (
         <div className="mb-2">
-          <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Title:</div>
+          <div className="mb-0.5" style={{ color: 'var(--colour-text)', fontSize: '0.65rem' }}>
+            Title:<Tooltip text="The display name shown to the player. Also generates the event id." />
+          </div>
           <input
             value={title}
             onChange={(e) => { setTitle(e.target.value); if (!dTagOverride || dTagOverride === buildDTag(worldSlug, eventType, title)) setDTagOverride(''); }}
@@ -234,8 +247,8 @@ export default function EventEditor({
       {/* Content */}
       {hasContent && (
         <div className="mb-2">
-          <div className="mb-0.5 flex items-center justify-between" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>
-            <span>Content:</span>
+          <div className="mb-0.5 flex items-center justify-between" style={{ color: 'var(--colour-text)', fontSize: '0.65rem' }}>
+            <span>Content:<Tooltip text="The description text shown when the player examines or enters this. Supports plain text or markdown." /></span>
             <span className="flex gap-2">
               <button
                 onClick={toggleContentType}
@@ -314,7 +327,7 @@ export default function EventEditor({
         return puzzleType !== 'sequence';
       })() && (
         <div className="mb-2">
-          <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>
+          <div className="mb-0.5" style={{ color: 'var(--colour-text)', fontSize: '0.65rem' }}>
             Answer (plain text — hashed on save):
           </div>
           <input
@@ -334,7 +347,9 @@ export default function EventEditor({
 
       {/* Tags */}
       <div className="mb-3">
-        <div className="mb-1" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Tags:</div>
+        <div className="mb-1" style={{ color: 'var(--colour-text)', fontSize: '0.65rem' }}>
+          Tags:<Tooltip text="Tags define the behaviour and relationships of this event — state machines, triggers, requirements, and connections to other events." />
+        </div>
         <TagEditor
           eventType={eventType}
           tags={tags}
@@ -346,7 +361,7 @@ export default function EventEditor({
       {/* Actions */}
       <div className="flex gap-2 pt-2" style={{ borderTop: '1px solid var(--colour-dim)' }}>
         {onSaveDraft && (
-          <DOSButton onClick={handleSaveDraft} colour="dim">
+          <DOSButton onClick={handleSaveDraft} colour="text">
             Save Draft
           </DOSButton>
         )}

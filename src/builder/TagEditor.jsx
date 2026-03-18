@@ -9,6 +9,68 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { TAG_SCHEMAS, TAGS_BY_EVENT_TYPE, getTagSchema, valuesToTag, tagToValues, ACTION_TARGET_FIELD } from './tagSchema.js';
 import DOSButton from './DOSButton.jsx';
+import InlineList from './InlineList.jsx';
+
+/** Tooltip — styled info icon that shows description on hover */
+function Tooltip({ text }) {
+  if (!text) return null;
+  const [show, setShow] = useState(false);
+  const iconRef = useRef(null);
+  const [above, setAbove] = useState(true);
+
+  const handleEnter = () => {
+    if (iconRef.current) {
+      const rect = iconRef.current.getBoundingClientRect();
+      setAbove(rect.top > 80); // show below if too close to top
+    }
+    setShow(true);
+  };
+
+  return (
+    <span
+      ref={iconRef}
+      className="inline-block cursor-help ml-1"
+      style={{ position: 'relative' }}
+      onMouseEnter={handleEnter}
+      onMouseLeave={() => setShow(false)}
+    >
+      <span
+        style={{
+          color: 'var(--colour-dim)',
+          fontSize: '0.55rem',
+          verticalAlign: 'middle',
+        }}
+      >
+        [?]
+      </span>
+      {show && (
+        <span
+          style={{
+            position: 'absolute',
+            ...(above
+              ? { bottom: '120%' }
+              : { top: '120%' }),
+            left: 0,
+            backgroundColor: 'var(--colour-bg)',
+            border: '1px solid var(--colour-dim)',
+            color: 'var(--colour-text)',
+            padding: '4px 8px',
+            fontSize: '0.6rem',
+            minWidth: '200px',
+            maxWidth: '320px',
+            whiteSpace: 'normal',
+            zIndex: 20,
+            lineHeight: '1.3',
+          }}
+        >
+          {text}
+        </span>
+      )}
+    </span>
+  );
+}
+
+export { Tooltip };
 
 /** Input styled for DOS aesthetic */
 function DOSInput({ value, onChange, placeholder, type = 'text', className = '', style = {} }) {
@@ -272,8 +334,18 @@ function EventRefSelect({ value, onChange, events, eventTypeFilter, placeholder:
 function TagField({ field, value, onChange, events }) {
   switch (field.type) {
     case 'text':
-    case 'aliases':
       return <DOSInput value={value} onChange={onChange} placeholder={field.placeholder} />;
+    case 'aliases': {
+      const items = value ? value.split(',').map((s) => s.trim()).filter(Boolean) : [];
+      return (
+        <InlineList
+          compact
+          items={items}
+          onChange={(newItems) => onChange(newItems.join(', '))}
+          placeholder={field.placeholder || 'Add alias...'}
+        />
+      );
+    }
     case 'number':
       return <DOSInput value={value} onChange={onChange} placeholder={field.placeholder} type="number" />;
     case 'textarea':
@@ -313,6 +385,7 @@ function shouldHideField(field, values) {
 /** A single tag row with its fields */
 function TagRow({ tagName, tag, fields, onChange, onRemove, events }) {
   const values = tagToValues(tag, fields);
+  const schemaDesc = TAG_SCHEMAS[tagName]?.desc;
 
   function updateField(fieldName, newValue) {
     const updated = { ...values, [fieldName]: newValue };
@@ -323,9 +396,9 @@ function TagRow({ tagName, tag, fields, onChange, onRemove, events }) {
     <div className="flex gap-1 items-start mb-1">
       <span
         className="shrink-0 px-1 mt-0.5"
-        style={{ color: 'var(--colour-dim)', minWidth: '8em', fontSize: '0.65rem' }}
+        style={{ color: 'var(--colour-text)', minWidth: '8em', fontSize: '0.65rem' }}
       >
-        {tagName}
+        {tagName}<Tooltip text={schemaDesc} />
       </span>
       <div className="flex-1 flex flex-col gap-0.5">
         {fields.map((field) => {

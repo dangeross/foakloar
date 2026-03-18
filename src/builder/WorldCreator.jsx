@@ -11,87 +11,12 @@ import { nip19 } from 'nostr-tools';
 import DOSPanel from '../components/ui/DOSPanel.jsx';
 import DOSButton from './DOSButton.jsx';
 import DOSSelect from './DOSSelect.jsx';
+import InlineList from './InlineList.jsx';
+import { Tooltip } from './TagEditor.jsx';
 import { slugify, buildEventTemplate } from './eventBuilder.js';
 import { DEFAULT_RELAY_URLS } from '../config.js';
 import { resolveTheme, applyTheme, resolveEffects, applyEffects, resolveFont, resolveFontSize, resolveFontSizePanel, resolveCursor, applyFontAndCursor, loadFont } from '../services/theme.js';
 
-/**
- * InlineList — Reusable inline add/remove list with optional validation.
- *
- * Props:
- *   label        — row label (e.g. "Tags")
- *   items        — string[]
- *   onChange      — (newItems: string[]) => void
- *   placeholder   — input placeholder text
- *   validate      — (input: string) => { value: string } | { error: string }
- *                   Defaults to trimmed passthrough. Can transform (e.g. npub → hex).
- *   display       — (storedValue: string) => string — for display (e.g. hex → npub)
- */
-function InlineList({ label, items, onChange, placeholder, validate, display }) {
-  const [input, setInput] = useState('');
-  const [error, setError] = useState('');
-
-  const handleAdd = (e) => {
-    e.preventDefault();
-    setError('');
-    const raw = input.trim();
-    if (!raw) return;
-    const result = validate ? validate(raw) : { value: raw };
-    if (result.error) { setError(result.error); return; }
-    if (items.includes(result.value)) { setError('Already added'); return; }
-    onChange([...items, result.value]);
-    setInput('');
-  };
-
-  return (
-    <>
-      {items.map((item, i) => (
-        <div key={item} className="mb-1 flex items-center gap-2">
-          <span className="shrink-0" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem', width: '7em', textAlign: 'right' }}>
-            {i === 0 ? `${label}:` : ''}
-          </span>
-          <span className="flex-1 truncate" style={{ color: 'var(--colour-text)', fontSize: '0.6rem' }}>
-            {display ? display(item) : item}
-          </span>
-          <button
-            onClick={() => onChange(items.filter((v) => v !== item))}
-            className="cursor-pointer shrink-0"
-            style={{ color: 'var(--colour-error)', background: 'none', border: 'none', font: 'inherit', padding: 0, fontSize: '0.65rem' }}
-          >
-            ×
-          </button>
-        </div>
-      ))}
-      <div className="mb-1 flex items-center gap-2">
-        <span className="shrink-0" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem', width: '7em', textAlign: 'right' }}>
-          {items.length === 0 ? `${label}:` : ''}
-        </span>
-        <form className="flex-1 flex gap-1" onSubmit={handleAdd}>
-          <input
-            value={input}
-            onChange={(e) => { setInput(e.target.value); setError(''); }}
-            placeholder={placeholder}
-            className="flex-1 bg-transparent outline-none font-mono text-xs px-1"
-            style={{ color: 'var(--colour-text)', border: '1px solid var(--colour-dim)' }}
-          />
-          <button
-            type="submit"
-            className="cursor-pointer shrink-0"
-            style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '0 4px', fontSize: '0.65rem' }}
-          >
-            +
-          </button>
-        </form>
-      </div>
-      {error && (
-        <div className="mb-1 flex items-center gap-2">
-          <span className="shrink-0" style={{ width: '7em' }} />
-          <span style={{ color: 'var(--colour-error)', fontSize: '0.6rem' }}>{error}</span>
-        </div>
-      )}
-    </>
-  );
-}
 
 /** Validators for InlineList */
 const validateNpub = (input) => {
@@ -180,6 +105,8 @@ export default function WorldCreator({
   const [colourOverrides, setColourOverrides] = useState({}); // { slot: '#hex' }
   const [collaborators, setCollaborators] = useState([]); // hex pubkeys
   const [relayURLs, setRelayURLs] = useState([...DEFAULT_RELAY_URLS]);
+  const [playerHealth, setPlayerHealth] = useState('');
+  const [playerMaxHealth, setPlayerMaxHealth] = useState('');
   const [startPlaceTitle, setStartPlaceTitle] = useState('');
   const [startPlaceContent, setStartPlaceContent] = useState('');
 
@@ -323,6 +250,9 @@ export default function WorldCreator({
       if (val !== '') worldTags.push([name, val]);
     }
     worldTags.push(['content-type', contentType]);
+    // Player health (optional — for worlds with combat)
+    if (playerHealth) worldTags.push(['health', playerHealth]);
+    if (playerMaxHealth) worldTags.push(['max-health', playerMaxHealth]);
     // Colour overrides
     for (const [slot, hex] of Object.entries(colourOverrides)) {
       if (hex.trim()) worldTags.push(['colour', slot, hex.trim()]);
@@ -354,14 +284,19 @@ export default function WorldCreator({
     onSaveDrafts(effectiveSlug, [worldTemplate, placeTemplate]);
     onClose();
   }, [isValid, title, authorName, description, genreTags, contentWarnings, theme, font, cursor, effectsBundle, effectOverrides, contentType,
-      collaboration, collaborators, colourOverrides, relayURLs, effectiveSlug, startPlaceDTag, startPlaceTitle, startPlaceContent, onSaveDrafts, onClose]);
+      collaboration, collaborators, colourOverrides, relayURLs, playerHealth, playerMaxHealth, effectiveSlug, startPlaceDTag, startPlaceTitle, startPlaceContent, onSaveDrafts, onClose]);
 
   return (
     <DOSPanel title="CREATE WORLD" onClose={onClose} minWidth="32em" maxWidth="95vw">
+      {/* Description */}
+      <div className="mb-3" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem', lineHeight: '1.4' }}>
+        Create a new world. Set a title, theme, and starting place. Everything else can be added later from build mode.
+      </div>
+
       {/* World slug */}
       <div className="mb-2">
         <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>
-          World Slug (unique identifier):
+          World Slug:<Tooltip text="Unique identifier used in URLs and event ids. Lowercase, hyphens only. Auto-derived from title." />
         </div>
         <input
           value={slugOverride ? slug : effectiveSlug}
@@ -380,7 +315,7 @@ export default function WorldCreator({
 
       {/* Title */}
       <div className="mb-2">
-        <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Title:</div>
+        <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Title:<Tooltip text="The display name of your world, shown to players in the lobby and browser." /></div>
         <input
           value={title}
           onChange={(e) => {
@@ -395,7 +330,7 @@ export default function WorldCreator({
 
       {/* Author name */}
       <div className="mb-2">
-        <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Author Name (optional):</div>
+        <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Author Name:<Tooltip text="Your display name shown alongside the world. Optional — your NOSTR profile name is used if blank." /></div>
         <input
           value={authorName}
           onChange={(e) => setAuthorName(e.target.value)}
@@ -407,7 +342,7 @@ export default function WorldCreator({
 
       {/* Description */}
       <div className="mb-2">
-        <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Description:</div>
+        <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Description:<Tooltip text="A short synopsis shown in the lobby. Sets the tone and tells players what to expect." /></div>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -419,17 +354,17 @@ export default function WorldCreator({
       </div>
 
       {/* ── Appearance ─────────────────────────────────────── */}
-      <div className="mb-0.5 mt-1" style={{ color: 'var(--colour-title)', fontSize: '0.7rem' }}>Appearance</div>
+      <div className="mb-0.5 mt-1" style={{ color: 'var(--colour-title)', fontSize: '0.7rem' }}>Appearance<Tooltip text="Visual theme, font, cursor style, and CRT effects. These set the look and feel for all players." /></div>
 
       {/* Theme / Font / Cursor */}
       {[
-        ['Theme', theme, setTheme, THEME_OPTIONS],
-        ['Font', font, setFont, FONT_OPTIONS],
-        ['Cursor', cursor, setCursor, CURSOR_OPTIONS],
-      ].map(([label, value, onChange, options]) => (
+        ['Theme', theme, setTheme, THEME_OPTIONS, 'Colour palette preset. Individual colours can be overridden below.'],
+        ['Font', font, setFont, FONT_OPTIONS, 'Typeface used for all game text.'],
+        ['Cursor', cursor, setCursor, CURSOR_OPTIONS, 'Input cursor style: block, underline, or thin beam.'],
+      ].map(([label, value, onChange, options, tip]) => (
         <div key={label} className="mb-1 flex items-center gap-2">
           <span className="shrink-0" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem', width: '7em', textAlign: 'right' }}>
-            {label}:
+            {label}:<Tooltip text={tip} />
           </span>
           <div className="flex-1">
             <DOSSelect value={value} onChange={onChange} options={options} />
@@ -440,7 +375,7 @@ export default function WorldCreator({
       {/* Effects bundle */}
       <div className="mb-1 flex items-center gap-2">
         <span className="shrink-0" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem', width: '7em', textAlign: 'right' }}>
-          Effects:
+          Effects:<Tooltip text="Visual effect bundle: CRT scanlines, glow, flicker, vignette. Fine-tune individual effects below." />
         </span>
         <div className="flex-1">
           <DOSSelect value={effectsBundle} onChange={setEffectsBundle} options={EFFECTS_OPTIONS} />
@@ -516,7 +451,7 @@ export default function WorldCreator({
       {/* Content type */}
       <div className="mb-1 flex items-center gap-2">
         <span className="shrink-0" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem', width: '7em', textAlign: 'right' }}>
-          Content:
+          Content:<Tooltip text="Format for the world description: plain text or markdown." />
         </span>
         <div className="flex-1">
           <DOSSelect value={contentType} onChange={setContentType} options={CONTENT_TYPE_OPTIONS} />
@@ -530,7 +465,7 @@ export default function WorldCreator({
         return (
           <div className="mb-1 flex items-center gap-2">
             <span className="shrink-0" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem', width: '7em', textAlign: 'right' }}>
-              Colour:
+              Colour:<Tooltip text="Override individual theme colour slots with hex values. Pick a slot to add." />
             </span>
             <div className="flex-1">
               <DOSSelect
@@ -581,18 +516,18 @@ export default function WorldCreator({
       ))}
 
       {/* ── Discovery & Access ─────────────────────────────── */}
-      <div className="mb-0.5 mt-3" style={{ color: 'var(--colour-title)', fontSize: '0.7rem' }}>Discovery & Access</div>
+      <div className="mb-0.5 mt-3" style={{ color: 'var(--colour-title)', fontSize: '0.7rem' }}>Discovery & Access<Tooltip text="Genre tags for search, content warnings, collaboration mode, and relay URLs for publishing." /></div>
 
       {/* Genre tags */}
-      <InlineList label="Tags" items={genreTags} onChange={setGenreTags} placeholder="mystery, horror..." />
+      <InlineList label="Tags" items={genreTags} onChange={setGenreTags} placeholder="mystery, horror..." tooltip="Genre and theme tags for discovery. Players can search by these." />
 
       {/* Content warnings */}
-      <InlineList label="CW" items={contentWarnings} onChange={setContentWarnings} placeholder="mild-peril, violence..." />
+      <InlineList label="CW" items={contentWarnings} onChange={setContentWarnings} placeholder="mild-peril, violence..." tooltip="Content warnings shown before players enter. Examples: violence, horror, mild-peril." />
 
       {/* Collaboration */}
       <div className="mb-1 flex items-center gap-2">
         <span className="shrink-0" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem', width: '7em', textAlign: 'right' }}>
-          Collab:
+          Collab:<Tooltip text="Who can add content: closed (only you), vouched (invite-only), or open (anyone)." />
         </span>
         <div className="flex-1">
           <DOSSelect value={collaboration} onChange={setCollaboration} options={COLLAB_OPTIONS} />
@@ -618,18 +553,43 @@ export default function WorldCreator({
         onChange={setRelayURLs}
         placeholder="wss://relay.example.com"
         validate={validateRelayURL}
+        tooltip="NOSTR relay URLs where your world events will be published and read from."
       />
+
+      {/* Player health (optional) */}
+      <div className="mb-1 flex items-center gap-2">
+        <span className="shrink-0" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem', width: '7em', textAlign: 'right' }}>
+          Health:<Tooltip text="Starting player hit points. Leave blank for worlds without combat." />
+        </span>
+        <input
+          value={playerHealth}
+          onChange={(e) => setPlayerHealth(e.target.value.replace(/[^0-9]/g, ''))}
+          placeholder="e.g. 10"
+          className="bg-transparent outline-none font-mono text-xs px-1"
+          style={{ color: 'var(--colour-text)', border: '1px solid var(--colour-dim)', width: '5em' }}
+        />
+        <span className="shrink-0" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>
+          Max:<Tooltip text="Maximum player health. Healing cannot exceed this. Defaults to starting health." />
+        </span>
+        <input
+          value={playerMaxHealth}
+          onChange={(e) => setPlayerMaxHealth(e.target.value.replace(/[^0-9]/g, ''))}
+          placeholder="e.g. 10"
+          className="bg-transparent outline-none font-mono text-xs px-1"
+          style={{ color: 'var(--colour-text)', border: '1px solid var(--colour-dim)', width: '5em' }}
+        />
+      </div>
 
       {/* Divider */}
       <div className="my-3" style={{ borderTop: '1px solid var(--colour-dim)' }} />
 
       {/* Genesis place */}
       <div className="mb-0.5" style={{ color: 'var(--colour-title)', fontSize: '0.7rem' }}>
-        Genesis Place (where players start):
+        Genesis Place<Tooltip text="The first place new players see. Give it a title, description, and at least one exit direction." />
       </div>
 
       <div className="mb-2">
-        <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Place Title:</div>
+        <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Place Title:<Tooltip text="Name of the starting location. This is the first thing players see." /></div>
         <input
           value={startPlaceTitle}
           onChange={(e) => setStartPlaceTitle(e.target.value)}
@@ -645,7 +605,7 @@ export default function WorldCreator({
       </div>
 
       <div className="mb-2">
-        <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Place Description:</div>
+        <div className="mb-0.5" style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Place Description:<Tooltip text="What the player sees when they arrive. Set the scene — what's here, what's visible, what catches the eye." /></div>
         <textarea
           value={startPlaceContent}
           onChange={(e) => setStartPlaceContent(e.target.value)}

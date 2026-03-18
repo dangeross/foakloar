@@ -56,6 +56,24 @@ export const ACTION_TARGET_FIELD = {
   'flees':          { type: 'text', placeholder: '(blank)', hidesEventRef: true },
 };
 
+/** Short descriptions for each event type — shown at the top of the editor */
+export const EVENT_TYPE_DESCRIPTIONS = {
+  place:       'A location in the world. Players move between places via portals. Add exits, features, items, and NPCs.',
+  portal:      'A connection between two places. Declares direction slots and optional requirements for passage.',
+  item:        'Something the player can pick up and carry. Declare verbs for how it can be used.',
+  feature:     'An interactive object in a place. Can change state when the player uses verbs on it.',
+  clue:        'Information revealed to the player. Often starts hidden and becomes visible through interaction.',
+  puzzle:      'A challenge the player must solve. Riddles require typed answers; sequences auto-complete from state changes.',
+  recipe:      'Defines how items combine to produce a new item. Player types the crafting verb to initiate.',
+  payment:     'A Lightning payment gate. Player pays an invoice to unlock passage or receive an item.',
+  npc:         'A character in the world. Can have dialogue, combat stats, inventory, and roaming routes.',
+  dialogue:    'A single dialogue node — NPC spoken text with player choice options.',
+  consequence: 'A reusable outcome (death, victory, curse). Fires respawn, clears state, gives/removes items.',
+  world:       'The world manifest. Sets title, theme, starting place, player health, and collaboration mode.',
+  vouch:       'A trust declaration — vouches for another author\'s content in this world.',
+  quest:       'A named goal with completion conditions. Shows progress in the quest log.',
+};
+
 export const TAG_SCHEMAS = {
   // ── Identity tags ────────────────────────────────────────────────────────
   d:              { label: 'D-Tag', desc: 'Unique identifier for this event (auto-generated)', auto: true, fields: [{ name: 'value', type: 'text', required: true, placeholder: 'world:type:name' }] },

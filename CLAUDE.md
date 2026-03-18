@@ -41,6 +41,15 @@ A decentralised text adventure built on NOSTR (kind 30078). The world is a graph
 | `src/engine/nip44-client.js` | NIP-44 encryption — key derivation, sealed content |
 | `src/engine/__tests__/` | Vitest unit tests for engine, parser, actions, world, trust |
 | `src/components/ui/DOSPanel.jsx` | Shared UI primitive — modal panel with title bar |
+| `src/builder/tagSchema.js` | Tag schemas, EVENT_TYPE_DESCRIPTIONS, TAGS_BY_EVENT_TYPE |
+| `src/builder/eventBuilder.js` | Event template building + validateEvent |
+| `src/builder/validateWorld.js` | Cross-event world validation |
+| `src/builder/EventEditor.jsx` | Generic event creation/edit form |
+| `src/builder/TagEditor.jsx` | Data-driven tag editor + Tooltip component |
+| `src/builder/BuildModeOverlay.jsx` | Annotated room view — exits, entities, + new dropdown |
+| `src/builder/InlineList.jsx` | Shared chip-tag input (verb/noun aliases, genre tags, relays) |
+| `src/builder/DOSSelect.jsx` | Themed dropdown select |
+| `src/builder/DOSButton.jsx` | Themed button |
 | `lib/events/*.mjs` | World event definitions (places, portals, items, features, clues) |
 | `lib/events/trust-test.mjs` | Trust test events — collaborator, vouched, untrusted authors |
 | `tools/publish-world.mjs` | Publishes events to relays (4 author keypairs) |
@@ -108,7 +117,7 @@ All previously tracked deviations have been fixed:
 
 1. **`on-counter`** — unified trigger with direction field (`down`/`up`). Fires actions when counter crosses threshold in declared direction. Message comes from transition text.
 2. **`requires` tags** — all use event refs with 4-element shape. No more bare flag strings.
-3. **`checkRequires`** — resolves events and dispatches on `type` tag (item, feature, puzzle, portal).
+3. **`checkRequires`** — resolves events and dispatches on `type` tag (item, feature, puzzle, npc, portal).
 4. **`flags` removed** — all state tracking uses the unified `states` map keyed by d-tag.
 
 ---
@@ -117,20 +126,18 @@ All previously tracked deviations have been fixed:
 
 | Phase | Status |
 |-------|--------|
-| 1. Feature State Machines | Done |
-| 2. `requires` on Features/Places | Done |
-| 3. Item States and Counters | Done |
-| 4. Hidden Portals and Features | Done |
-| 5. `set-state` with External Target | Done (merged into Phase 4) |
-| 6. Verb/Noun Parser | Done |
-| 7. NPC Rendering and Dialogue | Done |
-| 8. Sequence Puzzles | Done |
-| 9. `media` Tag Rendering | Done |
-| 10. `content-type: text/markdown` | Done |
-| 11. State Structure Refactor | Done |
-| 12. World Event Bootstrap + Theme | Done |
-| 13. NPC Inventory + Roaming | Done |
-| 14. Trust Model + Contested Exits | Done |
+| 1–14. Core engine (state, parser, NPCs, trust) | Done |
+| 15–18. Builder, themes, effects, validation | Done |
+| 19. Consequence dispatch | Done |
+| 20. Traverse action | Done |
+| 21. Counter threshold crossing | Done |
+| 22. increment/set-counter/decrement | Done |
+| 23. Payment LNURL flow | Done |
+| 24. Flees action | Done |
+| 25. Recipe/crafting | Done |
+| 26. Quest tracking | Done |
+| Combat system | Done |
+| Builder UX (tooltips, InlineList, + new dropdown) | Done |
 
 ---
 
