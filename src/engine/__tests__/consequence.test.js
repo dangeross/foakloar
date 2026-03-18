@@ -4,7 +4,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   ref, WORLD,
-  makePlace, makeItem, makeConsequence, makePortal, makeRoamingNPC, makeFeature,
+  makePlace, makeItem, makeConsequence, makePortal, makeRoamingNPC, makeNPC, makeFeature,
   buildEvents, makeEngine,
 } from './helpers.js';
 
@@ -473,5 +473,35 @@ describe('counter actions', () => {
     expect(engine.player.getState(ref(`${WORLD}:feature:trough`))).toBe('empty');
     const msg = engine.output.find((o) => o.text === 'The trough is empty.');
     expect(msg).toBeTruthy();
+  });
+});
+
+// ── Phase 24: flees action ──────────────────────────────────────────
+
+describe('flees action', () => {
+  it('NPC flees emits message on encounter', () => {
+    const armoury = makePlace('armoury');
+    const arena = makePlace('arena');
+    const rat = makeRoamingNPC('rat', {
+      routes: [`${WORLD}:place:armoury`, `${WORLD}:place:arena`],
+      roamsWhen: 'scared',
+      state: 'idle',
+      onEncounter: [['player', 'set-state', 'scared'], ['player', 'flees']],
+    });
+
+    const events = buildEvents(armoury, arena, rat);
+    const engine = makeEngine(events, { place: ref(`${WORLD}:place:armoury`) });
+    engine.currentPlace = ref(`${WORLD}:place:armoury`);
+    engine.player.ensureNpcState(ref(`${WORLD}:npc:rat`), { state: 'idle', inventory: [], health: null });
+
+    engine._fireNpcEncounter(rat, ref(`${WORLD}:npc:rat`));
+
+    // Flees emits message
+    const msg = engine.output.find((o) => o.text === 'Rat flees!');
+    expect(msg).toBeTruthy();
+
+    // set-state should have changed NPC state to 'scared' (activates roams-when)
+    const npcState = engine.player.getNpcState(ref(`${WORLD}:npc:rat`));
+    expect(npcState.state).toBe('scared');
   });
 });

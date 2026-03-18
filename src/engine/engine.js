@@ -973,7 +973,15 @@ export class GameEngine {
       const action = tag[2];
       const actionTarget = tag[3];
 
-      if (action === 'steals-item') {
+      if (action === 'set-state') {
+        // Update NPC's own state (stored in npcStates, not player.states)
+        const npcState = this.player.getNpcState(npcDtag);
+        if (npcState && npcState.state !== actionTarget) {
+          this.player.setNpcState(npcDtag, { ...npcState, state: actionTarget });
+          const transition = findTransition(npcEvent, npcState.state, actionTarget);
+          if (transition?.text) this._emit(transition.text, 'narrative');
+        }
+      } else if (action === 'steals-item') {
         this._npcStealsItem(npcDtag, actionTarget);
       } else if (action === 'deal-damage') {
         // Combat — future phase
@@ -983,8 +991,24 @@ export class GameEngine {
         if (actionTarget) this._traverse(actionTarget);
       } else if (action === 'increment' || action === 'decrement' || action === 'set-counter') {
         this._applyCounterAction(action, npcDtag, actionTarget, tag[4], npcEvent);
+      } else if (action === 'flees') {
+        this._npcFlees(npcEvent, npcDtag);
       }
     }
+  }
+
+  /**
+   * NPC flees — emits flee message.
+   * The actual movement is handled by the caller via set-state + roams-when:
+   *   ["on-encounter", "player", "set-state", "fled"]
+   *   ["on-encounter", "player", "flees"]
+   *   ["roams-when", "fled"]
+   * The set-state activates roaming, and the NPC naturally moves to a
+   * different route place on the next move. flees just emits the message.
+   */
+  _npcFlees(npcEvent, npcDtag) {
+    const npcTitle = getTag(npcEvent, 'title') || 'Someone';
+    this._emit(`${npcTitle} flees!`, 'npc');
   }
 
   /**

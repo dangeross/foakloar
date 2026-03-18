@@ -283,6 +283,27 @@
     {
       "kind": 30078,
       "tags": [
+        ["d",           "arena:npc:rat"],
+        ["t",           "arena"],
+        ["type",        "npc"],
+        ["title",       "Arena Rat"],
+        ["noun",        "rat", "rodent"],
+        ["speed",       "1"],
+        ["order",       "sequential"],
+        ["route",       "30078:<PUBKEY>:arena:place:armoury"],
+        ["route",       "30078:<PUBKEY>:arena:place:arena-floor"],
+        ["route",       "30078:<PUBKEY>:arena:place:entrance"],
+        ["roams-when",  "scared"],
+        ["state",       "idle"],
+        ["on-encounter","player", "set-state", "scared"],
+        ["on-encounter","player", "flees"]
+      ],
+      "content": "A large rat, scrounging for scraps. It eyes you nervously."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
         ["d",     "arena:clue:champion-falls"],
         ["t",     "arena"],
         ["type",  "clue"],
