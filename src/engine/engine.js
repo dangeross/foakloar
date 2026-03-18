@@ -1406,6 +1406,9 @@ export class GameEngine {
    */
   _processNpcOnMove() {
     const moveCount = this.player.getMoveCount();
+
+    // Build a map of place → NPCs at that place (for NPC-on-NPC encounters)
+    const npcsByPlace = new Map();
     for (const [dtag, event] of this.events) {
       if (getTag(event, 'type') !== 'npc') continue;
       if (getTags(event, 'route').length === 0) continue;
@@ -1416,15 +1419,63 @@ export class GameEngine {
       const npcPlace = calculateNpcPlace(event, moveCount, npcState.state);
       if (!npcPlace) continue;
 
+      if (!npcsByPlace.has(npcPlace)) npcsByPlace.set(npcPlace, []);
+      npcsByPlace.get(npcPlace).push({ dtag, event, state: npcState });
+
       // Fire on-enter triggers for the NPC's current place
       for (const tag of getTags(event, 'on-enter')) {
-        const placeRef = tag[1];  // full a-tag
-        if (placeRef === 'player') continue; // dialogue on-enter, not NPC movement
+        const placeRef = tag[1];
+        if (placeRef === 'player') continue;
         if (placeRef !== npcPlace) continue;
 
         const action = tag[2];
         if (action === 'deposits') {
           this._npcDeposits(dtag, npcPlace);
+        }
+      }
+    }
+
+    // NPC-on-NPC encounters — check on-encounter tags with NPC ref filters
+    for (const [, npcsHere] of npcsByPlace) {
+      if (npcsHere.length < 2) continue;
+      for (const npc of npcsHere) {
+        for (const tag of getTags(npc.event, 'on-encounter')) {
+          const filter = tag[1];
+          if (filter === 'player') continue; // player-only — skip for NPC encounters
+          // "" = any entity (fires for NPC encounters too)
+          // NPC a-tag = specific NPC only
+          if (filter) {
+            const targetHere = npcsHere.find((other) => other.dtag === filter && other.dtag !== npc.dtag);
+            if (!targetHere) continue;
+          }
+
+          const action = tag[2];
+          const actionTarget = tag[3];
+          const extTarget = tag[4];
+
+          if (action === 'steals-item') {
+            this._npcStealsItem(npc.dtag, actionTarget);
+          } else if (action === 'set-state') {
+            if (extTarget) {
+              applyExternalSetState(
+                extTarget, actionTarget, this.events, this.player,
+                (t, ty) => this._emit(t, ty),
+                (h, ty) => this._emitHtml(h, ty),
+              );
+            } else {
+              const ns = this.player.getNpcState(npc.dtag);
+              if (ns && ns.state !== actionTarget) {
+                this.player.setNpcState(npc.dtag, { ...ns, state: actionTarget });
+                this.player.setState(npc.dtag, actionTarget);
+                const transition = findTransition(npc.event, ns.state, actionTarget);
+                if (transition?.text) this._emit(transition.text, 'narrative');
+              }
+            }
+          } else if (action === 'consequence' && actionTarget) {
+            this._executeConsequence(actionTarget);
+          } else if (action === 'flees') {
+            this._npcFlees(npc.event, npc.dtag);
+          }
         }
       }
     }
