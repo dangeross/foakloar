@@ -123,7 +123,7 @@ export function validateEvent(template) {
     }
 
     // Check event type has at least a title (for types that use one)
-    const typesWithTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest'];
+    const typesWithTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest', 'recipe'];
     if (typesWithTitle.includes(typeTag) && !tagNames.has('title')) {
       errors.push('Missing title tag');
     }

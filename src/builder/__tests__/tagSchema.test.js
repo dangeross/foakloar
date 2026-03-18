@@ -169,8 +169,8 @@ describe('tag shapes', () => {
     expect(TAG_SCHEMAS['on-enter'].fields).toHaveLength(4);
   });
 
-  it('on-counter has 4 fields (counter, threshold, action, target)', () => {
-    expect(TAG_SCHEMAS['on-counter'].fields).toHaveLength(4);
+  it('on-counter has 5 fields (direction, counter, threshold, action, target)', () => {
+    expect(TAG_SCHEMAS['on-counter'].fields).toHaveLength(5);
   });
 
   it('content-type has 2 fields (value, plaintext-format)', () => {

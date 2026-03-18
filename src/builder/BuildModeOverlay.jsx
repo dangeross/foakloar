@@ -11,7 +11,6 @@ import { nip19 } from 'nostr-tools';
 import { getTag, getTags } from '../engine/world.js';
 import { getTrustLevel } from '../engine/trust.js';
 import { navigateToProfile } from '../services/router.js';
-import DOSButton from './DOSButton.jsx';
 
 /**
  * Derive room annotation data from events and current place.
@@ -28,8 +27,10 @@ function useRoomAnnotation(events, currentPlace) {
     const title = getTag(placeEvent, 'title') || placeDtag;
 
     // Declared exit slots on this place
+    // Extended form: ["exit", "<place-ref>", "north", "label"] — slot is t[2]
+    // Short form: ["exit", "north"] — slot is t[1]
     const exitTags = getTags(placeEvent, 'exit');
-    const declaredSlots = exitTags.map((t) => t[1]);
+    const declaredSlots = exitTags.map((t) => t[2] || t[1]); // slot is position 2 for extended, 1 for short
 
     // Find all portals that reference this place
     const portals = [];
@@ -54,7 +55,6 @@ function useRoomAnnotation(events, currentPlace) {
         slot,
         connected: true,
         portals: matching.map((p) => {
-          // Find the other exit on this portal (the destination)
           const otherExit = getTags(p.event, 'exit').find((e) => e[1] !== currentPlace);
           const destRef = otherExit?.[1] || '?';
           const destEvent = events.get(destRef);
@@ -103,6 +103,29 @@ function PubkeyLink({ pubkey }) {
   );
 }
 
+/** Truncate a long a-tag ref to show just the d-tag portion. */
+function ShortRef({ ref: fullRef }) {
+  const parts = fullRef.split(':');
+  // Show last 2-3 segments: e.g. "arena:place:arena-floor"
+  const short = parts.length > 3 ? parts.slice(-3).join(':') : fullRef;
+  return <span title={fullRef}>{short}</span>;
+}
+
+const EVENT_TYPES = [
+  { value: 'place', label: 'Place' },
+  { value: 'portal', label: 'Portal' },
+  { value: 'item', label: 'Item' },
+  { value: 'feature', label: 'Feature' },
+  { value: 'npc', label: 'NPC' },
+  { value: 'clue', label: 'Clue' },
+  { value: 'puzzle', label: 'Puzzle' },
+  { value: 'recipe', label: 'Recipe' },
+  { value: 'quest', label: 'Quest' },
+  { value: 'consequence', label: 'Consequence' },
+  { value: 'payment', label: 'Payment' },
+  { value: 'dialogue', label: 'Dialogue' },
+];
+
 export default function BuildModeOverlay({
   events,
   currentPlace,
@@ -116,6 +139,7 @@ export default function BuildModeOverlay({
 }) {
   const annotation = useRoomAnnotation(events, currentPlace);
   const [minimized, setMinimized] = useState(false);
+  const [showNewMenu, setShowNewMenu] = useState(false);
 
   if (!annotation) return null;
 
@@ -158,26 +182,77 @@ export default function BuildModeOverlay({
     >
       {/* Header — always visible */}
       <div className="flex justify-between items-center">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1" style={{ minWidth: 0 }}>
           <button
             onClick={() => setMinimized(!minimized)}
             className="cursor-pointer hover:opacity-80"
-            style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: 0 }}
+            style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: 0, flexShrink: 0 }}
           >
             {minimized ? '[+]' : '[-]'}
           </button>
-          <span style={{ color: 'var(--colour-title)' }}>BUILD</span>
-          <span style={{ color: 'var(--colour-dim)' }}>| {title}</span>
+          <span style={{ color: 'var(--colour-title)', flexShrink: 0 }}>BUILD</span>
+          <span style={{ color: 'var(--colour-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>| {title}</span>
           {onEditEvent && pubkey && placeAuthor === pubkey && (
             <button
               onClick={() => onEditEvent(currentPlace)}
               className="cursor-pointer hover:opacity-80"
-              style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', padding: 0 }}
+              style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', padding: 0, flexShrink: 0 }}
             >
               [edit]
             </button>
           )}
         </div>
+        {/* New event dropdown */}
+        {!minimized && (
+          <div style={{ position: 'relative', flexShrink: 0 }}>
+            <button
+              onClick={() => setShowNewMenu(!showNewMenu)}
+              className="cursor-pointer hover:opacity-80"
+              style={{
+                color: 'var(--colour-highlight)',
+                background: 'none',
+                border: '1px solid var(--colour-dim)',
+                font: 'inherit',
+                padding: '1px 6px',
+              }}
+            >
+              + new
+            </button>
+            {showNewMenu && (
+              <div
+                style={{
+                  position: 'absolute',
+                  right: 0,
+                  top: '100%',
+                  zIndex: 10,
+                  border: '1px solid var(--colour-dim)',
+                  backgroundColor: 'var(--colour-bg)',
+                  padding: '2px 0',
+                  minWidth: '120px',
+                  maxHeight: '260px',
+                  overflowY: 'auto',
+                }}
+              >
+                {EVENT_TYPES.map(({ value, label }) => (
+                  <button
+                    key={value}
+                    onClick={() => { setShowNewMenu(false); onNewEvent?.(value); }}
+                    className="cursor-pointer hover:opacity-80 block w-full text-left"
+                    style={{
+                      color: 'var(--colour-text)',
+                      background: 'none',
+                      border: 'none',
+                      font: 'inherit',
+                      padding: '2px 8px',
+                    }}
+                  >
+                    + {label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {minimized ? null : (
@@ -195,7 +270,7 @@ export default function BuildModeOverlay({
             <div style={{ color: 'var(--colour-dim)' }}>Exits:</div>
             {exits.map((exit) => (
               <div key={exit.slot} className="flex items-center gap-1 ml-2">
-                <span style={{ color: exit.connected ? 'var(--colour-text)' : 'var(--colour-error)' }}>
+                <span style={{ color: exit.connected ? 'var(--colour-text)' : 'var(--colour-error)', flexShrink: 0 }}>
                   {exit.slot}
                 </span>
                 {exit.connected ? (
@@ -228,6 +303,7 @@ export default function BuildModeOverlay({
                       font: 'inherit',
                       fontSize: '0.6rem',
                       padding: '0 4px',
+                      flexShrink: 0,
                     }}
                   >
                     + portal
@@ -257,18 +333,6 @@ export default function BuildModeOverlay({
               ))}
             </div>
           )}
-
-          {/* Quick create buttons */}
-          <div className="mt-2 flex gap-1 flex-wrap">
-            <DOSButton onClick={() => onNewEvent?.('place')} colour="text" className="text-xs">
-              + place
-            </DOSButton>
-            {['portal', 'item', 'feature', 'npc', 'clue', 'puzzle', 'payment'].map((type) => (
-              <DOSButton key={type} onClick={() => onNewEvent?.(type)} colour="dim" className="text-xs">
-                + {type}
-              </DOSButton>
-            ))}
-          </div>
         </>
       )}
     </div>

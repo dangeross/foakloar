@@ -215,8 +215,10 @@ export const TAG_SCHEMAS = {
     desc: 'Fires an action when this NPC\'s health reaches zero (defeated)',
     repeatable: true,
     fields: [
+      { name: 'blank', type: 'text', required: false, placeholder: '(blank)' },
       { name: 'action', type: 'select', required: true, options: TRIGGER_ACTIONS['on-health-zero'] },
-      { name: 'target', type: 'text', required: false },
+      { name: 'target', type: 'text', required: false, placeholder: 'state or target' },
+      { name: 'event-ref', type: 'event-ref', required: false, placeholder: 'target event (blank = self)' },
     ],
   },
   'on-player-health-zero': {
@@ -224,8 +226,9 @@ export const TAG_SCHEMAS = {
     desc: 'Fires an action when the player\'s health reaches zero (death consequence)',
     repeatable: true,
     fields: [
+      { name: 'blank', type: 'text', required: false, placeholder: '(blank)' },
       { name: 'action', type: 'select', required: true, options: TRIGGER_ACTIONS['on-player-health-zero'] },
-      { name: 'target', type: 'text', required: false },
+      { name: 'target', type: 'text', required: false, placeholder: 'consequence ref or state' },
     ],
   },
   'on-move': {
@@ -241,9 +244,10 @@ export const TAG_SCHEMAS = {
   },
   'on-counter': {
     label: 'On Counter',
-    desc: 'Fires an action when a counter crosses a threshold (going down)',
+    desc: 'Fires an action when a counter crosses a threshold in the declared direction',
     repeatable: true,
     fields: [
+      { name: 'direction', type: 'select', required: true, options: ['down', 'up'] },
       { name: 'counter', type: 'text', required: true, placeholder: 'battery' },
       { name: 'threshold', type: 'number', required: true, placeholder: '0' },
       { name: 'action', type: 'select', required: true, options: TRIGGER_ACTIONS['on-counter'] },
@@ -309,9 +313,10 @@ export const TAG_SCHEMAS = {
   inventory:   { label: 'Inventory', desc: 'Item the NPC starts with or can carry', repeatable: true, fields: [{ name: 'ref', type: 'event-ref', required: true, eventTypeFilter: 'item' }] },
 
   // ── Combat ───────────────────────────────────────────────────────────────
-  health:      { label: 'Health', desc: 'Hit points for this NPC', fields: [{ name: 'value', type: 'number', required: true }] },
-  damage:      { label: 'Damage', desc: 'Damage dealt per hit (NPC or weapon item)', fields: [{ name: 'value', type: 'number', required: true }] },
-  'hit-chance':{ label: 'Hit Chance', desc: 'Probability of landing a hit (0.0–1.0)', fields: [{ name: 'value', type: 'text', required: false, placeholder: '0.0-1.0' }] },
+  health:       { label: 'Health', desc: 'Hit points (NPC or player starting health on world event)', fields: [{ name: 'value', type: 'number', required: true }] },
+  'max-health': { label: 'Max Health', desc: 'Maximum hit points (world event — player health ceiling)', fields: [{ name: 'value', type: 'number', required: true }] },
+  damage:       { label: 'Damage', desc: 'Damage dealt per hit (NPC or weapon item)', fields: [{ name: 'value', type: 'number', required: true }] },
+  'hit-chance': { label: 'Hit Chance', desc: 'Probability of landing a hit (0.0–1.0)', fields: [{ name: 'value', type: 'text', required: false, placeholder: '0.0-1.0' }] },
 
   // ── Consequence ──────────────────────────────────────────────────────────
   respawn:     { label: 'Respawn', desc: 'Place the player respawns at after this consequence', fields: [{ name: 'ref', type: 'event-ref', required: true, eventTypeFilter: 'place' }] },
@@ -370,14 +375,14 @@ export const TAGS_BY_EVENT_TYPE = {
   feature:     ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'media'],
   clue:        ['title', 'noun', 'state', 'transition', 'content-type', 'requires', 'requires-not', 'media', 'puzzle'],
   puzzle:      ['puzzle-type', 'answer-hash', 'salt', 'ordered', 'requires', 'on-complete', 'content-type'],
-  recipe:      ['state', 'transition', 'requires', 'on-complete', 'ordered'],
+  recipe:      ['title', 'noun', 'verb', 'state', 'transition', 'requires', 'on-complete', 'ordered'],
   payment:     ['title', 'amount', 'unit', 'lnurl', 'on-complete'],
   npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health-zero', 'on-player-health-zero', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not'],
   dialogue:    ['text', 'option', 'requires', 'requires-not', 'on-enter'],
   consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage'],
-  world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'content-type', 'media', 'w'],
+  world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health-zero', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'content-type', 'media', 'w'],
   vouch:       ['pubkey', 'scope', 'can-vouch'],
-  quest:       ['title', 'involves', 'requires', 'requires-not'],
+  quest:       ['title', 'involves', 'requires', 'requires-not', 'on-complete'],
 };
 
 /**
