@@ -152,7 +152,7 @@ export function validateEvent(template) {
 
     // Triggers with no action selected
     const triggerNames = ['on-interact', 'on-enter', 'on-encounter', 'on-attacked',
-      'on-health-zero', 'on-player-health-zero', 'on-move', 'on-counter', 'on-complete'];
+      'on-health', 'on-player-health', 'on-health-zero', 'on-player-health-zero', 'on-move', 'on-counter', 'on-complete'];
     for (const tag of template.tags) {
       if (triggerNames.includes(tag[0])) {
         const schema = getTagSchema(tag[0], typeTag);

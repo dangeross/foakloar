@@ -767,7 +767,7 @@ Path-conditional content uses standard `requires`:
     ["verb",            "examine","look"],
     ["on-interact",     "use",    "deal-damage-npc", ""],
     ["on-interact",     "use",    "decrement",       "bullets"],
-    ["on-counter", "bullets", "0","set-state",       "empty"]
+    ["on-counter", "down", "bullets", "0","set-state",       "empty"]
   ],
   "content": "A standard .38 revolver."
 }}
@@ -821,7 +821,7 @@ Path-conditional content uses standard `requires`:
     ["transition",   "freed",     "freed",     "Sophia is free."],
     ["on-encounter", "player",    "deal-damage","0"],
     ["on-attacked",  "player",    "deal-damage","0"],
-    ["on-health-zero","consequence","30078:<FA>:fate:consequence:sophia-freed"],
+    ["on-health", "down", "0", "30078:<FA>:fate:consequence:sophia-freed"],
     ["dialogue",     "30078:<FA>:fate:dialogue:sophia:greeting"],
     ["dialogue",     "30078:<FA>:fate:dialogue:sophia:after-necklace",  "30078:<FA>:fate:item:nur-ab-sal-necklace",  "active"],
     ["dialogue",     "30078:<FA>:fate:dialogue:sophia:possessed",       "30078:<FA>:fate:npc:sophia",               "possessed"]
@@ -844,7 +844,7 @@ Path-conditional content uses standard `requires`:
     ["transition",   "dead",     "dead",  "Kerner is dead."],
     ["on-encounter", "player",   "deal-damage",  "4"],
     ["on-attacked",  "player",   "deal-damage",  "4"],
-    ["on-health-zero","consequence","30078:<FA>:fate:consequence:kerner-defeated"],
+    ["on-health", "down", "0", "30078:<FA>:fate:consequence:kerner-defeated"],
     ["dialogue",     "30078:<FA>:fate:dialogue:kerner:greeting"]
   ],
   "content": "Klaus Kerner. A cold-eyed Nazi agent. He wants Atlantis for the Reich."
@@ -875,7 +875,7 @@ Path-conditional content uses standard `requires`:
     ["noun",  "sophia", "hapgood", "she", "her", "woman"],
     ["requires",     "30078:<FA>:fate:npc:sophia", "possessed", ""],
     ["health",       "1"],
-    ["on-health-zero","consequence","30078:<FA>:fate:consequence:sophia-freed"],
+    ["on-health", "down", "0", "30078:<FA>:fate:consequence:sophia-freed"],
     ["dialogue",     "30078:<FA>:fate:dialogue:sophia:possessed"]
   ],
   "content": "Sophia stands motionless. Nur-Ab-Sal speaks from behind her eyes."

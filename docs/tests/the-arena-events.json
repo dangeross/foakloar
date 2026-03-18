@@ -24,7 +24,7 @@
         ["flicker",       "off"],
         ["health",        "10"],
         ["max-health",    "10"],
-        ["on-player-health-zero", "", "consequence", "30078:<PUBKEY>:arena:consequence:player-death"],
+        ["on-player-health", "down", "0", "consequence", "30078:<PUBKEY>:arena:consequence:player-death"],
         ["content-type",  "text/markdown"]
       ],
       "content": "The crowd is silent. You have been chosen.\n\nWin, and you leave. Lose, and you don't."
@@ -227,8 +227,9 @@
         ["transition", "wounded", "fled",    "The guard drops their weapon and runs. The north gate is clear."],
         ["on-attacked",    "", "deal-damage",     "2"],
         ["on-attacked",    "", "increment",       "hits-taken"],
-        ["on-health-zero", "", "set-state",       "fled"],
-        ["on-health-zero", "", "flees"]
+        ["on-health", "down", "50%", "set-state",  "wounded"],
+        ["on-health", "down", "0",   "set-state", "fled"],
+        ["on-health", "down", "0",   "flees"]
       ],
       "content": "A heavy-set guard in worn armour. They've done this before."
     },
@@ -250,9 +251,10 @@
         ["transition", "wounded", "defeated", "The champion falls. The gate opens."],
         ["on-attacked",    "", "deal-damage",     "4"],
         ["on-attacked",    "", "increment",       "hits-taken"],
-        ["on-health-zero", "", "set-state",       "defeated"],
-        ["on-health-zero", "", "set-state",       "visible", "30078:<PUBKEY>:arena:portal:gate-to-freedom"],
-        ["on-health-zero", "", "traverse",        "30078:<PUBKEY>:arena:portal:gate-to-freedom"]
+        ["on-health", "down", "50%", "set-state",  "wounded"],
+        ["on-health", "down", "0",   "set-state", "defeated"],
+        ["on-health", "down", "0",   "set-state", "visible", "30078:<PUBKEY>:arena:portal:gate-to-freedom"],
+        ["on-health", "down", "0",   "traverse",  "30078:<PUBKEY>:arena:portal:gate-to-freedom"]
       ],
       "content": "The champion. Undefeated. They look at you the way you'd look at a closed door."
     },

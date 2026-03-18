@@ -204,7 +204,7 @@ function DOSSelect({ value, onChange, options, placeholder }) {
 }
 
 /** Event ref selector — searchable dropdown portaled to float above panel */
-function EventRefSelect({ value, onChange, events, eventTypeFilter, placeholder: placeholderProp }) {
+function EventRefSelect({ value, onChange, events, eventTypeFilter, placeholder: placeholderProp, prefixOptions = [] }) {
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState(false);
   const triggerRef = useRef(null);
@@ -267,8 +267,11 @@ function EventRefSelect({ value, onChange, events, eventTypeFilter, placeholder:
   const selectedLabel = useMemo(() => {
     if (!value) return '';
     const found = options.find((o) => o.aTag === value);
+    // Check prefix options first
+    const prefixMatch = prefixOptions.find((p) => p.value === value);
+    if (prefixMatch) return prefixMatch.label;
     return found ? `${found.title || found.dTag}` : value.split(':').slice(2).join(':');
-  }, [value, options]);
+  }, [value, options, prefixOptions]);
 
   return (
     <>
@@ -307,7 +310,21 @@ function EventRefSelect({ value, onChange, events, eventTypeFilter, placeholder:
             placeholder="Search..."
             style={{ borderLeft: 'none', borderRight: 'none', borderTop: 'none' }}
           />
-          {filtered.length === 0 && (
+          {prefixOptions.map((popt) => (
+            <div
+              key={popt.value}
+              className="px-1 py-0.5 cursor-pointer hover:opacity-80"
+              style={{
+                color: popt.value === value ? 'var(--colour-highlight)' : 'var(--colour-text)',
+                backgroundColor: popt.value === value ? 'var(--colour-dim)' : 'transparent',
+                borderBottom: '1px solid var(--colour-dim)',
+              }}
+              onClick={() => { onChange(popt.value); setOpen(false); setSearch(''); }}
+            >
+              {popt.label}
+            </div>
+          ))}
+          {filtered.length === 0 && prefixOptions.length === 0 && (
             <div className="px-1 py-1" style={{ color: 'var(--colour-dim)' }}>No matches</div>
           )}
           {filtered.map((opt) => (
@@ -353,7 +370,7 @@ function TagField({ field, value, onChange, events }) {
     case 'select':
       return <DOSSelect value={value} onChange={onChange} options={field.options} placeholder="Select..." />;
     case 'event-ref':
-      return <EventRefSelect value={value} onChange={onChange} events={events} eventTypeFilter={field.eventTypeFilter} placeholder={field.placeholder} />;
+      return <EventRefSelect value={value} onChange={onChange} events={events} eventTypeFilter={field.eventTypeFilter} placeholder={field.placeholder} prefixOptions={field.prefixOptions || []} />;
     default:
       return <DOSInput value={value} onChange={onChange} placeholder={field.placeholder} />;
   }
@@ -375,6 +392,7 @@ function resolveField(field, fieldName, values) {
 
 /** Check if the event-ref field should be hidden based on the selected action */
 function shouldHideField(field, values) {
+  if (field.hidden) return true;
   if (field.name !== 'event-ref') return false;
   const action = values.action;
   if (!action) return false;

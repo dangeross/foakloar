@@ -255,7 +255,7 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["exit", "north"],
     ["counter",         "fratelli-chase", "10"],
     ["on-move",         "", "decrement",        "fratelli-chase"],
-    ["on-counter", "fratelli-chase", "0", "consequence", "30078:<GA>:goonies:consequence:caught-by-fratellis"]
+    ["on-counter", "down", "fratelli-chase", "0", "consequence", "30078:<GA>:goonies:consequence:caught-by-fratellis"]
   ],
   "content": "The Fratellis are right behind you! The tunnel stretches north toward the sound of the sea. RUN."
 }
@@ -547,7 +547,7 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["state",           "ready"],
     ["verb",            "use", "attach", "deploy"],
     ["verb",            "examine", "look"],
-    ["on-counter", "uses", "0", "set-state", "spent"]
+    ["on-counter", "down", "uses", "0", "set-state", "spent"]
   ],
   "content": "One of Data's inventions. A spring-loaded clamping device. Single use."
 }}
@@ -562,7 +562,7 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["transition",      "ready", "spent", "The Slick Shoes are used up."],
     ["verb",            "use",     "wear", "deploy"],
     ["verb",            "examine", "look"],
-    ["on-counter", "uses", "0", "set-state", "spent"]
+    ["on-counter", "down", "uses", "0", "set-state", "spent"]
   ],
   "content": "Data's rocket-powered shoes. Redirects water jets. Single use."
 }}
@@ -577,7 +577,7 @@ is the only thing that can save them. The other Goonies travel with you as compa
     ["transition",      "ready", "spent", "The Bully Blinders are used up."],
     ["verb",            "use",     "deploy", "throw"],
     ["verb",            "examine", "look"],
-    ["on-counter", "uses", "0", "set-state", "spent"]
+    ["on-counter", "down", "uses", "0", "set-state", "spent"]
   ],
   "content": "Data's sensor-confusing goggles. Disables pressure-plate traps. Single use."
 }}

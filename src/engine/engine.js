@@ -858,26 +858,13 @@ export class GameEngine {
       }
     }
 
+    const prevHealth = this.player.getHealth();
     this.player.dealDamage(amount);
     const npcTitle = sourceNpc ? getTag(sourceNpc, 'title') : 'Something';
     this._emit(`${npcTitle} hits you for ${amount} damage. (HP: ${this.player.getHealth()})`, 'error');
 
-    // Check player death
-    if (this.player.getHealth() <= 0) {
-      // Look for on-player-health-zero on the NPC or world event
-      const sources = [sourceNpc, this._findWorldEvent()].filter(Boolean);
-      for (const src of sources) {
-        for (const tag of getTags(src, 'on-player-health-zero')) {
-          const action = tag[2] || tag[1];
-          const target = tag[3] || tag[2];
-          if (action === 'consequence' && target) {
-            this._executeConsequence(target);
-            return;
-          }
-        }
-      }
-      this._emit('You have died.', 'error');
-    }
+    // Evaluate on-player-health triggers (threshold crossing)
+    this._evalPlayerHealthTriggers(prevHealth, this.player.getHealth());
   }
 
   /**
@@ -906,52 +893,153 @@ export class GameEngine {
     }
 
     // Apply damage
+    const prevHealth = npcState.health;
     npcState.health = Math.max(0, npcState.health - weaponDamage);
     this.player.setNpcState(targetDtag, npcState);
 
     const npcTitle = getTag(npcEvent, 'title') || 'Enemy';
     this._emit(`You hit ${npcTitle} for ${weaponDamage} damage. (HP: ${npcState.health})`, 'item');
 
-    // Check NPC death
-    if (npcState.health <= 0) {
-      this._fireOnHealthZero(npcEvent, targetDtag);
+    // Evaluate on-health triggers (threshold crossing)
+    this._evalNpcHealthTriggers(npcEvent, targetDtag, prevHealth, npcState.health);
+  }
+
+  /**
+   * Resolve a health threshold — supports absolute integers and "N%" percentages.
+   * @param {string} threshold — e.g. "0", "3", "50%"
+   * @param {number} maxHealth — max health for percentage resolution
+   * @returns {number}
+   */
+  _resolveHealthThreshold(threshold, maxHealth) {
+    if (typeof threshold === 'string' && threshold.endsWith('%')) {
+      const pct = parseInt(threshold, 10);
+      return Math.floor((pct / 100) * maxHealth);
+    }
+    return parseInt(threshold, 10) || 0;
+  }
+
+  /**
+   * Evaluate on-health triggers on an NPC after health change.
+   * Also handles legacy on-health-zero as alias for on-health down 0.
+   */
+  _evalNpcHealthTriggers(npcEvent, npcDtag, prevHealth, newHealth) {
+    const maxHealth = parseInt(getTag(npcEvent, 'health') || '1', 10);
+
+    // Collect all health trigger tags: on-health + legacy on-health-zero
+    const triggers = [];
+    for (const tag of getTags(npcEvent, 'on-health')) {
+      triggers.push({ direction: tag[1], threshold: tag[2], action: tag[3], target: tag[4], extRef: tag[5] });
+    }
+    // Legacy backwards compat
+    for (const tag of getTags(npcEvent, 'on-health-zero')) {
+      const hasBlank = tag[1] === '';
+      triggers.push({
+        direction: 'down',
+        threshold: '0',
+        action: hasBlank ? tag[2] : tag[1],
+        target: hasBlank ? tag[3] : tag[2],
+        extRef: hasBlank ? tag[4] : tag[3],
+      });
+    }
+
+    for (const { direction, threshold, action, target, extRef } of triggers) {
+      const threshVal = this._resolveHealthThreshold(threshold, maxHealth);
+      let crossed = false;
+      if (direction === 'down') {
+        crossed = prevHealth > threshVal && newHealth <= threshVal;
+      } else if (direction === 'up') {
+        crossed = prevHealth < threshVal && newHealth >= threshVal;
+      }
+      if (!crossed) continue;
+
+      this._fireHealthAction(action, target, extRef, npcEvent, npcDtag);
     }
   }
 
   /**
-   * Fire all on-health-zero tags on an NPC.
+   * Evaluate on-player-health triggers after player health change.
+   * Checks world event (global) + NPCs in current place (local).
    */
-  _fireOnHealthZero(npcEvent, npcDtag) {
-    for (const tag of getTags(npcEvent, 'on-health-zero')) {
-      const action = tag[2] || tag[1];
-      const target = tag[3] || tag[2];
-      const extRef = tag[4] || tag[3];
+  _evalPlayerHealthTriggers(prevHealth, newHealth) {
+    const maxHealth = this.player.getMaxHealth() || 10;
+    const sources = [];
 
-      if (action === 'set-state') {
-        // Update NPC state (in npcStates AND player.states for requires checks)
-        const ns = this.player.getNpcState(npcDtag);
-        if (ns && ns.state !== target) {
-          const transition = findTransition(npcEvent, ns.state, target);
-          this.player.setNpcState(npcDtag, { ...ns, state: target });
-          this.player.setState(npcDtag, target);
-          if (transition?.text) this._emit(transition.text, 'narrative');
-        }
-        // External set-state (e.g. reveal portal)
-        if (extRef) {
-          const result = applyExternalSetState(
-            extRef, target, this.events, this.player,
-            (t, ty) => this._emit(t, ty),
-            (h, ty) => this._emitHtml(h, ty),
-          );
-          if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
-        }
-      } else if (action === 'consequence' && target) {
-        this._executeConsequence(target);
-      } else if (action === 'traverse' && target) {
-        this._traverse(target);
-      } else if (action === 'flees') {
-        this._npcFlees(npcEvent, npcDtag);
+    // World event (global)
+    const worldEvent = this._findWorldEvent();
+    if (worldEvent) sources.push(worldEvent);
+
+    // NPCs in current place (local)
+    // Static NPCs
+    if (this.place) {
+      for (const ref of getTags(this.place, 'npc')) {
+        const npcEvent = this.events.get(ref[1]);
+        if (npcEvent) sources.push(npcEvent);
       }
+    }
+    // Roaming NPCs
+    const roaming = findRoamingNpcsAtPlace(
+      this.events, this.currentPlace, this.player.getMoveCount(),
+      (npcDtag) => this.player.getNpcState(npcDtag),
+    );
+    for (const { npcEvent } of roaming) sources.push(npcEvent);
+
+    for (const src of sources) {
+      // on-player-health tags
+      for (const tag of getTags(src, 'on-player-health')) {
+        const direction = tag[1];
+        const threshold = tag[2];
+        const action = tag[3];
+        const target = tag[4];
+        const threshVal = this._resolveHealthThreshold(threshold, maxHealth);
+        let crossed = false;
+        if (direction === 'down') {
+          crossed = prevHealth > threshVal && newHealth <= threshVal;
+        } else if (direction === 'up') {
+          crossed = prevHealth < threshVal && newHealth >= threshVal;
+        }
+        if (!crossed) continue;
+        this._fireHealthAction(action, target, null, src, null);
+      }
+      // Legacy on-player-health-zero
+      for (const tag of getTags(src, 'on-player-health-zero')) {
+        const hasBlank = tag[1] === '';
+        const action = hasBlank ? tag[2] : tag[1];
+        const target = hasBlank ? tag[3] : tag[2];
+        if (prevHealth > 0 && newHealth <= 0) {
+          this._fireHealthAction(action, target, null, src, null);
+        }
+      }
+    }
+  }
+
+  /**
+   * Fire a single health trigger action.
+   */
+  _fireHealthAction(action, target, extRef, sourceEvent, npcDtag) {
+    if (action === 'set-state' && npcDtag) {
+      const ns = this.player.getNpcState(npcDtag);
+      if (ns && ns.state !== target) {
+        const transition = findTransition(sourceEvent, ns.state, target);
+        this.player.setNpcState(npcDtag, { ...ns, state: target });
+        this.player.setState(npcDtag, target);
+        if (transition?.text) this._emit(transition.text, 'narrative');
+      }
+      if (extRef) {
+        const result = applyExternalSetState(
+          extRef, target, this.events, this.player,
+          (t, ty) => this._emit(t, ty),
+          (h, ty) => this._emitHtml(h, ty),
+        );
+        if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
+      }
+    } else if (action === 'consequence' && target) {
+      this._executeConsequence(target);
+    } else if (action === 'traverse' && target) {
+      this._traverse(target);
+    } else if (action === 'flees' && npcDtag) {
+      this._npcFlees(sourceEvent, npcDtag);
+    } else if (action === 'give-item' && target) {
+      giveItem(target, this.events, this.player, (t, ty) => this._emit(t, ty));
     }
   }
 
@@ -994,29 +1082,48 @@ export class GameEngine {
     }
 
     // 2. NPC counterattack — fire on-attacked tags (if NPC still alive)
+    // Shape: ["on-attacked", "<item-ref-or-blank>", "<action>", "<arg?>", "<ext-target?>"]
     const nsAfter = this.player.getNpcState(npcDtag);
     if (nsAfter && nsAfter.health > 0) {
       for (const tag of getTags(npcEvent, 'on-attacked')) {
-        const action = tag[2] || tag[1];
-        const actionTarget = tag[3] || tag[2];
+        const weaponFilter = tag[1];
+        // Skip if weapon-specific and doesn't match
+        if (weaponFilter && weaponFilter !== weaponDtag) continue;
+
+        const action = tag[2];
+        const actionTarget = tag[3];
+        const extTarget = tag[4];
 
         if (action === 'deal-damage') {
           const dmg = parseInt(actionTarget, 10) || parseInt(getTag(npcEvent, 'damage') || '1', 10);
           this._dealDamageToPlayer(dmg, npcEvent, npcDtag);
         } else if (action === 'increment' || action === 'decrement' || action === 'set-counter') {
-          this._applyCounterAction(action, npcDtag, actionTarget, tag[4] || tag[3], npcEvent);
+          this._applyCounterAction(action, npcDtag, actionTarget, extTarget, npcEvent);
         } else if (action === 'set-state') {
-          const ns2 = this.player.getNpcState(npcDtag);
-          if (ns2 && actionTarget && ns2.state !== actionTarget) {
-            const transition = findTransition(npcEvent, ns2.state, actionTarget);
-            this.player.setNpcState(npcDtag, { ...ns2, state: actionTarget });
-            this.player.setState(npcDtag, actionTarget);
-            if (transition?.text) this._emit(transition.text, 'narrative');
+          if (extTarget) {
+            // External target — set state on another event
+            const result = applyExternalSetState(
+              extTarget, actionTarget, this.events, this.player,
+              (t, ty) => this._emit(t, ty),
+              (h, ty) => this._emitHtml(h, ty),
+            );
+            if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
+          } else {
+            // Self — set NPC state
+            const ns2 = this.player.getNpcState(npcDtag);
+            if (ns2 && actionTarget && ns2.state !== actionTarget) {
+              const transition = findTransition(npcEvent, ns2.state, actionTarget);
+              this.player.setNpcState(npcDtag, { ...ns2, state: actionTarget });
+              this.player.setState(npcDtag, actionTarget);
+              if (transition?.text) this._emit(transition.text, 'narrative');
+            }
           }
         } else if (action === 'consequence' && actionTarget) {
           this._executeConsequence(actionTarget);
         } else if (action === 'flees') {
           this._npcFlees(npcEvent, npcDtag);
+        } else if (action === 'steals-item') {
+          this._npcStealsItem(npcDtag, actionTarget);
         }
       }
     }
@@ -1205,30 +1312,47 @@ export class GameEngine {
   // ── NPC encounter ──────────────────────────────────────────────────────
 
   _fireNpcEncounter(npcEvent, npcDtag) {
+    // Shape: ["on-encounter", "<filter>", "<action>", "<arg?>", "<ext-target?>"]
+    // Filter: "" = any entity, "player" = player only, NPC a-tag = that NPC only
     for (const tag of getTags(npcEvent, 'on-encounter')) {
-      if (tag[1] !== 'player') continue;
+      const filter = tag[1];
+      // Currently only player encounters are implemented
+      if (filter && filter !== 'player') continue;
+
       const action = tag[2];
       const actionTarget = tag[3];
+      const extTarget = tag[4];
 
       if (action === 'set-state') {
-        // Update NPC's own state (in npcStates AND player.states for requires checks)
-        const npcState = this.player.getNpcState(npcDtag);
-        if (npcState && npcState.state !== actionTarget) {
-          this.player.setNpcState(npcDtag, { ...npcState, state: actionTarget });
-          this.player.setState(npcDtag, actionTarget);
-          const transition = findTransition(npcEvent, npcState.state, actionTarget);
-          if (transition?.text) this._emit(transition.text, 'narrative');
+        if (extTarget) {
+          // External target
+          const result = applyExternalSetState(
+            extTarget, actionTarget, this.events, this.player,
+            (t, ty) => this._emit(t, ty),
+            (h, ty) => this._emitHtml(h, ty),
+          );
+          if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
+        } else {
+          // Self — update NPC's own state
+          const npcState = this.player.getNpcState(npcDtag);
+          if (npcState && npcState.state !== actionTarget) {
+            this.player.setNpcState(npcDtag, { ...npcState, state: actionTarget });
+            this.player.setState(npcDtag, actionTarget);
+            const transition = findTransition(npcEvent, npcState.state, actionTarget);
+            if (transition?.text) this._emit(transition.text, 'narrative');
+          }
         }
       } else if (action === 'steals-item') {
         this._npcStealsItem(npcDtag, actionTarget);
       } else if (action === 'deal-damage') {
-        // Combat — future phase
+        const dmg = parseInt(actionTarget, 10) || parseInt(getTag(npcEvent, 'damage') || '1', 10);
+        this._dealDamageToPlayer(dmg, npcEvent, npcDtag);
       } else if (action === 'consequence') {
         if (actionTarget) this._executeConsequence(actionTarget);
       } else if (action === 'traverse') {
         if (actionTarget) this._traverse(actionTarget);
       } else if (action === 'increment' || action === 'decrement' || action === 'set-counter') {
-        this._applyCounterAction(action, npcDtag, actionTarget, tag[4], npcEvent);
+        this._applyCounterAction(action, npcDtag, actionTarget, extTarget, npcEvent);
       } else if (action === 'flees') {
         this._npcFlees(npcEvent, npcDtag);
       }

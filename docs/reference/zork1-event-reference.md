@@ -719,9 +719,9 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["on-interact",     "turn on",  "set-state",   "on"],
     ["on-interact",     "turn off", "set-state",   "off"],
     ["on-move",         "on",       "decrement",   "battery"],
-    ["on-counter",  "battery",  "50",  "set-state",   "flickering"],
-    ["on-counter", "battery", "0",         "set-state",   "dead"],
-    ["on-counter", "battery", "0",  "consequence", "30078:<ZA>:zork1:consequence:lamp-dies"]
+    ["on-counter",  "down",  "battery",  "50",  "set-state",   "flickering"],
+    ["on-counter", "down", "battery", "0",         "set-state",   "dead"],
+    ["on-counter", "down", "battery", "0",  "consequence", "30078:<ZA>:zork1:consequence:lamp-dies"]
   ],
   "content": "A battery-powered brass lantern."
 }}
@@ -814,7 +814,7 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",            "examine","look"],
     ["on-interact",     "light", "set-state",   "lit"],
     ["on-move",         "lit",   "decrement",   "burn-time"],
-    ["on-counter", "burn-time", "0", "set-state","dead"]
+    ["on-counter", "down", "burn-time", "0", "set-state","dead"]
   ],
   "content": "Two white candles."
 }}
@@ -830,7 +830,7 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["verb",            "examine","look"],
     ["on-interact",     "strike",  "set-state",  "lit", "30078:<ZA>:zork1:item:candles"],
     ["on-interact",     "strike",  "decrement",  "matches"],
-    ["on-counter", "matches", "0", "consequence","30078:<ZA>:zork1:consequence:out-of-matches"]
+    ["on-counter", "down", "matches", "0", "consequence","30078:<ZA>:zork1:consequence:out-of-matches"]
   ],
   "content": "A book of matches."
 }}
@@ -933,7 +933,7 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["on-encounter", "player",  "steals-item",  "any"],
     ["on-enter",     "30078:<ZA>:zork1:place:treasure-room", "deposits"],
     ["on-attacked",  "player",  "deal-damage",  "3"],
-    ["on-health-zero","consequence","30078:<ZA>:zork1:consequence:thief-dies"],
+    ["on-health", "down", "0", "30078:<ZA>:zork1:consequence:thief-dies"],
     ["stash",        "30078:<ZA>:zork1:place:treasure-room"],
     ["dialogue",     "30078:<ZA>:zork1:dialogue:thief:greeting"]
   ],
@@ -954,7 +954,7 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["transition",   "dead",     "dead",  "The cyclops is dead."],
     ["on-encounter", "player",   "deal-damage",   "10"],
     ["on-attacked",  "player",   "deal-damage",   "10"],
-    ["on-health-zero","consequence","30078:<ZA>:zork1:consequence:cyclops-flees"],
+    ["on-health", "down", "0", "30078:<ZA>:zork1:consequence:cyclops-flees"],
     ["dialogue",     "30078:<ZA>:zork1:dialogue:cyclops:greeting"]
   ],
   "content": "A massive one-eyed creature blocks the passage."
@@ -973,7 +973,7 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["transition",   "blocking", "dead", "The troll slumps to the ground with a final roar."],
     ["on-encounter", "player",   "deal-damage",   "3"],
     ["on-attacked",  "player",   "deal-damage",   "3"],
-    ["on-health-zero","consequence","30078:<ZA>:zork1:consequence:troll-dies"]
+    ["on-health", "down", "0", "30078:<ZA>:zork1:consequence:troll-dies"]
   ],
   "content": "A nasty-looking troll, brandishing a bloody axe."
 }}

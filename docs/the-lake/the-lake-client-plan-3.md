@@ -22,7 +22,7 @@ Phases 11-18 complete. The Lake is fully playable including:
 | `traverse` action | 2.1 dispatcher | Yes — mechanism → sanctum | High |
 | Counter threshold crossing | counter section | Yes — lantern warning | High |
 | `increment` / `set-counter` dispatch | action types | Partial — not dispatched | Medium |
-| Payment LNURL flow | 2.7b | Yes — The Ferryman | Medium |
+| Payment LNURL flow | 2.8 | Yes — The Ferryman | Medium |
 | `flees` action | NPC actions | No | Low |
 | Recipe / crafting | 2.7 | No | Low |
 | Quest tracking | §8 | No | Low |
@@ -111,9 +111,9 @@ Phases 11-18 complete. The Lake is fully playable including:
 **The Lake's dependency:**
 ```json
 // Lantern — warn at 50, die at 0
-["on-counter", "battery", "50", "set-state", "flickering"],
-["on-counter", "battery", "0",  "set-state", "dead"],
-["on-counter", "battery", "0",  "consequence", "30078:<PUBKEY>:the-lake:consequence:lamp-dies"]
+["on-counter", "down", "battery", "50", "set-state", "flickering"],
+["on-counter", "down", "battery", "0",  "set-state", "dead"],
+["on-counter", "down", "battery", "0",  "consequence", "30078:<PUBKEY>:the-lake:consequence:lamp-dies"]
 ```
 
 Without crossing detection, `flickering` state never triggers mid-walk — only on reload or state entry.
@@ -176,7 +176,7 @@ Without crossing detection, `flickering` state never triggers mid-walk — only 
 
 **Use cases:**
 - Cowardly NPCs that run when attacked
-- NPCs that flee after a condition is met (`on-health-zero flees`)
+- NPCs that flee after a condition is met (`on-health "down" "0" flees`)
 
 **Test with:** Add `["on-attacked", "", "flees"]` to a test NPC. Attack it. Verify it moves to a random route place.
 
@@ -223,7 +223,7 @@ Affected spec features:
 - `attack` verb + `on-attacked` trigger
 - `deal-damage` / `deal-damage-npc` / `heal` actions
 - `health` / `damage` / `hit-chance` tags on NPCs
-- `on-health-zero` / `on-player-health-zero` triggers
+- `on-health` / `on-player-health "down" "0"` triggers
 - Player health tracking in state
 
 When a world author needs combat, this becomes a dedicated plan.

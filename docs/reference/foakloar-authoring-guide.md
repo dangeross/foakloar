@@ -373,6 +373,92 @@ This is the correct way to chain state consequences: one player action, multiple
 
 ---
 
+### `on-encounter` and `on-attacked` — trigger-target filter and external targets
+
+Both triggers use the trigger-target slot as a **filter** and support an optional external action target:
+
+**`on-encounter` filter values:**
+- `""` — fires when any entity (player or NPC) is in the same place
+- `"player"` — fires only when the player enters
+- NPC `a`-tag — fires only when that specific NPC is present
+
+**`on-attacked` filter values:**
+- `""` — fires on any attack regardless of weapon
+- item `a`-tag — fires only when attacked with that specific weapon
+
+`"player"` is not valid on `on-attacked` — attacks always come from the player in the current model.
+
+```json
+// on-encounter — fires on player entry, deals damage
+["on-encounter", "player", "deal-damage", "3"],
+
+// on-encounter — proximity trap, any entity, delegates to consequence
+["on-encounter", "", "consequence", "30078:<PUBKEY>:the-lake:consequence:proximity-trap"],
+
+// on-encounter — alert another NPC when player arrives
+["on-encounter", "player", "set-state", "alerted", "30078:<PUBKEY>:the-lake:npc:captain"],
+
+// on-attacked — counter-attack, any weapon
+["on-attacked", "", "deal-damage", "3"],
+
+// on-attacked — silver sword triggers consequence
+["on-attacked", "30078:<PUBKEY>:the-lake:item:silver-sword", "consequence", "30078:<PUBKEY>:the-lake:consequence:silver-weakness"]
+```
+
+---
+
+### `on-attacked` — trigger-target and external targets
+
+`on-attacked` is not a simple "NPC fires back" tag. The trigger-target filters by weapon used, and an optional fifth element targets an external event:
+
+```json
+// "" fires on any attack
+["on-attacked", "", "deal-damage", "3"],
+
+// Item ref fires only when attacked with that specific weapon
+["on-attacked", "30078:<PUBKEY>:the-lake:item:silver-sword", "deal-damage", "6"],
+
+// External target — alert another NPC on any attack
+["on-attacked", "", "set-state", "alerted", "30078:<PUBKEY>:the-lake:npc:captain"],
+
+// External target — decrement a shield's durability counter
+["on-attacked", "", "decrement", "durability", "30078:<PUBKEY>:the-lake:item:shield"]
+```
+
+The shape mirrors `on-interact` exactly — trigger-target replaces the verb, external event `a`-tag is optional position 4.
+
+---
+
+### Inline actions vs consequences — when to use each
+
+Use **inline actions** for simple, single-effect reactions:
+
+```json
+// Good inline — one action, unique to this trigger
+["on-attacked", "", "deal-damage", "3"]
+["on-health", "down", "50%", "set-state", "wounded"]
+```
+
+Use a **consequence event** when:
+- Multiple actions fire together
+- The same reaction fires from multiple different triggers
+- Actions target several external events at once
+
+```json
+// Complex reaction — consequence bundles it cleanly
+["on-attacked", "30078:<PUBKEY>:the-lake:item:silver-sword",
+  "consequence", "30078:<PUBKEY>:the-lake:consequence:silver-weakness"]
+
+// silver-weakness fires: extra damage + state change + clue reveal
+// Can be reused from a silver trap, a silver room, or any other trigger
+```
+
+The rule of thumb: **if one action fires, inline it. If multiple actions fire together, or the same reaction fires from multiple triggers, use a consequence.**
+
+Resist creating a consequence for every single action — it creates unnecessary events and makes the world harder to author and debug. Inline is almost always right for one-action reactions.
+
+---
+
 ### Orphaned requires
 ```json
 // WRONG — this state is never set anywhere
@@ -513,8 +599,8 @@ Type (item, feature, NPC, puzzle, portal) is inferred from the referenced event'
 ["on-counter-low",  "battery", "20", "set-state", "flickering"]
 
 // CORRECT
-["on-counter", "battery", "0",  "set-state", "dead"]
-["on-counter", "battery", "20", "set-state", "flickering"]
+["on-counter", "down", "battery", "0",  "set-state", "dead"]
+["on-counter", "down", "battery", "20", "set-state", "flickering"]
 ```
 
 Three fire conditions: threshold crossing, state entry re-evaluation, load reconciliation on reload.

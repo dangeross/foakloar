@@ -28,6 +28,8 @@ export const TRIGGER_ACTIONS = {
   'on-enter':              ['set-state', 'give-item', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter'],
   'on-encounter':          ['set-state', 'deal-damage', 'consequence', 'steals-item', 'deposits', 'flees', 'decrement'],
   'on-attacked':           ['set-state', 'deal-damage', 'deal-damage-npc', 'consequence', 'steals-item', 'flees'],
+  'on-health':             ['set-state', 'give-item', 'consequence', 'flees', 'deposits'],
+  'on-player-health':      ['set-state', 'traverse', 'consequence'],
   'on-health-zero':        ['set-state', 'give-item', 'consequence', 'deposits'],
   'on-player-health-zero': ['set-state', 'traverse', 'consequence'],
   'on-move':               ['set-state', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter'],
@@ -208,29 +210,53 @@ export const TAG_SCHEMAS = {
   },
   'on-encounter': {
     label: 'On Encounter',
-    desc: 'Fires an action when the player first meets this NPC in a room',
+    desc: 'Fires when an entity enters this NPC\'s place. "player" = player only, blank = any entity, or set an NPC ref for NPC-on-NPC encounters.',
     repeatable: true,
     fields: [
-      { name: 'trigger', type: 'text', required: true, placeholder: 'player' },
+      { name: 'filter', type: 'event-ref', required: false, eventTypeFilter: 'npc', placeholder: 'any entity (default)', prefixOptions: [{ value: '', label: 'Any entity (default)' }, { value: 'player', label: 'Player only' }] },
       { name: 'action', type: 'select', required: true, options: TRIGGER_ACTIONS['on-encounter'] },
-      { name: 'target', type: 'text', required: false, placeholder: 'action target' },
-      { name: 'event-ref', type: 'event-ref', required: false, placeholder: 'target event (blank = self)' },
+      { name: 'target', type: 'text', required: false, placeholder: 'damage amount, state, or ref' },
+      { name: 'event-ref', type: 'event-ref', required: false, placeholder: 'external target (blank = self)' },
     ],
   },
   'on-attacked': {
     label: 'On Attacked',
-    desc: 'Fires an action when this NPC is attacked by the player',
+    desc: 'Fires when this NPC is attacked. Blank = any item. Set an item ref to fire only when attacked with that specific item (e.g. silver sword vulnerability, magic wand effect).',
     repeatable: true,
     fields: [
-      { name: 'trigger', type: 'text', required: false },
+      { name: 'weapon-filter', type: 'event-ref', required: false, eventTypeFilter: 'item', placeholder: 'item filter (blank = any)' },
       { name: 'action', type: 'select', required: true, options: TRIGGER_ACTIONS['on-attacked'] },
-      { name: 'target', type: 'text', required: false },
+      { name: 'target', type: 'text', required: false, placeholder: 'damage amount or state' },
+      { name: 'event-ref', type: 'event-ref', required: false, placeholder: 'external target (blank = self)' },
+    ],
+  },
+  'on-health': {
+    label: 'On Health',
+    desc: 'Fires when this NPC\'s health crosses a threshold. Supports absolute values or percentages (e.g. "50%").',
+    repeatable: true,
+    fields: [
+      { name: 'direction', type: 'select', required: true, options: ['down', 'up'] },
+      { name: 'threshold', type: 'text', required: true, placeholder: '0, 3, or 50%' },
+      { name: 'action', type: 'select', required: true, options: TRIGGER_ACTIONS['on-health'] },
+      { name: 'target', type: 'text', required: false, placeholder: 'state or target' },
       { name: 'event-ref', type: 'event-ref', required: false, placeholder: 'target event (blank = self)' },
     ],
   },
+  'on-player-health': {
+    label: 'On Player Health',
+    desc: 'Fires when player health crosses a threshold. On world event = global, on NPC = local to that place.',
+    repeatable: true,
+    fields: [
+      { name: 'direction', type: 'select', required: true, options: ['down', 'up'] },
+      { name: 'threshold', type: 'text', required: true, placeholder: '0, 2, or 30%' },
+      { name: 'action', type: 'select', required: true, options: TRIGGER_ACTIONS['on-player-health'] },
+      { name: 'target', type: 'text', required: false, placeholder: 'consequence ref or state' },
+    ],
+  },
+  // Legacy aliases (backwards compat)
   'on-health-zero': {
-    label: 'On Health Zero',
-    desc: 'Fires an action when this NPC\'s health reaches zero (defeated)',
+    label: 'On Health Zero (legacy)',
+    desc: 'Legacy — use "On Health" with threshold "0" instead',
     repeatable: true,
     fields: [
       { name: 'blank', type: 'text', required: false, placeholder: '(blank)' },
@@ -240,8 +266,8 @@ export const TAG_SCHEMAS = {
     ],
   },
   'on-player-health-zero': {
-    label: 'On Player Health Zero',
-    desc: 'Fires an action when the player\'s health reaches zero (death consequence)',
+    label: 'On Player Health Zero (legacy)',
+    desc: 'Legacy — use "On Player Health" with threshold "0" instead',
     repeatable: true,
     fields: [
       { name: 'blank', type: 'text', required: false, placeholder: '(blank)' },
@@ -277,7 +303,7 @@ export const TAG_SCHEMAS = {
     desc: 'Fires an action when a puzzle or recipe is completed',
     repeatable: true,
     fields: [
-      { name: 'blank', type: 'text', required: false, placeholder: '(blank)' },
+      { name: 'blank', type: 'text', required: false, hidden: true },
       { name: 'action', type: 'select', required: true, options: TRIGGER_ACTIONS['on-complete'] },
       { name: 'target', type: 'text', required: false },
     ],
@@ -387,7 +413,7 @@ export const TAG_SCHEMAS = {
 
 /** Which tags are valid for each event type */
 export const TAGS_BY_EVENT_TYPE = {
-  place:       ['title', 'content-type', 'exit', 'item', 'feature', 'npc', 'clue', 'noun', 'state', 'transition', 'requires', 'requires-not', 'on-enter', 'on-player-health-zero', 'media', 'cw', 'puzzle'],
+  place:       ['title', 'content-type', 'exit', 'item', 'feature', 'npc', 'clue', 'noun', 'state', 'transition', 'requires', 'requires-not', 'on-enter', 'on-player-health', 'media', 'cw', 'puzzle'],
   portal:      ['title', 'exit', 'state', 'transition', 'requires', 'requires-not', 'consequence', 'cw'],
   item:        ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-move', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'damage', 'hit-chance', 'media'],
   feature:     ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'media'],
@@ -395,10 +421,10 @@ export const TAGS_BY_EVENT_TYPE = {
   puzzle:      ['puzzle-type', 'answer-hash', 'salt', 'ordered', 'requires', 'on-complete', 'content-type'],
   recipe:      ['title', 'noun', 'verb', 'state', 'transition', 'requires', 'on-complete', 'ordered'],
   payment:     ['title', 'amount', 'unit', 'lnurl', 'on-complete'],
-  npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health-zero', 'on-player-health-zero', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not'],
+  npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health', 'on-player-health', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not'],
   dialogue:    ['text', 'option', 'requires', 'requires-not', 'on-enter'],
   consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage'],
-  world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health-zero', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'content-type', 'media', 'w'],
+  world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'content-type', 'media', 'w'],
   vouch:       ['pubkey', 'scope', 'can-vouch'],
   quest:       ['title', 'involves', 'requires', 'requires-not', 'on-complete'],
 };

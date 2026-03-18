@@ -5,7 +5,9 @@
 
 ## Current Status
 
-All phases complete (1–26 + combat). The Lake is fully playable. Builder mode functional with tooltips, event creation, draft management, and world validation.
+Reference client: The Lake phases 1-10 complete. Full world playable end to end.
+World: The Lake — all 12 places, full item chain, Hermit NPC, mechanism puzzle, Sanctum sealed.
+Next: Phase 11 — world event bootstrap.
 
 ---
 
@@ -26,9 +28,9 @@ All phases complete (1–26 + combat). The Lake is fully playable. Builder mode 
 
 ## Current Status
 
-All phases complete. Plan 3 (phases 19–26) fully implemented including combat system. Builder mode has tooltips, event type descriptions, InlineList component, and + new dropdown.
+Phases 11-18 complete. The Lake is fully playable. See `the-lake-client-plan-3.md` for Phase 19+ work.
 
-**Test worlds:** The Arena (combat), The Forge (crafting), The Errand (quests) in `docs/tests/`.
+**Next: Phase 19 — Consequence dispatch** (start here)
 
 ---
 
@@ -97,8 +99,8 @@ Item's `on-interact` can set state on an external feature or portal. Fourth argu
 `on-counter-zero` and `on-counter-low` replaced by `on-counter` with threshold:
 
 ```json
-["on-counter", "battery", "50", "set-state",   "flickering"]
-["on-counter", "battery", "0",  "set-state",   "dead"]
+["on-counter", "down", "battery", "50", "set-state",   "flickering"]
+["on-counter", "down", "battery", "0",  "set-state",   "dead"]
 ```
 
 Three fire conditions: threshold crossing, state entry re-evaluation, load reconciliation.
@@ -117,7 +119,7 @@ NPC carried items:
 
 ### 6. `type: payment` — new primitive
 
-Lightning payment gate. See spec section 2.7b and `the-lake-client-plan-2.md` Phase 15.
+Lightning payment gate. See spec section 2.8 and `the-lake-client-plan-2.md` Phase 15.
 
 ### 7. World event fully specced
 

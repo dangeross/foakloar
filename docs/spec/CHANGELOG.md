@@ -106,6 +106,21 @@ Portal always uses extended form. Portal wins if conflict. Hidden portals still 
 
 **`plaintext-type` tag proposed and removed before shipping** — replaced by three-element `content-type`.
 
+**`on-encounter` shape formalised — filter + external target**
+Trigger-target is now `""` (any entity), `"player"`, or NPC `a`-tag. Optional 5th element is an external action target — same convention as `on-attacked` and `on-interact`. `""` enables proximity traps firing on any entity.
+
+**`on-attacked` / `on-encounter` filter semantics table added**
+Documents which trigger-target values are valid for each trigger — `on-attacked` filters by weapon (item ref or `""`), `on-encounter` filters by entity (`""`, `"player"`, NPC ref). `"player"` is not applicable to `on-attacked`.
+
+**`on-attacked` shape formalised — filter + external target**
+Trigger-target is now a weapon item `a`-tag (or `""` for any attack). Optional 5th element is an external action target — same convention as `on-interact`. Enables weapon-specific NPC reactions (silver sword extra damage, magic resistance) and cross-NPC effects (alert guard, decrement shield durability).
+
+**Consequence as action carrier — inline vs consequence guidance documented**
+Simple single-action reactions stay inline. Multi-action, reusable, or cross-event reactions delegate to a `consequence` event. Same `on-attacked` filter can delegate to consequence for weapon-specific complex outcomes. Guidance: if one action fires, inline it. If multiple actions fire together, or the same reaction fires from multiple triggers, use consequence.
+
+**`on-health` and `on-player-health` triggers added**
+Unified health threshold triggers replacing `on-health-zero` and `on-player-health-zero`. Shape mirrors `on-counter`: `["on-health", "<direction>", "<threshold>", "<action-type>", "<action-target?>"]`. Threshold is absolute integer or `N%` percentage of max-health. `on-player-health` valid on world event (global) or NPC (local). Old tags kept as client aliases for backwards compat but removed from spec.
+
 **Recipe `consume-item` is explicit, not automatic**
 `requires` gates a recipe but does not consume ingredients. Authors must declare each `on-complete consume-item` explicitly. Enables non-item requirements (lit forge, place state) without consuming them.
 

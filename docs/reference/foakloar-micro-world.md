@@ -50,7 +50,7 @@ derive key → decrypt keeper's final log
   "tags": [
     ["d",            "lighthouse:world"],
     ["t",            "lighthouse"],
-        ["w",             "foakloar"]
+    ["w",             "foakloar"],
     ["type",         "world"],
     ["title",        "The Lighthouse Keeper"],
     ["author",       "FOAKLOAR Example"],
@@ -69,6 +69,7 @@ derive key → decrypt keeper's final log
     ["colour",       "clue",    "#a8c4d4"],
     ["font",         "courier"],
     ["cursor",       "beam"],
+    ["effects",      "typewriter"],
     ["content-type", "text/markdown"]
   ],
   "content": "The light has been dark for three years.\n\nThe keeper's cottage is empty. His logbook is sealed.\n\nSomething brought you here."
@@ -182,9 +183,24 @@ derive key → decrypt keeper's final log
     ["exit",         "30078:<PUBKEY>:lighthouse:place:lamp-room", "west", "Back to the lamp room."],
     ["feature",      "30078:<PUBKEY>:lighthouse:feature:signal-panel"],
     ["feature",      "30078:<PUBKEY>:lighthouse:feature:final-log"],
-    ["content-type", "application/nip44"]
+    ["content-type", "application/nip44", "text/markdown"],
+    ["puzzle",       "lighthouse:puzzle:signal-decode"]
   ],
-  "content": "<NIP-44 ciphertext — see win prose below, encrypt with your lock keypair before publishing>"
+  "content": "# The Keeper's Final Log
+
+The coordinates are not a place. They never were.
+
+They are a bearing — to something that has been answering the light for longer than this lighthouse has existed. Something that was here before the coast had a name.
+
+I went to see. I won't write what I found.
+
+The light should stay dark. But if you've read this — you lit it. You found the signal. You know the coordinates.
+
+You'll go too.
+
+I understand now why I stayed so long.
+
+*— H.M., Keeper, Day 10,847*" — see win prose below, encrypt with your lock keypair before publishing>"
 }
 ```
 

@@ -459,12 +459,35 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 | `on-interact` | Verb string | Player uses a verb on this feature, item, or NPC |
 | `on-complete` | `""` (blank) | Player satisfies all `requires` and confirms action (puzzle answered, recipe combined). Trigger-target is always blank — `["on-complete", "", "<action-type>", "<action-target?>"]` |
 | `on-enter` | `player` or place `a`-tag | Player enters this place (arg: `player`), or NPC arrives at a place (arg: place ref). Client dispatches based on event `type`. |
-| `on-encounter` | `player` or NPC `a`-tag | NPC is in the same place as target |
-| `on-attacked` | — | NPC is attacked by player |
-| `on-health-zero` | — | This NPC's health reaches zero |
-| `on-player-health-zero` | — | Player health reaches zero (on place or NPC) |
+| `on-encounter` | `""`, `player`, or NPC `a`-tag | NPC is in the same place as target. `""` = any entity. `player` = player only. NPC `a`-tag = that NPC only. Optional external action target. |
+| `on-attacked` | `""` or item `a`-tag | NPC is attacked. `""` = any weapon. Item `a`-tag = that weapon only. Optional external action target. |
+| `on-health` | `down`\|`up`, threshold | This NPC's health crosses threshold in declared direction. Replaces `on-health-zero`. |
+| `on-player-health` | `down`\|`up`, threshold | Player health crosses threshold. Valid on world event (global) or NPC (local). Replaces `on-player-health-zero`. |
 | `on-move` | State string or `—` | Every player move; optional state guard |
 | `on-counter` | Direction (`down`\|`up`), counter name, threshold | Fires when counter crosses threshold in declared direction — see counter section |
+
+**Trigger-target filter semantics:**
+
+| Trigger | `""` | `"player"` | item `a`-tag | NPC `a`-tag |
+|---------|------|------------|-------------|-------------|
+| `on-attacked` | Any weapon | — (not applicable) | That weapon only | — |
+| `on-encounter` | Any entity | Player only | — | That NPC only |
+| `on-enter` | — | Player entering | — | — |
+
+`on-encounter` and `on-attacked` both support an optional external action target as the final element — same convention as `on-interact`:
+
+```json
+// on-encounter examples
+["on-encounter", "player",  "deal-damage",  "3"],                                       // player enters, damage
+["on-encounter", "player",  "set-state",    "alerted", "30078:<PUBKEY>:npc:captain"],   // alert another NPC
+["on-encounter", "",        "consequence",  "30078:<PUBKEY>:consequence:proximity-trap"], // any entity triggers trap
+["on-encounter", "30078:<PUBKEY>:npc:thief", "steals-item", "any"],                     // NPC-on-NPC encounter
+
+// on-attacked examples
+["on-attacked",  "",                          "deal-damage", "3"],           // counter-attack, any weapon
+["on-attacked",  "30078:<PUBKEY>:item:silver-sword", "deal-damage", "6"],   // extra damage from silver
+["on-attacked",  "",                          "set-state", "alerted", "30078:<PUBKEY>:npc:captain"] // alert on any attack
+```
 
 **Action types** (shared across all `on-*` tags):
 
@@ -511,19 +534,17 @@ New action types can be added without changing the tag structure — the dispatc
 | `on-enter` | ✓ | ✓ | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ |
 | `on-encounter` | ✓ | — | — | — | ✓ | — | — | ✓ | ✓ | ✓ | ✓ | ✓ | — | — |
 | `on-attacked` | ✓ | — | — | — | ✓ | ✓ | — | ✓ | ✓ | — | ✓ | — | — | — |
-| `on-health-zero` | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — | — | — | — |
-| `on-player-health-zero` | ✓ | — | — | ✓ | — | — | — | ✓ | — | — | — | — | — | — |
+| `on-health` | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — | — | — | — |
+| `on-player-health` | ✓ | — | — | ✓ | — | — | — | ✓ | — | — | — | — | — | — |
 | `on-move` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ |
 | `on-counter` | ✓ | ✓ | — | — | ✓ | — | ✓ | ✓ | — | — | — | — | — | — |
-| `on-move` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ | |
-| `on-counter` | ✓ | ✓ | — | — | ✓ | — | ✓ | ✓ | — | — | — | — | — | — | |
 
 **Notes:**
 - `steals-item`, `deposits`, `flees` are NPC-only actions — only meaningful on `on-encounter` and `on-attacked` where an NPC is the actor
-- `traverse` on `on-player-health-zero` is the respawn pattern — fire when health reaches zero, send player to a respawn place
+- `traverse` on `on-player-health` is the respawn pattern — `["on-player-health", "down", "0", "traverse", "<respawn-portal-ref>"]`
 - `deal-damage` on `on-enter` / `on-move` — damage traps and hazardous terrain
 - `consume-item` on `on-interact` — single-use items consumed on use
-- `give-item` on `on-health-zero` — NPC drops loot on death
+- `give-item` on `on-health` — NPC drops loot on death
 - The matrix reflects intent, not hard enforcement. The client should handle unexpected combinations gracefully rather than erroring.
 
 #### counter
@@ -598,6 +619,58 @@ Multiple counters on a single event:
 ```json
 ["counter", "battery", "300"]
 ["counter", "charges", "5"]
+```
+
+
+---
+
+#### health triggers — `on-health` and `on-player-health`
+
+Health triggers mirror the `on-counter` system — same direction model, same crossing semantics, same three behavioural rules (threshold crossing, state entry re-evaluation, load reconciliation).
+
+**Shape:**
+
+```json
+["on-health",        "<direction>", "<threshold>", "<action-type>", "<action-target?>"]
+["on-player-health", "<direction>", "<threshold>", "<action-type>", "<action-target?>"]
+```
+
+| Element | Values | Meaning |
+|---------|--------|---------|
+| direction | `down` \| `up` | Which crossing direction triggers the action |
+| threshold | Integer or `N%` string | Absolute health value or percentage of max-health |
+| action-type | any action type | What to do |
+| action-target | optional | State value, consequence ref, etc. |
+
+**Threshold formats:**
+- `"0"` — absolute. Fires when health reaches exactly zero.
+- `"3"` — absolute. Fires when health crosses at-or-below 3.
+- `"50%"` — percentage of `max-health`. Fires when health crosses at-or-below 50% of max. Portable across different health pools.
+
+**`on-health`** is declared on an NPC and fires for that NPC's health only.
+
+**`on-player-health`** fires for player health. Valid on the world event (global — fires anywhere) or on an NPC (local — fires only when that NPC is in the same place). Use the world event for death consequences; use NPC declaration for NPC-specific player-health reactions.
+
+```json
+// Guard — wounded at 50%, flees at 0
+["on-health", "down", "50%", "set-state", "wounded"],
+["on-health", "down", "0",   "set-state", "defeated"],
+["on-health", "down", "0",   "flees"],
+
+// World event — player death anywhere
+["on-player-health", "down", "0", "consequence", "30078:<pubkey>:the-lake:consequence:death"],
+
+// NPC — gloats when player is nearly dead
+["on-player-health", "down", "2", "set-state", "gloating"]
+```
+
+**Replaces `on-health-zero` and `on-player-health-zero`:** these legacy tags are equivalent to `on-health down 0` and `on-player-health down 0` respectively. Clients should support them as aliases for backwards compatibility but they are removed from the spec.
+
+**Player health declaration** lives on the world event:
+
+```json
+["health",     "10"]   // starting health
+["max-health", "10"]   // maximum health ceiling
 ```
 
 #### state & transition
@@ -1339,8 +1412,82 @@ Combat is not a separate system — it is the `on-*` dispatcher applied to healt
 **Combat round sequence (client responsibility):**
 1. Player issues `attack` verb → fires `deal-damage-npc` on target NPC
 2. If NPC health > 0, NPC `on-attacked` fires → `deal-damage` on player
-3. Check NPC health — if zero, fire `on-health-zero` consequence
-4. Check player health — if zero, fire `on-player-health-zero` consequence (typically death)
+3. Check all `on-health` tags on NPC — fire any whose threshold is crossed (direction-aware)
+4. Check all `on-player-health` tags — fire any whose threshold is crossed
+
+---
+
+**`on-attacked` — shape and target**
+
+`on-attacked` follows the same shape as `on-interact` — the trigger-target is the item used to attack (or `""` for any), and an optional external event `a`-tag is the action target:
+
+```json
+["on-attacked", "<item-ref-or-blank>", "<action-type>", "<action-arg?>", "<external-target?>"]
+```
+
+| trigger-target | Meaning |
+|---------------|---------|
+| `""` | Fires on any attack |
+| `"30078:...:item:silver-sword"` | Fires only when attacked with that specific item |
+
+The external target (position 4) applies the action to another event — same convention as `on-interact`:
+
+```json
+// Counter-attack player — any weapon
+["on-attacked", "", "deal-damage", "3"],
+
+// Alert a guard NPC — any weapon
+["on-attacked", "", "set-state", "alerted", "30078:<PUBKEY>:the-lake:npc:captain"],
+
+// Decrement shield durability — any weapon
+["on-attacked", "", "decrement", "durability", "30078:<PUBKEY>:the-lake:item:shield"],
+
+// Extra damage from silver — weapon-specific
+["on-attacked", "30078:<PUBKEY>:the-lake:item:silver-sword", "deal-damage", "6"],
+
+// Weapon-specific reaction delegates to consequence
+["on-attacked", "30078:<PUBKEY>:the-lake:item:silver-sword", "consequence", "30078:<PUBKEY>:the-lake:consequence:silver-weakness"]
+```
+
+---
+
+**When to use inline actions vs consequences**
+
+Inline actions are for simple, single-effect reactions. Consequences are for complex or reusable reactions.
+
+| Use inline when | Use consequence when |
+|----------------|---------------------|
+| One action fires | Multiple actions fire together |
+| Effect is unique to this trigger | Same effect fires from multiple triggers |
+| Action is self-contained | Actions target multiple external events |
+| Simple state change or damage | Narrative text + state + damage + sound all together |
+
+```json
+// Inline — simple counter-attack, one action
+["on-attacked", "", "deal-damage", "3"],
+
+// Consequence — silver weakness: extra damage + state change + clue revealed
+["on-attacked", "30078:<PUBKEY>:the-lake:item:silver-sword",
+  "consequence", "30078:<PUBKEY>:the-lake:consequence:silver-weakness"]
+```
+
+```json
+// consequence:silver-weakness — bundles several effects cleanly
+{
+  "kind": 30078, "tags": [
+    ["d",           "the-lake:consequence:silver-weakness"],
+    ["type",        "consequence"],
+    ["deal-damage", "8"],
+    ["set-state",   "burning",   "30078:<PUBKEY>:the-lake:npc:werewolf"],
+    ["set-state",   "visible",   "30078:<PUBKEY>:the-lake:clue:silver-secret"]
+  ],
+  "content": "The silver burns. The creature recoils."
+}
+```
+
+The consequence also becomes reusable — a silver room, a silver trap, and a silver weapon can all reference the same `silver-weakness` consequence. Authors should resist creating a consequence for every single action — inline is almost always right for one-action reactions.
+
+---
 
 **A complete Zork-style troll:**
 
@@ -1349,17 +1496,37 @@ Combat is not a separate system — it is the `on-*` dispatcher applied to healt
   "kind": 30078,
   "pubkey": "<author_pubkey>",
   "tags": [
-    ["d",                "the-lake:npc:troll"],
-    ["t",                "the-lake"],
-    ["type",             "npc"],
-    ["title",            "Troll"],
-    ["health",           "6"],
-    ["damage",           "3"],
-    ["on-encounter",     "player",      "deal-damage",   "3"],
-    ["on-attacked",      "player",      "deal-damage",   "3"],
-    ["on-health-zero",   "consequence", "30078:<pubkey>:the-lake:consequence:troll-dies"]
+    ["d",             "the-lake:npc:troll"],
+    ["t",             "the-lake"],
+    ["type",          "npc"],
+    ["title",         "Troll"],
+    ["health",        "6"],
+    ["damage",        "3"],
+    ["on-encounter",  "player", "deal-damage",  "3"],
+    ["on-attacked",   "",       "deal-damage",  "3"],
+    ["on-health", "down", "0",  "consequence",  "30078:<pubkey>:the-lake:consequence:troll-dies"]
   ],
   "content": "A nasty troll brandishing a bloody axe."
+}
+```
+
+**A werewolf — resistant to normal weapons, vulnerable to silver:**
+
+```json
+{
+  "kind": 30078,
+  "tags": [
+    ["d",            "the-lake:npc:werewolf"],
+    ["t",            "the-lake"],
+    ["type",         "npc"],
+    ["title",        "Werewolf"],
+    ["health",       "12"],
+    ["damage",       "5"],
+    ["on-attacked",  "",                                        "deal-damage", "1"],
+    ["on-attacked",  "30078:<PUBKEY>:the-lake:item:silver-sword", "consequence", "30078:<PUBKEY>:the-lake:consequence:silver-weakness"],
+    ["on-health", "down", "0", "consequence", "30078:<PUBKEY>:the-lake:consequence:werewolf-dies"]
+  ],
+  "content": "A massive wolf-shaped creature. Your sword barely scratches it."
 }
 ```
 

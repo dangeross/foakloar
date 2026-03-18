@@ -163,6 +163,8 @@ Combat is data-driven via `on-*` dispatcher:
 - **Player health:** World event `["health", "10"]`, `["max-health", "10"]`, `["on-player-health-zero", "", "consequence", "<ref>"]`
 - **NPC state sync:** NPC `set-state` writes to both `npcStates` and `player.states` so `requires` can check NPC state
 - **`checkRequires`** handles types: `item`, `feature`, `puzzle`, `npc`, `portal`
+- **`on-health`:** `["on-health", "down", "50%", "set-state", "wounded"]` — fires on NPC health threshold crossing. Supports `%` and absolute. Replaces `on-health-zero`.
+- **`on-player-health`:** `["on-player-health", "down", "0", "consequence", "<ref>"]` — fires on player health crossing. On world event (global) or NPC (local). Replaces `on-player-health-zero`.
 
 ---
 

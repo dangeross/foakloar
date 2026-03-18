@@ -62,7 +62,7 @@ const SPEC_ACTION_TYPES = [
 describe('action type options on triggers', () => {
   const triggerTags = [
     'on-interact', 'on-enter', 'on-encounter', 'on-attacked',
-    'on-health-zero', 'on-player-health-zero', 'on-move', 'on-counter', 'on-complete',
+    'on-health', 'on-player-health', 'on-move', 'on-counter', 'on-complete',
   ];
 
   for (const tagName of triggerTags) {
@@ -107,7 +107,7 @@ describe('place tags', () => {
   it.each([
     'title', 'content-type', 'exit', 'item', 'feature', 'npc', 'clue',
     'noun', 'state', 'transition', 'requires', 'requires-not',
-    'on-enter', 'on-player-health-zero', 'media', 'cw', 'puzzle',
+    'on-enter', 'on-player-health', 'media', 'cw', 'puzzle',
   ])('includes %s', (tag) => {
     expect(placeTags).toContain(tag);
   });
@@ -124,8 +124,8 @@ describe('npc tags', () => {
   const npcTags = TAGS_BY_EVENT_TYPE.npc;
   it.each([
     'title', 'noun', 'verb', 'state', 'transition', 'dialogue',
-    'on-interact', 'on-encounter', 'on-attacked', 'on-health-zero',
-    'on-player-health-zero', 'on-enter', 'on-move', 'on-counter', 'counter',
+    'on-interact', 'on-encounter', 'on-attacked', 'on-health',
+    'on-player-health', 'on-enter', 'on-move', 'on-counter', 'counter',
     'speed', 'order', 'route', 'stash', 'roams-when', 'inventory',
     'health', 'damage', 'hit-chance', 'requires', 'requires-not',
   ])('includes %s', (tag) => {
