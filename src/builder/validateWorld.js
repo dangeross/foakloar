@@ -167,7 +167,60 @@ export function validateWorld(events, answers = {}) {
     }
   }
 
-  // ── 5. Answer hash mismatch (sync check — collect for async verify) ────
+  // ── 5. Verb alias collisions per place ──────────────────────────────────
+  // Check if any verb alias maps to different canonical verbs across
+  // features/items in the same place (causes parser to use the wrong verb).
+  for (const event of events) {
+    if (getTagValue(event, 'type') !== 'place') continue;
+    const placeDTag = getTagValue(event, 'd') || '?';
+
+    // Collect all verb sources: features + items referenced by this place
+    const refTypes = ['feature', 'item', 'npc'];
+    const verbSources = []; // { eventDTag, canonical, alias }
+    for (const type of refTypes) {
+      for (const tag of getTags(event, type)) {
+        const ref = tag[1];
+        const refDTag = extractDTagFromRef(ref);
+        const refEvent = refDTag ? byDTag.get(refDTag) : null;
+        if (!refEvent) continue;
+        for (const vt of getTags(refEvent, 'verb')) {
+          const canonical = vt[1];
+          for (let i = 1; i < vt.length; i++) {
+            verbSources.push({ eventDTag: refDTag, canonical, alias: vt[i].toLowerCase() });
+          }
+        }
+      }
+    }
+
+    // Also check all items in the world (could be in inventory at this place)
+    for (const ev of events) {
+      if (getTagValue(ev, 'type') !== 'item') continue;
+      const itemDTag = getTagValue(ev, 'd');
+      // Skip items already counted as place items
+      if (verbSources.some((v) => v.eventDTag === itemDTag)) continue;
+      for (const vt of getTags(ev, 'verb')) {
+        const canonical = vt[1];
+        for (let i = 1; i < vt.length; i++) {
+          verbSources.push({ eventDTag: itemDTag, canonical, alias: vt[i].toLowerCase() });
+        }
+      }
+    }
+
+    // Find collisions: same alias, different canonical
+    const aliasMap = new Map(); // alias → { canonical, eventDTag }
+    for (const { eventDTag, canonical, alias } of verbSources) {
+      const existing = aliasMap.get(alias);
+      if (existing && existing.canonical !== canonical) {
+        warnings.push({
+          dTag: placeDTag,
+          message: `Verb collision: "${alias}" maps to "${existing.canonical}" (${existing.eventDTag.split(':').pop()}) and "${canonical}" (${eventDTag.split(':').pop()}) — last one wins, may cause unexpected behaviour`,
+        });
+      }
+      aliasMap.set(alias, { canonical, eventDTag });
+    }
+  }
+
+  // ── 6. Answer hash mismatch (sync check — collect for async verify) ────
   const puzzlesToVerify = [];
   for (const event of events) {
     const eventType = getTagValue(event, 'type');
