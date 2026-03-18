@@ -312,6 +312,45 @@ Use `clue` events with rich content for this. The history doesn't need to be on 
 
 ---
 
+## Branching and Consequences
+
+### State is the branching primitive
+
+There is no special branching mechanic in FOAKLOAR. Forks in the narrative are expressed through `set-state` on any trigger — dialogue choice, item used, puzzle solved, place visited. The state carries through the world and gates future content wherever `requires` is declared.
+
+```
+player sides with hermit in dialogue
+  → set-state "ally" on journal item
+      → hidden portal requires journal:ally
+      → collector NPC reacts differently
+      → hermit gives different item on next encounter
+```
+
+Any trigger can set state. Any event can require state. The branch is wherever you put the state, not a special construct.
+
+### `on-fail` — wrong answer consequences
+
+Riddle and cipher puzzles can declare `on-fail` tags that fire on each wrong answer:
+
+```json
+// Simple damage on wrong answer
+["on-fail", "", "deal-damage", "2"],
+
+// Alert a guard on wrong answer
+["on-fail", "", "set-state", "alarmed", "30078:<PUBKEY>:the-lake:npc:guard"],
+
+// Attempt-limited puzzle — alarm after 3 wrong answers
+["counter",    "attempts", "3"],
+["on-fail",    "", "decrement", "attempts"],
+["on-counter", "down", "attempts", "0", "consequence", "30078:<PUBKEY>:the-lake:consequence:alarm"]
+```
+
+`on-fail` fires on every wrong answer. The second element is always `""` — there is nothing to filter on, unlike `on-attacked` or `on-encounter`. Pair with a counter and `on-counter` for attempt limits — no new tag needed, the counter system handles it.
+
+`on-fail` is only valid on `riddle` and `cipher` — sequence and observe puzzles have no wrong-answer state.
+
+---
+
 ## Common Mistakes
 
 ### `requires` with blank state — checking presence only
@@ -456,6 +495,24 @@ Use a **consequence event** when:
 The rule of thumb: **if one action fires, inline it. If multiple actions fire together, or the same reaction fires from multiple triggers, use a consequence.**
 
 Resist creating a consequence for every single action — it creates unnecessary events and makes the world harder to author and debug. Inline is almost always right for one-action reactions.
+
+---
+
+### Contained items declared on the place
+
+Items inside a container must not also be declared on the place event:
+
+```json
+// WRONG — iron-key is inside the chest, not on the ground
+["item",    "30078:<PUBKEY>:the-lake:item:iron-key"],     // ← bug
+["feature", "30078:<PUBKEY>:the-lake:feature:ancient-chest"]
+
+// CORRECT — only the chest is on the ground
+["feature", "30078:<PUBKEY>:the-lake:feature:ancient-chest"]
+// iron-key is declared via ["contains", ...] on the chest event
+```
+
+If an item appears in both a place `item` tag and a `contains` tag, it exists in two places simultaneously — the player can pick it up from the ground AND take it from the chest. The item would duplicate.
 
 ---
 
@@ -843,3 +900,175 @@ The Lake is medium. The Lighthouse Keeper (in `reference/foakloar-micro-world.md
 - Total events: 26
 
 This is the right scope for a first world. The full event listing is in `reference/foakloar-micro-world.md`.
+
+---
+
+## Sound Scoring
+
+Sound is a progressive enhancement — players who can't hear it miss nothing. Sound is atmosphere, never information. Never gate a puzzle solution, navigation choice, or narrative reveal behind sound. A deaf player should have the full experience.
+
+---
+
+### Pattern library — moods and their notation
+
+Use these as building blocks. Pick the mood that fits the moment:
+
+| Mood | Pattern | Notes |
+|------|---------|-------|
+| Dread | `"c2*1 slow(pad)"` | Low drone, barely moving. Underground, ancient. |
+| Tension | `"b2 ~ b2 ~ slow(strings)"` | Minor root, slow pulse. Unsolved puzzle, danger nearby. |
+| Danger | `"c3 b2 c3 b2 fast(strings)"` | Minor second oscillation. Rapid threat. |
+| Urgency | `"c3*8 fast(perc)"` | Rapid repeat. Chase, countdown. |
+| Mystery | `"c3 ~ eb3 ~ slow(pad)"` | Minor third, spaced out. Unknown territory. |
+| Wonder | `"c4 e4 g4 c5 slow(bells)"` | Ascending major. Discovery, arrival. |
+| Resolution | `"c3 e3 g3 slow(pad)"` | Major chord, settling. Puzzle solved, door open. |
+| Stillness | `"~ ~ ~ ~"` | Silence. Aftermath, emptiness, weight. |
+| Mechanical | `"perc(bd)*4"` | Steady kick. Machinery running, clock ticking. |
+| Ethereal | `"c5 g5 c6 slow(bells)"` | High, sparse. Magical, otherworldly. |
+
+Patterns can be combined — a place ambient plus a state-conditional layer:
+
+```json
+["sound", "ambient", "0.6", "c2*1 slow(pad)"],                          // always present
+["sound", "layer",   "0.4", "b2 ~ b2 ~ slow(strings)", "unsolved"]      // only while puzzle unsolved
+```
+
+---
+
+### State-conditional layers — the most powerful tool
+
+A layer can be gated to a specific event state. When the state changes, the layer enters or leaves the mix automatically. This is the FOAKLOAR equivalent of iMUSE — dynamic music without a music engine.
+
+```json
+// Always-on drone
+["sound", "ambient", "0.7", "c2*1 slow(pad)"],
+
+// Lamp hum — only when lamp is on
+["sound", "layer", "0.3", "c5*16 fast(sine)", "on"],
+
+// Tension — only while puzzle unsolved  
+["sound", "layer", "0.4", "b2 ~ b2 ~", "unsolved"],
+
+// Victory swell — only after puzzle solved
+["sound", "effect", "0.8", "c3 e3 g3 c4 slow(pad)", "solved"]
+```
+
+The state string is the event's own state — the fourth element on the `sound` tag is evaluated against the event it's declared on.
+
+---
+
+### Layering budget — how many layers is too many
+
+The client mixes all active `sound` tags simultaneously. Too many layers becomes noise.
+
+| Event type | Sound budget |
+|-----------|-------------|
+| World event | `bpm` only |
+| Place | 1 `ambient`, 1 optional `layer` |
+| Feature/item | 1 `layer` or `effect` — only if the sound is meaningful to that specific object |
+| NPC | 1 `effect` on encounter |
+| **Active simultaneously** | **3–4 layers maximum** |
+
+Resist the urge to add sound to everything. Silence is part of the palette — a place with no sound tags inherits a quieter mix.
+
+---
+
+### BPM and place overrides
+
+Declare the world BPM on the world event. Place events can override it for tempo shifts:
+
+```json
+// World event — comfortable walking pace
+["sound", "bpm", "72"],
+
+// Mechanism chamber — faster, more tense
+["sound", "bpm", "96"],
+
+// The sanctum — slower, ancient
+["sound", "bpm", "52"]
+```
+
+Tempo shifts are felt even when players don't consciously notice them. Use them for threshold moments — descent underground, entering a significant place, approaching the win state.
+
+---
+
+### Worked example — The Lighthouse Keeper with sound
+
+```json
+// World event — slow coastal tempo
+["sound", "bpm", "60"],
+
+// Shore Path — open air, distant waves
+["sound", "ambient", "0.5", "c3 ~ ~ ~ slow(pad)"],
+
+// Lighthouse Base — heavier, mechanism waiting
+["sound", "ambient", "0.6", "c2*1 slow(pad)"],
+["sound", "layer",   "0.3", "perc(bd) ~ ~ ~"],            // slow mechanical pulse
+
+// Lamp Room — tension while lamp is dark, resolution when running
+["sound", "ambient", "0.5", "b2 ~ b2 ~ slow(strings)", "dark"],
+["sound", "ambient", "0.4", "c3 e3 g3 slow(pad)",      "running"],
+
+// Brass Lantern item — hum when on
+["sound", "layer", "0.2", "c5*16 fast(sine)", "on"],
+
+// Lamp Mechanism feature — one-shot on activation
+["sound", "effect", "0.9", "c2 c3 c4 fast(perc)"],
+
+// Signal Alcove — ethereal signal from out at sea
+["sound", "ambient", "0.5", "c4 ~ g4 ~ slow(bells)"],
+["sound", "layer",   "0.4", "b2 ~ b2 ~", "dark"],         // still tense until decoded
+["sound", "layer",   "0.5", "c3 e3 g3 slow(pad)", "decoded"], // resolution on decode
+
+// Keeper's Cottage — quiet, lived-in
+["sound", "ambient", "0.3", "~ ~ ~ ~"]                    // near-silence
+```
+
+The lamp room shows the pattern clearly: two `ambient` tags on the same place, each gated to a different lamp state. Only one plays at a time. The mix changes the moment the lamp runs — without the author doing anything else.
+
+---
+
+### `sound` as an action type — triggered one-shots
+
+For sounds that should fire at a specific moment rather than play passively, use `sound` as an action in any `on-*` dispatcher:
+
+```json
+// Puzzle solved — victory chord
+["on-complete", "", "sound", "c3 e3 g3 c4 fast(bells)", "0.9"],
+
+// Wrong answer — discordant sting
+["on-fail", "", "sound", "b2 f3 slow(pad)", "0.6"],
+
+// Key turns in lock
+["on-interact", "use", "sound", "c2 c3 fast(perc)", "1.0"],
+
+// NPC dies
+["on-health", "down", "0", "sound", "b1 ~ ~ ~ slow(pad)", "0.7"]
+```
+
+Volume is optional — defaults to `1.0`.
+
+**The rule:** if the sound marks a moment (solve, death, unlock, reveal), use the action type. If the sound characterises a state (in this room, lamp is on, puzzle unsolved), use a `sound` tag on the event.
+
+---
+
+### What NOT to do
+
+```json
+// DON'T — sound carries puzzle information
+["sound", "effect", "1.0", "c3 e3 g3", "solved"]
+// If this is the only signal that the puzzle was solved, deaf players are stuck.
+// Always pair sound effects with visible state changes or transition text.
+
+// DON'T — too many layers
+["sound", "layer", "0.5", "c2*1 slow(pad)"],
+["sound", "layer", "0.4", "b2 ~ b2 ~"],
+["sound", "layer", "0.3", "e3 ~ g3 ~"],
+["sound", "layer", "0.3", "perc(bd)*4"],
+["sound", "layer", "0.2", "c5*8 fast(sine)"]
+// Five layers simultaneously — the mix is unlistenable.
+
+// DON'T — generic sound on everything
+// Not every feature, item, and NPC needs a sound tag.
+// Sound should mean something. Silence is also a choice.
+```

@@ -284,24 +284,40 @@ An item with state and verbs:
 }
 ```
 
-Items can contain other items via `contains` tags. If an item has `contains` tags it is implicitly a container — no additional flag needed. Contents are accessible once the item is in inventory, and listed when examined or opened.
+Items can contain other items via `contains` tags. If an item has `contains` tags it is implicitly a container — no additional flag needed. The `contains` shape mirrors `requires`:
+
+```json
+["contains", "<item-ref>", "<state-or-blank>", "<fail-message-or-blank>"]
+```
+
+- **state** — the container must be in this state for the item to be accessible. Blank = always accessible once the container is in scope.
+- **fail-message** — shown when the player tries to take the item but the state gate isn't met. Blank = generic message.
 
 ```json
 {
   "kind": 30078,
   "pubkey": "<author_pubkey>",
   "tags": [
-    ["d",           "the-lake:item:brown-sack"],
-    ["t",           "the-lake"],
-    ["type",        "item"],
-    ["title",       "A Brown Sack"],
-    ["noun",        "sack",   "bag",   "brown sack"],
-    ["contains",    "30078:<pubkey>:the-lake:item:lunch"],
-    ["contains",    "30078:<pubkey>:the-lake:item:garlic"]
+    ["d",        "the-lake:item:brown-sack"],
+    ["t",        "the-lake"],
+    ["type",     "item"],
+    ["title",    "A Brown Sack"],
+    ["noun",     "sack", "bag", "brown sack"],
+    ["contains", "30078:<pubkey>:the-lake:item:lunch",  "", ""],
+    ["contains", "30078:<pubkey>:the-lake:item:garlic", "", ""]
   ],
   "content": "A brown sack, smelling of garlic."
 }
 ```
+
+**Scope:** contents are accessible when the container is in player inventory or on the ground in the current place. A dropped sack can still be accessed — `take lunch from sack` works whether the sack is carried or on the floor.
+
+**Contained items are not on the ground.** The place event does NOT declare a separate `["item", "<ref>"]` for items inside a container. They exist only inside the container and appear only via `take X from Y`. If an item appears in both a place `item` tag and a `contains` tag, it exists in two places at once — that is a bug.
+
+**Commands:**
+- `take <item> from <container>` — extract one item. `from` keeps noun order: target is the item, container is the instrument.
+- `take all from <container>` — extract all accessible contents in one command.
+- `examine <container>` / `look in <container>` — lists accessible contents. Items gated by unmet state show their fail-message or are hidden if fail-message is blank.
 
 #### requires / requires-not
 
@@ -465,6 +481,7 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 | `on-player-health` | `down`\|`up`, threshold | Player health crosses threshold. Valid on world event (global) or NPC (local). Replaces `on-player-health-zero`. |
 | `on-move` | State string or `—` | Every player move; optional state guard |
 | `on-counter` | Direction (`down`\|`up`), counter name, threshold | Fires when counter crosses threshold in declared direction — see counter section |
+| `on-fail` | `""` (blank, always) | Puzzle receives a wrong answer. Trigger-target is always blank — there is nothing to filter on. Only valid on `riddle` and `cipher` puzzle types. |
 
 **Trigger-target filter semantics:**
 
@@ -507,6 +524,7 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 | `decrement` | Counter name | Reduces named counter by 1 |
 | `increment` | Counter name | Increases named counter by 1 |
 | `set-counter` | Counter name, value | Sets named counter to a specific value |
+| `sound` | Pattern string, optional volume | Fires a one-shot sound effect |
 
 **`flees` and NPC movement:** `flees` is a message-only action — it tells the player the NPC has fled. Actual NPC movement is handled by `set-state` activating the `roams-when` condition. The intended pattern:
 
@@ -527,17 +545,18 @@ New action types can be added without changing the tag structure — the dispatc
 
 ✓ = valid and meaningful  —  = not applicable or nonsensical in this context
 
-| Trigger | `set-state` | `give-item` | `consume-item` | `traverse` | `deal-damage` | `deal-damage-npc` | `heal` | `consequence` | `steals-item` | `deposits` | `flees` | `decrement` | `increment` | `set-counter` |
-|---------|-------------|-------------|----------------|------------|---------------|-------------------|--------|---------------|---------------|------------|---------|-------------|-------------|---------------|
-| `on-interact` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ |
-| `on-complete` | ✓ | ✓ | ✓ | ✓ | — | — | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ |
-| `on-enter` | ✓ | ✓ | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ |
-| `on-encounter` | ✓ | — | — | — | ✓ | — | — | ✓ | ✓ | ✓ | ✓ | ✓ | — | — |
-| `on-attacked` | ✓ | — | — | — | ✓ | ✓ | — | ✓ | ✓ | — | ✓ | — | — | — |
-| `on-health` | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — | — | — | — |
-| `on-player-health` | ✓ | — | — | ✓ | — | — | — | ✓ | — | — | — | — | — | — |
-| `on-move` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ |
-| `on-counter` | ✓ | ✓ | — | — | ✓ | — | ✓ | ✓ | — | — | — | — | — | — |
+| Trigger | `set-state` | `give-item` | `consume-item` | `traverse` | `deal-damage` | `deal-damage-npc` | `heal` | `consequence` | `steals-item` | `deposits` | `flees` | `decrement` | `increment` | `set-counter` | `sound` |
+|---------|-------------|-------------|----------------|------------|---------------|-------------------|--------|---------------|---------------|------------|---------|-------------|-------------|---------------|---------|
+| `on-interact` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ | | ✓ |
+| `on-complete` | ✓ | ✓ | ✓ | ✓ | — | — | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ | | ✓ |
+| `on-enter` | ✓ | ✓ | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ | | ✓ |
+| `on-encounter` | ✓ | — | — | — | ✓ | — | — | ✓ | ✓ | ✓ | ✓ | ✓ | — | — | | ✓ |
+| `on-attacked` | ✓ | — | — | — | ✓ | ✓ | — | ✓ | ✓ | — | ✓ | — | — | — | | ✓ |
+| `on-health` | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — | — | — | — | | ✓ |
+| `on-player-health` | ✓ | — | — | ✓ | — | — | — | ✓ | — | — | — | — | — | — | | ✓ |
+| `on-move` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ | | ✓ |
+| `on-counter` | ✓ | ✓ | — | — | ✓ | — | ✓ | ✓ | — | — | — | — | — | — | | ✓ |
+| `on-fail` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | — | — | | ✓ |
 
 **Notes:**
 - `steals-item`, `deposits`, `flees` are NPC-only actions — only meaningful on `on-encounter` and `on-attacked` where an NPC is the actor
@@ -545,6 +564,7 @@ New action types can be added without changing the tag structure — the dispatc
 - `deal-damage` on `on-enter` / `on-move` — damage traps and hazardous terrain
 - `consume-item` on `on-interact` — single-use items consumed on use
 - `give-item` on `on-health` — NPC drops loot on death
+- `on-fail` only fires on `riddle` and `cipher` puzzles — sequence/observe puzzles have no wrong-answer state
 - The matrix reflects intent, not hard enforcement. The client should handle unexpected combinations gracefully rather than erroring.
 
 #### counter
@@ -757,21 +777,32 @@ A chest with state, contents, and a lock:
     ["t",           "the-lake"],
     ["type",        "feature"],
     ["title",       "An Ancient Chest"],
-    ["verb", "open", "examine"],
+    ["noun",        "chest", "box"],
+    ["verb",        "open",  "examine"],
     ["state",       "closed"],
-    ["requires", "30078:<pubkey>:the-lake:item:iron-key", "", "The chest is sealed with a serpent-shaped lock."],
-    ["on-interact", "open", "set-state", "open"],
-    ["contains",    "30078:<pubkey>:the-lake:item:iron-key"],
-    ["contains",    "30078:<pubkey>:the-lake:item:map-fragment"]
+    ["requires",    "30078:<pubkey>:the-lake:item:iron-key", "", "The chest is sealed with a serpent-shaped lock."],
+    ["on-interact", "open",  "set-state", "open"],
+    ["contains",    "30078:<pubkey>:the-lake:item:treasure-map", "open", "The chest is closed."],
+    ["contains",    "30078:<pubkey>:the-lake:item:gold-coin",    "open", "The chest is closed."]
   ],
   "content": "A heavy oak chest bound with iron. The lock is shaped like a serpent."
 }
 ```
 
-The place event references both items and features it contains:
+Features support `contains` with the same shape as items. The state gate is particularly useful on features — a chest only yields its contents when `open`, a safe only when `unlocked`. Contained items are not declared on the place event — they exist exclusively inside the feature:
 
 ```json
-["item",    "30078:<pubkey>:the-lake:item:iron-key"],
+// CORRECT — place declares the chest, not its contents
+["feature", "30078:<pubkey>:the-lake:feature:ancient-chest"]
+
+// WRONG — contained items must not appear as place items
+// ["item", "30078:<pubkey>:the-lake:item:treasure-map"]  ← bug: exists in two places
+```
+
+The place event declares the chest and any ground-level items — not items inside containers:
+
+```json
+["item",    "30078:<pubkey>:the-lake:item:brass-lantern"],
 ["feature", "30078:<pubkey>:the-lake:feature:ancient-chest"],
 ["feature", "30078:<pubkey>:the-lake:feature:bronze-altar"]
 ```
@@ -894,7 +925,6 @@ The answer is never stored. `SHA256(answer + salt)` means the client hashes the 
 | `sequence` | Events must reach given states in order | Same as recipe with `ordered: true` |
 | `cipher` | Decode an encrypted message | Uses NIP-44 sealed content |
 | `observe` | Notice something in place/clue descriptions | Client surfaces on player action |
-| `map` | Navigate a sub-maze | Client-side spatial challenge |
 
 **`observe` puzzles** are a named variant of `sequence` — the player must have examined or visited specific things rather than manipulated them. The `requires` tags check for `visited` or `read` states on places, clues, or features. Auto-evaluated after any state change, same as sequence puzzles. No answer input required — completion is automatic when all conditions pass:
 
@@ -942,14 +972,45 @@ The `combine` puzzle type is now redundant — item combination is handled entir
 
 **Sequence puzzle evaluation** — the client evaluates a sequence puzzle's `requires` automatically after any feature or item state change in the current place, not only on explicit player action. If all conditions are satisfied, `on-complete` fires immediately. This means players don't need to "submit" a sequence — completing the last step triggers completion automatically.
 
-**Branching puzzles** — when a puzzle has multiple possible outcomes depending on player choice (e.g. choosing between three paths), the schema fires multiple `on-complete` tags but the client must present the choice and fire only the appropriate one. This is the one case where client-layer selection is required — the schema defines what each outcome does, but cannot itself encode which choice the player made. The client presents the options, the player chooses, and the client fires the matching `on-complete` action:
+**`on-fail` — wrong answer hook**
+
+When a puzzle receives a wrong answer, `on-fail` fires. Shape mirrors `on-complete` exactly — blank trigger-target, action type, optional action target:
 
 ```json
-// Path choice — client presents three options, fires the chosen one
-["on-complete", "", "give-item", "30078:<pubkey>:the-lake:item:path-wits"],
-["on-complete", "", "give-item", "30078:<pubkey>:the-lake:item:path-fists"],
-["on-complete", "", "give-item", "30078:<pubkey>:the-lake:item:path-team"]
+["on-fail", "", "deal-damage",  "2"],
+["on-fail", "", "set-state",    "alarmed", "30078:<pubkey>:the-lake:npc:guard"],
+["on-fail", "", "decrement",    "attempts"],
+["on-fail", "", "consequence",  "30078:<pubkey>:the-lake:consequence:trap-springs"]
 ```
+
+`on-fail` fires on every wrong answer unless the author uses a counter to limit attempts. `on-fail` paired with a counter and `on-counter` gives attempt-limited puzzles with no new tag needed:
+
+```json
+// Puzzle with 3 attempts — alarm triggers on exhaustion
+["counter",    "attempts", "3"],
+["on-fail",    "", "decrement",   "attempts"],
+["on-counter", "down", "attempts", "0", "consequence", "30078:<pubkey>:the-lake:consequence:alarm-triggered"]
+```
+
+`on-fail` is only valid on `riddle` and `cipher` puzzle types — sequence and observe puzzles have no wrong-answer state.
+
+**Forks and branching — state is the primitive**
+
+Branching is not a puzzle mechanic. It is expressed through `set-state` on any trigger, with the state carrying through the world and gating future content. The fork is wherever the state gets set — a dialogue choice, an item used, a place visited, a puzzle solved one way.
+
+```json
+// Dialogue choice — player sides with the hermit
+["on-option", "side-with-hermit", "set-state", "ally", "30078:<pubkey>:the-lake:item:journal"]
+
+// Later — hidden portal only opens for hermit allies
+["requires", "30078:<pubkey>:the-lake:item:journal", "ally", "The passage doesn't respond to you."]
+
+// Different NPC reaction based on earlier choice
+["on-encounter", "player", "give-item", "30078:<pubkey>:the-lake:item:token"]
+// (gated by requires on the NPC or portal referencing the journal state)
+```
+
+State set anywhere propagates everywhere. NPCs react differently, portals open or stay sealed, items become available or don't — all reading the same state flag. This is the correct model for branching narratives in FOAKLOAR. No special branching mechanic exists or is needed.
 
 Everything else — conditions, outcomes, state transitions, NPC behaviour — is fully expressed in the schema with no special client logic required.
 
@@ -1303,6 +1364,7 @@ A reusable outcome definition. Consequences are fired by portals, NPCs, or `on-i
 | `give-item` | Item `a`-tag | Adds item to inventory |
 | `consume-item` | Item `a`-tag | Removes item from inventory |
 | `deal-damage` | Integer string | Reduces player health |
+| `set-state` | State string, optional event `a`-tag | Transitions this event (or a referenced event) to a new state — same shape as `on-interact` |
 
 State keys for `clears`: `inventory`, `states`, `counters`, `cryptoKeys`, `dialogueVisited`, `paymentAttempts`, `visited`.
 
@@ -1337,12 +1399,13 @@ When a consequence fires, its tags execute in this fixed order regardless of tag
 1. `give-item` — add items to inventory
 2. `consume-item` — remove items from inventory
 3. `deal-damage` — reduce player health
-4. **Drop inventory to current place** — if `clears inventory` is present
-5. `clears inventory` — empty player inventory array
-6. `clears states` — wipe states map
-7. `clears counters` — wipe counters map
-8. `clears` other keys — in declaration order
-9. `respawn` — move player to declared place (always last)
+4. `set-state` — transition event states (self or external)
+5. **Drop inventory to current place** — if `clears inventory` is present
+6. `clears inventory` — empty player inventory array
+7. `clears states` — wipe states map
+8. `clears counters` — wipe counters map
+9. `clears` other keys — in declaration order
+10. `respawn` — move player to declared place (always last)
 
 Drop before clear, respawn last. The engine uses `currentPlace` at consequence dispatch time for the drop location — this is always known.
 
@@ -2136,10 +2199,70 @@ Pattern notation follows a simplified mini-notation (Strudel/TidalCycles style) 
 | `fast(sine)` | Named instrument, fast attack |
 | `perc(bd)` | Percussion — `bd` kick, `sd` snare, `hh` hi-hat |
 
+**Sound tags on specific event types:**
+
+`sound` tags are valid on any event. Some event types have useful conventions:
+
+| Event type | Typical use |
+|-----------|-------------|
+| `world` | `bpm` — global tempo |
+| `place` | `ambient` — room atmosphere, `bpm` — tempo override |
+| `feature` / `item` / `npc` | `layer` — adds to mix while in scope, `effect` — one-shot on state entry |
+| `clue` | `effect` — plays when clue becomes visible (eerie chord on inscription reveal) |
+| `puzzle` | `layer` — tension music while puzzle is active and unsolved |
+| `consequence` | `effect` — one-shot when consequence fires (death jingle, victory swell) |
+| `payment` | `layer` — plays while payment UI is open |
+
+```json
+// Clue — eerie chord when inscription is revealed
+["sound", "effect", "0.8", "eb3 ~ bb3 ~ slow(pad)"],
+
+// Puzzle — tension layer while unsolved
+["sound", "layer",  "0.5", "b2 ~ b2 ~ slow(strings)", "unsolved"],
+
+// Consequence — death jingle
+["sound", "effect", "1.0", "b1 ~ ~ ~ slow(pad)"]
+```
+
+**`sound` as an action type:**
+
+Sound can also be triggered imperatively from any `on-*` dispatcher. This is a one-shot effect fired at a specific moment — different from passive `sound` tags which play while an event is in scope.
+
+Shape:
+```json
+["on-complete",  "", "sound", "<pattern>", "<volume?>"]
+["on-interact",  "<verb>", "sound", "<pattern>", "<volume?>"]
+["on-health",    "down", "0", "sound", "<pattern>", "<volume?>"]
+["on-fail",      "", "sound", "<pattern>", "<volume?>"]
+```
+
+```json
+// Puzzle solved — victory chord
+["on-complete", "", "sound", "c3 e3 g3 c4 fast(bells)", "0.9"],
+
+// Wrong answer — discordant sting
+["on-fail", "", "sound", "b2 f3 slow(pad)", "0.6"],
+
+// Lamp mechanism activates — mechanical clunk
+["on-interact", "use", "sound", "c2 c3 fast(perc)", "1.0"],
+
+// NPC dies — low swell
+["on-health", "down", "0", "sound", "b1 ~ ~ ~ slow(pad)", "0.7"],
+
+// Player enters place — arrival sound
+["on-enter", "player", "sound", "c4 ~ g4 slow(bells)", "0.5"]
+```
+
+Volume is optional — defaults to `1.0` if omitted.
+
+**Two sound models, two use cases:**
+- `sound` tags on events = passive, scope-driven. Plays while the event is relevant. Used for ambient atmosphere, state-conditional layers, NPC themes.
+- `sound` action = imperative, trigger-driven. Fires once at a specific moment. Used for punctuation — puzzle solve, death, key turning, door opening.
+
 **Client mixing:**
 The client evaluates all `sound` tags in scope on every state change. Passing tags are mixed at their declared volumes. No two `ambient` tags should be active simultaneously on the same place — the world author controls layering through role selection.
 
-**Note:** Sound is a progressive enhancement. Clients that do not implement the sound system ignore `sound` tags silently. World authors should not require sound for puzzle solving or navigation.
+Sound is a progressive enhancement. Clients that do not implement the sound system ignore `sound` tags silently. World authors must not require sound for puzzle solving or navigation.
 
 Content warnings use a `cw` tag with a short string. Clients display these before the world loads — the player can choose not to enter. Common values: `violence`, `horror`, `mild-peril`, `adult`, `flashing-lights`. No enforced vocabulary — world authors choose their own, clients can filter on known values.
 
@@ -2659,6 +2782,8 @@ The following commands are always available regardless of world content. They ar
 | `quests` | `q`, `journal` | Show active and completed quests |
 | `examine <noun>` | `x`, `look at` | Examine a feature, item, or NPC |
 | `take <noun>` | `get`, `pick up` | Pick up an item |
+| `take <noun> from <container>` | | Extract item from container (item in inventory or feature in place) |
+| `take all from <container>` | | Extract all accessible contents from container |
 | `drop <noun>` | | Drop an item to current place |
 | `go <direction>` | Direction alone | Navigate an exit slot |
 | `north` / `south` / `east` / `west` / `up` / `down` | `n s e w u d` | Navigation shortcuts |

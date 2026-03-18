@@ -1,0 +1,1428 @@
+{
+  "answers": {
+    "lighthouse:puzzle:signal-decode": "47.3N-9.8W"
+  },
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:world"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "The Lighthouse Keeper"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "mystery"
+        ],
+        [
+          "tag",
+          "coastal"
+        ],
+        [
+          "tag",
+          "melancholy"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:lighthouse:place:shore-path"
+        ],
+        [
+          "relay",
+          "wss://relay.damus.io"
+        ],
+        [
+          "collaboration",
+          "closed"
+        ],
+        [
+          "theme",
+          "monochrome"
+        ],
+        [
+          "colour",
+          "text",
+          "#d4d0c8"
+        ],
+        [
+          "colour",
+          "dim",
+          "#6b6b6b"
+        ],
+        [
+          "colour",
+          "title",
+          "#ffffff"
+        ],
+        [
+          "colour",
+          "clue",
+          "#a8c4d4"
+        ],
+        [
+          "font",
+          "courier"
+        ],
+        [
+          "cursor",
+          "beam"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "sound",
+          "bpm",
+          "60"
+        ],
+        [
+          "sound",
+          "bpm",
+          "60"
+        ]
+      ],
+      "content": "The light has been dark for three years.\n\nThe keeper's cottage is empty. His logbook is sealed.\n\nSomething brought you here."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:place:shore-path"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Shore Path"
+        ],
+        [
+          "noun",
+          "shore",
+          "path",
+          "beach"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:lighthouse-base",
+          "north",
+          "The lighthouse stands to the north."
+        ],
+        [
+          "exit",
+          "south",
+          "The coast road south \u2014 beyond the edge of this map."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:lighthouse:feature:tide-wrack"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "sound",
+          "ambient",
+          "0.5",
+          "c3 ~ ~ ~ slow(pad)"
+        ],
+        [
+          "sound",
+          "ambient",
+          "0.5",
+          "c3 ~ ~ ~ slow(pad)"
+        ]
+      ],
+      "content": "A shingle path runs north along the coast. The lighthouse rises against a grey sky \u2014 dark, as it has been for years. The tide has left something in the wrack line."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:place:lighthouse-base"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Lighthouse Base"
+        ],
+        [
+          "noun",
+          "lighthouse",
+          "base",
+          "ground floor"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:shore-path",
+          "south",
+          "Back to the shore."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:lamp-room",
+          "up",
+          "The spiral stair winds upward."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:keepers-cottage",
+          "west",
+          "The keeper's cottage."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:lighthouse:feature:mechanism"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:lighthouse:feature:logbook-shelf"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:lighthouse:item:crank-handle"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "sound",
+          "ambient",
+          "0.6",
+          "c2*1 slow(pad)"
+        ],
+        [
+          "sound",
+          "layer",
+          "0.3",
+          "perc(bd) ~ ~ ~"
+        ],
+        [
+          "sound",
+          "ambient",
+          "0.6",
+          "c2*1 slow(pad)"
+        ],
+        [
+          "sound",
+          "layer",
+          "0.3",
+          "perc(bd) ~ ~ ~"
+        ]
+      ],
+      "content": "The base of the lighthouse. Salt and rust. A mechanism occupies the centre of the room \u2014 the lamp drive, seized for lack of use. A crank socket gapes at its side. On a shelf by the stairs, a row of logbooks ends abruptly \u2014 the last spine blank."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:place:lamp-room"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Lamp Room"
+        ],
+        [
+          "noun",
+          "lamp room",
+          "top",
+          "lantern room"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:lighthouse-base",
+          "down",
+          "Back down the stairs."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:signal-alcove",
+          "east",
+          "A panel in the wall."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:lighthouse:feature:lamp"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:lighthouse:feature:lens"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "sound",
+          "ambient",
+          "0.5",
+          "b2 ~ b2 ~ slow(strings)"
+        ],
+        [
+          "sound",
+          "ambient",
+          "0.5",
+          "b2 ~ b2 ~ slow(strings)"
+        ]
+      ],
+      "content": "The lamp room at the top of the tower. The great lens is intact, dusty but undamaged. The lamp is cold. Through the glass, the sea stretches to the horizon. Something is out there \u2014 has always been out there."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:place:keepers-cottage"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Keeper's Cottage"
+        ],
+        [
+          "noun",
+          "cottage",
+          "house",
+          "cabin"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:lighthouse-base",
+          "east",
+          "Back to the lighthouse."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:lighthouse:feature:writing-desk"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:lighthouse:feature:cold-hearth"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "sound",
+          "ambient",
+          "0.2",
+          "~ ~ ~ ~"
+        ],
+        [
+          "sound",
+          "ambient",
+          "0.2",
+          "~ ~ ~ ~"
+        ]
+      ],
+      "content": "The keeper's cottage. Everything is as he left it \u2014 almost. A writing desk faces the window that looks toward the sea. The hearth is cold. The walls hold his whole life in small objects."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:place:signal-alcove"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Signal Alcove"
+        ],
+        [
+          "noun",
+          "alcove",
+          "signal room",
+          "east"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:lamp-room",
+          "west",
+          "Back to the lamp room."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:lighthouse:feature:signal-panel"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:lighthouse:feature:final-log"
+        ],
+        [
+          "content-type",
+          "application/nip44",
+          "text/markdown"
+        ],
+        [
+          "puzzle",
+          "lighthouse:puzzle:signal-decode"
+        ],
+        [
+          "sound",
+          "ambient",
+          "0.5",
+          "c4 ~ g4 ~ slow(bells)"
+        ],
+        [
+          "sound",
+          "layer",
+          "0.4",
+          "c3 e3 g3 slow(pad)",
+          "decoded"
+        ],
+        [
+          "sound",
+          "ambient",
+          "0.5",
+          "c4 ~ g4 ~ slow(bells)"
+        ],
+        [
+          "sound",
+          "layer",
+          "0.4",
+          "c3 e3 g3 slow(pad)",
+          "decoded"
+        ]
+      ],
+      "content": "# The Keeper's Final Log\n\nThe coordinates are not a place. They never were.\n\nThey are a bearing \u2014 to something that has been answering the light for longer than this lighthouse has existed. Something that was here before the coast had a name.\n\nI went to see. I won't write what I found.\n\nThe light should stay dark. But if you've read this \u2014 you lit it. You found the signal. You know the coordinates.\n\nYou'll go too.\n\nI understand now why I stayed so long.\n\n*\u2014 H.M., Keeper, Day 10,847*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:portal:shore-to-base"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:shore-path",
+          "north",
+          "The lighthouse."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:lighthouse-base",
+          "south",
+          "The shore path."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:portal:base-to-lamp"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:lighthouse-base",
+          "up",
+          "Up the spiral stair."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:lamp-room",
+          "down",
+          "Down to the base."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:portal:base-to-cottage"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:lighthouse-base",
+          "west",
+          "The keeper's cottage."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:keepers-cottage",
+          "east",
+          "The lighthouse."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:portal:lamp-to-alcove"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:lamp-room",
+          "east",
+          "A panel in the wall, previously invisible. It slides open."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:lighthouse:place:signal-alcove",
+          "west",
+          "Back to the lamp room."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:lighthouse:feature:lamp",
+          "running",
+          "The lamp is dark. Nothing is visible."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:item:crank-handle"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Crank Handle"
+        ],
+        [
+          "noun",
+          "crank",
+          "handle",
+          "crank handle"
+        ],
+        [
+          "verb",
+          "examine",
+          "look"
+        ],
+        [
+          "verb",
+          "use",
+          "insert",
+          "turn",
+          "fit"
+        ],
+        [
+          "description",
+          "A heavy iron handle, hexagonal socket at one end. Made to fit something specific."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:feature:tide-wrack"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Tide Wrack"
+        ],
+        [
+          "noun",
+          "wrack",
+          "seaweed",
+          "tide line",
+          "debris"
+        ],
+        [
+          "state",
+          "unsearched"
+        ],
+        [
+          "transition",
+          "unsearched",
+          "searched",
+          "Among the wrack: rope, shells, and something metal."
+        ],
+        [
+          "transition",
+          "searched",
+          "searched",
+          "You've already been through it."
+        ],
+        [
+          "verb",
+          "examine",
+          "look",
+          "search",
+          "rummage"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "searched"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "give-item",
+          "30078:<PUBKEY>:lighthouse:item:crank-handle"
+        ],
+        [
+          "description",
+          "A line of seaweed and debris left by the last high tide."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:feature:mechanism"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Lamp Mechanism"
+        ],
+        [
+          "noun",
+          "mechanism",
+          "drive",
+          "machine",
+          "socket"
+        ],
+        [
+          "state",
+          "seized"
+        ],
+        [
+          "transition",
+          "seized",
+          "cranking",
+          "The handle fits. You turn it. The mechanism groans \u2014 then catches."
+        ],
+        [
+          "transition",
+          "cranking",
+          "running",
+          "The mechanism runs. Above, the lamp wakes."
+        ],
+        [
+          "verb",
+          "examine",
+          "look"
+        ],
+        [
+          "verb",
+          "use",
+          "crank",
+          "turn",
+          "insert"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:lighthouse:item:crank-handle",
+          "",
+          "The socket needs something to turn it."
+        ],
+        [
+          "on-interact",
+          "use",
+          "set-state",
+          "cranking",
+          "30078:<PUBKEY>:lighthouse:feature:lamp"
+        ],
+        [
+          "on-interact",
+          "use",
+          "set-state",
+          "running",
+          "30078:<PUBKEY>:lighthouse:feature:lamp"
+        ],
+        [
+          "on-interact",
+          "use",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:lighthouse:portal:lamp-to-alcove"
+        ],
+        [
+          "on-interact",
+          "use",
+          "consume-item",
+          "30078:<PUBKEY>:lighthouse:item:crank-handle"
+        ],
+        [
+          "description",
+          "The lamp drive. A crank socket gapes at its side."
+        ],
+        [
+          "sound",
+          "effect",
+          "0.9",
+          "c2 c3 c4 fast(perc)"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:feature:lamp"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Lamp"
+        ],
+        [
+          "noun",
+          "lamp",
+          "light",
+          "lantern"
+        ],
+        [
+          "state",
+          "dark"
+        ],
+        [
+          "transition",
+          "dark",
+          "cranking",
+          "The lamp stirs. Warmth in the glass."
+        ],
+        [
+          "transition",
+          "cranking",
+          "running",
+          "The lamp is running. Light floods the room and cuts out to sea. Something out there catches it."
+        ],
+        [
+          "verb",
+          "examine",
+          "look"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:lighthouse:clue:lamp-dark"
+        ],
+        [
+          "description",
+          "The great lamp. Cold and dark."
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:lighthouse:clue:lamp-running"
+        ],
+        [
+          "sound",
+          "layer",
+          "0.2",
+          "c5*16 fast(sine)",
+          "running"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:feature:lens"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Fresnel Lens"
+        ],
+        [
+          "noun",
+          "lens",
+          "fresnel",
+          "glass"
+        ],
+        [
+          "verb",
+          "examine",
+          "look"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:lighthouse:clue:lamp-dark"
+        ],
+        [
+          "description",
+          "A great Fresnel lens, intact and dust-filmed. If the lamp ran, this would be visible for twenty miles."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:feature:logbook-shelf"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Logbook Shelf"
+        ],
+        [
+          "noun",
+          "shelf",
+          "logbook",
+          "logbooks",
+          "books"
+        ],
+        [
+          "state",
+          "unread"
+        ],
+        [
+          "transition",
+          "unread",
+          "read",
+          "Thirty years of entries. The last one ends mid-sentence."
+        ],
+        [
+          "verb",
+          "examine",
+          "look",
+          "read"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "read"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:lighthouse:clue:logbook-entry"
+        ],
+        [
+          "description",
+          "A shelf of logbooks. Thirty years of them. The last spine is blank."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:feature:writing-desk"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Writing Desk"
+        ],
+        [
+          "noun",
+          "desk",
+          "writing desk",
+          "table"
+        ],
+        [
+          "state",
+          "unread"
+        ],
+        [
+          "transition",
+          "unread",
+          "read",
+          "A letter, begun and abandoned. 'If you find this, the light is dark. You know what to do.'"
+        ],
+        [
+          "verb",
+          "examine",
+          "look",
+          "read",
+          "search"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "read"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:lighthouse:clue:desk-letter"
+        ],
+        [
+          "description",
+          "A writing desk. Something was written here and left."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:feature:cold-hearth"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Cold Hearth"
+        ],
+        [
+          "noun",
+          "hearth",
+          "fireplace",
+          "fire"
+        ],
+        [
+          "verb",
+          "examine",
+          "look"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:lighthouse:clue:hearth-ash"
+        ],
+        [
+          "description",
+          "A fireplace, cold for years. Ash in the grate."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:feature:signal-panel"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Signal Panel"
+        ],
+        [
+          "noun",
+          "panel",
+          "signal",
+          "dials",
+          "switches"
+        ],
+        [
+          "state",
+          "dark"
+        ],
+        [
+          "transition",
+          "dark",
+          "lit",
+          "The panel lights up. Dials, switches, a receiving display."
+        ],
+        [
+          "transition",
+          "lit",
+          "decoded",
+          "The signal resolves. A sequence of numbers. You know what they mean."
+        ],
+        [
+          "verb",
+          "examine",
+          "look"
+        ],
+        [
+          "verb",
+          "use",
+          "decode",
+          "read",
+          "tune"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "lit"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:lighthouse:clue:signal-instructions"
+        ],
+        [
+          "description",
+          "A signal panel, hidden behind the sliding wall. Active."
+        ],
+        [
+          "on-interact",
+          "use",
+          "set-state",
+          "active",
+          "30078:<PUBKEY>:lighthouse:puzzle:signal-decode"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:feature:final-log"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Final Log"
+        ],
+        [
+          "noun",
+          "log",
+          "logbook",
+          "journal",
+          "book"
+        ],
+        [
+          "state",
+          "sealed"
+        ],
+        [
+          "verb",
+          "examine",
+          "look",
+          "read",
+          "open"
+        ],
+        [
+          "description",
+          "The blank-spined logbook from the shelf \u2014 it was here all along. Sealed."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:clue:lamp-dark"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "The Dark Lamp"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Dark for three years. The mechanism below could run it \u2014 if it had something to turn it with."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:clue:lamp-running"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "The Light"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:lighthouse:feature:lamp",
+          "running",
+          ""
+        ]
+      ],
+      "content": "The light cuts out to sea. Something in the water \u2014 far out, at bearing north-northeast \u2014 catches it and answers back."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:clue:logbook-entry"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Last Entry"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Day 10,847. The signal came again at 03:00. Same coordinates. Same sequence. I know what's there. I know what I have to do. I've sealed the log. If the light runs again, you'll find it."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:clue:desk-letter"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Unfinished Letter"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "If you find this, the light is dark. You know what to do. Light it. The signal will answer. The coordinates are the key \u2014 not the place, the sequence."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:clue:hearth-ash"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Cold Ash"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Years of ash. Near the top: paper. He burned something before he left."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:clue:signal-instructions"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Signal Panel"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The receiving display shows coordinates in decimal degrees \u2014 latitude and longitude, separated by a dash. Enter them exactly as shown."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:puzzle:signal-decode"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "puzzle-type",
+          "riddle"
+        ],
+        [
+          "answer-hash",
+          "be253f50b555a1a2a91e899d4441691d5193c56c795c2ba108c05cc2f8832ac3"
+        ],
+        [
+          "salt",
+          "lighthouse:puzzle:signal-decode:v1"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:lighthouse:feature:signal-panel",
+          "lit",
+          "The panel needs to be active first."
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "decoded",
+          "30078:<PUBKEY>:lighthouse:feature:signal-panel"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:lighthouse:feature:final-log"
+        ]
+      ],
+      "content": "The panel shows a receiving display. A signal from out at sea \u2014 coordinates, repeated. What are they?"
+    }
+  ]
+}

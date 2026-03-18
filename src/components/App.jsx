@@ -23,6 +23,8 @@ import IdentityButton from './ui/IdentityButton.jsx';
 import LoginPanel from './ui/LoginPanel.jsx';
 import { loadDrafts, saveDraft, updateDraft, deleteDraft, clearDrafts, importEvents, exportDrafts, bulkPublish, loadAnswers } from '../builder/draftStore.js';
 import { validateWorld, verifyPuzzleHashes } from '../builder/validateWorld.js';
+import SoundToggle from './SoundToggle.jsx';
+import { evaluateSoundTags, isAudioReady } from '../services/sound.js';
 
 /** Map entry types to colour slots */
 const TYPE_COLOUR = {
@@ -310,6 +312,10 @@ export default function App() {
 
       engine.enterRoom(engine.currentPlace);
       commitEngine(engine);
+      // Start sound on initial room entry
+      if (isAudioReady()) {
+        evaluateSoundTags(mergedEvents, engine.currentPlace, engine.player.state, engine.player.npcStates);
+      }
     }
   }, [status, generation, mergedEvents]);
 
@@ -329,6 +335,10 @@ export default function App() {
     draftRef.current = '';
     await engine.handleCommand(val);
     commitEngine(engine);
+    // Update sound layers after state changes
+    if (isAudioReady()) {
+      evaluateSoundTags(mergedEvents, engine.currentPlace, engine.player.state, engine.player.npcStates);
+    }
   }
 
   function onKeyDown(e) {
@@ -452,6 +462,14 @@ export default function App() {
             draftsCount={drafts.length}
             onOpenDrafts={() => setShowDrafts(true)}
           />
+          <SoundToggle onAudioReady={() => {
+            if (engineRef.current) {
+              evaluateSoundTags(
+                mergedEvents, engineRef.current.currentPlace,
+                engineRef.current.player.state, engineRef.current.player.npcStates,
+              );
+            }
+          }} />
           <IdentityButton identity={identity} onClick={() => setShowLogin(!showLogin)} />
         </span>
       </div>

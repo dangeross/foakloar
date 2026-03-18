@@ -396,6 +396,19 @@ export const TAG_SCHEMAS = {
     ],
   },
 
+  // ── Sound ──────────────────────────────────────────────────────────────
+  sound: {
+    label: 'Sound',
+    desc: 'Sound layer. Role: bpm (tempo), ambient (loop), layer (adds to mix), effect (one-shot). Pattern uses mini-notation. Optional state gate.',
+    repeatable: true,
+    fields: [
+      { name: 'role', type: 'select', required: true, options: ['bpm', 'ambient', 'layer', 'effect'] },
+      { name: 'value', type: 'text', required: true, placeholder: 'BPM or volume (0.0-1.0)' },
+      { name: 'pattern', type: 'text', required: false, placeholder: 'c3 e3 g3 slow(pad)' },
+      { name: 'state', type: 'text', required: false, placeholder: 'state gate (blank = always)' },
+    ],
+  },
+
   // ── Consequence-level tags (direct on consequence events) ──────────────
   'set-state':    { label: 'Set State', desc: 'Set state on an external event (NPC, feature, portal). Used in consequences for side effects.', repeatable: true, fields: [{ name: 'state', type: 'text', required: true, placeholder: 'target state (e.g. burning, visible)' }, { name: 'ref', type: 'event-ref', required: true, placeholder: 'target event' }] },
   'give-item':    { label: 'Give Item', desc: 'Add this item to the player\'s inventory', repeatable: true, fields: [{ name: 'ref', type: 'event-ref', required: true, eventTypeFilter: 'item' }] },
@@ -435,18 +448,18 @@ export const TAG_SCHEMAS = {
 
 /** Which tags are valid for each event type */
 export const TAGS_BY_EVENT_TYPE = {
-  place:       ['title', 'content-type', 'exit', 'item', 'feature', 'npc', 'clue', 'noun', 'state', 'transition', 'requires', 'requires-not', 'on-enter', 'on-player-health', 'media', 'cw', 'puzzle'],
+  place:       ['title', 'content-type', 'exit', 'item', 'feature', 'npc', 'clue', 'noun', 'state', 'transition', 'requires', 'requires-not', 'on-enter', 'on-player-health', 'media', 'sound', 'cw', 'puzzle'],
   portal:      ['title', 'exit', 'state', 'transition', 'requires', 'requires-not', 'consequence', 'cw'],
-  item:        ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-move', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'damage', 'hit-chance', 'media'],
-  feature:     ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'media'],
+  item:        ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-move', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'damage', 'hit-chance', 'media', 'sound'],
+  feature:     ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'media', 'sound'],
   clue:        ['title', 'noun', 'state', 'transition', 'content-type', 'requires', 'requires-not', 'media', 'puzzle'],
   puzzle:      ['puzzle-type', 'answer-hash', 'salt', 'ordered', 'requires', 'on-complete', 'on-fail', 'counter', 'on-counter', 'content-type'],
   recipe:      ['title', 'noun', 'verb', 'state', 'transition', 'requires', 'on-complete', 'on-fail', 'counter', 'on-counter', 'ordered'],
   payment:     ['title', 'amount', 'unit', 'lnurl', 'on-complete'],
-  npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health', 'on-player-health', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not'],
+  npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health', 'on-player-health', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not', 'sound'],
   dialogue:    ['text', 'option', 'requires', 'requires-not', 'on-enter'],
   consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage', 'set-state'],
-  world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'content-type', 'media', 'w'],
+  world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'content-type', 'media', 'w'],
   vouch:       ['pubkey', 'scope', 'can-vouch'],
   quest:       ['title', 'involves', 'requires', 'requires-not', 'on-complete'],
 };

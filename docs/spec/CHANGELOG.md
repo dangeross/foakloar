@@ -106,6 +106,21 @@ Portal always uses extended form. Portal wins if conflict. Hidden portals still 
 
 **`plaintext-type` tag proposed and removed before shipping** — replaced by three-element `content-type`.
 
+**`sound` extended — event tags on clue/puzzle/consequence/payment, and `sound` as action type**
+Event `sound` tags: documented conventions per event type — clue (`effect` on reveal), puzzle (`layer` while unsolved), consequence (`effect` on fire), payment (`layer` while UI open). `sound` as action type: one-shot triggered from any `on-*` dispatcher. Shape: `["on-complete", "", "sound", "<pattern>", "<volume?>"]`. Added to action types table and trigger × action matrix. Two models: passive tags (scope-driven) vs action type (trigger-driven).
+
+**`contains` tag fully specced — unified container mechanic**
+Shape: `["contains", "<item-ref>", "<state-or-blank>", "<fail-message-or-blank>"]`. Valid on items and features. State gate makes contents accessible only when container is in specified state. Contained items are NOT declared on the place event — they exist exclusively inside the container. Scope: accessible when container is in inventory or on ground in current place. Commands: `take <item> from <container>`, `take all from <container>`, `examine <container>`. Starting inventory containers work naturally via world event `inventory` tag.
+
+**`on-fail` trigger added to puzzle events**
+Fires when a riddle or cipher puzzle receives a wrong answer. Shape mirrors `on-complete`. Valid on `riddle` and `cipher` only — sequence/observe have no wrong-answer state. Pair with a counter + `on-counter` for attempt-limited puzzles.
+
+**Branching puzzles removed — state is the branching primitive**
+The branching puzzle pattern (multiple `on-complete` tags with client-layer selection) is removed. Branching is expressed through `set-state` on any trigger, with state carrying through the world and gating future content via `requires`. No special branching mechanic exists or is needed.
+
+**`set-state` added to consequence tag table and execution order**
+Was used in examples (silver-weakness) but missing from the formal tag table and execution order. Added as step 4 — fires after `deal-damage`, before inventory drop. Shape identical to `on-interact`: state string with optional external event `a`-tag.
+
 **`on-encounter` shape formalised — filter + external target**
 Trigger-target is now `""` (any entity), `"player"`, or NPC `a`-tag. Optional 5th element is an external action target — same convention as `on-attacked` and `on-interact`. `""` enables proximity traps firing on any entity.
 
