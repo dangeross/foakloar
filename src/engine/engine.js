@@ -1533,6 +1533,8 @@ export class GameEngine {
 
     if (hashHex !== expectedHash) {
       this._emit('That is not the answer.', 'error');
+      // Fire on-fail tags (riddle/cipher only)
+      this._firePuzzleOnFail(puzzleEvent, this.puzzleActive);
       return;
     }
 
@@ -1579,6 +1581,46 @@ export class GameEngine {
     }
 
     this.puzzleActive = null;
+  }
+
+  /**
+   * Fire on-fail tags on a puzzle after a wrong answer.
+   * Shape: ["on-fail", "", "<action>", "<target?>", "<ext-ref?>"]
+   * Only valid on riddle and cipher puzzle types.
+   */
+  _firePuzzleOnFail(puzzleEvent, puzzleDtag) {
+    for (const tag of getTags(puzzleEvent, 'on-fail')) {
+      const action = tag[2];
+      const value = tag[3];
+      const extRef = tag[4];
+
+      if (action === 'deal-damage') {
+        const amount = parseInt(value, 10) || 1;
+        const prevHealth = this.player.getHealth();
+        if (prevHealth != null) {
+          this.player.dealDamage(amount);
+          this._emit(`You take ${amount} damage. (HP: ${this.player.getHealth()})`, 'error');
+          this._evalPlayerHealthTriggers(prevHealth, this.player.getHealth());
+        }
+      } else if (action === 'set-state' && extRef) {
+        const result = applyExternalSetState(
+          extRef, value, this.events, this.player,
+          (t, ty) => this._emit(t, ty),
+          (h, ty) => this._emitHtml(h, ty),
+        );
+        if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
+      } else if (action === 'consequence' && value) {
+        this._executeConsequence(value);
+      } else if (action === 'traverse' && value) {
+        this._traverse(value);
+      } else if (action === 'decrement') {
+        this._applyCounterAction('decrement', puzzleDtag, value, extRef, puzzleEvent);
+      } else if (action === 'increment') {
+        this._applyCounterAction('increment', puzzleDtag, value, extRef, puzzleEvent);
+      } else if (action === 'set-counter') {
+        this._applyCounterAction('set-counter', puzzleDtag, value, extRef, puzzleEvent);
+      }
+    }
   }
 
   // ── Dialogue system ───────────────────────────────────────────────────
@@ -1986,6 +2028,7 @@ export class GameEngine {
 
     if (invMatch.dtag !== expectedRef) {
       this._emit("That's not right.", 'error');
+      this._firePuzzleOnFail(recipeEvent, recipeDtag);
       this.craftingActive = null;
       return true;
     }
@@ -1996,6 +2039,7 @@ export class GameEngine {
       if (itemState !== expectedState) {
         const desc = itemRequires[step][3] || "That item isn't in the right state.";
         this._emit(desc, 'error');
+        this._firePuzzleOnFail(recipeEvent, recipeDtag);
         this.craftingActive = null;
         return true;
       }

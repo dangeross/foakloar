@@ -65,6 +65,10 @@
           "clean"
         ],
         [
+          "health",
+          "10"
+        ],
+        [
           "content-type",
           "text/markdown"
         ]
@@ -796,6 +800,12 @@
           "set-state",
           "visible",
           "30078:<PUBKEY>:forge:clue:key-forged"
+        ],
+        [
+          "on-fail",
+          "",
+          "deal-damage",
+          "1"
         ]
       ],
       "content": "Forge the iron bar with the leather strip for a grip. The forge must be lit."
