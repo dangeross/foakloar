@@ -5,12 +5,12 @@
  */
 
 import React, { useState, useRef, useMemo, useEffect } from 'react';
-import DOSPanel from '../components/ui/DOSPanel.jsx';
-import DOSButton from './DOSButton.jsx';
+import DOSPanel from '../../components/ui/DOSPanel.jsx';
+import DOSButton from './ui/DOSButton.jsx';
 import ImportPreviewPanel from './ImportPreviewPanel.jsx';
-import { validateEvent } from './eventBuilder.js';
-import { validateImport, loadAnswers } from './draftStore.js';
-import { validateWorld, verifyPuzzleHashes } from './validateWorld.js';
+import { validateEvent } from '../eventBuilder.js';
+import { validateImport, loadAnswers } from '../draftStore.js';
+import { validateWorld, verifyPuzzleHashes } from '../validateWorld.js';
 
 function getTagValue(event, name) {
   return event.tags?.find((t) => t[0] === name)?.[1] || null;

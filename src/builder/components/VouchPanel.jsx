@@ -4,10 +4,10 @@
 
 import React, { useState, useCallback } from 'react';
 import { nip19 } from 'nostr-tools';
-import DOSPanel from '../components/ui/DOSPanel.jsx';
-import DOSButton from './DOSButton.jsx';
-import DOSSelect from './DOSSelect.jsx';
-import { buildEventTemplate, publishEvent } from './eventBuilder.js';
+import DOSPanel from '../../components/ui/DOSPanel.jsx';
+import DOSButton from './ui/DOSButton.jsx';
+import DOSSelect from './ui/DOSSelect.jsx';
+import { buildEventTemplate, publishEvent } from '../eventBuilder.js';
 
 const SCOPE_OPTIONS = [
   { value: 'all', label: 'All event types' },

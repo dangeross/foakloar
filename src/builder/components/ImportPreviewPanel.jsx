@@ -6,8 +6,8 @@
  */
 
 import React from 'react';
-import DOSPanel from '../components/ui/DOSPanel.jsx';
-import DOSButton from './DOSButton.jsx';
+import DOSPanel from '../../components/ui/DOSPanel.jsx';
+import DOSButton from './ui/DOSButton.jsx';
 
 function getTagValue(event, name) {
   return event.tags?.find((t) => t[0] === name)?.[1] || null;

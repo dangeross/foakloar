@@ -8,14 +8,14 @@
 
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { nip19 } from 'nostr-tools';
-import DOSPanel from '../components/ui/DOSPanel.jsx';
-import DOSButton from './DOSButton.jsx';
-import DOSSelect from './DOSSelect.jsx';
-import InlineList from './InlineList.jsx';
+import DOSPanel from '../../components/ui/DOSPanel.jsx';
+import DOSButton from './ui/DOSButton.jsx';
+import DOSSelect from './ui/DOSSelect.jsx';
+import InlineList from './ui/InlineList.jsx';
 import { Tooltip } from './TagEditor.jsx';
-import { slugify, buildEventTemplate } from './eventBuilder.js';
-import { DEFAULT_RELAY_URLS } from '../config.js';
-import { resolveTheme, applyTheme, resolveEffects, applyEffects, resolveFont, resolveFontSize, resolveFontSizePanel, resolveCursor, applyFontAndCursor, loadFont } from '../services/theme.js';
+import { slugify, buildEventTemplate } from '../eventBuilder.js';
+import { DEFAULT_RELAY_URLS } from '../../config.js';
+import { resolveTheme, applyTheme, resolveEffects, applyEffects, resolveFont, resolveFontSize, resolveFontSizePanel, resolveCursor, applyFontAndCursor, loadFont } from '../../services/theme.js';
 
 
 /** Validators for InlineList */

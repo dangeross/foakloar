@@ -13,7 +13,7 @@
  */
 
 import React, { useState } from 'react';
-import { Tooltip } from './TagEditor.jsx';
+import { Tooltip } from '../TagEditor.jsx';
 
 export default function InlineList({ label, items, onChange, placeholder, validate, display, compact = false, tooltip }) {
   const [input, setInput] = useState('');

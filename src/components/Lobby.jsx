@@ -17,7 +17,7 @@ import WorldCard from './WorldCard.jsx';
 import TipPanel from './TipPanel.jsx';
 import { useWorldDiscovery } from '../hooks/useWorldDiscovery.js';
 import { listDraftWorlds, validateImport, importEvents } from '../builder/draftStore.js';
-import ImportPreviewPanel from '../builder/ImportPreviewPanel.jsx';
+import ImportPreviewPanel from '../builder/components/ImportPreviewPanel.jsx';
 import { APP_PUBKEY } from '../config.js';
 
 const LOBBY_MODES = [

@@ -480,10 +480,23 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 | `consequence` | Consequence `a`-tag | Fires a consequence event |
 | `steals-item` | `any` or item `a`-tag | Takes item from player inventory |
 | `deposits` | — | NPC drops held items in current place |
-| `flees` | — | NPC moves immediately to a random route place |
+| `flees` | — | Emits a departure message. Pair with `set-state` to activate roaming — see below. |
 | `decrement` | Counter name | Reduces named counter by 1 |
 | `increment` | Counter name | Increases named counter by 1 |
 | `set-counter` | Counter name, value | Sets named counter to a specific value |
+
+**`flees` and NPC movement:** `flees` is a message-only action — it tells the player the NPC has fled. Actual NPC movement is handled by `set-state` activating the `roams-when` condition. The intended pattern:
+
+```json
+// On NPC — roams only when fleeing
+["roams-when", "fleeing"],
+
+// On attacked — state change activates roaming, flees emits the message
+["on-attacked", "", "set-state", "fleeing"],
+["on-attacked", "", "flees"]
+```
+
+`flees` without a matching `set-state` will emit a message but the NPC will not move. `set-state` without `flees` will silently start roaming with no player feedback. Both together give the correct behaviour.
 
 New action types can be added without changing the tag structure — the dispatcher is intentionally open-ended.
 
@@ -881,9 +894,6 @@ Defines what items combine to produce a new item. Structurally identical to a se
     ["d",           "the-lake:recipe:serpent-staff"],
     ["t",           "the-lake"],
     ["type",        "recipe"],
-    ["title",       "Serpent Staff"],
-    ["noun",        "staff", "serpent staff"],
-    ["verb",        "craft", "assemble", "combine"],
     ["state",       "unknown"],
     ["transition",  "unknown", "known", "You piece together how the staff was made."],
     ["requires",    "30078:<pubkey>:the-lake:item:wooden-rod",   "", ""],
@@ -897,21 +907,20 @@ Defines what items combine to produce a new item. Structurally identical to a se
 }
 ```
 
-**Crafting verbs and nouns:**
+- `ordered: true` — ingredients must be combined in sequence; client evaluates `requires` in tag order
+- **Ingredient consumption is explicit** — items are only consumed if listed as `on-complete consume-item` tags. `requires` gates the recipe (player must hold the item) but does not consume it. This allows non-item requirements — a lit forge, a specific place state — without consuming them:
 
-Recipes use `verb` and `noun` tags, same as features and items. The player types `<verb> <noun>` to initiate crafting — e.g. `craft staff`, `forge key`, `brew potion`. If no `verb` tag is declared, the client falls back to `craft` and `combine` as built-in defaults. If no `noun` tag, the client matches by `title`.
+```json
+// Forge is required but not consumed — only the iron-bar and leather-strip are
+["requires",    "30078:<pubkey>:forge:feature:forge",       "lit", "You need a lit forge."],
+["requires",    "30078:<pubkey>:forge:item:iron-bar",       "", ""],
+["requires",    "30078:<pubkey>:forge:item:leather-strip",  "", ""],
+["on-complete", "", "give-item",    "30078:<pubkey>:forge:item:iron-key"],
+["on-complete", "", "consume-item", "30078:<pubkey>:forge:item:iron-bar"],
+["on-complete", "", "consume-item", "30078:<pubkey>:forge:item:leather-strip"]
+```
 
-**Crafting flow:**
-
-- `ordered: false` (or absent) — the client checks all `requires` at once. If all pass, `on-complete` fires immediately. If any fail, the first failure message is shown.
-- `ordered: true` — the client enters crafting mode. The player selects inventory items one at a time, in `requires` tag order. If the wrong item is selected, crafting fails with a message and exits. Non-item requires (feature states) are checked silently.
-
-**Additional rules:**
-
-- Ingredients are consumed from inventory on completion; produced item is added
-- A feature can be required for crafting: `["requires", "30078:<pubkey>:the-lake:feature:forge", "lit", "You need a lit forge."]`
-- Recipes are not place-scoped — the player can craft anywhere if they have the items
-- A completed recipe is marked as solved and cannot be crafted again
+- A feature can be required for crafting without being consumed — `requires` on a feature state is a gate, not an ingredient
 
 ---
 
@@ -2376,6 +2385,16 @@ For named, trackable quests, an optional quest event groups the chain and define
 
 `involves` tags are optional hints for the client's quest log UI — they indicate which events are part of this quest chain without affecting completion logic.
 
+**Quest rewards via `on-complete`:** when all `requires` conditions pass, the quest fires its `on-complete` tags — same dispatcher as puzzles and recipes. Use this to give reward items, open portals, change world state:
+
+```json
+["on-complete", "", "give-item",  "30078:<pubkey>:the-lake:item:hermit-token"],
+["on-complete", "", "set-state",  "rewarded"],
+["on-complete", "", "set-state",  "open", "30078:<pubkey>:the-lake:portal:hermit-shortcut"]
+```
+
+Without `on-complete` tags, quest completion is recorded in player state and the quest log is updated — that's the minimum behaviour.
+
 **Score** — numeric scoring (e.g. points per treasure deposited) is client-side presentation, not schema. The client can derive a score from whatever rule fits the game. No schema tag needed.
 
 ---
@@ -2457,6 +2476,28 @@ The two modes share all state. Switching is a UI toggle, not a different session
 │  └──────────────┘                                │
 └──────────────────────────────────────────────────┘
 ```
+
+---
+
+### 9.3 Built-in Commands
+
+The following commands are always available regardless of world content. They are client-level commands — not dispatched through the world's `verb` tag system.
+
+| Command | Aliases | Effect |
+|---------|---------|--------|
+| `look` | `l` | Re-render current place description, exits, items, NPCs |
+| `look <direction>` | | Show all portals on that exit slot — full list including unverified |
+| `inventory` | `i`, `inv` | List carried items |
+| `help` | `?` | Show available commands |
+| `quests` | `q`, `journal` | Show active and completed quests |
+| `examine <noun>` | `x`, `look at` | Examine a feature, item, or NPC |
+| `take <noun>` | `get`, `pick up` | Pick up an item |
+| `drop <noun>` | | Drop an item to current place |
+| `go <direction>` | Direction alone | Navigate an exit slot |
+| `north` / `south` / `east` / `west` / `up` / `down` | `n s e w u d` | Navigation shortcuts |
+| `attack <noun>` | `fight`, `hit` | Attack a target (combat) |
+
+World-defined `verb` tags extend this set — built-in commands are always available and cannot be overridden by world events. If a world's verb conflicts with a built-in command, the built-in takes precedence.
 
 ---
 

@@ -44,12 +44,15 @@ A decentralised text adventure built on NOSTR (kind 30078). The world is a graph
 | `src/builder/tagSchema.js` | Tag schemas, EVENT_TYPE_DESCRIPTIONS, TAGS_BY_EVENT_TYPE |
 | `src/builder/eventBuilder.js` | Event template building + validateEvent |
 | `src/builder/validateWorld.js` | Cross-event world validation |
-| `src/builder/EventEditor.jsx` | Generic event creation/edit form |
-| `src/builder/TagEditor.jsx` | Data-driven tag editor + Tooltip component |
-| `src/builder/BuildModeOverlay.jsx` | Annotated room view — exits, entities, + new dropdown |
-| `src/builder/InlineList.jsx` | Shared chip-tag input (verb/noun aliases, genre tags, relays) |
-| `src/builder/DOSSelect.jsx` | Themed dropdown select |
-| `src/builder/DOSButton.jsx` | Themed button |
+| `src/builder/draftStore.js` | Draft persistence, import/export, bulk publish |
+| `src/builder/components/EventEditor.jsx` | Generic event creation/edit form |
+| `src/builder/components/TagEditor.jsx` | Data-driven tag editor + Tooltip component |
+| `src/builder/components/BuildModeOverlay.jsx` | Annotated room view — exits, entities, + new dropdown |
+| `src/builder/components/WorldCreator.jsx` | World creation panel |
+| `src/builder/components/DraftListPanel.jsx` | Draft management panel |
+| `src/builder/components/ui/InlineList.jsx` | Shared chip-tag input (aliases, tags, relays) |
+| `src/builder/components/ui/DOSSelect.jsx` | Themed dropdown select |
+| `src/builder/components/ui/DOSButton.jsx` | Themed button |
 | `lib/events/*.mjs` | World event definitions (places, portals, items, features, clues) |
 | `lib/events/trust-test.mjs` | Trust test events — collaborator, vouched, untrusted authors |
 | `tools/publish-world.mjs` | Publishes events to relays (4 author keypairs) |

@@ -3,9 +3,9 @@
  */
 
 import React, { useMemo, useState } from 'react';
-import DOSPanel from '../components/ui/DOSPanel.jsx';
-import DOSButton from './DOSButton.jsx';
-import { validateEvent } from './eventBuilder.js';
+import DOSPanel from '../../components/ui/DOSPanel.jsx';
+import DOSButton from './ui/DOSButton.jsx';
+import { validateEvent } from '../eventBuilder.js';
 
 export default function EventPreview({ template, onPublish, onBack, onClose }) {
   const [publishing, setPublishing] = useState(false);

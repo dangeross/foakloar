@@ -5,9 +5,7 @@
 
 ## Current Status
 
-Reference client: The Lake phases 1-10 complete. Full world playable end to end.
-World: The Lake — all 12 places, full item chain, Hermit NPC, mechanism puzzle, Sanctum sealed.
-Next: Phase 11 — world event bootstrap.
+All phases complete (1–26 + combat). The Lake is fully playable. Builder mode functional with tooltips, event creation, draft management, and world validation.
 
 ---
 
@@ -28,9 +26,9 @@ Next: Phase 11 — world event bootstrap.
 
 ## Current Status
 
-Phases 11-18 complete. The Lake is fully playable. See `the-lake-client-plan-3.md` for Phase 19+ work.
+All phases complete. Plan 3 (phases 19–26) fully implemented including combat system. Builder mode has tooltips, event type descriptions, InlineList component, and + new dropdown.
 
-**Next: Phase 19 — Consequence dispatch** (start here)
+**Test worlds:** The Arena (combat), The Forge (crafting), The Errand (quests) in `docs/tests/`.
 
 ---
 

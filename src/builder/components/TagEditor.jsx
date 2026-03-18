@@ -7,9 +7,9 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { TAG_SCHEMAS, TAGS_BY_EVENT_TYPE, getTagSchema, valuesToTag, tagToValues, ACTION_TARGET_FIELD } from './tagSchema.js';
-import DOSButton from './DOSButton.jsx';
-import InlineList from './InlineList.jsx';
+import { TAG_SCHEMAS, TAGS_BY_EVENT_TYPE, getTagSchema, valuesToTag, tagToValues, ACTION_TARGET_FIELD } from '../tagSchema.js';
+import DOSButton from './ui/DOSButton.jsx';
+import InlineList from './ui/InlineList.jsx';
 
 /** Tooltip — styled info icon that shows description on hover */
 function Tooltip({ text }) {

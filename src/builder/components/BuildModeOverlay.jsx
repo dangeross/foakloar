@@ -8,9 +8,9 @@
 
 import React, { useMemo, useState } from 'react';
 import { nip19 } from 'nostr-tools';
-import { getTag, getTags } from '../engine/world.js';
-import { getTrustLevel } from '../engine/trust.js';
-import { navigateToProfile } from '../services/router.js';
+import { getTag, getTags } from '../../engine/world.js';
+import { getTrustLevel } from '../../engine/trust.js';
+import { navigateToProfile } from '../../services/router.js';
 
 /**
  * Derive room annotation data from events and current place.

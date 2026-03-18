@@ -9,15 +9,15 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import DOSPanel from '../components/ui/DOSPanel.jsx';
-import DOSButton from './DOSButton.jsx';
+import DOSPanel from '../../components/ui/DOSPanel.jsx';
+import DOSButton from './ui/DOSButton.jsx';
 import TagEditor from './TagEditor.jsx';
 import EventPreview from './EventPreview.jsx';
-import { buildEventTemplate, buildDTag, publishEvent } from './eventBuilder.js';
-import { EVENT_TYPE_DESCRIPTIONS } from './tagSchema.js';
+import { buildEventTemplate, buildDTag, publishEvent } from '../eventBuilder.js';
+import { EVENT_TYPE_DESCRIPTIONS } from '../tagSchema.js';
 import { Tooltip } from './TagEditor.jsx';
-import { resolvePubkeyPlaceholder, loadAnswers, saveAnswer } from './draftStore.js';
-import { renderMarkdown } from '../engine/content.js';
+import { resolvePubkeyPlaceholder, loadAnswers, saveAnswer } from '../draftStore.js';
+import { renderMarkdown } from '../../engine/content.js';
 
 /**
  * Extract fields from an event template for editing.

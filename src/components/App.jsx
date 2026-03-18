@@ -10,12 +10,12 @@ import { resolveTheme, applyTheme, resolveEffects, applyEffects, resolveFont, re
 import { buildTrustSet, resolveClientMode } from '../engine/trust.js';
 import { useStateBackup } from '../hooks/useStateBackup.js';
 import PaymentPanel from './PaymentPanel.jsx';
-import BuildModeOverlay from '../builder/BuildModeOverlay.jsx';
-import EventEditor from '../builder/EventEditor.jsx';
-import DraftListPanel from '../builder/DraftListPanel.jsx';
-import ModeDropdown from '../builder/ModeDropdown.jsx';
-import WorldCreator from '../builder/WorldCreator.jsx';
-import VouchPanel from '../builder/VouchPanel.jsx';
+import BuildModeOverlay from '../builder/components/BuildModeOverlay.jsx';
+import EventEditor from '../builder/components/EventEditor.jsx';
+import DraftListPanel from '../builder/components/DraftListPanel.jsx';
+import ModeDropdown from '../builder/components/ModeDropdown.jsx';
+import WorldCreator from '../builder/components/WorldCreator.jsx';
+import VouchPanel from '../builder/components/VouchPanel.jsx';
 import Lobby from './Lobby.jsx';
 import AuthorProfile from './AuthorProfile.jsx';
 import TipPanel from './TipPanel.jsx';
