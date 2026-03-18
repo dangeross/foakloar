@@ -218,6 +218,10 @@
           "30078:<PUBKEY>:forge:item:leather-strip"
         ],
         [
+          "item",
+          "30078:<PUBKEY>:forge:item:sack"
+        ],
+        [
           "feature",
           "30078:<PUBKEY>:forge:feature:wood-pile"
         ],
@@ -400,8 +404,7 @@
           "verb",
           "use",
           "unlock",
-          "insert",
-          "open"
+          "insert"
         ]
       ],
       "content": "A freshly forged iron key. Still warm. The leather grip fits the hand well."
@@ -592,6 +595,18 @@
           "open",
           "consume-item",
           "30078:<PUBKEY>:forge:item:iron-key"
+        ],
+        [
+          "contains",
+          "30078:<PUBKEY>:forge:item:smith-journal",
+          "open",
+          "The chest is locked."
+        ],
+        [
+          "contains",
+          "30078:<PUBKEY>:forge:item:gold-coin",
+          "open",
+          "The chest is locked."
         ]
       ],
       "content": "A heavy iron chest, locked. The lock is old but solid."
@@ -722,6 +737,73 @@
         ]
       ],
       "content": "Heavy leather bellows mounted above the forge. A few pumps would bring a dying fire back to life."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",       "forge:item:sack"],
+        ["t",       "forge"],
+        ["type",    "item"],
+        ["title",   "Brown Sack"],
+        ["noun",    "sack", "bag"],
+        ["verb",    "examine", "look"],
+        ["contains","30078:<PUBKEY>:forge:item:bread", "", ""],
+        ["contains","30078:<PUBKEY>:forge:item:garlic", "", ""]
+      ],
+      "content": "A brown sack, smelling faintly of garlic."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",     "forge:item:bread"],
+        ["t",     "forge"],
+        ["type",  "item"],
+        ["title", "Bread"],
+        ["noun",  "bread", "loaf"],
+        ["verb",  "examine"]
+      ],
+      "content": "A stale loaf. Still edible."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",     "forge:item:garlic"],
+        ["t",     "forge"],
+        ["type",  "item"],
+        ["title", "Garlic"],
+        ["noun",  "garlic", "clove"],
+        ["verb",  "examine"]
+      ],
+      "content": "A bulb of garlic, pungent and dry."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",     "forge:item:smith-journal"],
+        ["t",     "forge"],
+        ["type",  "item"],
+        ["title", "Smith's Journal"],
+        ["noun",  "journal", "book", "diary"],
+        ["verb",  "examine", "read"]
+      ],
+      "content": "A worn journal. The last entry reads: 'The iron must go first, then the leather for grip. The forge must be hot.'"
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",     "forge:item:gold-coin"],
+        ["t",     "forge"],
+        ["type",  "item"],
+        ["title", "Gold Coin"],
+        ["noun",  "coin", "gold", "gold coin"],
+        ["verb",  "examine"]
+      ],
+      "content": "A heavy gold coin, stamped with a serpent crest."
     },
 
     {

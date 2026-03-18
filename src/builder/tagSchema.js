@@ -385,7 +385,16 @@ export const TAG_SCHEMAS = {
   lnurl:  { label: 'LNURL / Lightning Address', desc: 'Lightning address or LNURL for receiving payment', fields: [{ name: 'value', type: 'text', required: true, placeholder: 'user@domain.com or lnurl1...' }] },
 
   // ── Contains (items within items) ────────────────────────────────────────
-  contains: { label: 'Contains', desc: 'Item found inside this item when examined', repeatable: true, fields: [{ name: 'ref', type: 'event-ref', required: true, eventTypeFilter: 'item' }] },
+  contains: {
+    label: 'Contains',
+    desc: 'Item inside this container. Accessible via "take X from Y". Optional state gate (e.g. only when chest is open).',
+    repeatable: true,
+    fields: [
+      { name: 'ref', type: 'event-ref', required: true, eventTypeFilter: 'item' },
+      { name: 'state', type: 'text', required: false, placeholder: 'required state (blank = always)' },
+      { name: 'fail-msg', type: 'text', required: false, placeholder: 'failure message' },
+    ],
+  },
 
   // ── Consequence-level tags (direct on consequence events) ──────────────
   'set-state':    { label: 'Set State', desc: 'Set state on an external event (NPC, feature, portal). Used in consequences for side effects.', repeatable: true, fields: [{ name: 'state', type: 'text', required: true, placeholder: 'target state (e.g. burning, visible)' }, { name: 'ref', type: 'event-ref', required: true, placeholder: 'target event' }] },

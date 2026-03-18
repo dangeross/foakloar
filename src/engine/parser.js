@@ -5,7 +5,7 @@
 
 import { getTag, getTags } from './world.js';
 
-const PREPOSITIONS = ['on', 'with', 'to', 'at', 'in', 'into'];
+const PREPOSITIONS = ['on', 'with', 'from', 'to', 'at', 'in', 'into'];
 
 /**
  * Strip leading articles (the, a, an) from a noun string.
