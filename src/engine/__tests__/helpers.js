@@ -209,6 +209,20 @@ export function makeEngine(events, playerOverrides = {}, configOverrides = {}, n
   return new GameEngine({ events, player, config });
 }
 
+/** Create a consequence event. */
+export function makeConsequence(name, { respawn, clears = [], giveItems = [], consumeItems = [], content = '', extraTags = [] } = {}) {
+  const dtag = `${WORLD}:consequence:${name}`;
+  const tags = [
+    ['type', 'consequence'],
+    ...(respawn ? [['respawn', ref(respawn)]] : []),
+    ...clears.map((c) => ['clears', c]),
+    ...giveItems.map((i) => ['give-item', ref(i)]),
+    ...consumeItems.map((i) => ['consume-item', ref(i)]),
+    ...extraTags,
+  ];
+  return makeEvent(dtag, tags, content);
+}
+
 // ── Multi-author helpers ──────────────────────────────────────────────
 
 /** Build an a-tag ref with a specific pubkey. */

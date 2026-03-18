@@ -1,0 +1,917 @@
+{
+  "answers": {},
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:world"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "The Forge"
+        ],
+        [
+          "author",
+          "FOAKLOAR Test"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "test"
+        ],
+        [
+          "tag",
+          "crafting"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:forge:place:smithy"
+        ],
+        [
+          "relay",
+          "wss://relay.damus.io"
+        ],
+        [
+          "collaboration",
+          "closed"
+        ],
+        [
+          "theme",
+          "monochrome"
+        ],
+        [
+          "effects",
+          "clean"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "An abandoned smithy. The forge is cold but the tools are here.\n\nSomething is locked in the chest."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:place:smithy"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Smithy"
+        ],
+        [
+          "noun",
+          "smithy",
+          "forge room",
+          "workshop"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:forge:place:storeroom",
+          "east",
+          "A storeroom to the east."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:forge:place:yard",
+          "south",
+          "The yard to the south."
+        ],
+        [
+          "exit",
+          "north",
+          "The road north \u2014 beyond the edge of this map."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:forge:feature:forge"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:forge:feature:locked-chest"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:forge:feature:bellows"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "A stone-floored smithy. The forge dominates the centre \u2014 cold ash in the grate, bellows overhead. A heavy chest sits against the far wall, locked. The tools are all here. The smith is not."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:place:storeroom"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Storeroom"
+        ],
+        [
+          "noun",
+          "storeroom",
+          "storage",
+          "room"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:forge:place:smithy",
+          "west",
+          "Back to the smithy."
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:forge:item:iron-bar"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:forge:feature:shelves"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "A small storeroom. Shelves line the walls \u2014 most empty, a few holding raw materials. An iron bar sits on the lowest shelf."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:place:yard"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Yard"
+        ],
+        [
+          "noun",
+          "yard",
+          "outside",
+          "courtyard"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:forge:place:smithy",
+          "north",
+          "Back to the smithy."
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:forge:item:leather-strip"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:forge:feature:wood-pile"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "A small yard behind the smithy. A pile of wood sits against the wall. Something is tangled in the wood \u2014 a strip of leather, stiff with age."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:portal:smithy-to-storeroom"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:forge:place:smithy",
+          "east",
+          "The storeroom."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:forge:place:storeroom",
+          "west",
+          "The smithy."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:portal:smithy-to-yard"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:forge:place:smithy",
+          "south",
+          "The yard."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:forge:place:yard",
+          "north",
+          "The smithy."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:item:iron-bar"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Iron Bar"
+        ],
+        [
+          "noun",
+          "bar",
+          "iron bar",
+          "iron"
+        ],
+        [
+          "verb",
+          "examine",
+          "look"
+        ],
+        [
+          "verb",
+          "use",
+          "forge",
+          "smelt",
+          "combine"
+        ]
+      ],
+      "content": "A bar of wrought iron. Still workable if the forge were lit."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:item:leather-strip"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Leather Strip"
+        ],
+        [
+          "noun",
+          "leather",
+          "strip",
+          "leather strip"
+        ],
+        [
+          "verb",
+          "examine",
+          "look"
+        ],
+        [
+          "verb",
+          "use",
+          "combine",
+          "wrap"
+        ]
+      ],
+      "content": "A strip of tanned leather, stiff with age but still pliable. Good for a grip."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:item:iron-key"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Iron Key"
+        ],
+        [
+          "noun",
+          "key",
+          "iron key"
+        ],
+        [
+          "verb",
+          "examine",
+          "look"
+        ],
+        [
+          "verb",
+          "use",
+          "unlock",
+          "insert",
+          "open"
+        ]
+      ],
+      "content": "A freshly forged iron key. Still warm. The leather grip fits the hand well."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:feature:forge"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Forge"
+        ],
+        [
+          "noun",
+          "forge",
+          "furnace",
+          "fire"
+        ],
+        [
+          "state",
+          "cold"
+        ],
+        [
+          "counter",
+          "heat",
+          "0"
+        ],
+        [
+          "transition",
+          "cold",
+          "lit",
+          "You pack the grate with wood and strike a spark. The forge catches."
+        ],
+        [
+          "transition",
+          "lit",
+          "cooling",
+          "The forge is losing heat. The bellows could bring it back."
+        ],
+        [
+          "transition",
+          "cooling",
+          "cold",
+          "The forge dies. You'll need to relight it."
+        ],
+        [
+          "transition",
+          "lit",
+          "lit",
+          "The forge burns steadily."
+        ],
+        [
+          "on-counter",
+          "heat",
+          "1",
+          "set-state",
+          "cooling"
+        ],
+        [
+          "on-counter",
+          "heat",
+          "0",
+          "set-state",
+          "cold"
+        ],
+        [
+          "verb",
+          "examine",
+          "look"
+        ],
+        [
+          "verb",
+          "light",
+          "start",
+          "ignite",
+          "use"
+        ],
+        [
+          "on-interact",
+          "light",
+          "set-state",
+          "lit"
+        ],
+        [
+          "on-interact",
+          "light",
+          "set-counter",
+          "heat",
+          "3"
+        ],
+        [
+          "on-interact",
+          "light",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:forge:clue:forge-lit"
+        ]
+      ],
+      "content": "A stone forge, cold and ash-filled. The bellows hang above it. There is wood in the yard."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:feature:locked-chest"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Locked Chest"
+        ],
+        [
+          "noun",
+          "chest",
+          "box",
+          "trunk",
+          "locked chest"
+        ],
+        [
+          "state",
+          "locked"
+        ],
+        [
+          "transition",
+          "locked",
+          "open",
+          "The key turns. The chest opens with a heavy clunk."
+        ],
+        [
+          "transition",
+          "open",
+          "open",
+          "The chest is open."
+        ],
+        [
+          "verb",
+          "examine",
+          "look"
+        ],
+        [
+          "verb",
+          "open",
+          "unlock",
+          "use"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:forge:item:iron-key",
+          "",
+          "The chest is locked. You need a key."
+        ],
+        [
+          "on-interact",
+          "open",
+          "set-state",
+          "open"
+        ],
+        [
+          "on-interact",
+          "open",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:forge:clue:chest-contents"
+        ],
+        [
+          "on-interact",
+          "open",
+          "consume-item",
+          "30078:<PUBKEY>:forge:item:iron-key"
+        ]
+      ],
+      "content": "A heavy iron chest, locked. The lock is old but solid."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:feature:shelves"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Shelves"
+        ],
+        [
+          "noun",
+          "shelves",
+          "shelf",
+          "rack"
+        ],
+        [
+          "verb",
+          "examine",
+          "look",
+          "search"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:forge:clue:shelves-note"
+        ]
+      ],
+      "content": "Wooden shelves, most empty. Dust outlines where things used to sit."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:feature:wood-pile"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Wood Pile"
+        ],
+        [
+          "noun",
+          "wood",
+          "pile",
+          "wood pile",
+          "logs"
+        ],
+        [
+          "verb",
+          "examine",
+          "look",
+          "search"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:forge:clue:wood-note"
+        ]
+      ],
+      "content": "A pile of split wood, dry and ready. Good for the forge."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:feature:bellows"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Bellows"
+        ],
+        [
+          "noun",
+          "bellows"
+        ],
+        [
+          "verb",
+          "examine",
+          "look"
+        ],
+        [
+          "verb",
+          "pump",
+          "use",
+          "pull"
+        ],
+        [
+          "on-interact",
+          "pump",
+          "set-state",
+          "lit",
+          "30078:<PUBKEY>:forge:feature:forge"
+        ]
+      ],
+      "content": "Heavy leather bellows mounted above the forge. A few pumps would bring a dying fire back to life."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:recipe:iron-key"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "recipe"
+        ],
+        [
+          "ordered",
+          "true"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:forge:item:iron-bar",
+          "",
+          "You need an iron bar."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:forge:item:leather-strip",
+          "",
+          "You need a leather strip for the grip."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:forge:feature:forge",
+          "lit",
+          "The forge must be lit to work the iron."
+        ],
+        [
+          "on-complete",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:forge:item:iron-key"
+        ],
+        [
+          "on-complete",
+          "",
+          "consume-item",
+          "30078:<PUBKEY>:forge:item:iron-bar"
+        ],
+        [
+          "on-complete",
+          "",
+          "consume-item",
+          "30078:<PUBKEY>:forge:item:leather-strip"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:forge:clue:key-forged"
+        ]
+      ],
+      "content": "Forge the iron bar with the leather strip for a grip. The forge must be lit."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:clue:forge-lit"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Forge Lit"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The forge burns. The iron bar could be worked now."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:clue:key-forged"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Key Forged"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The key is done. Still warm. The chest in the smithy might take it."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:clue:chest-contents"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Chest Contents"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Inside the chest: a smith's journal, a pouch of coin, and a letter addressed to no one. The smith knew something. They left it here deliberately."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:clue:shelves-note"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Shelves"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Most shelves are bare. One holds an iron bar \u2014 the last of the stock."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "forge:clue:wood-note"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Wood Pile"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Dry wood, enough to light the forge. A strip of old leather is tangled in the pile."
+    }
+  ]
+}

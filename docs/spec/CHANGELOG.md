@@ -50,7 +50,7 @@ Starting player inventory — given once on new game, not on reload.
 Items the NPC carries from spawn. Tracked per NPC. Drops on death, deposits via `deposits` action, stealable.
 
 **`type: payment` primitive**
-Lightning payment gate. LUD-06 + LUD-11. Payment hash stored for recovery on reload. See spec section 2.7b.
+Lightning payment gate. LUD-06 + LUD-11. Payment hash stored for recovery on reload. See spec section 2.8.
 
 **`on-complete` blank trigger-target**
 `on-complete` always uses `""` as trigger-target — consistent with generic `on-*` shape:
@@ -105,6 +105,25 @@ Portal always uses extended form. Portal wins if conflict. Hidden portals still 
 **`puzzle-type: payment` removed** — replaced by `type: payment`.
 
 **`plaintext-type` tag proposed and removed before shipping** — replaced by three-element `content-type`.
+
+**`clears inventory` drop behaviour specified**
+Items dropped to current place before inventory is emptied — never destroyed. Prevents soft-locks. Drop location is `currentPlace` at consequence dispatch time, not the respawn destination.
+
+**Consequence execution order defined**
+Fixed order: `give-item` → `consume-item` → `deal-damage` → drop inventory → `clears inventory` → `clears states` → `clears counters` → other `clears` → `respawn`. Drop before clear, respawn always last.
+
+**`clears states` and item state reset semantics**
+Dropped items initialise from event default state on re-pickup — not pre-death state. Correct: a lantern left on the ground resets to `off` on next pickup.
+
+**`clears counters` and resource reset semantics**
+Counters re-initialise from event `counter` tags on re-pickup. Depleted lantern resets to full after a death that clears counters. Authors who want counters to persist across death should omit `clears counters`.
+
+**Sound scoring system added (`sound` tag)**
+Any event can declare sound layers. Client mixes all active layers in real time. State-aware — layers add/remove as world state changes. Pattern-based synthesis via mini-notation (Strudel/TidalCycles style), no audio files.
+
+Shape: `["sound", "<role>", "<value>", "<pattern?>", "<state?>"]`
+Roles: `bpm` (tempo, value=BPM), `ambient` (continuous loop), `layer` (adds to mix in scope), `effect` (one-shot on state change).
+Progressive enhancement — clients that don't implement sound ignore tags silently.
 
 **Visual effects system added to world event**
 `effects` tag selects a bundle; individual tags override specific effects.

@@ -1,0 +1,295 @@
+{
+  "answers": {},
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",             "arena:world"],
+        ["t",             "arena"],
+        ["w",             "foakloar"],
+        ["type",          "world"],
+        ["title",         "The Arena"],
+        ["author",        "FOAKLOAR Test"],
+        ["version",       "1.1.0"],
+        ["lang",          "en"],
+        ["tag",           "test"],
+        ["tag",           "combat"],
+        ["tag",           "traverse"],
+        ["tag",           "counters"],
+        ["start",         "30078:<PUBKEY>:arena:place:entrance"],
+        ["relay",         "wss://relay.damus.io"],
+        ["collaboration", "closed"],
+        ["theme",         "blood-red"],
+        ["effects",       "crt"],
+        ["flicker",       "off"],
+        ["content-type",  "text/markdown"]
+      ],
+      "content": "The crowd is silent. You have been chosen.\n\nWin, and you leave. Lose, and you don't."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "arena:place:entrance"],
+        ["t",        "arena"],
+        ["type",     "place"],
+        ["title",    "Entrance Tunnel"],
+        ["noun",     "entrance", "tunnel", "gate"],
+        ["exit",     "30078:<PUBKEY>:arena:place:arena-floor", "north", "The arena floor."],
+        ["exit",     "30078:<PUBKEY>:arena:place:freedom-road", "south", "The way out."],
+        ["content-type", "text/markdown"]
+      ],
+      "content": "A stone tunnel leading north to the arena floor. The gate behind you sealed the moment you entered. The crowd's noise filters through the stone. Someone hands you nothing \u2014 you're on your own."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "arena:place:arena-floor"],
+        ["t",        "arena"],
+        ["type",     "place"],
+        ["title",    "Arena Floor"],
+        ["noun",     "arena", "floor", "sand"],
+        ["exit",     "30078:<PUBKEY>:arena:place:entrance",       "south", "Back to the entrance tunnel."],
+        ["exit",     "30078:<PUBKEY>:arena:place:armoury",        "east",  "A door to the armoury."],
+        ["exit",     "30078:<PUBKEY>:arena:place:champions-gate", "north", "The champion's gate."],
+        ["npc",      "30078:<PUBKEY>:arena:npc:guard"],
+        ["content-type", "text/markdown"]
+      ],
+      "content": "Sand and blood. The arena floor is open and wide. The crowd watches from above \u2014 too far to make out faces. A guard stands between you and the north gate. The armoury door is to the east."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "arena:place:armoury"],
+        ["t",        "arena"],
+        ["type",     "place"],
+        ["title",    "Armoury"],
+        ["noun",     "armoury", "armory", "weapons room"],
+        ["exit",     "30078:<PUBKEY>:arena:place:arena-floor", "west", "Back to the arena floor."],
+        ["item",     "30078:<PUBKEY>:arena:item:sword"],
+        ["feature",  "30078:<PUBKEY>:arena:feature:water-trough"],
+        ["content-type", "text/markdown"]
+      ],
+      "content": "A small room off the main floor. Weapon racks, mostly empty. One sword remains \u2014 serviceable, if not elegant. A water trough sits in the corner."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "arena:place:champions-gate"],
+        ["t",        "arena"],
+        ["type",     "place"],
+        ["title",    "Champion's Gate"],
+        ["noun",     "champion's gate", "gate", "north end"],
+        ["exit",     "30078:<PUBKEY>:arena:place:arena-floor",  "south", "Back to the arena floor."],
+        ["exit",     "30078:<PUBKEY>:arena:place:freedom-road", "north", "The gate to freedom."],
+        ["npc",      "30078:<PUBKEY>:arena:npc:champion"],
+        ["requires", "30078:<PUBKEY>:arena:npc:guard", "fled", "The guard still blocks the north gate."],
+        ["content-type", "text/markdown"]
+      ],
+      "content": "The far end of the arena. The champion waits here \u2014 still, unhurried, certain. Behind them, the gate to freedom."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "arena:place:freedom-road"],
+        ["t",        "arena"],
+        ["type",     "place"],
+        ["title",    "Freedom Road"],
+        ["noun",     "road", "freedom", "outside"],
+        ["exit",     "south", "The arena is behind you. There is no going back."],
+        ["content-type", "text/markdown"]
+      ],
+      "content": "Sunlight. Real sunlight, not the filtered kind that reaches the sand below. The road stretches ahead \u2014 open, empty, yours. The crowd's roar fades behind you. You won."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",    "arena:portal:entrance-to-floor"],
+        ["t",    "arena"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:arena:place:entrance",    "north", "The arena floor."],
+        ["exit", "30078:<PUBKEY>:arena:place:arena-floor", "south", "The entrance tunnel."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",    "arena:portal:floor-to-armoury"],
+        ["t",    "arena"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:arena:place:arena-floor", "east", "The armoury."],
+        ["exit", "30078:<PUBKEY>:arena:place:armoury",     "west", "The arena floor."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",       "arena:portal:floor-to-gate"],
+        ["t",       "arena"],
+        ["type",    "portal"],
+        ["exit",    "30078:<PUBKEY>:arena:place:arena-floor",    "north", "The champion's gate."],
+        ["exit",    "30078:<PUBKEY>:arena:place:champions-gate", "south", "Back to the arena floor."],
+        ["requires","30078:<PUBKEY>:arena:npc:guard", "fled", "The guard blocks the way north."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",           "arena:portal:entrance-south"],
+        ["t",           "arena"],
+        ["type",        "portal"],
+        ["exit",        "30078:<PUBKEY>:arena:place:entrance",     "south", "The gate to the outside."],
+        ["exit",        "30078:<PUBKEY>:arena:place:freedom-road", "north", "Back to the arena."],
+        ["requires",    "30078:<PUBKEY>:arena:npc:champion", "defeated", "The gate is sealed. You haven't earned your freedom."],
+        ["consequence", "30078:<PUBKEY>:arena:consequence:sealed-gate"]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "arena:portal:gate-to-freedom"],
+        ["t",        "arena"],
+        ["type",     "portal"],
+        ["state",    "hidden"],
+        ["exit",     "30078:<PUBKEY>:arena:place:champions-gate", "north", "The gate to freedom."],
+        ["exit",     "30078:<PUBKEY>:arena:place:freedom-road",   "south", "The arena behind you."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",           "arena:item:sword"],
+        ["t",           "arena"],
+        ["type",        "item"],
+        ["title",       "Sword"],
+        ["noun",        "sword", "blade", "weapon"],
+        ["verb",        "examine", "look"],
+        ["verb",        "attack",  "swing", "strike", "hit", "fight"]
+      ],
+      "content": "A straight iron sword. Balanced. It will do."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",          "arena:feature:water-trough"],
+        ["t",          "arena"],
+        ["type",       "feature"],
+        ["title",      "Water Trough"],
+        ["noun",       "trough", "water", "water trough"],
+        ["state",      "full"],
+        ["transition", "full",  "empty", "You drink deeply. The water is cold and clean."],
+        ["transition", "empty", "empty", "The trough is empty."],
+        ["counter",    "drinks", "3"],
+        ["verb",       "examine", "look"],
+        ["verb",       "drink",   "use", "sip"],
+        ["on-interact","drink", "decrement", "drinks"],
+        ["on-interact","drink", "heal",      "2"],
+        ["on-counter", "drinks", "0", "set-state", "empty"]
+      ],
+      "content": "A stone trough filled with water. Three mouthfuls, maybe. Enough to take the edge off a wound."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",          "arena:npc:guard"],
+        ["t",          "arena"],
+        ["type",       "npc"],
+        ["title",      "Arena Guard"],
+        ["noun",       "guard", "soldier", "fighter"],
+        ["health",     "6"],
+        ["damage",     "2"],
+        ["hit-chance", "0.7"],
+        ["state",      "hostile"],
+        ["counter",    "hits-taken", "0"],
+        ["transition", "hostile", "wounded", "The guard staggers back, clutching their side."],
+        ["transition", "wounded", "fled",    "The guard drops their weapon and runs. The north gate is clear."],
+        ["on-attacked",    "", "deal-damage",     "2"],
+        ["on-attacked",    "", "deal-damage-npc", "30078:<PUBKEY>:arena:npc:guard"],
+        ["on-attacked",    "", "increment",       "hits-taken"],
+        ["on-health-zero", "", "set-state",       "fled"],
+        ["on-health-zero", "", "flees"]
+      ],
+      "content": "A heavy-set guard in worn armour. They've done this before."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",          "arena:npc:champion"],
+        ["t",          "arena"],
+        ["type",       "npc"],
+        ["title",      "The Champion"],
+        ["noun",       "champion", "fighter", "warrior"],
+        ["health",     "12"],
+        ["damage",     "4"],
+        ["hit-chance", "0.85"],
+        ["state",      "hostile"],
+        ["counter",    "hits-taken", "0"],
+        ["transition", "hostile", "wounded",  "The champion steps back \u2014 the first sign of doubt."],
+        ["transition", "wounded", "defeated", "The champion falls. The gate opens."],
+        ["on-attacked",    "", "deal-damage",     "4"],
+        ["on-attacked",    "", "deal-damage-npc", "30078:<PUBKEY>:arena:npc:champion"],
+        ["on-attacked",    "", "increment",       "hits-taken"],
+        ["on-health-zero", "", "set-state",       "defeated"],
+        ["on-health-zero", "", "set-state",       "visible", "30078:<PUBKEY>:arena:portal:gate-to-freedom"],
+        ["on-health-zero", "", "traverse",        "30078:<PUBKEY>:arena:portal:gate-to-freedom"]
+      ],
+      "content": "The champion. Undefeated. They look at you the way you'd look at a closed door."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",       "arena:consequence:sealed-gate"],
+        ["t",       "arena"],
+        ["type",    "consequence"],
+        ["clears",  "inventory"],
+        ["respawn", "30078:<PUBKEY>:arena:place:arena-floor"]
+      ],
+      "content": "The gate sparks. A shock throws you back onto the sand. The crowd laughs."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",       "arena:consequence:player-death"],
+        ["t",       "arena"],
+        ["type",    "consequence"],
+        ["respawn", "30078:<PUBKEY>:arena:place:entrance"],
+        ["clears",  "states"],
+        ["clears",  "inventory"],
+        ["clears",  "counters"]
+      ],
+      "content": "Darkness. Then the entrance tunnel, as if you just arrived."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",     "arena:clue:champion-falls"],
+        ["t",     "arena"],
+        ["type",  "clue"],
+        ["title", "Victory"],
+        ["state", "hidden"]
+      ],
+      "content": "The champion is down. The gate beyond them is open. The road to freedom awaits."
+    }
+  ]
+}

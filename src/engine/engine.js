@@ -443,6 +443,10 @@ export class GameEngine {
           this._emit(`${consumeTitle} is consumed.`, 'item');
         }
         acted = true;
+      } else if (action === 'consequence') {
+        const cRef = targetState || targetRef;
+        if (cRef) this._executeConsequence(cRef);
+        acted = true;
       }
     }
     if (acted) evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty));
@@ -677,6 +681,8 @@ export class GameEngine {
                   this.player.setState(dtag, transition.to);
                   if (transition.text) this._emit(transition.text, 'narrative');
                 }
+              } else if (action === 'consequence' && actionTarget) {
+                this._executeConsequence(actionTarget);
               }
             }
           }
@@ -760,12 +766,93 @@ export class GameEngine {
     }
 
     const req = checkRequires(exit.portalEvent, this.player.state, this.events);
-    if (!req.allowed) { this._emit(req.reason, 'error'); return; }
+    if (!req.allowed) {
+      // Lethal portal — fires consequence instead of blocking (spec §2.11)
+      const consequenceTag = exit.portalEvent.tags.find((t) => t[0] === 'consequence');
+      if (consequenceTag && consequenceTag[1]) {
+        this._emit(req.reason, 'narrative');
+        this._executeConsequence(consequenceTag[1]);
+      } else {
+        this._emit(req.reason, 'error');
+      }
+      return;
+    }
 
     this.player.incrementMoveCount();
     this.processOnMove();
     this._processNpcOnMove();
     this.enterRoom(exit.destinationDTag, { isMoving: true });
+  }
+
+  // ── Consequence execution ────────────────────────────────────────────
+
+  /**
+   * Execute a consequence event (spec §2.11).
+   * Fixed execution order regardless of tag declaration:
+   *   give-item → consume-item → deal-damage → drop inventory → clears → content → respawn
+   */
+  _executeConsequence(consequenceRef) {
+    const event = this.events.get(consequenceRef);
+    if (!event) return;
+
+    const tags = event.tags;
+
+    // 1. give-item
+    for (const tag of tags.filter((t) => t[0] === 'give-item')) {
+      giveItem(tag[1], this.events, this.player, (t, ty) => this._emit(t, ty));
+    }
+
+    // 2. consume-item
+    for (const tag of tags.filter((t) => t[0] === 'consume-item')) {
+      const itemRef = tag[1];
+      if (this.player.hasItem(itemRef)) {
+        this.player.removeItem(itemRef);
+      }
+    }
+
+    // 3. deal-damage — stub for combat phase
+    // for (const tag of tags.filter((t) => t[0] === 'deal-damage')) { ... }
+
+    // 4-8. Process clears in fixed order
+    const clearsSet = new Set(tags.filter((t) => t[0] === 'clears').map((t) => t[1]));
+
+    // 4-5. Drop inventory to current place, then clear
+    if (clearsSet.has('inventory')) {
+      for (const itemDtag of this.player.state.inventory) {
+        this.player.addPlaceItem(this.currentPlace, itemDtag);
+      }
+      this.player.state.inventory = [];
+      clearsSet.delete('inventory');
+    }
+
+    // 6. clears states
+    if (clearsSet.has('states')) {
+      this.player.state.states = {};
+      clearsSet.delete('states');
+    }
+
+    // 7. clears counters
+    if (clearsSet.has('counters')) {
+      this.player.state.counters = {};
+      clearsSet.delete('counters');
+    }
+
+    // 8. Other clears in declaration order
+    for (const key of clearsSet) {
+      if (key === 'cryptoKeys') this.player.state.cryptoKeys = [];
+      else if (key === 'dialogueVisited') this.player.state.dialogueVisited = {};
+      else if (key === 'paymentAttempts') this.player.state.paymentAttempts = {};
+      else if (key === 'visited') this.player.state.visited = [];
+    }
+
+    // 9. Content
+    if (event.content) this._emit(event.content, 'narrative');
+
+    // 10. Respawn — always last
+    const respawnRef = getTag(event, 'respawn');
+    if (respawnRef) {
+      this.enterRoom(respawnRef);
+    }
   }
 
   // ── NPC encounter ──────────────────────────────────────────────────────
@@ -781,7 +868,7 @@ export class GameEngine {
       } else if (action === 'deal-damage') {
         // Combat — future phase
       } else if (action === 'consequence') {
-        // Consequence — future phase
+        if (actionTarget) this._executeConsequence(actionTarget);
       }
     }
   }
@@ -892,6 +979,8 @@ export class GameEngine {
       if (action === 'give-crypto-key') {
         this.player.addCryptoKey(derivedPrivKey);
         this._emit('You feel a key take shape in your mind.', 'narrative');
+      } else if (action === 'consequence' && (value || extRef)) {
+        this._executeConsequence(extRef || value);
       } else if (action === 'set-state' && extRef) {
         const targetEvent = this.events.get(extRef);
         if (!targetEvent) continue;

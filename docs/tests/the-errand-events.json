@@ -1,0 +1,296 @@
+{
+  "answers": {},
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",             "errand:world"],
+        ["t",             "errand"],
+        ["w",             "foakloar"],
+        ["type",          "world"],
+        ["title",         "The Errand"],
+        ["author",        "FOAKLOAR Test"],
+        ["version",       "1.0.0"],
+        ["lang",          "en"],
+        ["tag",           "test"],
+        ["tag",           "quest"],
+        ["start",         "30078:<PUBKEY>:errand:place:village-square"],
+        ["relay",         "wss://relay.damus.io"],
+        ["collaboration", "closed"],
+        ["theme",         "parchment"],
+        ["effects",       "clean"],
+        ["content-type",  "text/markdown"]
+      ],
+      "content": "A village. Three problems. One morning to fix them all."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "errand:place:village-square"],
+        ["t",        "errand"],
+        ["type",     "place"],
+        ["title",    "Village Square"],
+        ["noun",     "square", "village", "centre"],
+        ["exit",     "30078:<PUBKEY>:errand:place:market",     "north", "The market stalls."],
+        ["exit",     "30078:<PUBKEY>:errand:place:well",       "east",  "The old well."],
+        ["exit",     "30078:<PUBKEY>:errand:place:bakery",     "west",  "The bakery."],
+        ["feature",  "30078:<PUBKEY>:errand:feature:notice-board"],
+        ["content-type", "text/markdown"]
+      ],
+      "content": "The village square, quiet in the early morning. A notice board stands by the fountain. Three roads lead away \u2014 market to the north, well to the east, bakery to the west."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "errand:place:market"],
+        ["t",        "errand"],
+        ["type",     "place"],
+        ["title",    "Market Stalls"],
+        ["noun",     "market", "stalls", "stall"],
+        ["exit",     "30078:<PUBKEY>:errand:place:village-square", "south", "Back to the square."],
+        ["npc",      "30078:<PUBKEY>:errand:npc:merchant"],
+        ["item",     "30078:<PUBKEY>:errand:item:flour-sack"],
+        ["content-type", "text/markdown"]
+      ],
+      "content": "A row of market stalls, half of them shuttered. A merchant stands behind the only open one, arms folded."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "errand:place:well"],
+        ["t",        "errand"],
+        ["type",     "place"],
+        ["title",    "The Old Well"],
+        ["noun",     "well", "old well"],
+        ["exit",     "30078:<PUBKEY>:errand:place:village-square", "west", "Back to the square."],
+        ["feature",  "30078:<PUBKEY>:errand:feature:well"],
+        ["item",     "30078:<PUBKEY>:errand:item:bucket"],
+        ["content-type", "text/markdown"]
+      ],
+      "content": "The old well, stone-rimmed and deep. A bucket sits beside it. The rope is frayed but holds."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "errand:place:bakery"],
+        ["t",        "errand"],
+        ["type",     "place"],
+        ["title",    "The Bakery"],
+        ["noun",     "bakery", "shop"],
+        ["exit",     "30078:<PUBKEY>:errand:place:village-square", "east", "Back to the square."],
+        ["npc",      "30078:<PUBKEY>:errand:npc:baker"],
+        ["feature",  "30078:<PUBKEY>:errand:feature:oven"],
+        ["content-type", "text/markdown"]
+      ],
+      "content": "A warm bakery. The oven dominates the back wall \u2014 cold now, waiting. The baker stands behind the counter, dusting flour from her hands."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",    "errand:portal:square-to-market"],
+        ["t",    "errand"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:errand:place:village-square", "north", "The market stalls."],
+        ["exit", "30078:<PUBKEY>:errand:place:market",         "south", "The village square."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",    "errand:portal:square-to-well"],
+        ["t",    "errand"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:errand:place:village-square", "east", "The old well."],
+        ["exit", "30078:<PUBKEY>:errand:place:well",           "west", "The village square."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",    "errand:portal:square-to-bakery"],
+        ["t",    "errand"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:errand:place:village-square", "west", "The bakery."],
+        ["exit", "30078:<PUBKEY>:errand:place:bakery",         "east", "The village square."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",           "errand:item:flour-sack"],
+        ["t",           "errand"],
+        ["type",        "item"],
+        ["title",       "Flour Sack"],
+        ["noun",        "flour", "sack", "flour sack"],
+        ["verb",        "examine", "look"],
+        ["verb",        "give",    "deliver", "hand"]
+      ],
+      "content": "A heavy sack of milled flour. The baker's been waiting for this."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",           "errand:item:bucket"],
+        ["t",           "errand"],
+        ["type",        "item"],
+        ["title",       "Bucket"],
+        ["noun",        "bucket", "pail"],
+        ["state",       "empty"],
+        ["transition",  "empty", "full",  "You lower the bucket and haul it back. Water sloshes."],
+        ["transition",  "full",  "empty", "The water pours out."],
+        ["verb",        "examine", "look"],
+        ["verb",        "fill",    "lower", "use"],
+        ["verb",        "pour",    "empty", "tip"]
+      ],
+      "content": "A wooden bucket, banded with iron. Empty."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",          "errand:feature:notice-board"],
+        ["t",          "errand"],
+        ["type",       "feature"],
+        ["title",      "Notice Board"],
+        ["noun",       "board", "notice board", "notices"],
+        ["verb",       "examine", "look", "read"],
+        ["on-interact","examine", "set-state", "visible", "30078:<PUBKEY>:errand:clue:errands-list"]
+      ],
+      "content": "A weathered board pinned with notices. Three stand out \u2014 all marked urgent."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",          "errand:feature:well"],
+        ["t",          "errand"],
+        ["type",       "feature"],
+        ["title",      "The Well"],
+        ["noun",       "well", "rope", "winch"],
+        ["verb",       "examine", "look"],
+        ["verb",       "use",     "lower", "draw"]
+      ],
+      "content": "A deep stone well. The rope and winch still work. Lower a bucket to draw water."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",          "errand:feature:oven"],
+        ["t",          "errand"],
+        ["type",       "feature"],
+        ["title",      "Oven"],
+        ["noun",       "oven", "stove"],
+        ["state",      "cold"],
+        ["transition", "cold",   "hot",  "The oven roars to life. Heat fills the bakery."],
+        ["transition", "hot",    "hot",  "The oven burns steadily."],
+        ["verb",       "examine", "look"],
+        ["verb",       "light",   "start", "ignite", "use"],
+        ["requires",   "30078:<PUBKEY>:errand:item:bucket", "full", "You need water nearby before lighting the oven. Safety first."],
+        ["on-interact","light", "set-state", "hot"]
+      ],
+      "content": "A large brick oven, cold and dark. The baker won't start it without water on hand."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "errand:npc:merchant"],
+        ["t",        "errand"],
+        ["type",     "npc"],
+        ["title",    "Merchant"],
+        ["noun",     "merchant", "trader", "man"],
+        ["dialogue", "30078:<PUBKEY>:errand:dialogue:merchant-greeting"]
+      ],
+      "content": "A tired-looking merchant behind a cluttered stall."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "errand:npc:baker"],
+        ["t",        "errand"],
+        ["type",     "npc"],
+        ["title",    "Baker"],
+        ["noun",     "baker", "woman"],
+        ["dialogue", "30078:<PUBKEY>:errand:dialogue:baker-greeting"],
+        ["dialogue", "30078:<PUBKEY>:errand:dialogue:baker-thanks"]
+      ],
+      "content": "The baker. Flour on her apron, worry on her face."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",      "errand:dialogue:merchant-greeting"],
+        ["t",      "errand"],
+        ["type",   "dialogue"],
+        ["title",  "Merchant"]
+      ],
+      "content": "The flour's in. Take a sack to the bakery if you're heading that way. She's been waiting."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "errand:dialogue:baker-greeting"],
+        ["t",        "errand"],
+        ["type",     "dialogue"],
+        ["title",    "Baker"]
+      ],
+      "content": "No flour, no bread. No bread, no village. Simple as that. The merchant has my order \u2014 if he ever gets round to it."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "errand:dialogue:baker-thanks"],
+        ["t",        "errand"],
+        ["type",     "dialogue"],
+        ["title",    "Baker"],
+        ["requires", "30078:<PUBKEY>:errand:feature:oven", "hot", ""]
+      ],
+      "content": "Flour delivered, oven lit, water on hand. You've done more this morning than most do all week. The village owes you one."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",     "errand:clue:errands-list"],
+        ["t",     "errand"],
+        ["type",  "clue"],
+        ["title", "Urgent Notices"],
+        ["state", "hidden"]
+      ],
+      "content": "Three notices pinned to the board:\n\n1. **FLOUR NEEDED** \u2014 Collect from market, deliver to bakery.\n2. **WELL WATER** \u2014 Draw water from the well. Bucket by the rim.\n3. **OVEN COLD** \u2014 Light the bakery oven. Water must be on hand first."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d",        "errand:quest:morning-errands"],
+        ["t",        "errand"],
+        ["type",     "quest"],
+        ["title",    "Morning Errands"],
+        ["involves", "30078:<PUBKEY>:errand:item:flour-sack"],
+        ["involves", "30078:<PUBKEY>:errand:item:bucket"],
+        ["involves", "30078:<PUBKEY>:errand:feature:oven"],
+        ["requires", "30078:<PUBKEY>:errand:feature:oven", "hot", ""],
+        ["requires", "30078:<PUBKEY>:errand:item:bucket", "full", ""]
+      ],
+      "content": "Complete the three errands on the notice board: deliver the flour, draw water, and light the oven."
+    }
+  ]
+}

@@ -875,7 +875,7 @@ Defines what items combine to produce a new item. Structurally identical to a se
 
 ---
 
-### 2.7b Payment (`type: payment`)
+### 2.8 Payment (`type: payment`)
 
 A Lightning payment gate. The player pays a LNURL invoice; on confirmation the client fires `on-complete` — typically giving a receipt item that satisfies a `requires` condition on a portal or feature. Verification is via LUD-11 (LNURL-verify), keyed on the payment hash.
 
@@ -943,7 +943,7 @@ If the verify endpoint goes offline, the puzzle becomes unsolvable for new playe
 
 ---
 
-### 2.8 NPC (`type: npc`)
+### 2.9 NPC (`type: npc`)
 
 An actor in the world. NPCs are placed by the place author via reference tags — they do not declare their own location. NPCs use the same `on-*` dispatcher as features, items, and places for all reactive behaviour — `on-interact`, `on-encounter`, `on-enter`, `on-attacked`. No separate `behaviour` tag needed.
 
@@ -1068,7 +1068,7 @@ NPC position is deterministic — seeded by player move count and the NPC's own 
 
 ---
 
-### 2.9 Dialogue (`type: dialogue`)
+### 2.10 Dialogue (`type: dialogue`)
 
 Each dialogue node is its own event. Nodes are grouped by `d` tag namespacing — all nodes for an NPC share a common prefix (e.g. `the-lake:dialogue:hermit:`), allowing the client to fetch the entire conversation in one relay query.
 
@@ -1152,7 +1152,7 @@ A node that gives an item on visit:
 
 ---
 
-### 2.10 Consequence (`type: consequence`)
+### 2.11 Consequence (`type: consequence`)
 
 A reusable outcome definition. Consequences are fired by portals, NPCs, or `on-interact` actions — they define what happens to player state, not why. Multiple callers can reference the same consequence event.
 
@@ -1161,13 +1161,12 @@ A reusable outcome definition. Consequences are fired by portals, NPCs, or `on-i
   "kind": 30078,
   "pubkey": "<author_pubkey>",
   "tags": [
-    ["d",         "the-lake:consequence:death"],
-    ["t",         "the-lake"],
-    ["type",      "consequence"],
-    ["respawn",   "30078:<pubkey>:the-lake:place:west-of-house"],
-
-
-    ["clears",    "crypto-keys"]
+    ["d",       "the-lake:consequence:death"],
+    ["t",       "the-lake"],
+    ["type",    "consequence"],
+    ["respawn", "30078:<pubkey>:the-lake:place:west-of-house"],
+    ["clears",  "inventory"],
+    ["clears",  "cryptoKeys"]
   ],
   "content": "It is pitch black. You are likely to be eaten by a grue."
 }
@@ -1177,13 +1176,55 @@ A reusable outcome definition. Consequences are fired by portals, NPCs, or `on-i
 
 | Tag | Value | Effect |
 |-----|-------|--------|
-| `respawn` | Place `a`-tag | Moves player to this place |
-| `clears` | State key | Wipes this part of player state |
+| `respawn` | Place `a`-tag | Moves player to this place — always fires last |
+| `clears` | State key | Wipes this part of player state — see below |
 | `give-item` | Item `a`-tag | Adds item to inventory |
 | `consume-item` | Item `a`-tag | Removes item from inventory |
 | `deal-damage` | Integer string | Reduces player health |
 
 State keys for `clears`: `inventory`, `states`, `counters`, `cryptoKeys`, `dialogueVisited`, `paymentAttempts`, `visited`.
+
+---
+
+**`clears inventory` — drop behaviour**
+
+When `clears inventory` fires, all items in the player's inventory are **dropped to the current place** (the place where the consequence fired, not the respawn destination) before the inventory array is emptied. The player can walk back to retrieve them after respawning.
+
+This is the only built-in behaviour — there is no destroy-on-death variant. Dropping prevents soft-locks: if the player dies holding the only key, the key is recoverable. World authors who want certain items to be unrecoverable should make those items re-acquirable elsewhere, or not use `clears inventory` on death consequences that fire in unreachable places.
+
+Dropped items appear in the place's ground inventory and behave exactly as if the author had declared `["item", "<ref>"]` on that place — they persist until picked up.
+
+---
+
+**`clears states` and item state**
+
+`clears states` wipes the entire `player.states` map — all event states the player has set. Dropped items are deposited to the ground **before** states are wiped, so the drop completes cleanly. When the player re-picks up a dropped item, it initialises from the event's declared `state` tag (its default), not its pre-death state. This is correct behaviour — a lantern left on the ground resets to `off` (its default) when picked up again.
+
+---
+
+**`clears counters` and resource reset**
+
+`clears counters` wipes the `player.counters` map. When a dropped item is re-picked up, its counters re-initialise from the event's `counter` tags. A depleted lantern battery resets to full on re-pickup after a death that clears counters — generous but prevents counters from making the world unwinnable. Authors who want counters to persist across death should not include `clears counters` on the consequence.
+
+---
+
+**Execution order**
+
+When a consequence fires, its tags execute in this fixed order regardless of tag declaration order:
+
+1. `give-item` — add items to inventory
+2. `consume-item` — remove items from inventory
+3. `deal-damage` — reduce player health
+4. **Drop inventory to current place** — if `clears inventory` is present
+5. `clears inventory` — empty player inventory array
+6. `clears states` — wipe states map
+7. `clears counters` — wipe counters map
+8. `clears` other keys — in declaration order
+9. `respawn` — move player to declared place (always last)
+
+Drop before clear, respawn last. The engine uses `currentPlace` at consequence dispatch time for the drop location — this is always known.
+
+---
 
 **Referencing a consequence:**
 
@@ -1216,14 +1257,14 @@ A lethal portal fires its consequence on traversal attempt when `requires` condi
     ["consequence", "30078:<pubkey>:the-lake:consequence:fell-into-chasm"]
   ],
   "content": ""
-}}
+}
 ```
 
 If `requires` passes — player crosses. If it fails — consequence fires instead of blocking. This replaces the old `lethal` flag idea with something more expressive: the portal author decides exactly what happens on a failed crossing.
 
 ---
 
-### 2.11 Combat
+### 2.12 Combat
 
 Combat is not a separate system — it is the `on-*` dispatcher applied to health values. The schema provides the data; the client resolves the round sequence. Different games define different combat feels purely through tag values.
 
@@ -1715,6 +1756,10 @@ The world event is a replaceable event (`kind: 30078`). The genesis author can u
     ["cursor",  "block"],
     ["effects", "crt"],        // optional — defaults from theme if absent
 
+    // Sound
+    ["sound", "bpm",     "72"],
+    ["sound", "ambient", "0.7", "c2*1 slow(pad)"],
+
     // Cover media
     ["content-type",  "text/markdown"],
     ["media",         "text/plain", "    ~  ~  ~\n  ~ THE  ~\n  ~ LAKE ~\n    ~  ~  ~"]
@@ -1749,6 +1794,7 @@ The world event is a replaceable event (`kind: 30078`). The genesis author can u
 | `flicker` | `on` \| `off` | Override screen flicker |
 | `vignette` | 0.0–1.0 | Override edge vignette intensity |
 | `noise` | 0.0–1.0 | Grain/static overlay — adds texture without full CRT feel |
+| `sound` | Role + value + pattern + state | Sound layer — see sound scoring section |
 | `content-type` | MIME type | Format of `content` field |
 | `media` | Type + value | Cover art or world image |
 
@@ -1813,7 +1859,71 @@ The `effects` tag selects a bundle. Individual tags override specific effects wi
 
 If `effects` is absent, the bundle defaults from the active `theme` preset (see preset table above). Individual effect tags without an `effects` tag override the preset's default bundle.
 
-Intensity values (0.0–1.0) give fine control. `scanlines` intensity controls line opacity (0 = off, 1 = heavy black lines). `glow` controls phosphor text-shadow spread. `vignette` controls edge darkening. `flicker` is boolean (`on`/`off`). `noise` adds grain/static for texture without the full CRT aesthetic — useful for horror, aged documents, or abstract worlds.
+Intensity values (0.0–1.0) give fine control where it matters — `glow` and `vignette` benefit from gradation. `scanlines` and `flicker` are effectively boolean (`on`/`off`). `noise` adds grain/static for texture without the full CRT aesthetic — useful for horror, aged documents, or abstract worlds.
+
+---
+
+**Sound scoring (`sound` tag):**
+
+Any event can declare sound layers using `sound` tags. The client collects all active `sound` tags from the current place, its features, items, NPCs, and player inventory, and mixes them in real time. Layers are added or removed as world state changes — a lamp goes on, its hum layer starts; an NPC enters, their theme joins the mix.
+
+Pattern notation follows a simplified mini-notation (Strudel/TidalCycles style) synthesised client-side via WebAudio. No audio files — patterns are text, tiny, deterministic.
+
+**Shape:** `["sound", "<role>", "<value>", "<pattern?>", "<state?>"]`
+
+| Element | Values | Meaning |
+|---------|--------|---------|
+| role | `bpm`, `ambient`, `layer`, `effect` | What this sound tag does |
+| value | BPM integer (for `bpm`) or 0.0–1.0 volume | Rate or volume |
+| pattern | Mini-notation string | The sound to play (omit for `bpm`) |
+| state | State string | Only play when event is in this state (optional) |
+
+**Roles:**
+
+| Role | Behaviour |
+|------|-----------|
+| `bpm` | Sets global tempo. Value is BPM. No pattern. Declared on world or place event. Place overrides world. |
+| `ambient` | Continuous loop. Crossfades on place entry/exit. Typically on place events. |
+| `layer` | Adds to current mix when event is in scope. Removed when out of scope or state condition fails. |
+| `effect` | One-shot. Fires on state change that brings the event into scope. |
+
+**Examples:**
+
+```json
+// World event — global tempo
+["sound", "bpm",     "72"],
+
+// Place — atmospheric drone
+["sound", "ambient", "0.7", "c2*1 slow(pad)"],
+
+// Feature — clock adds ticking when examined
+["sound", "layer",   "0.5", "perc(sd)*8"],
+
+// Item — lantern hum only when on
+["sound", "layer",   "0.3", "c5*16 fast(sine)", "on"],
+
+// Place — tension layer only when puzzle unsolved
+["sound", "layer",   "0.4", "b2 ~ b2 ~ slow(strings)", "unsolved"],
+
+// NPC — one-shot on encounter
+["sound", "effect",  "1.0", "c3 e3 g3"]
+```
+
+**Mini-notation basics:**
+
+| Syntax | Meaning |
+|--------|---------|
+| `c3 e3 g3` | Sequence of notes |
+| `c3*4` | Repeat 4 times per cycle |
+| `c3 ~ ~ ~` | Note with rests |
+| `slow(pad)` | Named instrument preset, slow attack |
+| `fast(sine)` | Named instrument, fast attack |
+| `perc(bd)` | Percussion — `bd` kick, `sd` snare, `hh` hi-hat |
+
+**Client mixing:**
+The client evaluates all `sound` tags in scope on every state change. Passing tags are mixed at their declared volumes. No two `ambient` tags should be active simultaneously on the same place — the world author controls layering through role selection.
+
+**Note:** Sound is a progressive enhancement. Clients that do not implement the sound system ignore `sound` tags silently. World authors should not require sound for puzzle solving or navigation.
 
 Content warnings use a `cw` tag with a short string. Clients display these before the world loads — the player can choose not to enter. Common values: `violence`, `horror`, `mild-peril`, `adult`, `flashing-lights`. No enforced vocabulary — world authors choose their own, clients can filter on known values.
 
