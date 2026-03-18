@@ -376,6 +376,7 @@ export const TAG_SCHEMAS = {
   contains: { label: 'Contains', desc: 'Item found inside this item when examined', repeatable: true, fields: [{ name: 'ref', type: 'event-ref', required: true, eventTypeFilter: 'item' }] },
 
   // ── Consequence-level tags (direct on consequence events) ──────────────
+  'set-state':    { label: 'Set State', desc: 'Set state on an external event (NPC, feature, portal). Used in consequences for side effects.', repeatable: true, fields: [{ name: 'state', type: 'text', required: true, placeholder: 'target state (e.g. burning, visible)' }, { name: 'ref', type: 'event-ref', required: true, placeholder: 'target event' }] },
   'give-item':    { label: 'Give Item', desc: 'Add this item to the player\'s inventory', repeatable: true, fields: [{ name: 'ref', type: 'event-ref', required: true, eventTypeFilter: 'item' }] },
   'consume-item': { label: 'Consume Item', desc: 'Remove this item from the player\'s inventory', repeatable: true, fields: [{ name: 'ref', type: 'event-ref', required: true, eventTypeFilter: 'item' }] },
   'deal-damage':  { label: 'Deal Damage', desc: 'Damage dealt to the player by this consequence', fields: [{ name: 'value', type: 'number', required: true, placeholder: '10' }] },
@@ -423,7 +424,7 @@ export const TAGS_BY_EVENT_TYPE = {
   payment:     ['title', 'amount', 'unit', 'lnurl', 'on-complete'],
   npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health', 'on-player-health', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not'],
   dialogue:    ['text', 'option', 'requires', 'requires-not', 'on-enter'],
-  consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage'],
+  consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage', 'set-state'],
   world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'content-type', 'media', 'w'],
   vouch:       ['pubkey', 'scope', 'can-vouch'],
   quest:       ['title', 'involves', 'requires', 'requires-not', 'on-complete'],

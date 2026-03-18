@@ -1264,8 +1264,30 @@ export class GameEngine {
       }
     }
 
-    // 3. deal-damage — stub for combat phase
-    // for (const tag of tags.filter((t) => t[0] === 'deal-damage')) { ... }
+    // 3. deal-damage
+    for (const tag of tags.filter((t) => t[0] === 'deal-damage')) {
+      const amount = parseInt(tag[1], 10) || 0;
+      if (amount > 0) {
+        const prevHealth = this.player.getHealth();
+        this.player.dealDamage(amount);
+        this._emit(`You take ${amount} damage. (HP: ${this.player.getHealth()})`, 'error');
+        if (prevHealth != null) this._evalPlayerHealthTriggers(prevHealth, this.player.getHealth());
+      }
+    }
+
+    // 3b. set-state — external state changes (e.g. NPC burning, clue revealed)
+    for (const tag of tags.filter((t) => t[0] === 'set-state')) {
+      const targetState = tag[1];
+      const targetRef = tag[2];
+      if (targetRef) {
+        const result = applyExternalSetState(
+          targetRef, targetState, this.events, this.player,
+          (t, ty) => this._emit(t, ty),
+          (h, ty) => this._emitHtml(h, ty),
+        );
+        if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
+      }
+    }
 
     // 4-8. Process clears in fixed order
     const clearsSet = new Set(tags.filter((t) => t[0] === 'clears').map((t) => t[1]));
