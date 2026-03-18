@@ -400,6 +400,20 @@ export class GameEngine {
     return null;
   }
 
+  // ── Drop item ────────────────────────────────────────────────────────
+
+  _handleDrop(rawNoun) {
+    const noun = stripArticles(rawNoun);
+    const match = findInventoryItem(this.events, this.player.state.inventory, noun);
+    if (!match) {
+      this._emit("You don't have that.", 'error');
+      return;
+    }
+    this.player.removeItem(match.dtag);
+    this.player.addPlaceItem(this.currentPlace, match.dtag);
+    this._emit(`Dropped: ${getTag(match.event, 'title')}`, 'item');
+  }
+
   // ── Container: take X from Y ─────────────────────────────────────────
 
   /**
@@ -2337,6 +2351,8 @@ export class GameEngine {
       ['go &lt;direction&gt;', 'Move (or just type the direction)'],
       ['examine &lt;thing&gt;', 'Examine something closely'],
       ['take &lt;item&gt;', 'Pick up an item'],
+      ['take &lt;item&gt; from &lt;container&gt;', 'Take from a container'],
+      ['drop &lt;item&gt;', 'Drop an item on the ground'],
       ['inventory (i)', 'Show what you are carrying'],
       ['talk &lt;npc&gt;', 'Talk to someone'],
       ['quests (q)', 'Show quest log'],
@@ -2604,6 +2620,10 @@ export class GameEngine {
       this.enterRoom(this.config.GENESIS_PLACE);
       return;
     }
+
+    // Built-in: drop
+    const dropMatch = trimmed.match(/^drop\s+(.+)$/);
+    if (dropMatch) { this._handleDrop(dropMatch[1]); return; }
 
     // Built-in: take X from Y
     const takeFromMatch = trimmed.match(/^(?:take|get|grab)\s+(.+?)\s+from\s+(.+)$/);
