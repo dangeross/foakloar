@@ -203,6 +203,25 @@ export class PlayerStateMutator {
     };
   }
 
+  // ── Health ──────────────────────────────────────────────────────────────
+
+  getHealth() { return this.state.health ?? null; }
+  getMaxHealth() { return this.state.maxHealth ?? null; }
+
+  setHealth(val) { this.state.health = val; }
+  setMaxHealth(val) { this.state.maxHealth = val; }
+
+  dealDamage(amount) {
+    if (this.state.health == null) return;
+    this.state.health = Math.max(0, this.state.health - amount);
+  }
+
+  heal(amount) {
+    if (this.state.health == null) return;
+    const max = this.state.maxHealth ?? this.state.health;
+    this.state.health = Math.min(max, this.state.health + amount);
+  }
+
   // ── Reset ───────────────────────────────────────────────────────────────
 
   reset() {
@@ -216,6 +235,8 @@ export class PlayerStateMutator {
       paymentAttempts: {},
       visited: [],
       moveCount: 0,
+      health: null,
+      maxHealth: null,
     };
     this.npcStates = {};
   }

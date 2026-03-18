@@ -189,6 +189,8 @@ export function freshState(overrides = {}) {
     paymentAttempts: {},
     visited: [],
     moveCount: 0,
+    health: null,
+    maxHealth: null,
     ...overrides,
   };
 }

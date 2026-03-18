@@ -61,7 +61,7 @@ Client evaluates after any feature/item state change in current place — not on
 
 **`on-counter` unified**
 `on-counter-zero` + `on-counter-low` → single tag with threshold argument:
-`["on-counter", "<counter>", "<threshold>", "<action-type>", "<action-target?>"]`
+`["on-counter", "<direction>", "<counter>", "<threshold>", "<action-type>", "<action-target?>"]`
 Three fire conditions: threshold crossing, state entry re-evaluation, load reconciliation.
 
 **`on-interact` external target**
@@ -105,6 +105,36 @@ Portal always uses extended form. Portal wins if conflict. Hidden portals still 
 **`puzzle-type: payment` removed** — replaced by `type: payment`.
 
 **`plaintext-type` tag proposed and removed before shipping** — replaced by three-element `content-type`.
+
+**Recipe `consume-item` is explicit, not automatic**
+`requires` gates a recipe but does not consume ingredients. Authors must declare each `on-complete consume-item` explicitly. Enables non-item requirements (lit forge, place state) without consuming them.
+
+**Quest `on-complete` support added**
+Quests fire `on-complete` tags when all `requires` pass — same dispatcher as puzzles and recipes. Minimum behaviour (mark solved, update quest log) applies without `on-complete` tags. Reward items, portal unlocks, and state changes via `on-complete`.
+
+**`flees` documented as message-only action**
+`flees` emits a departure message. NPC movement requires `set-state` to activate `roams-when`. Both together give correct flee behaviour. `flees` alone = message only. `set-state` alone = silent movement.
+
+**Built-in commands section added (spec section 9.3)**
+Canonical command set: `look`, `look <direction>`, `inventory`/`i`, `help`/`?`, `quests`/`q`, `examine`, `take`, `drop`, `go <direction>`, cardinal directions, `attack`. Built-ins cannot be overridden by world verb tags.
+
+**Player health on world event**
+`["health", "10"]` and `["max-health", "10"]` on the world event set starting player health. `["on-player-health-zero", "", "consequence", "<ref>"]` on the world event fires when player dies.
+
+**`with` preposition reverses noun order**
+Two-noun commands with `with` keep noun order: `attack guard with sword` → target=guard, instrument=sword. Other prepositions (`on`, `to`, `at`, `in`, `into`) swap: `use key on door` → target=door, instrument=key.
+
+**`requires` supports NPC and portal state checks**
+`["requires", "<npc-ref>", "fled", "..."]` checks NPC state. NPC state changes sync to `player.states` so `checkRequires` can evaluate them. Portal state also supported.
+
+**`on-counter` direction argument added**
+Shape changed from `["on-counter", "<counter>", "<threshold>", ...]` to `["on-counter", "<direction>", "<counter>", "<threshold>", ...]`. Direction is `down` (fires crossing at-or-below) or `up` (fires crossing at-or-above). All existing `on-counter` tags updated to `"down"`. Enables upward-crossing counters (hit counts, charge accumulation) without new tag names.
+
+**Counter action tag positions documented**
+`["on-interact", "<verb>", "increment"|"decrement", "<counter-name>"]` and `["on-interact", "<verb>", "set-counter", "<counter-name>", "<value>"]`. External target as optional final element — same pattern as external `set-state`.
+
+**External counter targeting added**
+Counter actions (`increment`, `decrement`, `set-counter`) support an optional external event `a`-tag as final element, targeting another event's counter. `["on-interact", "pump", "increment", "heat", "30078:<PUBKEY>:forge:feature:forge"]`
 
 **`clears inventory` drop behaviour specified**
 Items dropped to current place before inventory is emptied — never destroyed. Prevents soft-locks. Drop location is `currentPlace` at consequence dispatch time, not the respawn destination.

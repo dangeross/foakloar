@@ -139,8 +139,20 @@ All previously tracked deviations have been fixed:
 - **Verb aliases are data, not code.** The parser builds its verb map from `verb` tags on events in the current place + inventory. Aliases like `x` for `examine` must be on the verb tag: `["verb", "examine", "x", "look at", "inspect"]`. First value is canonical; `on-interact` always references the canonical verb.
 - **One verb tag per canonical verb.** Don't combine multiple canonical verbs into one tag (e.g. `["verb", "examine", "pray"]` is wrong — use two separate verb tags).
 - **Article stripping.** The client strips leading articles (`the`, `a`, `an`) from noun input. Noun tags should never include articles: `["noun", "lantern", "brass lantern"]` matches `the brass lantern`.
-- **Two-noun commands.** `<verb> <noun> [preposition] <noun>` — target is noun2, instrument is noun1. Prepositions: `on`, `with`, `to`, `at`, `in`, `into`.
-- **Built-in commands** (not data-driven): `look`/`l`, `look <direction>`, `inventory`/`i`, `pick up`/`take`/`get`/`grab`, direction words, `yes`/`no` (confirmation).
+- **Two-noun commands.** `<verb> <noun> [preposition] <noun>` — `with` keeps order (target=noun1, instrument=noun2): `attack guard with sword`. Other prepositions swap (target=noun2, instrument=noun1): `use key on door`. Prepositions: `on`, `with`, `to`, `at`, `in`, `into`.
+- **Built-in commands** (not data-driven): `look`/`l`, `look <direction>`, `inventory`/`i`, `help`/`h`/`?`, `quests`/`q`, `pick up`/`take`/`get`/`grab`, `attack <npc> [with <weapon>]`, direction words, `yes`/`no` (confirmation).
+
+---
+
+## Combat (spec section 2.12)
+
+Combat is data-driven via `on-*` dispatcher:
+
+- **Weapon:** `["damage", "3"]`, `["on-interact", "attack", "deal-damage-npc", ""]` — empty target resolves to combat target NPC
+- **NPC:** `["health", "6"]`, `["damage", "2"]`, `["hit-chance", "0.7"]`, `["on-attacked", "", "deal-damage", "2"]`
+- **Player health:** World event `["health", "10"]`, `["max-health", "10"]`, `["on-player-health-zero", "", "consequence", "<ref>"]`
+- **NPC state sync:** NPC `set-state` writes to both `npcStates` and `player.states` so `requires` can check NPC state
+- **`checkRequires`** handles types: `item`, `feature`, `puzzle`, `npc`, `portal`
 
 ---
 

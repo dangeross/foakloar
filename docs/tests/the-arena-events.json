@@ -22,6 +22,9 @@
         ["theme",         "blood-red"],
         ["effects",       "crt"],
         ["flicker",       "off"],
+        ["health",        "10"],
+        ["max-health",    "10"],
+        ["on-player-health-zero", "", "consequence", "30078:<PUBKEY>:arena:consequence:player-death"],
         ["content-type",  "text/markdown"]
       ],
       "content": "The crowd is silent. You have been chosen.\n\nWin, and you leave. Lose, and you don't."
@@ -178,8 +181,10 @@
         ["type",        "item"],
         ["title",       "Sword"],
         ["noun",        "sword", "blade", "weapon"],
+        ["damage",      "3"],
         ["verb",        "examine", "look"],
-        ["verb",        "attack",  "swing", "strike", "hit", "fight"]
+        ["verb",        "attack",  "swing", "strike", "hit", "fight"],
+        ["on-interact", "attack", "deal-damage-npc", ""]
       ],
       "content": "A straight iron sword. Balanced. It will do."
     },
@@ -221,7 +226,6 @@
         ["transition", "hostile", "wounded", "The guard staggers back, clutching their side."],
         ["transition", "wounded", "fled",    "The guard drops their weapon and runs. The north gate is clear."],
         ["on-attacked",    "", "deal-damage",     "2"],
-        ["on-attacked",    "", "deal-damage-npc", "30078:<PUBKEY>:arena:npc:guard"],
         ["on-attacked",    "", "increment",       "hits-taken"],
         ["on-health-zero", "", "set-state",       "fled"],
         ["on-health-zero", "", "flees"]
@@ -245,7 +249,6 @@
         ["transition", "hostile", "wounded",  "The champion steps back \u2014 the first sign of doubt."],
         ["transition", "wounded", "defeated", "The champion falls. The gate opens."],
         ["on-attacked",    "", "deal-damage",     "4"],
-        ["on-attacked",    "", "deal-damage-npc", "30078:<PUBKEY>:arena:npc:champion"],
         ["on-attacked",    "", "increment",       "hits-taken"],
         ["on-health-zero", "", "set-state",       "defeated"],
         ["on-health-zero", "", "set-state",       "visible", "30078:<PUBKEY>:arena:portal:gate-to-freedom"],

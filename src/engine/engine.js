@@ -36,9 +36,29 @@ export class GameEngine {
     this.pendingConfirm = null;
     this.pendingChoice = null;  // { direction, exits } — disambiguation list awaiting numeric input
     this.craftingActive = null; // { recipeDtag, step, itemRequires } — ordered crafting mode
+    this.combatTarget = null;  // NPC dtag during a combat round
+
+    // Initialize player health from world event if not already set
+    if (player.getHealth() == null) {
+      const worldEvent = this._findWorldEvent(events);
+      const hp = worldEvent ? parseInt(getTag(worldEvent, 'health') || '0', 10) : 0;
+      const maxHp = worldEvent ? parseInt(getTag(worldEvent, 'max-health') || '0', 10) : 0;
+      if (hp > 0 || maxHp > 0) {
+        player.setHealth(hp || maxHp || 10);
+        player.setMaxHealth(maxHp || hp || 10);
+      }
+    }
 
     /** @type {Array<{text?: string, html?: string, type: string}>} */
     this.output = [];
+  }
+
+  /** Find the world event in the events map. */
+  _findWorldEvent(evts) {
+    for (const [, event] of (evts || this.events)) {
+      if (getTag(event, 'type') === 'world') return event;
+    }
+    return null;
   }
 
   // ── Output helpers ────────────────────────────────────────────────────
@@ -458,6 +478,14 @@ export class GameEngine {
       } else if (action === 'set-counter') {
         this._applyCounterAction('set-counter', dtag, targetState, targetRef, event, tag[5]);
         acted = true;
+      } else if (action === 'heal') {
+        const amount = parseInt(targetState, 10) || 1;
+        this._healPlayer(amount);
+        acted = true;
+      } else if (action === 'deal-damage') {
+        const amount = parseInt(targetState, 10) || 1;
+        this._dealDamageToPlayer(amount, null, null);
+        acted = true;
       }
     }
     if (acted) {
@@ -809,6 +837,210 @@ export class GameEngine {
     this.enterRoom(destinationDTag, { isMoving: true });
   }
 
+  // ── Combat actions ───────────────────────────────────────────────────
+
+  /**
+   * Deal damage to player. Rolls NPC hit-chance. Fires on-player-health-zero.
+   * @param {number} amount — damage to deal
+   * @param {Object} [sourceNpc] — NPC event (for hit-chance and on-player-health-zero)
+   * @param {string} [sourceNpcDtag] — NPC dtag
+   */
+  _dealDamageToPlayer(amount, sourceNpc, sourceNpcDtag) {
+    if (this.player.getHealth() == null) return;
+
+    // Roll NPC hit-chance
+    if (sourceNpc) {
+      const hitChance = parseFloat(getTag(sourceNpc, 'hit-chance') || '1.0');
+      if (Math.random() > hitChance) {
+        const npcTitle = getTag(sourceNpc, 'title') || 'Enemy';
+        this._emit(`${npcTitle} misses!`, 'narrative');
+        return;
+      }
+    }
+
+    this.player.dealDamage(amount);
+    const npcTitle = sourceNpc ? getTag(sourceNpc, 'title') : 'Something';
+    this._emit(`${npcTitle} hits you for ${amount} damage. (HP: ${this.player.getHealth()})`, 'error');
+
+    // Check player death
+    if (this.player.getHealth() <= 0) {
+      // Look for on-player-health-zero on the NPC or world event
+      const sources = [sourceNpc, this._findWorldEvent()].filter(Boolean);
+      for (const src of sources) {
+        for (const tag of getTags(src, 'on-player-health-zero')) {
+          const action = tag[2] || tag[1];
+          const target = tag[3] || tag[2];
+          if (action === 'consequence' && target) {
+            this._executeConsequence(target);
+            return;
+          }
+        }
+      }
+      this._emit('You have died.', 'error');
+    }
+  }
+
+  /**
+   * Deal damage to an NPC. Rolls weapon hit-chance. Fires on-health-zero.
+   * @param {string} npcDtag — target NPC (or "" to use combatTarget)
+   * @param {Object} weaponEvent — the weapon item event (for damage + hit-chance)
+   */
+  _dealDamageToNpc(npcDtag, weaponEvent) {
+    const targetDtag = npcDtag || this.combatTarget;
+    if (!targetDtag) return;
+
+    const npcEvent = this.events.get(targetDtag);
+    if (!npcEvent) return;
+
+    const npcState = this.player.getNpcState(targetDtag);
+    if (!npcState || npcState.health == null || npcState.health <= 0) return;
+
+    // Resolve weapon damage
+    const weaponDamage = parseInt(getTag(weaponEvent, 'damage') || '1', 10);
+    const hitChance = parseFloat(getTag(weaponEvent, 'hit-chance') || '1.0');
+
+    // Roll hit
+    if (Math.random() > hitChance) {
+      this._emit('You miss!', 'narrative');
+      return;
+    }
+
+    // Apply damage
+    npcState.health = Math.max(0, npcState.health - weaponDamage);
+    this.player.setNpcState(targetDtag, npcState);
+
+    const npcTitle = getTag(npcEvent, 'title') || 'Enemy';
+    this._emit(`You hit ${npcTitle} for ${weaponDamage} damage. (HP: ${npcState.health})`, 'item');
+
+    // Check NPC death
+    if (npcState.health <= 0) {
+      this._fireOnHealthZero(npcEvent, targetDtag);
+    }
+  }
+
+  /**
+   * Fire all on-health-zero tags on an NPC.
+   */
+  _fireOnHealthZero(npcEvent, npcDtag) {
+    for (const tag of getTags(npcEvent, 'on-health-zero')) {
+      const action = tag[2] || tag[1];
+      const target = tag[3] || tag[2];
+      const extRef = tag[4] || tag[3];
+
+      if (action === 'set-state') {
+        // Update NPC state (in npcStates AND player.states for requires checks)
+        const ns = this.player.getNpcState(npcDtag);
+        if (ns && ns.state !== target) {
+          const transition = findTransition(npcEvent, ns.state, target);
+          this.player.setNpcState(npcDtag, { ...ns, state: target });
+          this.player.setState(npcDtag, target);
+          if (transition?.text) this._emit(transition.text, 'narrative');
+        }
+        // External set-state (e.g. reveal portal)
+        if (extRef) {
+          const result = applyExternalSetState(
+            extRef, target, this.events, this.player,
+            (t, ty) => this._emit(t, ty),
+            (h, ty) => this._emitHtml(h, ty),
+          );
+          if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
+        }
+      } else if (action === 'consequence' && target) {
+        this._executeConsequence(target);
+      } else if (action === 'traverse' && target) {
+        this._traverse(target);
+      } else if (action === 'flees') {
+        this._npcFlees(npcEvent, npcDtag);
+      }
+    }
+  }
+
+  /**
+   * Handle `attack <npc> [with <weapon>]` combat flow.
+   */
+  _handleAttack(npcEvent, npcDtag, weaponEvent, weaponDtag) {
+    const npcTitle = getTag(npcEvent, 'title') || 'Enemy';
+
+    // Check NPC has health
+    const npcState = this.player.getNpcState(npcDtag);
+    if (!npcState) {
+      this.player.ensureNpcState(npcDtag, initNpcState(npcEvent));
+    }
+    const ns = this.player.getNpcState(npcDtag);
+    if (ns.health == null || ns.health <= 0) {
+      this._emit(`${npcTitle} is already defeated.`, 'narrative');
+      return;
+    }
+
+    // Set combat target for deal-damage-npc resolution
+    this.combatTarget = npcDtag;
+
+    // 1. Player attacks — fire weapon on-interact "attack" tags
+    const currentState = this.player.getState(weaponDtag) || getDefaultState(weaponEvent);
+    for (const tag of getTags(weaponEvent, 'on-interact')) {
+      if (tag[1] !== 'attack') continue;
+      const action = tag[2];
+      const targetState = tag[3];
+
+      if (action === 'deal-damage-npc') {
+        this._dealDamageToNpc(targetState || npcDtag, weaponEvent);
+      }
+    }
+
+    // If weapon has no on-interact attack, use damage tag directly
+    const hasAttackInteract = getTags(weaponEvent, 'on-interact').some((t) => t[1] === 'attack');
+    if (!hasAttackInteract) {
+      this._dealDamageToNpc(npcDtag, weaponEvent);
+    }
+
+    // 2. NPC counterattack — fire on-attacked tags (if NPC still alive)
+    const nsAfter = this.player.getNpcState(npcDtag);
+    if (nsAfter && nsAfter.health > 0) {
+      for (const tag of getTags(npcEvent, 'on-attacked')) {
+        const action = tag[2] || tag[1];
+        const actionTarget = tag[3] || tag[2];
+
+        if (action === 'deal-damage') {
+          const dmg = parseInt(actionTarget, 10) || parseInt(getTag(npcEvent, 'damage') || '1', 10);
+          this._dealDamageToPlayer(dmg, npcEvent, npcDtag);
+        } else if (action === 'increment' || action === 'decrement' || action === 'set-counter') {
+          this._applyCounterAction(action, npcDtag, actionTarget, tag[4] || tag[3], npcEvent);
+        } else if (action === 'set-state') {
+          const ns2 = this.player.getNpcState(npcDtag);
+          if (ns2 && actionTarget && ns2.state !== actionTarget) {
+            const transition = findTransition(npcEvent, ns2.state, actionTarget);
+            this.player.setNpcState(npcDtag, { ...ns2, state: actionTarget });
+            this.player.setState(npcDtag, actionTarget);
+            if (transition?.text) this._emit(transition.text, 'narrative');
+          }
+        } else if (action === 'consequence' && actionTarget) {
+          this._executeConsequence(actionTarget);
+        } else if (action === 'flees') {
+          this._npcFlees(npcEvent, npcDtag);
+        }
+      }
+    }
+
+    this.combatTarget = null;
+  }
+
+  /**
+   * Heal the player.
+   */
+  _healPlayer(amount) {
+    if (this.player.getHealth() == null) {
+      // Initialize health if not set (world without health tag)
+      this.player.setHealth(10);
+      this.player.setMaxHealth(10);
+    }
+    const before = this.player.getHealth();
+    this.player.heal(amount);
+    const healed = this.player.getHealth() - before;
+    if (healed > 0) {
+      this._emit(`Healed ${healed} HP. (HP: ${this.player.getHealth()})`, 'item');
+    }
+  }
+
   // ── Counter actions ──────────────────────────────────────────────────
 
   /**
@@ -979,10 +1211,11 @@ export class GameEngine {
       const actionTarget = tag[3];
 
       if (action === 'set-state') {
-        // Update NPC's own state (stored in npcStates, not player.states)
+        // Update NPC's own state (in npcStates AND player.states for requires checks)
         const npcState = this.player.getNpcState(npcDtag);
         if (npcState && npcState.state !== actionTarget) {
           this.player.setNpcState(npcDtag, { ...npcState, state: actionTarget });
+          this.player.setState(npcDtag, actionTarget);
           const transition = findTransition(npcEvent, npcState.state, actionTarget);
           if (transition?.text) this._emit(transition.text, 'narrative');
         }
@@ -1780,6 +2013,26 @@ export class GameEngine {
         if (desc) this._emit(desc, 'narrative');
       } else if (verb === 'talk') {
         this.startDialogue(dtag);
+      } else if (verb === 'attack') {
+        // Find weapon — from instrumentNoun or auto-detect
+        let weaponMatch = null;
+        if (instrumentNoun) {
+          weaponMatch = findInventoryItem(this.events, this.player.state.inventory, stripArticles(instrumentNoun));
+        } else {
+          // Auto-find first weapon in inventory with damage tag
+          for (const invDtag of this.player.state.inventory) {
+            const invEvent = this.events.get(invDtag);
+            if (invEvent && getTag(invEvent, 'damage')) {
+              weaponMatch = { event: invEvent, dtag: invDtag };
+              break;
+            }
+          }
+        }
+        if (!weaponMatch) {
+          this._emit('You have no weapon.', 'error');
+          return;
+        }
+        this._handleAttack(event, dtag, weaponMatch.event, weaponMatch.dtag);
       } else {
         this._emit("You can't do that.", 'error');
       }
@@ -1957,7 +2210,13 @@ export class GameEngine {
 
     if (parsed && parsed.noun1) {
       if (parsed.noun2) {
-        this.handleInteraction(parsed.verb, parsed.noun2, parsed.noun1);
+        // "with" = noun1 is target, noun2 is instrument (attack guard with sword)
+        // other prepositions = noun1 is instrument, noun2 is target (use key on door)
+        if (parsed.preposition === 'with') {
+          this.handleInteraction(parsed.verb, parsed.noun1, parsed.noun2);
+        } else {
+          this.handleInteraction(parsed.verb, parsed.noun2, parsed.noun1);
+        }
       } else {
         this.handleInteraction(parsed.verb, parsed.noun1, null);
       }

@@ -57,7 +57,12 @@ export function checkRequires(event, playerState, events) {
           return { allowed: false, reason: failDesc };
         }
       }
-    } else if (refType === 'feature') {
+    } else if (refType === 'feature' || refType === 'npc') {
+      const currentState = playerState.states?.[ref];
+      if (expectedState && currentState !== expectedState) {
+        return { allowed: false, reason: failDesc };
+      }
+    } else if (refType === 'portal') {
       const currentState = playerState.states?.[ref];
       if (expectedState && currentState !== expectedState) {
         return { allowed: false, reason: failDesc };
