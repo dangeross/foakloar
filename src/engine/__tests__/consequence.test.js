@@ -1,11 +1,10 @@
 /**
- * Tests for consequence dispatch (Phase 19).
- * Spec §2.11 — reusable outcomes with fixed execution order.
+ * Tests for consequence dispatch (Phase 19) and traverse action (Phase 20).
  */
 import { describe, it, expect } from 'vitest';
 import {
   ref, WORLD,
-  makePlace, makeItem, makeConsequence, makePortal, makeRoamingNPC,
+  makePlace, makeItem, makeConsequence, makePortal, makeRoamingNPC, makeFeature,
   buildEvents, makeEngine,
 } from './helpers.js';
 
@@ -302,5 +301,85 @@ describe('consequence dispatch sites', () => {
     // The requires failure reason should also be emitted
     const reason = engine.output.find((o) => o.text === 'The ledge crumbles beneath you.');
     expect(reason).toBeTruthy();
+  });
+});
+
+// ── Phase 20: traverse action ───────────────────────────────────────
+
+describe('_traverse', () => {
+  it('navigates player through a portal', () => {
+    const arena = makePlace('arena', {
+      extraTags: [['exit', ref(`${WORLD}:place:sanctum`), 'north', 'The sanctum.']],
+    });
+    const sanctum = makePlace('sanctum');
+    const portal = makePortal('arena-to-sanctum', [
+      [`${WORLD}:place:arena`, 'north', 'The sanctum.'],
+      [`${WORLD}:place:sanctum`, 'south', 'The arena.'],
+    ]);
+
+    const events = buildEvents(arena, sanctum, portal);
+    const engine = makeEngine(events, { place: ref(`${WORLD}:place:arena`) });
+    engine.currentPlace = ref(`${WORLD}:place:arena`);
+
+    engine._traverse(ref(`${WORLD}:portal:arena-to-sanctum`));
+
+    expect(engine.currentPlace).toBe(ref(`${WORLD}:place:sanctum`));
+  });
+
+  it('blocks traversal when portal requires fails', () => {
+    const arena = makePlace('arena');
+    const sanctum = makePlace('sanctum');
+    const portal = makePortal('locked-gate', [
+      [`${WORLD}:place:arena`, 'north', 'The sanctum.'],
+      [`${WORLD}:place:sanctum`, 'south', 'The arena.'],
+    ], {
+      requires: [[ref(`${WORLD}:feature:lever`), 'pulled', 'The gate is locked.']],
+    });
+
+    const events = buildEvents(arena, sanctum, portal);
+    const engine = makeEngine(events, { place: ref(`${WORLD}:place:arena`) });
+    engine.currentPlace = ref(`${WORLD}:place:arena`);
+
+    engine._traverse(ref(`${WORLD}:portal:locked-gate`));
+
+    // Should stay in arena
+    expect(engine.currentPlace).toBe(ref(`${WORLD}:place:arena`));
+    const msg = engine.output.find((o) => o.text === 'The gate is locked.');
+    expect(msg).toBeTruthy();
+  });
+
+  it('is no-op for missing portal ref', () => {
+    const arena = makePlace('arena');
+    const events = buildEvents(arena);
+    const engine = makeEngine(events, { place: ref(`${WORLD}:place:arena`) });
+    engine.currentPlace = ref(`${WORLD}:place:arena`);
+
+    engine._traverse(ref(`${WORLD}:portal:nonexistent`));
+
+    expect(engine.currentPlace).toBe(ref(`${WORLD}:place:arena`));
+  });
+
+  it('fires from on-interact', () => {
+    const arena = makePlace('arena', {
+      features: [`${WORLD}:feature:mirror`],
+    });
+    const sanctum = makePlace('sanctum');
+    const portal = makePortal('mirror-portal', [
+      [`${WORLD}:place:arena`, 'north', 'Through the mirror.'],
+      [`${WORLD}:place:sanctum`, 'south', 'Back.'],
+    ]);
+    const mirror = makeFeature('mirror', {
+      verbs: [['examine'], ['use', 'touch', 'enter']],
+      nouns: [['mirror']],
+      onInteract: [['use', 'traverse', ref(`${WORLD}:portal:mirror-portal`)]],
+    });
+
+    const events = buildEvents(arena, sanctum, portal, mirror);
+    const engine = makeEngine(events, { place: ref(`${WORLD}:place:arena`) });
+    engine.currentPlace = ref(`${WORLD}:place:arena`);
+
+    engine.processFeatureInteract(mirror, ref(`${WORLD}:feature:mirror`), 'use', null);
+
+    expect(engine.currentPlace).toBe(ref(`${WORLD}:place:sanctum`));
   });
 });

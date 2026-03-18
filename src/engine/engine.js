@@ -447,6 +447,10 @@ export class GameEngine {
         const cRef = targetState || targetRef;
         if (cRef) this._executeConsequence(cRef);
         acted = true;
+      } else if (action === 'traverse') {
+        const pRef = targetState || targetRef;
+        if (pRef) this._traverse(pRef);
+        acted = true;
       }
     }
     if (acted) evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty));
@@ -683,6 +687,8 @@ export class GameEngine {
                 }
               } else if (action === 'consequence' && actionTarget) {
                 this._executeConsequence(actionTarget);
+              } else if (action === 'traverse' && actionTarget) {
+                this._traverse(actionTarget);
               }
             }
           }
@@ -784,6 +790,43 @@ export class GameEngine {
     this.enterRoom(exit.destinationDTag, { isMoving: true });
   }
 
+  // ── Traverse action ──────────────────────────────────────────────────
+
+  /**
+   * Traverse a portal programmatically (spec action: traverse).
+   * Resolves the destination from the portal's exit tags relative to the
+   * player's current place, checks requires, then navigates.
+   */
+  _traverse(portalRef) {
+    const portal = this.events.get(portalRef);
+    if (!portal) return;
+
+    // Check requires on the portal
+    const req = checkRequires(portal, this.player.state, this.events);
+    if (!req.allowed) {
+      this._emit(req.reason, 'error');
+      return;
+    }
+
+    // Find the exit that leads AWAY from the current place
+    const exitTags = getTags(portal, 'exit');
+    let destinationDTag = null;
+    for (const tag of exitTags) {
+      const placeRef = tag[1];
+      if (placeRef !== this.currentPlace) {
+        destinationDTag = placeRef;
+        break;
+      }
+    }
+
+    if (!destinationDTag) return;
+
+    this.player.incrementMoveCount();
+    this.processOnMove();
+    this._processNpcOnMove();
+    this.enterRoom(destinationDTag, { isMoving: true });
+  }
+
   // ── Consequence execution ────────────────────────────────────────────
 
   /**
@@ -869,6 +912,8 @@ export class GameEngine {
         // Combat — future phase
       } else if (action === 'consequence') {
         if (actionTarget) this._executeConsequence(actionTarget);
+      } else if (action === 'traverse') {
+        if (actionTarget) this._traverse(actionTarget);
       }
     }
   }
@@ -981,6 +1026,8 @@ export class GameEngine {
         this._emit('You feel a key take shape in your mind.', 'narrative');
       } else if (action === 'consequence' && (value || extRef)) {
         this._executeConsequence(extRef || value);
+      } else if (action === 'traverse' && (value || extRef)) {
+        this._traverse(extRef || value);
       } else if (action === 'set-state' && extRef) {
         const targetEvent = this.events.get(extRef);
         if (!targetEvent) continue;
