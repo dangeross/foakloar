@@ -200,7 +200,7 @@
         ["verb",       "drink",   "use", "sip"],
         ["on-interact","drink", "decrement", "drinks"],
         ["on-interact","drink", "heal",      "2"],
-        ["on-counter", "drinks", "0", "set-state", "empty"]
+        ["on-counter", "down", "drinks", "0", "set-state", "empty"]
       ],
       "content": "A stone trough filled with water. Three mouthfuls, maybe. Enough to take the edge off a wound."
     },

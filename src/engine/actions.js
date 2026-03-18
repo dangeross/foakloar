@@ -87,14 +87,26 @@ export function giveItem(itemRef, events, player, emit) {
  */
 export function evalCounterLow(item, dtag, currentState, player, emit) {
   for (const lt of getTags(item, 'on-counter')) {
-    const counterName = lt[1];
-    const threshold = parseInt(lt[2], 10);
-    const action = lt[3];
-    const actionTarget = lt[4];
+    // Support both new shape (with direction) and legacy (without)
+    const hasDirection = lt[1] === 'down' || lt[1] === 'up';
+    const direction = hasDirection ? lt[1] : 'down';
+    const counterName = hasDirection ? lt[2] : lt[1];
+    const threshold = parseInt(hasDirection ? lt[3] : lt[2], 10);
+    const action = hasDirection ? lt[4] : lt[3];
+    const actionTarget = hasDirection ? lt[5] : lt[4];
 
     const key = `${dtag}:${counterName}`;
     const val = player.getCounter(key);
-    if (val === undefined || val > threshold || val <= 0) continue;
+    if (val === undefined) continue;
+
+    // State-entry re-evaluation: check if counter already satisfies threshold
+    let satisfied = false;
+    if (direction === 'down') {
+      satisfied = val <= threshold;
+    } else if (direction === 'up') {
+      satisfied = val >= threshold;
+    }
+    if (!satisfied) continue;
 
     if (currentState === actionTarget) continue;
 

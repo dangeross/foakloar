@@ -301,7 +301,7 @@ describe('processOnMove', () => {
       state: 'on',
       counters: [['battery', 100]],
       onMove: [['on', 'decrement', 'battery', '1']],
-      onCounter: [['battery', '20', 'set-state', 'flickering']],
+      onCounter: [['down', 'battery', '20', 'set-state', 'flickering']],
       transitions: [['on', 'flickering', 'The lantern flickers ominously.']],
       nouns: [['lantern']],
     });

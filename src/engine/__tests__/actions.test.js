@@ -154,7 +154,7 @@ describe('evalCounterLow', () => {
   it('fires set-state when counter is at or below threshold', () => {
     const lantern = makeItem('lantern', {
       state: 'on',
-      onCounter: [['battery', '20', 'set-state', 'flickering']],
+      onCounter: [['down', 'battery', '20', 'set-state', 'flickering']],
       transitions: [['on', 'flickering', 'The lantern flickers.']],
     });
     const events = buildEvents(lantern);
@@ -175,7 +175,7 @@ describe('evalCounterLow', () => {
   it('does not fire when counter is above threshold', () => {
     const lantern = makeItem('lantern', {
       state: 'on',
-      onCounter: [['battery', '20', 'set-state', 'flickering']],
+      onCounter: [['down', 'battery', '20', 'set-state', 'flickering']],
       transitions: [['on', 'flickering', 'Flickers.']],
     });
     const lanternRef = ref(`${WORLD}:item:lantern`);
@@ -195,7 +195,7 @@ describe('evalCounterLow', () => {
   it('does not fire when already in target state', () => {
     const lantern = makeItem('lantern', {
       state: 'on',
-      onCounter: [['battery', '20', 'set-state', 'flickering']],
+      onCounter: [['down', 'battery', '20', 'set-state', 'flickering']],
       transitions: [['on', 'flickering', 'Flickers.']],
     });
     const lanternRef = ref(`${WORLD}:item:lantern`);

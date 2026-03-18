@@ -451,6 +451,12 @@ export class GameEngine {
         const pRef = targetState || targetRef;
         if (pRef) this._traverse(pRef);
         acted = true;
+      } else if (action === 'decrement' || action === 'increment') {
+        this._applyCounterAction(action, dtag, targetState, targetRef, event);
+        acted = true;
+      } else if (action === 'set-counter') {
+        this._applyCounterAction('set-counter', dtag, targetState, targetRef, event, tag[5]);
+        acted = true;
       }
     }
     if (acted) evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty));
@@ -662,36 +668,7 @@ export class GameEngine {
         if (tag[1] !== currentState) continue;
 
         if (tag[2] === 'decrement') {
-          const counterName = tag[3];
-          const amount = parseInt(tag[4], 10) || 1;
-          const key = `${dtag}:${counterName}`;
-          const current = this.player.getCounter(key);
-          if (current === undefined || current <= 0) continue;
-
-          const newVal = Math.max(0, current - amount);
-          this.player.setCounter(key, newVal);
-
-          // Unified on-counter: fires when counter crosses threshold downward
-          for (const ct of getTags(item, 'on-counter')) {
-            if (ct[1] !== counterName) continue;
-            const threshold = parseInt(ct[2], 10);
-            if (current > threshold && newVal <= threshold) {
-              const action = ct[3];
-              const actionTarget = ct[4];
-              if (action === 'set-state' && actionTarget) {
-                const currentItemState = this.player.getState(dtag);
-                const transition = findTransition(item, currentItemState, actionTarget);
-                if (transition) {
-                  this.player.setState(dtag, transition.to);
-                  if (transition.text) this._emit(transition.text, 'narrative');
-                }
-              } else if (action === 'consequence' && actionTarget) {
-                this._executeConsequence(actionTarget);
-              } else if (action === 'traverse' && actionTarget) {
-                this._traverse(actionTarget);
-              }
-            }
-          }
+          this._applyCounterAction('decrement', dtag, tag[3], tag[4], item);
         }
       }
     }
@@ -827,6 +804,96 @@ export class GameEngine {
     this.enterRoom(destinationDTag, { isMoving: true });
   }
 
+  // ── Counter actions ──────────────────────────────────────────────────
+
+  /**
+   * Apply a counter action (decrement, increment, set-counter) on an event.
+   *
+   * On-interact positions:
+   *   increment/decrement: ["on-interact", verb, action, counterName, externalRef?]
+   *   set-counter:         ["on-interact", verb, "set-counter", counterName, value, externalRef?]
+   *
+   * @param {string} action — 'decrement', 'increment', or 'set-counter'
+   * @param {string} eventDtag — the event this tag is declared on (self)
+   * @param {string} counterName — counter name (position 3)
+   * @param {string} valueOrRef — position 4: value for set-counter, or external ref for inc/dec
+   * @param {Object} event — the event object (for on-counter evaluation)
+   * @param {string} [externalRef] — position 5: external ref for set-counter
+   */
+  _applyCounterAction(action, eventDtag, counterName, valueOrRef, event, externalRef) {
+    if (!counterName) return;
+
+    // Resolve target: external ref overrides self
+    let targetDtag = eventDtag;
+    let targetEvent = event;
+    if (action === 'set-counter' && externalRef) {
+      // set-counter: position 4 = value, position 5 = external ref
+      targetDtag = externalRef;
+      targetEvent = this.events.get(externalRef);
+    } else if ((action === 'increment' || action === 'decrement') && valueOrRef && this.events.has(valueOrRef)) {
+      // increment/decrement: position 4 = external ref (if it resolves to an event)
+      targetDtag = valueOrRef;
+      targetEvent = this.events.get(valueOrRef);
+      valueOrRef = null; // not a numeric value
+    }
+
+    const key = `${targetDtag}:${counterName}`;
+    const current = this.player.getCounter(key);
+    if (current === undefined && action !== 'set-counter') return;
+
+    let newVal;
+    if (action === 'decrement') {
+      if (current <= 0) return;
+      newVal = Math.max(0, current - 1);
+    } else if (action === 'increment') {
+      newVal = (current || 0) + 1;
+    } else if (action === 'set-counter') {
+      newVal = parseInt(valueOrRef, 10) || 0;
+    }
+
+    this.player.setCounter(key, newVal);
+
+    // Evaluate on-counter threshold crossing
+    if (!targetEvent || current === undefined) return;
+
+    for (const ct of getTags(targetEvent, 'on-counter')) {
+      // Support both new shape (with direction) and legacy (without)
+      // New:    ["on-counter", "down", "battery", "20", "set-state", "flickering"]
+      // Legacy: ["on-counter", "battery", "20", "set-state", "flickering"]
+      const hasDirection = ct[1] === 'down' || ct[1] === 'up';
+      const direction = hasDirection ? ct[1] : 'down';
+      const ctCounter = hasDirection ? ct[2] : ct[1];
+      if (ctCounter !== counterName) continue;
+      const threshold = parseInt(hasDirection ? ct[3] : ct[2], 10);
+      const ctAction = hasDirection ? ct[4] : ct[3];
+      const ctTarget = hasDirection ? ct[5] : ct[4];
+
+      let crossed = false;
+      if (direction === 'down' && newVal < current) {
+        // Downward: was above threshold, now at-or-below
+        crossed = current > threshold && newVal <= threshold;
+      } else if (direction === 'up' && newVal > current) {
+        // Upward: was below threshold, now at-or-above
+        crossed = current < threshold && newVal >= threshold;
+      }
+
+      if (crossed) {
+        if (ctAction === 'set-state' && ctTarget) {
+          const currentState = this.player.getState(targetDtag);
+          const transition = findTransition(targetEvent, currentState, ctTarget);
+          if (transition) {
+            this.player.setState(targetDtag, transition.to);
+            if (transition.text) this._emit(transition.text, 'narrative');
+          }
+        } else if (ctAction === 'consequence' && ctTarget) {
+          this._executeConsequence(ctTarget);
+        } else if (ctAction === 'traverse' && ctTarget) {
+          this._traverse(ctTarget);
+        }
+      }
+    }
+  }
+
   // ── Consequence execution ────────────────────────────────────────────
 
   /**
@@ -914,6 +981,8 @@ export class GameEngine {
         if (actionTarget) this._executeConsequence(actionTarget);
       } else if (action === 'traverse') {
         if (actionTarget) this._traverse(actionTarget);
+      } else if (action === 'increment' || action === 'decrement' || action === 'set-counter') {
+        this._applyCounterAction(action, npcDtag, actionTarget, tag[4], npcEvent);
       }
     }
   }
@@ -1028,6 +1097,13 @@ export class GameEngine {
         this._executeConsequence(extRef || value);
       } else if (action === 'traverse' && (value || extRef)) {
         this._traverse(extRef || value);
+      } else if (action === 'increment' || action === 'decrement' || action === 'set-counter') {
+        // Counter actions on puzzle — counterName in value, amount/val in extRef
+        const puzzleDtag = this.puzzleActive;
+        if (puzzleDtag) {
+          const puzzleEvt = this.events.get(puzzleDtag);
+          this._applyCounterAction(action, puzzleDtag, value, extRef, puzzleEvt);
+        }
       } else if (action === 'set-state' && extRef) {
         const targetEvent = this.events.get(extRef);
         if (!targetEvent) continue;

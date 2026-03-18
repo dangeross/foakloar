@@ -462,6 +462,7 @@
         ],
         [
           "on-counter",
+          "down",
           "heat",
           "1",
           "set-state",
@@ -469,6 +470,7 @@
         ],
         [
           "on-counter",
+          "down",
           "heat",
           "0",
           "set-state",

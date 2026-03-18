@@ -72,16 +72,16 @@ Spec-defined triggers: `on-interact`, `on-complete`, `on-enter`, `on-encounter`,
 
 ### on-counter
 
-Unified counter trigger — fires an action when a counter crosses a threshold (going down). Shape has an extra threshold argument:
+Counter trigger — fires an action when a counter crosses a threshold in a declared direction (`down` or `up`):
 
 ```
-["on-counter", "<counter>", "<threshold>", "<action-type>", "<action-target?>"]
+["on-counter", "<direction>", "<counter>", "<threshold>", "<action-type>", "<action-target?>"]
 ```
 
-The message comes from transition text, not from the tag. Example:
+`down` fires when counter crosses at-or-below threshold. `up` fires when counter crosses at-or-above threshold. Message comes from transition text, not from the tag. Example:
 
 ```
-["on-counter",  "battery", "20", "set-state", "flickering"]
+["on-counter", "down", "battery", "20", "set-state", "flickering"]
 ["transition",  "on", "flickering", "The lantern flickers ominously."]
 ```
 
@@ -106,7 +106,7 @@ Spec-defined actions: `set-state`, `traverse`, `give-item`, `consume-item`, `dea
 
 All previously tracked deviations have been fixed:
 
-1. **`on-counter`** — unified trigger (replaces `on-counter-low` and `on-counter-zero`). Fires actions when counter crosses threshold downward. Message comes from transition text.
+1. **`on-counter`** — unified trigger with direction field (`down`/`up`). Fires actions when counter crosses threshold in declared direction. Message comes from transition text.
 2. **`requires` tags** — all use event refs with 4-element shape. No more bare flag strings.
 3. **`checkRequires`** — resolves events and dispatches on `type` tag (item, feature, puzzle, portal).
 4. **`flags` removed** — all state tracking uses the unified `states` map keyed by d-tag.

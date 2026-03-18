@@ -244,7 +244,7 @@ describe('consequence dispatch sites', () => {
       state: 'on',
       counters: [['battery', 200]],
       onMove: [['on', 'decrement', 'battery', '1']],
-      onCounter: [['battery', '0', 'consequence', ref(`${WORLD}:consequence:lamp-dies`)]],
+      onCounter: [['down', 'battery', '0', 'consequence', ref(`${WORLD}:consequence:lamp-dies`)]],
     });
     const consequence = makeConsequence('lamp-dies', {
       respawn: `${WORLD}:place:entrance`,
@@ -381,5 +381,97 @@ describe('_traverse', () => {
     engine.processFeatureInteract(mirror, ref(`${WORLD}:feature:mirror`), 'use', null);
 
     expect(engine.currentPlace).toBe(ref(`${WORLD}:place:sanctum`));
+  });
+});
+
+// ── Phase 22: increment / set-counter ───────────────────────────────
+
+describe('counter actions', () => {
+  it('increment increases counter by 1', () => {
+    const arena = makePlace('arena', { features: [`${WORLD}:feature:lever`] });
+    const lever = makeFeature('lever', {
+      verbs: [['examine'], ['pull']],
+      nouns: [['lever']],
+      onInteract: [['pull', 'increment', 'pulls']],
+      extraTags: [['counter', 'pulls', '0']],
+    });
+
+    const events = buildEvents(arena, lever);
+    const engine = makeEngine(events, { place: ref(`${WORLD}:place:arena`) });
+    engine.currentPlace = ref(`${WORLD}:place:arena`);
+
+    // Init counter
+    engine.player.setCounter(`${ref(`${WORLD}:feature:lever`)}:pulls`, 0);
+
+    engine.processFeatureInteract(lever, ref(`${WORLD}:feature:lever`), 'pull', null);
+
+    expect(engine.player.getCounter(`${ref(`${WORLD}:feature:lever`)}:pulls`)).toBe(1);
+  });
+
+  it('set-counter sets counter to specific value', () => {
+    const arena = makePlace('arena', { features: [`${WORLD}:feature:forge`] });
+    const forge = makeFeature('forge', {
+      verbs: [['examine'], ['light']],
+      nouns: [['forge']],
+      onInteract: [['light', 'set-counter', 'heat', '3']],
+      extraTags: [['counter', 'heat', '0']],
+    });
+
+    const events = buildEvents(arena, forge);
+    const engine = makeEngine(events, { place: ref(`${WORLD}:place:arena`) });
+    engine.currentPlace = ref(`${WORLD}:place:arena`);
+    engine.player.setCounter(`${ref(`${WORLD}:feature:forge`)}:heat`, 0);
+
+    engine.processFeatureInteract(forge, ref(`${WORLD}:feature:forge`), 'light', 'cold');
+
+    expect(engine.player.getCounter(`${ref(`${WORLD}:feature:forge`)}:heat`)).toBe(3);
+  });
+
+  it('decrement from on-interact works', () => {
+    const arena = makePlace('arena', { features: [`${WORLD}:feature:trough`] });
+    const trough = makeFeature('trough', {
+      verbs: [['examine'], ['drink']],
+      nouns: [['trough']],
+      onInteract: [['drink', 'decrement', 'drinks']],
+      extraTags: [['counter', 'drinks', '3']],
+    });
+
+    const events = buildEvents(arena, trough);
+    const engine = makeEngine(events, { place: ref(`${WORLD}:place:arena`) });
+    engine.currentPlace = ref(`${WORLD}:place:arena`);
+    engine.player.setCounter(`${ref(`${WORLD}:feature:trough`)}:drinks`, 3);
+
+    engine.processFeatureInteract(trough, ref(`${WORLD}:feature:trough`), 'drink', 'full');
+
+    expect(engine.player.getCounter(`${ref(`${WORLD}:feature:trough`)}:drinks`)).toBe(2);
+  });
+
+  it('decrement triggers on-counter threshold crossing', () => {
+    const arena = makePlace('arena', { features: [`${WORLD}:feature:trough`] });
+    const trough = makeFeature('trough', {
+      state: 'full',
+      verbs: [['drink']],
+      nouns: [['trough']],
+      onInteract: [['drink', 'decrement', 'drinks']],
+      extraTags: [
+        ['counter', 'drinks', '3'],
+        ['on-counter', 'down', 'drinks', '0', 'set-state', 'empty'],
+        ['transition', 'full', 'empty', 'The trough is empty.'],
+      ],
+    });
+
+    const events = buildEvents(arena, trough);
+    const engine = makeEngine(events, { place: ref(`${WORLD}:place:arena`) });
+    engine.currentPlace = ref(`${WORLD}:place:arena`);
+    engine.player.setCounter(`${ref(`${WORLD}:feature:trough`)}:drinks`, 1);
+    engine.player.setState(ref(`${WORLD}:feature:trough`), 'full');
+
+    engine.processFeatureInteract(trough, ref(`${WORLD}:feature:trough`), 'drink', 'full');
+
+    // Counter crossed 0 threshold → state should be empty
+    expect(engine.player.getCounter(`${ref(`${WORLD}:feature:trough`)}:drinks`)).toBe(0);
+    expect(engine.player.getState(ref(`${WORLD}:feature:trough`))).toBe('empty');
+    const msg = engine.output.find((o) => o.text === 'The trough is empty.');
+    expect(msg).toBeTruthy();
   });
 });
