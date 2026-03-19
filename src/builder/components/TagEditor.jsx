@@ -80,6 +80,7 @@ function DOSInput({ value, onChange, placeholder, type = 'text', className = '',
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
+      {...(type === 'number' ? { step: 'any' } : {})}
       className={`bg-transparent outline-none font-mono text-xs px-1 ${className}`}
       style={{
         color: 'var(--colour-text)',
@@ -401,7 +402,22 @@ function shouldHideField(field, values) {
 }
 
 /** A single tag row with its fields */
-function TagRow({ tagName, tag, fields, onChange, onRemove, events }) {
+/** Reorder arrows for tag rows */
+function ReorderButtons({ index, total, onMove }) {
+  const btnStyle = { color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: '0 1px', cursor: 'pointer', fontSize: '0.6rem', lineHeight: 1 };
+  return (
+    <span className="shrink-0 flex flex-col" style={{ marginTop: '1px' }}>
+      {index > 0 ? (
+        <button onClick={() => onMove(index, -1)} style={btnStyle} title="Move up">▲</button>
+      ) : <span style={{ ...btnStyle, visibility: 'hidden' }}>▲</span>}
+      {index < total - 1 ? (
+        <button onClick={() => onMove(index, 1)} style={btnStyle} title="Move down">▼</button>
+      ) : <span style={{ ...btnStyle, visibility: 'hidden' }}>▼</span>}
+    </span>
+  );
+}
+
+function TagRow({ tagName, tag, fields, onChange, onRemove, onMoveUp, onMoveDown, events }) {
   const values = tagToValues(tag, fields);
   const schemaDesc = TAG_SCHEMAS[tagName]?.desc;
 
@@ -412,6 +428,14 @@ function TagRow({ tagName, tag, fields, onChange, onRemove, events }) {
 
   return (
     <div className="flex gap-1 items-start mb-1">
+      <span className="shrink-0 flex flex-col" style={{ marginTop: '1px' }}>
+        {onMoveUp ? (
+          <button onClick={onMoveUp} style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: '0 1px', cursor: 'pointer', fontSize: '0.6rem', lineHeight: 1 }} title="Move up">▲</button>
+        ) : <span style={{ fontSize: '0.6rem', lineHeight: 1, padding: '0 1px', visibility: 'hidden' }}>▲</span>}
+        {onMoveDown ? (
+          <button onClick={onMoveDown} style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: '0 1px', cursor: 'pointer', fontSize: '0.6rem', lineHeight: 1 }} title="Move down">▼</button>
+        ) : <span style={{ fontSize: '0.6rem', lineHeight: 1, padding: '0 1px', visibility: 'hidden' }}>▼</span>}
+      </span>
       <span
         className="shrink-0 px-1 mt-0.5"
         style={{ color: 'var(--colour-text)', minWidth: '8em', fontSize: '0.65rem' }}
@@ -564,12 +588,29 @@ export default function TagEditor({ eventType, tags, onChange, events }) {
     });
   }, [eventType, tags]);
 
+  function canMoveTag(tags, index, direction, evType) {
+    if (evType !== 'sound') return true;
+    const SOURCES = new Set(['note', 'noise']);
+    const tagName = tags[index]?.[0];
+    const targetIndex = index + direction;
+    // Source tags are locked at position 0
+    if (SOURCES.has(tagName)) return false;
+    // Non-source tags can't move into position 0 if a source is there
+    if (targetIndex === 0 && SOURCES.has(tags[0]?.[0])) return false;
+    return true;
+  }
+
   function addTag(tagName) {
     const schema = getTagSchema(tagName, eventType);
     if (!schema) return;
     // Create empty tag with correct number of fields
     const emptyTag = [tagName, ...schema.fields.map(() => '')];
-    onChange([...tags, emptyTag]);
+    // Sound source tags (note, noise) must be first
+    if (eventType === 'sound' && (tagName === 'note' || tagName === 'noise')) {
+      onChange([emptyTag, ...tags]);
+    } else {
+      onChange([...tags, emptyTag]);
+    }
   }
 
   function updateTag(index, newTag) {
@@ -580,6 +621,14 @@ export default function TagEditor({ eventType, tags, onChange, events }) {
 
   function removeTag(index) {
     onChange(tags.filter((_, i) => i !== index));
+  }
+
+  function moveTag(from, direction) {
+    const to = from + direction;
+    if (to < 0 || to >= tags.length) return;
+    const updated = [...tags];
+    [updated[from], updated[to]] = [updated[to], updated[from]];
+    onChange(updated);
   }
 
   return (
@@ -597,6 +646,7 @@ export default function TagEditor({ eventType, tags, onChange, events }) {
               <span className="flex-1 text-xs" style={{ color: 'var(--colour-dim)' }}>
                 {tag.slice(1).join(' | ')}
               </span>
+              <ReorderButtons index={i} total={tags.length} onMove={moveTag} />
               <button
                 onClick={() => removeTag(i)}
                 className="shrink-0 cursor-pointer"
@@ -615,6 +665,8 @@ export default function TagEditor({ eventType, tags, onChange, events }) {
             fields={schema.fields}
             onChange={(newTag) => updateTag(i, newTag)}
             onRemove={() => removeTag(i)}
+            onMoveUp={i > 0 && canMoveTag(tags, i, -1, eventType) ? () => moveTag(i, -1) : null}
+            onMoveDown={i < tags.length - 1 && canMoveTag(tags, i, 1, eventType) ? () => moveTag(i, 1) : null}
             events={events}
           />
         );

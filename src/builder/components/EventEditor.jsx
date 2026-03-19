@@ -13,6 +13,7 @@ import DOSPanel from '../../components/ui/DOSPanel.jsx';
 import DOSButton from './ui/DOSButton.jsx';
 import TagEditor from './TagEditor.jsx';
 import EventPreview from './EventPreview.jsx';
+import { buildStrudelCodeFromTags, previewSound, stopPreview, decompileStrudelCode } from '../../services/sound.js';
 import { buildEventTemplate, buildDTag, publishEvent } from '../eventBuilder.js';
 import { EVENT_TYPE_DESCRIPTIONS } from '../tagSchema.js';
 import { Tooltip } from './TagEditor.jsx';
@@ -358,6 +359,11 @@ export default function EventEditor({
         />
       </div>
 
+      {/* Sound preview — only for sound events */}
+      {eventType === 'sound' && (
+        <SoundPreview tags={tags} onTagsChange={setTags} />
+      )}
+
       {/* Actions */}
       <div className="flex gap-2 pt-2" style={{ borderTop: '1px solid var(--colour-dim)' }}>
         {onSaveDraft && (
@@ -372,3 +378,135 @@ export default function EventEditor({
     </DOSPanel>
   );
 }
+
+/** Sound preview panel — editable Strudel code, play/stop, decompile back to tags */
+function SoundPreview({ tags, onTagsChange }) {
+  const [playing, setPlaying] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [editCode, setEditCode] = useState('');
+  const generatedCode = useMemo(() => buildStrudelCodeFromTags(tags), [tags]);
+
+  const handlePlay = async () => {
+    if (playing) {
+      stopPreview();
+      setPlaying(false);
+    } else {
+      // Play either the edited code or the generated code
+      const codeToPlay = editMode ? editCode : null;
+      const ok = codeToPlay
+        ? await previewSound(null, codeToPlay)
+        : await previewSound(tags);
+      setPlaying(ok);
+    }
+  };
+
+  // Stop when tags change while playing
+  React.useEffect(() => {
+    if (playing) {
+      stopPreview();
+      setPlaying(false);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [generatedCode]);
+
+  const handleEditToggle = () => {
+    if (!editMode) {
+      setEditCode(generatedCode || '');
+      setEditMode(true);
+    } else {
+      setEditMode(false);
+    }
+  };
+
+  const handleDecompile = () => {
+    if (!editCode.trim()) return;
+    const decompiled = decompileStrudelCode(editCode);
+    if (decompiled.length === 0) return;
+    // Preserve non-sound tags (d, t, type, title, etc.)
+    const nonSoundTags = tags.filter((t) => !SOUND_TAG_NAMES.has(t[0]));
+    onTagsChange([...nonSoundTags, ...decompiled]);
+    setEditMode(false);
+  };
+
+  const hasSource = tags.some((t) => t[0] === 'note' || t[0] === 'noise');
+
+  return (
+    <div className="mb-3">
+      <div className="mb-1 flex items-center gap-2" style={{ color: 'var(--colour-text)', fontSize: '0.65rem' }}>
+        <span>Strudel:</span>
+        <button
+          onClick={handlePlay}
+          disabled={!hasSource && !editMode}
+          style={{
+            color: playing ? 'var(--colour-error)' : 'var(--colour-highlight)',
+            background: 'none', border: '1px solid currentColor',
+            font: 'inherit', fontSize: '0.6rem', padding: '1px 6px',
+            cursor: hasSource || editMode ? 'pointer' : 'default',
+            opacity: hasSource || editMode ? 1 : 0.4,
+          }}
+        >
+          {playing ? '■ Stop' : '▶ Play'}
+        </button>
+        <button
+          onClick={handleEditToggle}
+          style={{
+            color: editMode ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+            background: 'none', border: '1px solid currentColor',
+            font: 'inherit', fontSize: '0.6rem', padding: '1px 6px',
+            cursor: 'pointer',
+          }}
+        >
+          {editMode ? 'cancel' : 'edit'}
+        </button>
+        {editMode && (
+          <button
+            onClick={handleDecompile}
+            style={{
+              color: 'var(--colour-item)',
+              background: 'none', border: '1px solid currentColor',
+              font: 'inherit', fontSize: '0.6rem', padding: '1px 6px',
+              cursor: 'pointer',
+            }}
+          >
+            apply
+          </button>
+        )}
+      </div>
+      {editMode ? (
+        <textarea
+          value={editCode}
+          onChange={(e) => setEditCode(e.target.value)}
+          rows={3}
+          style={{
+            color: 'var(--colour-text)', fontSize: '0.55rem',
+            background: 'rgba(0,0,0,0.3)', padding: '4px 6px',
+            border: '1px solid var(--colour-highlight)',
+            whiteSpace: 'pre-wrap', wordBreak: 'break-all',
+            fontFamily: 'inherit', width: '100%', resize: 'vertical',
+          }}
+        />
+      ) : generatedCode ? (
+        <pre
+          style={{
+            color: 'var(--colour-dim)', fontSize: '0.55rem',
+            background: 'rgba(0,0,0,0.3)', padding: '4px 6px',
+            border: '1px solid var(--colour-dim)',
+            whiteSpace: 'pre-wrap', wordBreak: 'break-all',
+            fontFamily: 'inherit',
+          }}
+        >{generatedCode}</pre>
+      ) : (
+        <div style={{ color: 'var(--colour-dim)', fontSize: '0.55rem' }}>
+          Add a note or noise tag to generate Strudel code.
+        </div>
+      )}
+    </div>
+  );
+}
+
+const SOUND_TAG_NAMES = new Set([
+  'note', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan',
+  'lpf', 'hpf', 'vowel', 'crush', 'shape', 'room', 'roomsize',
+  'delay', 'rev', 'palindrome', 'degrade-by', 'rand', 'jux', 'arp',
+  'sustain', 'attack', 'release', 'sample',
+]);

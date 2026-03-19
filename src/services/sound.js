@@ -56,8 +56,33 @@ export function isMuted() { return muted; }
  * Load all samples from sound events on world init.
  * Collects sample tags, dedupes by name, calls Strudel's samples().
  */
+// Known preset aliases for sample libraries
+const SAMPLE_PRESETS = {
+  dirt: 'github:tidalcycles/Dirt-Samples',
+  classic: 'https://raw.githubusercontent.com/felixroos/dough-samples/main/vcsl.json',
+};
+
 export async function loadSamples(events) {
   if (!audioReady || !strudelModule) return;
+
+  // 1. Load preset sample libraries from world event ["samples", "<preset-or-url>"]
+  for (const [, event] of events) {
+    if (getTag(event, 'type') !== 'world') continue;
+    for (const tag of getTags(event, 'samples')) {
+      const val = tag[1];
+      if (!val) continue;
+      const url = SAMPLE_PRESETS[val] || val;
+      try {
+        await strudelModule.samples(url);
+        console.log(`Loaded sample library: ${val}`);
+      } catch (e) {
+        console.warn(`Sample library "${val}" failed:`, e.message || e);
+      }
+    }
+    break;
+  }
+
+  // 2. Load custom samples from sound events ["sample", "<name>", "<url>"]
   const sampleMap = {};
   for (const [, event] of events) {
     if (getTag(event, 'type') !== 'sound') continue;
@@ -65,11 +90,12 @@ export async function loadSamples(events) {
       if (tag[1] && tag[2]) sampleMap[tag[1]] = tag[2];
     }
   }
-  if (Object.keys(sampleMap).length === 0) return;
-  try {
-    await strudelModule.samples(sampleMap);
-  } catch (e) {
-    console.warn('Sample loading failed:', e.message || e);
+  if (Object.keys(sampleMap).length > 0) {
+    try {
+      await strudelModule.samples(sampleMap);
+    } catch (e) {
+      console.warn('Custom sample loading failed:', e.message || e);
+    }
   }
 }
 
@@ -332,10 +358,16 @@ function buildStrudelCodeFromEvent(soundEvent, mixVolume) {
 
   let code = '';
   let baseGain = null;
+  let bpmPrefix = '';
   for (const tag of soundEvent.tags || []) {
     const name = tag[0];
     const val = tag[1];
 
+    // BPM sets global tempo, prepended before the pattern
+    if (name === 'bpm') {
+      bpmPrefix = `setbpm(${parseInt(val, 10) || 120})\n`;
+      continue;
+    }
     // Handle special multi-value tags
     if (name === 'delay') {
       const time = parseFloat(val) || 0.5;
@@ -361,6 +393,7 @@ function buildStrudelCodeFromEvent(soundEvent, mixVolume) {
   }
 
   if (!code) return null;
+  code = bpmPrefix + code;
 
   // Gain = sound event's base gain × referencing tag's mix volume
   const finalGain = (baseGain ?? 1.0) * (mixVolume ?? 1.0);
@@ -374,6 +407,120 @@ function buildStrudelCodeFromEvent(soundEvent, mixVolume) {
   }
 
   return code;
+}
+
+/**
+ * Build Strudel code from raw tag arrays (for builder preview).
+ * Takes tags in the same format as event.tags: [["note", "c3"], ["oscillator", "sine"], ...]
+ */
+export function buildStrudelCodeFromTags(tags) {
+  // Wrap tags in a fake event object for buildStrudelCodeFromEvent
+  return buildStrudelCodeFromEvent({ tags }, 1.0);
+}
+
+/**
+ * Preview a sound from builder tags — evaluates and plays.
+ * Returns true if playback started.
+ */
+export async function previewSound(tags, rawCode = null) {
+  // Auto-init audio if not ready (preview button counts as user gesture)
+  if (!audioReady) {
+    const ok = await initAudio();
+    if (!ok) return false;
+  }
+  try {
+    const ctx = strudelModule?.getAudioContext?.();
+    if (ctx?.state === 'suspended') await ctx.resume();
+    await strudelReady;
+    const code = rawCode || (tags ? buildStrudelCodeFromTags(tags) : null);
+    if (!code) return false;
+    await strudelModule.evaluate(code);
+    return true;
+  } catch (e) {
+    console.warn('Sound preview error:', e.message || e);
+    return false;
+  }
+}
+
+/**
+ * Stop sound preview.
+ */
+export function stopPreview() {
+  _stopPatterns();
+  // Restore ambient layers if any were playing
+  if (lastLayers.length > 0) {
+    playLayers(lastLayers);
+  }
+}
+
+/**
+ * Decompile Strudel code string back into tag arrays.
+ * Extracts known function calls via regex.
+ */
+export function decompileStrudelCode(code) {
+  const tags = [];
+  if (!code || typeof code !== 'string') return tags;
+
+  // Source: note("...") or noise()
+  const noteMatch = code.match(/note\("([^"]+)"\)/);
+  if (noteMatch) tags.push(['note', noteMatch[1]]);
+
+  const noiseMatch = code.match(/\bnoise\(\)/);
+  if (noiseMatch && !noteMatch) tags.push(['noise', '']);
+
+  // .s("...") → oscillator
+  const oscMatch = code.match(/\.s\("([^"]+)"\)/);
+  if (oscMatch) tags.push(['oscillator', oscMatch[1]]);
+
+  // Single-value float methods
+  const floatMethods = [
+    ['gain', 'gain'], ['slow', 'slow'], ['fast', 'fast'],
+    ['pan', 'pan'], ['lpf', 'lpf'], ['hpf', 'hpf'],
+    ['room', 'room'], ['roomsize', 'roomsize'],
+    ['shape', 'shape'], ['sustain', 'sustain'],
+    ['attack', 'attack'], ['release', 'release'],
+  ];
+  for (const [method, tagName] of floatMethods) {
+    const re = new RegExp(`\\.${method}\\(([\\d.]+)\\)`);
+    const m = code.match(re);
+    if (m) tags.push([tagName, m[1]]);
+  }
+
+  // crush (integer)
+  const crushMatch = code.match(/\.crush\((\d+)\)/);
+  if (crushMatch) tags.push(['crush', crushMatch[1]]);
+
+  // vowel
+  const vowelMatch = code.match(/\.vowel\("([^"]+)"\)/);
+  if (vowelMatch) tags.push(['vowel', vowelMatch[1]]);
+
+  // arp
+  const arpMatch = code.match(/\.arp\("([^"]+)"\)/);
+  if (arpMatch) tags.push(['arp', arpMatch[1]]);
+
+  // delay (two values)
+  const delayMatch = code.match(/\.delay\(([\d.]+),\s*([\d.]+)\)/);
+  if (delayMatch) tags.push(['delay', delayMatch[1], delayMatch[2]]);
+
+  // degradeBy
+  const degradeMatch = code.match(/\.degradeBy\(([\d.]+)\)/);
+  if (degradeMatch) tags.push(['degrade-by', degradeMatch[1]]);
+
+  // rand (gain with rand.range)
+  const randMatch = code.match(/\.gain\(rand\.range\(([\d.]+),\s*([\d.]+)\)\)/);
+  if (randMatch) tags.push(['rand', randMatch[1], randMatch[2]]);
+
+  // jux
+  const juxMatch = code.match(/\.jux\((\w+)\)/);
+  if (juxMatch) tags.push(['jux', juxMatch[1]]);
+
+  // rev (no args)
+  if (/\.rev\(\)/.test(code)) tags.push(['rev', '']);
+
+  // palindrome (no args)
+  if (/\.palindrome\(\)/.test(code)) tags.push(['palindrome', '']);
+
+  return tags;
 }
 
 /**

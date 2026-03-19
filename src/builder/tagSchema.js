@@ -414,31 +414,35 @@ export const TAG_SCHEMAS = {
   // ── Sound event tags ──────────────────────────────────────────────────
   // Source
   note:         { label: 'Note', desc: 'Mini-notation note pattern. First in the Strudel chain. Examples: c3 e3 g3, c2*4, c3 ~ ~ ~', fields: [{ name: 'pattern', type: 'text', required: true, placeholder: 'c3 e3 g3' }] },
-  oscillator:   { label: 'Oscillator', desc: 'Sound source waveform. sine = smooth, triangle = warm, sawtooth = buzzy, square = hollow/retro', fields: [{ name: 'type', type: 'select', required: true, options: ['sine', 'triangle', 'sawtooth', 'square'] }] },
+  oscillator:   { label: 'Oscillator', desc: 'Sound source. Built-in: sine, triangle, sawtooth, square. With samples loaded: piano, bass, bd, sd, hh, etc.', fields: [{ name: 'type', type: 'text', required: true, placeholder: 'sine' }] },
   // Volume & timing
-  gain:         { label: 'Gain', desc: 'Base volume baked into the sound definition (0.0–1.0). Multiplied with the play tag volume at point of use.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
-  slow:         { label: 'Slow', desc: 'Stretch time relative to global tempo. 2 = half speed, 4 = quarter speed.', fields: [{ name: 'factor', type: 'text', required: true, placeholder: '2' }] },
-  fast:         { label: 'Fast', desc: 'Compress time relative to global tempo. 2 = double speed, 4 = quadruple speed.', fields: [{ name: 'factor', type: 'text', required: true, placeholder: '2' }] },
-  pan:          { label: 'Pan', desc: 'Stereo position. -1 = left, 0 = centre, 1 = right.', fields: [{ name: 'position', type: 'text', required: true, placeholder: '0' }] },
+  gain:         { label: 'Gain', desc: 'Base volume baked into the sound definition (0.0–1.0). Multiplied with the play tag volume at point of use.', fields: [{ name: 'value', type: 'number', required: true, placeholder: '0.5' }] },
+  slow:         { label: 'Slow', desc: 'Stretch time relative to global tempo. 2 = half speed, 4 = quarter speed.', fields: [{ name: 'factor', type: 'number', required: true, placeholder: '2' }] },
+  fast:         { label: 'Fast', desc: 'Compress time relative to global tempo. 2 = double speed, 4 = quadruple speed.', fields: [{ name: 'factor', type: 'number', required: true, placeholder: '2' }] },
+  pan:          { label: 'Pan', desc: 'Stereo position. -1 = left, 0 = centre, 1 = right.', fields: [{ name: 'position', type: 'number', required: true, placeholder: '0' }] },
   // Filters
-  lpf:          { label: 'Low-pass Filter', desc: 'Removes frequencies above cutoff (Hz). Lower = warmer/muffled. Good for drones, underwater.', fields: [{ name: 'freq', type: 'text', required: true, placeholder: '400' }] },
-  hpf:          { label: 'High-pass Filter', desc: 'Removes frequencies below cutoff (Hz). Higher = thinner/airy. Good for shimmer, radio.', fields: [{ name: 'freq', type: 'text', required: true, placeholder: '1000' }] },
+  lpf:          { label: 'Low-pass Filter', desc: 'Removes frequencies above cutoff (Hz). Lower = warmer/muffled. Good for drones, underwater.', fields: [{ name: 'freq', type: 'number', required: true, placeholder: '400' }] },
+  hpf:          { label: 'High-pass Filter', desc: 'Removes frequencies below cutoff (Hz). Higher = thinner/airy. Good for shimmer, radio.', fields: [{ name: 'freq', type: 'number', required: true, placeholder: '1000' }] },
   vowel:        { label: 'Vowel', desc: 'Formant filter — shapes sound to vocal vowels. Single or pattern: a e i o u', fields: [{ name: 'pattern', type: 'text', required: true, placeholder: 'a e i o' }] },
   // Distortion
-  crush:        { label: 'Crush', desc: 'Bit crush for lo-fi texture. 1 = most crushed, 16 = least.', fields: [{ name: 'bits', type: 'text', required: true, placeholder: '8' }] },
-  shape:        { label: 'Shape', desc: 'Soft distortion/saturation. 0 = clean, 1 = aggressive. Adds warmth.', fields: [{ name: 'amount', type: 'text', required: true, placeholder: '0.5' }] },
+  crush:        { label: 'Crush', desc: 'Bit crush for lo-fi texture. 1 = most crushed, 16 = least.', fields: [{ name: 'bits', type: 'number', required: true, placeholder: '8' }] },
+  shape:        { label: 'Shape', desc: 'Soft distortion/saturation. 0 = clean, 1 = aggressive. Adds warmth.', fields: [{ name: 'amount', type: 'number', required: true, placeholder: '0.5' }] },
   // Effects
-  room:         { label: 'Room', desc: 'Reverb wet/dry. 0 = dry, 1 = fully wet. Adds space and depth.', fields: [{ name: 'amount', type: 'text', required: true, placeholder: '0.5' }] },
-  roomsize:     { label: 'Room Size', desc: 'Reverb room size (1–10). Only meaningful with room > 0.', fields: [{ name: 'size', type: 'text', required: true, placeholder: '4' }] },
-  delay:        { label: 'Delay', desc: 'Echo effect. Time = spacing (0–1), feedback = repeats (0–1).', fields: [{ name: 'time', type: 'text', required: true, placeholder: '0.5' }, { name: 'feedback', type: 'text', required: true, placeholder: '0.3' }] },
+  room:         { label: 'Room', desc: 'Reverb wet/dry. 0 = dry, 1 = fully wet. Adds space and depth.', fields: [{ name: 'amount', type: 'number', required: true, placeholder: '0.5' }] },
+  roomsize:     { label: 'Room Size', desc: 'Reverb room size (1–10). Only meaningful with room > 0.', fields: [{ name: 'size', type: 'number', required: true, placeholder: '4' }] },
+  delay:        { label: 'Delay', desc: 'Echo effect. Time = spacing (0–1), feedback = repeats (0–1).', fields: [{ name: 'time', type: 'number', required: true, placeholder: '0.5' }, { name: 'feedback', type: 'number', required: true, placeholder: '0.3' }] },
   rev:          { label: 'Reverse', desc: 'Reverse the pattern order within each cycle. No value needed.', fields: [] },
   palindrome:   { label: 'Palindrome', desc: 'Play pattern forward then backward — mirrored loop. No value needed.', fields: [] },
   // Texture & randomness
-  'degrade-by': { label: 'Degrade By', desc: 'Randomly drop events each cycle (0.0–1.0). 0.3 = ~30% dropped. Creates organic texture.', fields: [{ name: 'amount', type: 'text', required: true, placeholder: '0.3' }] },
-  rand:         { label: 'Random Gain', desc: 'Random volume per event — crackle, shimmer, breathing. Two values: min, max.', fields: [{ name: 'min', type: 'text', required: true, placeholder: '0.1' }, { name: 'max', type: 'text', required: true, placeholder: '0.4' }] },
+  'degrade-by': { label: 'Degrade By', desc: 'Randomly drop events each cycle (0.0–1.0). 0.3 = ~30% dropped. Creates organic texture.', fields: [{ name: 'amount', type: 'number', required: true, placeholder: '0.3' }] },
+  rand:         { label: 'Random Gain', desc: 'Random volume per event — crackle, shimmer, breathing. Two values: min, max.', fields: [{ name: 'min', type: 'number', required: true, placeholder: '0.1' }, { name: 'max', type: 'number', required: true, placeholder: '0.4' }] },
   // Stereo & layering
   jux:          { label: 'Jux', desc: 'Stereo width — normal in left, reversed in right. Creates spatial movement.', fields: [{ name: 'fn', type: 'select', required: true, options: ['rev'] }] },
   arp:          { label: 'Arpeggio', desc: 'Arpeggiate chords — play notes in sequence. up = low-high, down = high-low.', fields: [{ name: 'direction', type: 'select', required: true, options: ['up', 'down', 'updown'] }] },
+  // Envelope
+  sustain:      { label: 'Sustain', desc: 'Note duration in seconds. Shorter = responsive to state changes. Longer = droning.', fields: [{ name: 'value', type: 'number', required: true, placeholder: '2' }] },
+  attack:       { label: 'Attack', desc: 'Fade-in time in seconds. 0 = instant, higher = gradual swell.', fields: [{ name: 'value', type: 'number', required: true, placeholder: '0.1' }] },
+  release:      { label: 'Release', desc: 'Fade-out time after note ends. 0 = hard cut, higher = natural decay.', fields: [{ name: 'value', type: 'number', required: true, placeholder: '0.1' }] },
   // Sample
   sample:       { label: 'Sample', desc: 'Register external audio file by name. Use the name in note patterns.', repeatable: true, fields: [{ name: 'name', type: 'text', required: true, placeholder: 'kick' }, { name: 'url', type: 'text', required: true, placeholder: 'https://...' }] },
 
@@ -486,6 +490,7 @@ export const TAG_SCHEMAS = {
   },
   puzzle:        { label: 'Puzzle NIP-44', desc: 'D-tag of the puzzle whose key decrypts NIP-44 content', fields: [{ name: 'ref', type: 'text', required: true, placeholder: 'puzzle d-tag for NIP-44' }] },
   bpm:           { label: 'BPM', desc: 'Global tempo (world) or place override. Default 120. Affects all Strudel pattern cycle speeds.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '120' }] },
+  samples:       { label: 'Sample Library', desc: 'Load a sample library. Use a preset name (e.g. "dirt") or a URL (e.g. "github:user/repo").', repeatable: true, fields: [{ name: 'value', type: 'text', required: true, placeholder: 'dirt' }] },
 };
 
 /** Which tags are valid for each event type */
@@ -501,8 +506,8 @@ export const TAGS_BY_EVENT_TYPE = {
   npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health', 'on-player-health', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not', 'sound'],
   dialogue:    ['text', 'option', 'requires', 'requires-not', 'on-enter', 'sound'],
   consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage', 'set-state', 'sound'],
-  sound:       ['note', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan', 'lpf', 'hpf', 'vowel', 'crush', 'shape', 'room', 'roomsize', 'delay', 'rev', 'palindrome', 'degrade-by', 'rand', 'jux', 'arp', 'sample'],
-  world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'bpm', 'content-type', 'media', 'w'],
+  sound:       ['note', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan', 'lpf', 'hpf', 'vowel', 'crush', 'shape', 'room', 'roomsize', 'delay', 'rev', 'palindrome', 'degrade-by', 'rand', 'jux', 'arp', 'sustain', 'attack', 'release', 'sample'],
+  world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'bpm', 'samples', 'content-type', 'media', 'w'],
   vouch:       ['pubkey', 'scope', 'can-vouch'],
   quest:       ['title', 'involves', 'requires', 'requires-not', 'on-complete', 'sound'],
 };

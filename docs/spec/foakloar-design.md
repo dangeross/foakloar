@@ -2100,7 +2100,8 @@ The world event is a replaceable event (`kind: 30078`). The genesis author can u
 | `flicker` | `on` \| `off` | Override screen flicker |
 | `vignette` | 0.0–1.0 | Override edge vignette intensity |
 | `noise` | 0.0–1.0 | Grain/static overlay — adds texture without full CRT feel |
-| `bpm` | Integer string | Global tempo in BPM. Place overrides world. |
+| `bpm` | Integer string | Global tempo in BPM. Default 120. Place overrides world. |
+| `samples` | Preset name or URL | Opt into a sample library — see sound section. |
 | `sound` | Sound `a`-tag + role + volume + state | Play a `type: sound` event — see sound scoring section |
 | `content-type` | MIME type | Format of `content` field |
 | `media` | Type + value | Cover art or world image |
@@ -2213,6 +2214,9 @@ A named, reusable sound recipe. Declared as a FOAKLOAR event with a `d`-tag for 
 | `slow` | float > 1 | `.slow(n)` | Stretch cycle — slower playback. Relative to global BPM. |
 | `fast` | float > 1 | `.fast(n)` | Compress cycle — faster playback. Relative to global BPM. |
 | `pan` | -1.0–1.0 | `.pan(n)` | Stereo position. -1 = left, 0 = centre, 1 = right. |
+| `attack` | Seconds e.g. `0.1` | `.attack(n)` | Fade-in time. `0` = instant, higher = gradual swell. |
+| `sustain` | Seconds e.g. `2` | `.sustain(n)` | How long each note sounds. Longer = droning. Shorter = responsive to state changes — the sound cuts off quickly when a state gate deactivates it. |
+| `release` | Seconds e.g. `0.1` | `.release(n)` | Fade-out after note ends. `0` = hard cut, higher = natural decay. |
 
 **Filters:**
 
@@ -2286,6 +2290,26 @@ On world load the client collects all `sample` tags, deduplicates by name, and c
 
 ---
 
+**`samples` tag — world-level sample libraries:**
+
+Declared on the world event to load a sample library on startup. Without it, only built-in oscillators and `noise` are available (plus any `sample` tags on individual sound events).
+
+```json
+["samples", "dirt"]                                           // Strudel Dirt-Samples preset
+["samples", "github:tidalcycles/Dirt-Samples"]               // GitHub-hosted pack
+["samples", "https://myblossom.example/my-world-samples.json"] // custom index
+```
+
+| Value | Resolves to |
+|-------|------------|
+| `dirt` | `github:tidalcycles/Dirt-Samples` — hundreds of sounds: `piano`, `bass`, `bd`, `sd`, `hh` etc. |
+| `github:user/repo` | GitHub-hosted Strudel-compatible sample pack |
+| `https://...` | Direct URL to a Strudel-compatible sample index JSON |
+
+Sample libraries load asynchronously on world start. Built-in oscillators and `noise` work instantly.
+
+---
+
 **Playing a sound — `sound` tag on any event:**
 
 ```json
@@ -2348,6 +2372,8 @@ Volume optional — defaults to `1.0`.
 `bpm` is a standalone tag on world or place events. Individual sound events use `slow`/`fast` for relative tempo adjustment.
 
 ---
+
+**Sound events and the `w` tag:** `type: sound` events do not carry the `["w", "foakloar"]` discovery tag. They are referenced by `a`-tag from other events — not discovered via relay filtering. Only `type: world` events need the `w` tag.
 
 **Two sound models:**
 - `sound` tags on events — passive, scope-driven. Plays while event is relevant.

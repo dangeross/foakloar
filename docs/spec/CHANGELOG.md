@@ -106,6 +106,9 @@ Portal always uses extended form. Portal wins if conflict. Hidden portals still 
 
 **`plaintext-type` tag proposed and removed before shipping** — replaced by three-element `content-type`.
 
+**Sound system — envelope, samples library, noise correction**
+`attack`, `sustain`, `release` tags added for envelope control. `sustain` is critical for state-gated layers — short sustain makes layers cut off cleanly when their state gate deactivates. `noise` corrected: it is a DSP oscillator generating `noise()`, not `s("noise")` (which would look for a sample). `samples` tag added to world event for loading sample libraries: `["samples", "dirt"]` loads Strudel Dirt-Samples; GitHub repos and direct URLs also supported. `type: sound` events do not carry the `w` discovery tag — they are referenced by `a`-tag, not relay-discovered.
+
 **Sound system fully specced against working implementation**
 `type: sound` event primitive with complete Strudel-mapped parameter set: source (`note`, `oscillator`, `noise`), volume/timing (`gain`, `slow`, `fast`, `pan`), filters (`lpf`, `hpf`, `vowel`), distortion (`crush`, `shape`), effects (`room`, `roomsize`, `delay` with two values, `rev`, `palindrome`), texture (`degrade-by`, `rand`), stereo/layering (`jux`, `stack`), pitch (`arp`), and `sample` for external audio. `gain` × `volume` multiplication documented. `loop` removed (implicit in Strudel). `delay` updated to two values (time, feedback). `roomsize` added alongside `room`. Default BPM is 120.
 

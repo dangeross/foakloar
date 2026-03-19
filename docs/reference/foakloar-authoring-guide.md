@@ -953,12 +953,15 @@ Play tag shape: `["sound", "<sound-a-tag>", "<role>", "<volume>", "<state?>"]`
 | Parameter | Values | Effect |
 |-----------|--------|--------|
 | `note` | mini-notation | Pitch sequence — always first |
-| `noise` | *(no value)* | White noise source — for wind, rain, fire, static |
+| `noise` | *(no value)* | White noise oscillator (DSP, not a sample) — for wind, rain, fire, static |
 | `oscillator` | `sine` `triangle` `sawtooth` `square` | Waveform shape |
 | `gain` | 0.0–1.0 | Base volume (multiplies with play tag volume) |
 | `slow` | float > 1 | Stretch relative to global tempo |
 | `fast` | float > 1 | Compress relative to global tempo |
 | `pan` | -1.0–1.0 | Stereo — -1 left, 0 centre, 1 right |
+| `attack` | seconds | Fade-in. `0` = instant, `0.5` = gradual swell. |
+| `sustain` | seconds | Note duration. Short = responsive to state changes. Long = droning. |
+| `release` | seconds | Fade-out. `0` = hard cut, `0.3` = natural decay. |
 | `lpf` | Hz | Low-pass filter — warmer, muffled. Drones, underwater. |
 | `hpf` | Hz | High-pass filter — thinner, airy. Shimmer, radio. |
 | `room` | 0.0–1.0 | Reverb wet/dry |
@@ -1000,6 +1003,14 @@ Use these as building blocks:
 ### State-conditional layers — the most powerful tool
 
 The state element on the `sound` play tag gates the layer to a specific event state. When the state changes, the layer enters or leaves the mix automatically:
+
+**Tip — use `sustain` and `release` for responsive state layers:**
+A layer with default sustain may linger after its state gate deactivates. Short `sustain` and `release` values make it cut off cleanly:
+
+```json
+// Lamp hum — cuts off quickly when lamp turns off
+["sustain", "0.5"], ["release", "0.1"]
+```
 
 ```json
 // Two sound events

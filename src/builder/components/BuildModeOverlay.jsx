@@ -146,6 +146,39 @@ export default function BuildModeOverlay({
 
   const { placeDtag, placeAuthor, title, exits, entities } = annotation;
 
+  // Collect sound events referenced by the current place and its entities
+  const soundEvents = useMemo(() => {
+    const placeEvent = events.get(currentPlace);
+    if (!placeEvent) return [];
+    // Gather all events in scope: place + features + items + NPCs
+    const scopeRefs = [currentPlace];
+    for (const tag of placeEvent.tags || []) {
+      if (['feature', 'item', 'npc', 'clue', 'puzzle'].includes(tag[0]) && tag[1]) {
+        scopeRefs.push(tag[1]);
+      }
+    }
+    // Collect unique sound refs from sound tags on scoped events
+    const soundRefs = new Set();
+    for (const ref of scopeRefs) {
+      const ev = events.get(ref);
+      if (!ev) continue;
+      for (const tag of ev.tags || []) {
+        if (tag[0] === 'sound' && tag[1]?.startsWith('30078:')) {
+          soundRefs.add(tag[1]);
+        }
+      }
+    }
+    // Resolve to sound event metadata
+    const sounds = [];
+    for (const ref of soundRefs) {
+      const ev = events.get(ref);
+      if (!ev) continue;
+      const sTitle = ev.tags?.find((t) => t[0] === 'title')?.[1] || ev.tags?.find((t) => t[0] === 'd')?.[1] || ref;
+      sounds.push({ ref, title: sTitle, author: ev.pubkey });
+    }
+    return sounds;
+  }, [events, currentPlace]);
+
   // Check if the current user can vouch and whether a pubkey needs vouching
   const canUserVouch = trustSet && trustSet.collaboration === 'vouched' && pubkey && (
     pubkey === trustSet.genesisPubkey ||
@@ -324,6 +357,27 @@ export default function BuildModeOverlay({
                   {onEditEvent && pubkey && ent.author === pubkey && (
                     <button
                       onClick={() => onEditEvent(ent.ref)}
+                      className="cursor-pointer hover:opacity-80"
+                      style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', padding: 0 }}
+                    >
+                      [edit]
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Sounds */}
+          {soundEvents.length > 0 && (
+            <div className="mt-1">
+              <div style={{ color: 'var(--colour-dim)' }}>Sounds:</div>
+              {soundEvents.map((snd) => (
+                <div key={snd.ref} className="ml-2 flex items-center gap-1" style={{ color: 'var(--colour-dim)', fontSize: '0.6rem' }}>
+                  <span>[sound] {snd.title}</span>
+                  {onEditEvent && pubkey && snd.author === pubkey && (
+                    <button
+                      onClick={() => onEditEvent(snd.ref)}
                       className="cursor-pointer hover:opacity-80"
                       style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', padding: 0 }}
                     >
