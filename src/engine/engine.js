@@ -2329,6 +2329,11 @@ export class GameEngine {
     const quests = [];
     for (const [dtag, event] of this.events) {
       if (getTag(event, 'type') === 'quest') {
+        // Skip hidden quest events (untrusted authors in closed/vouched modes)
+        if (this.config.trustSet) {
+          const level = getTrustLevel(this.config.trustSet, event.pubkey, 'all', this.config.clientMode || 'community');
+          if (level === 'hidden') continue;
+        }
         quests.push({ event, dtag });
       }
     }

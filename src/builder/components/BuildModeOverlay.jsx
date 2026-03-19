@@ -142,11 +142,8 @@ export default function BuildModeOverlay({
   const [minimized, setMinimized] = useState(false);
   const [showNewMenu, setShowNewMenu] = useState(false);
 
-  if (!annotation) return null;
-
-  const { placeDtag, placeAuthor, title, exits, entities } = annotation;
-
   // Collect sound events referenced by the current place and its entities
+  // (must be before early return to satisfy React hooks rules)
   const soundEvents = useMemo(() => {
     const placeEvent = events.get(currentPlace);
     if (!placeEvent) return [];
@@ -178,6 +175,10 @@ export default function BuildModeOverlay({
     }
     return sounds;
   }, [events, currentPlace]);
+
+  if (!annotation) return null;
+
+  const { placeDtag, placeAuthor, title, exits, entities } = annotation;
 
   // Check if the current user can vouch and whether a pubkey needs vouching
   const canUserVouch = trustSet && trustSet.collaboration === 'vouched' && pubkey && (
