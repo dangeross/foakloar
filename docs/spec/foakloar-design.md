@@ -2295,18 +2295,28 @@ On world load the client collects all `sample` tags, deduplicates by name, and c
 Declared on the world event to load a sample library on startup. Without it, only built-in oscillators and `noise` are available (plus any `sample` tags on individual sound events).
 
 ```json
-["samples", "dirt"]                                           // Strudel Dirt-Samples preset
-["samples", "github:tidalcycles/Dirt-Samples"]               // GitHub-hosted pack
-["samples", "https://myblossom.example/my-world-samples.json"] // custom index
+["samples", "dirt"]                                              // built-in preset — 217 sample banks
+["samples", "classic"]                                           // built-in preset — 53 acoustic/orchestral samples
+["samples", "github:tidalcycles/Dirt-Samples"]                  // any GitHub repo with strudel.json
+["samples", "https://myblossom.example/my-world-samples.json"]  // direct URL to sample index
 ```
 
 | Value | Resolves to |
 |-------|------------|
-| `dirt` | `github:tidalcycles/Dirt-Samples` — hundreds of sounds: `piano`, `bass`, `bd`, `sd`, `hh` etc. |
-| `github:user/repo` | GitHub-hosted Strudel-compatible sample pack |
+| `dirt` | `github:tidalcycles/Dirt-Samples` — 217 sample banks: drums, synths, nature, voice, world instruments |
+| `classic` | VCSL (CC0) — 53 acoustic/orchestral: recorder, ocarina, sax, harmonica, pipe organ, timpani, bongo |
+| `github:user/repo` | Any GitHub-hosted sample pack — must contain a `strudel.json` index at the repo root |
 | `https://...` | Direct URL to a Strudel-compatible sample index JSON |
 
-Sample libraries load asynchronously on world start. Built-in oscillators and `noise` work instantly.
+Full sample listings for both presets are in `reference/sample-presets.md`.
+
+Sample libraries load asynchronously on world start. Built-in oscillators and `noise` work instantly. Patterns using samples won't play until files are fetched — design accordingly.
+
+**Custom GitHub sample repos:** any GitHub repository containing a `strudel.json` index file can be loaded as a sample pack. The `strudel.json` maps sample names to audio file paths within the repo. This lets world authors host their own samples on GitHub and reference them directly:
+
+```json
+["samples", "github:my-username/my-world-sounds"]
+```
 
 ---
 

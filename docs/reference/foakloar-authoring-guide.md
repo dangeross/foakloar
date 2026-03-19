@@ -1039,6 +1039,59 @@ Silence is part of the palette. A place with no `sound` tags inherits a quieter 
 
 ---
 
+### Sample libraries — extending the sound palette
+
+Without a `samples` tag on the world event, only built-in oscillators (`sine`, `triangle`, `sawtooth`, `square`) and `noise` are available. Add `samples` to unlock named audio files:
+
+```json
+// On the world event:
+["samples", "dirt"]     // 217 sample banks — drums, synths, nature, voice, instruments
+["samples", "classic"]  // 53 acoustic/orchestral — recorder, sax, organ, timpani, bongo
+```
+
+Use sample names directly in `note` patterns on sound events:
+
+```json
+// Fire ambience using dirt preset
+{ "d": "the-lake:sound:fire", "type": "sound",
+  "tags": [["note","fire*8"],["degrade-by","0.3"],["lpf","800"],["gain","0.4"]] }
+
+// Birdsong layer using dirt preset
+{ "d": "the-lake:sound:birds", "type": "sound",
+  "tags": [["note","birds ~ ~ ~"],["slow","4"],["gain","0.3"]] }
+
+// Medieval flute — classic preset (sample name used directly in note pattern)
+{ "d": "the-lake:sound:flute", "type": "sound",
+  "tags": [["note","recorder_alto_sus"],["slow","2"],["room","0.4"],["gain","0.5"]] }
+
+// Wind — dirt preset
+{ "d": "the-lake:sound:wind", "type": "sound",
+  "tags": [["note","wind*2"],["slow","4"],["rand","0.1","0.3"],["gain","0.4"]] }
+```
+
+**Recommended samples by world type:**
+
+| World type | Useful samples |
+|-----------|---------------|
+| Coastal / lighthouse | `wind`, `birds`, `birds3`, `breath` |
+| Underground / cave | `industrial`, `if`, `space`, `cosmicg` |
+| Forest / nature | `birds`, `birds3`, `insect`, `wind`, `fire` |
+| Ancient / medieval | `recorder_alto_sus`, `ocarina`, `tabla`, `world`, `east` (needs `classic` preset for recorders/ocarina) |
+| Horror / dread | `crow`, `voodoo`, `glitch`, `industrial`, `wind` |
+| Sci-fi / machine | `future`, `tech`, `bleep`, `blip`, `invaders` |
+| Combat / tension | `bd`, `hh`, `sd`, `stab`, `hit` |
+| Magical / wonder | `arpy`, `fm`, `cosmicg`, `space`, `juno` |
+
+**Custom GitHub repos:** any GitHub repository with a `strudel.json` index file at the root can be loaded:
+
+```json
+["samples", "github:my-username/my-world-sounds"]
+```
+
+The `strudel.json` maps sample names to audio file paths in the repo. This lets authors host world-specific sounds and reference them by name in patterns. Full sample list for both presets: [reference/sample-presets.md](https://github.com/dangeross/foakloar/blob/main/docs/reference/sample-presets.md).
+
+---
+
 ### BPM
 
 ```json
