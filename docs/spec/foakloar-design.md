@@ -2172,13 +2172,13 @@ Intensity values (0.0–1.0) give fine control where it matters — `glow` and `
 
 **Sound scoring:**
 
-Sound in FOAKLOAR uses two primitives — `type: sound` events define named sound recipes, and `sound` tags on any event play them. The engine is Strudel (TidalCycles-style) synthesised client-side via WebAudio. No audio files — patterns are text, tiny, deterministic. Built-in oscillators only: `sine`, `triangle`, `sawtooth`, `square`.
+Sound in FOAKLOAR uses two primitives — `type: sound` events define named sound recipes, and `sound` tags on any event play them. The engine is Strudel (TidalCycles-style) synthesised client-side via WebAudio. No audio files required — built-in oscillators (`sine`, `triangle`, `sawtooth`, `square`) and `noise` work instantly. External samples can be loaded via the `sample` tag.
 
 ---
 
 ### `type: sound` — sound definition event
 
-A named, reusable sound recipe. Declared as a FOAKLOAR event like any other primitive. The `d`-tag gives it world-scoped uniqueness and makes it relay-queryable.
+A named, reusable sound recipe. Declared as a FOAKLOAR event with a `d`-tag for world-scoped uniqueness. Tags are applied in declaration order to build the Strudel chain. `note` or `noise` should come first — they establish the source pattern everything else modifies.
 
 ```json
 {
@@ -2188,41 +2188,101 @@ A named, reusable sound recipe. Declared as a FOAKLOAR event like any other prim
     ["t",          "the-lake"],
     ["type",       "sound"],
     ["note",       "c2 ~ ~ ~"],
-    ["oscillator", "sine"],
+    ["oscillator", "sawtooth"],
+    ["lpf",        "200"],
     ["slow",       "4"],
-    ["room",       "0.8"],
-    ["delay",      "0.3"]
+    ["gain",       "0.4"]
   ],
   "content": ""
 }
 ```
 
-Tags are applied in declaration order to build the Strudel chain. `note` should always come first — it establishes the pattern that all other parameters modify.
+**Source tags:**
 
-**Sound parameters:**
+| Tag | Values | Strudel | Effect |
+|-----|--------|---------|--------|
+| `note` | Mini-notation string | `note("...")` | Pitch sequence. Always first when using oscillators. |
+| `oscillator` | `sine` `triangle` `sawtooth` `square` | `.s("...")` | Waveform. `sine` = smooth, `triangle` = warm, `sawtooth` = buzzy, `square` = hollow/retro. |
+| `noise` | *(no value)* | `s("noise")` | White noise source. Base for wind, rain, fire, static. Use with filters. |
 
-| Tag | Values | Strudel equivalent | Effect |
-|-----|--------|--------------------|--------|
-| `note` | mini-notation string | `note("...")` | Note sequence — always first |
-| `oscillator` | `sine` `triangle` `sawtooth` `square` | `.s("...")` | Sound source |
-| `slow` | float | `.slow(n)` | Stretch time relative to global tempo |
-| `fast` | float | `.fast(n)` | Compress time relative to global tempo |
-| `room` | 0.0–1.0 | `.room(n)` | Reverb — 0 = dry, 1 = large space |
-| `delay` | 0.0–1.0 | `.delay(n)` | Echo amount |
-| `pan` | -1.0–1.0 | `.pan(n)` | Stereo position — -1 = left, 1 = right |
-| `crush` | 1–16 | `.crush(n)` | Bit crush — lo-fi degraded texture |
-| `loop` | `true` `false` | — | Whether pattern loops. Default `true`. |
+**Volume & timing:**
 
-**Mini-notation basics:**
+| Tag | Values | Strudel | Effect |
+|-----|--------|---------|--------|
+| `gain` | 0.0–1.0 | `.gain(n)` | Base volume baked into the definition. Multiplies with play tag volume — see below. |
+| `slow` | float > 1 | `.slow(n)` | Stretch cycle — slower playback. Relative to global BPM. |
+| `fast` | float > 1 | `.fast(n)` | Compress cycle — faster playback. Relative to global BPM. |
+| `pan` | -1.0–1.0 | `.pan(n)` | Stereo position. -1 = left, 0 = centre, 1 = right. |
 
-| Syntax | Meaning |
-|--------|---------|
-| `c3 e3 g3` | Sequence of notes |
-| `c3*4` | Repeat 4 times per cycle |
-| `c3 ~ ~ ~` | Note with rests |
-| `[c3 e3] g3` | Sub-pattern |
+**Filters:**
 
-The client builds: `note("c2 ~ ~ ~").s("sine").slow(4).room(0.8).delay(0.3)` and plays it via Strudel's WebAudio engine.
+| Tag | Values | Strudel | Effect |
+|-----|--------|---------|--------|
+| `lpf` | Hz: `200`–`20000` | `.lpf(n)` | Low-pass — removes highs. Lower = warmer, muffled. Drones, underwater. |
+| `hpf` | Hz: `200`–`20000` | `.hpf(n)` | High-pass — removes lows. Higher = thinner, airy. Shimmer, radio. |
+| `vowel` | `a` `e` `i` `o` `u` or pattern | `.vowel("a e i o")` | Formant filter — vocal vowel shaping. Pattern cycles through shapes. |
+
+**Distortion:**
+
+| Tag | Values | Strudel | Effect |
+|-----|--------|---------|--------|
+| `crush` | 1–16 (lower = harsher) | `.crush(n)` | Bit crush — retro/digital distortion. 16 = clean, 1 = extreme. |
+| `shape` | 0.0–1.0 | `.shape(n)` | Soft saturation — warmth and presence. |
+
+**Effects:**
+
+| Tag | Values | Strudel | Effect |
+|-----|--------|---------|--------|
+| `room` | 0.0–1.0 | `.room(n)` | Reverb wet/dry. 0 = dry, 1 = fully wet. |
+| `roomsize` | 1–10 | `.roomsize(n)` | Reverb room size. Only meaningful with `room` > 0. |
+| `delay` | time 0.0–1.0, feedback 0.0–1.0 | `.delay(t, f)` | Echo. Time = spacing, feedback = repeats. Two values: `["delay", "0.5", "0.3"]` |
+| `rev` | *(no value)* | `.rev()` | Reverse pattern order within each cycle. |
+| `palindrome` | *(no value)* | `.palindrome()` | Forward then backward — mirrored loop. |
+
+**Texture & randomness:**
+
+| Tag | Values | Strudel | Effect |
+|-----|--------|---------|--------|
+| `degrade-by` | 0.0–1.0 | `.degradeBy(n)` | Random note dropout each cycle. 0.3 = ~30% dropped. Organic, irregular texture. |
+| `rand` | min, max | `.gain(rand.range(n,m))` | Random gain per event. Crackle, shimmer, breathing. Two values: `["rand", "0.1", "0.4"]` |
+
+**Stereo & layering:**
+
+| Tag | Values | Strudel | Effect |
+|-----|--------|---------|--------|
+| `jux` | `rev` | `.jux(rev)` | Normal left, reversed right. Spatial width. |
+| `stack` | Comma-separated `a`-tags | `stack(...)` | Layer multiple sound events simultaneously. Client resolves each ref and combines. |
+
+**Pitch manipulation:**
+
+| Tag | Values | Strudel | Effect |
+|-----|--------|---------|--------|
+| `arp` | `up` `down` `updown` | `.arp("up")` | Arpeggiate chords — play notes in sequence rather than simultaneously. |
+
+---
+
+**`sample` tag — external audio:**
+
+```json
+["sample", "<name>", "<url>"]
+```
+
+Registers an external audio file (WAV, MP3, OGG) under a short name. Once registered, use the name in `note` patterns: `["note", "crackle*8"]`.
+
+On world load the client collects all `sample` tags, deduplicates by name, and calls Strudel's `samples()` to preload. Sample-based patterns wait until files are fetched — built-in oscillators and `noise` work instantly.
+
+```json
+// Campfire — noise sample with organic dropout
+{ "tags": [
+    ["d",          "the-lake:sound:campfire"],
+    ["type",       "sound"],
+    ["sample",     "crackle", "https://blossom.example/crackle.wav"],
+    ["note",       "crackle*8"],
+    ["degrade-by", "0.3"],
+    ["lpf",        "800"],
+    ["gain",       "0.4"]
+]}
+```
 
 ---
 
@@ -2235,30 +2295,26 @@ The client builds: `note("c2 ~ ~ ~").s("sine").slow(4).room(0.8).delay(0.3)` and
 | Element | Values | Meaning |
 |---------|--------|---------|
 | sound ref | `a`-tag | Which `type: sound` event to play |
-| role | `ambient` `layer` `effect` | How it plays — see roles below |
-| volume | 0.0–1.0 | Mix volume |
-| state | state string | Only play when this event is in this state (optional) |
+| role | `ambient` `layer` `effect` | How it plays |
+| volume | 0.0–1.0 | Mix volume at this point of use |
+| state | state string | Only play when event is in this state (optional) |
+
+**`gain` × `volume`:** the sound event's `gain` bakes a base level into the definition. The play tag's `volume` controls the mix at point of use. These multiply: `finalVolume = gain × volume`. The same sound event can play at `0.6` near a cave entrance and `0.8` deeper inside.
 
 **Roles:**
 
 | Role | Behaviour |
 |------|-----------|
-| `ambient` | Continuous loop. Crossfades on place entry/exit. One per place. |
-| `layer` | Adds to mix when event is in scope. Removed when out of scope or state fails. |
-| `effect` | One-shot. Fires when event comes into scope or state condition becomes true. |
+| `ambient` | Continuous loop. One per place. Crossfades on room change. |
+| `layer` | Continuous loop added to mix. Multiple layers can play simultaneously. |
+| `effect` | One-shot. Fires when event enters scope. Re-fires on re-entry. |
 
 ```json
 // Place — atmospheric drone
 ["sound", "30078:<PUBKEY>:the-lake:sound:cave-drone",   "ambient", "0.7"],
 
-// Feature — clock ticking while in place
-["sound", "30078:<PUBKEY>:the-lake:sound:clock-tick",   "layer",   "0.5"],
-
-// Item — lantern hum only when on
+// Item — lamp hum only when on
 ["sound", "30078:<PUBKEY>:the-lake:sound:lamp-hum",     "layer",   "0.3", "on"],
-
-// Clue — eerie chord when revealed
-["sound", "30078:<PUBKEY>:the-lake:sound:reveal-chord", "effect",  "0.8"],
 
 // Puzzle — tension while unsolved
 ["sound", "30078:<PUBKEY>:the-lake:sound:tension",      "layer",   "0.5", "unsolved"],
@@ -2271,45 +2327,56 @@ The client builds: `note("c2 ~ ~ ~").s("sine").slow(4).room(0.8).delay(0.3)` and
 
 **`sound` as an action type:**
 
-Sound can also be triggered imperatively from any `on-*` dispatcher — a one-shot fired at a specific moment:
-
 ```json
 ["on-complete", "", "sound", "30078:<PUBKEY>:the-lake:sound:victory-chord", "0.9"],
 ["on-fail",     "", "sound", "30078:<PUBKEY>:the-lake:sound:wrong-answer",  "0.6"],
-["on-interact", "use", "sound", "30078:<PUBKEY>:the-lake:sound:mechanism-clunk", "1.0"],
-["on-health",   "down", "0", "sound", "30078:<PUBKEY>:the-lake:sound:death-jingle", "0.7"]
+["on-interact", "use", "sound", "30078:<PUBKEY>:the-lake:sound:mechanism-clunk"],
+["on-health",   "down", "0", "sound", "30078:<PUBKEY>:the-lake:sound:death-jingle"]
 ```
 
-Volume is optional — defaults to `1.0` if omitted.
+Volume optional — defaults to `1.0`.
 
 ---
 
 **Tempo — `bpm` tag:**
 
-Global tempo lives on the world event. Place events override it on entry — all active sounds snap to the new tempo. `slow`/`fast` on individual `type: sound` events are relative to the current global tempo.
-
 ```json
-// World event — global tempo
-["bpm", "72"],
-
-// Place — override on entry (tense, faster)
-["bpm", "96"],
-
-// Sound event — plays at half the current global tempo regardless
-["slow", "2"]
+["bpm", "90"]   // world event — global default (default: 120)
+["bpm", "60"]   // place event — override on entry
 ```
 
-`bpm` is not a `sound` tag — it sits directly on the world or place event.
+`bpm` is a standalone tag on world or place events. Individual sound events use `slow`/`fast` for relative tempo adjustment.
 
 ---
 
-**Two sound models, two use cases:**
-- `sound` tags on events = passive, scope-driven. Plays while event is relevant.
-- `sound` action type = imperative, trigger-driven. Fires once at a specific moment.
+**Two sound models:**
+- `sound` tags on events — passive, scope-driven. Plays while event is relevant.
+- `sound` action type — imperative, trigger-driven. One-shot at a specific moment.
 
-**Layering budget:** 3–4 active layers simultaneously maximum. One `ambient` per place.
+**Layering budget:** 3–4 active layers maximum. One `ambient` per place.
 
 Sound is a progressive enhancement. Clients that do not implement the sound system ignore all `sound` tags and `type: sound` events silently. World authors must not require sound for puzzle solving or navigation.
+
+---
+
+**Recipe examples:**
+
+```json
+// Wind — noise + filters
+["noise", ""], ["lpf", "400"], ["rand", "0.05", "0.2"], ["slow", "4"], ["gain", "0.3"]
+
+// Water drip — oscillator + delay
+["note", "e5 ~ ~ g5 ~ ~ a5 ~"], ["oscillator", "sine"], ["fast", "2"], ["delay", "0.3", "0.2"], ["gain", "0.3"]
+
+// Eerie shimmer — stereo reversal
+["note", "c4 eb4 g4"], ["oscillator", "sine"], ["jux", "rev"], ["slow", "8"], ["gain", "0.2"]
+
+// Fire crackle — noise + bit crush
+["noise", ""], ["lpf", "800"], ["crush", "6"], ["rand", "0.1", "0.4"], ["gain", "0.3"]
+
+// Warm cave drone — filtered sawtooth
+["note", "c2 ~ ~ ~"], ["oscillator", "sawtooth"], ["lpf", "200"], ["slow", "4"], ["gain", "0.4"]
+```
 
 Content warnings use a `cw` tag with a short string. Clients display these before the world loads — the player can choose not to enter. Common values: `violence`, `horror`, `mild-peril`, `adult`, `flashing-lights`. No enforced vocabulary — world authors choose their own, clients can filter on known values.
 

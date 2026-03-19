@@ -129,7 +129,7 @@ export function validateEvent(template) {
     }
 
     // Content field required on most event types (optional on portals and world events)
-    const contentOptionalTypes = ['portal', 'world', 'vouch', 'consequence', 'dialogue', 'recipe', 'payment', 'quest'];
+    const contentOptionalTypes = ['portal', 'world', 'vouch', 'consequence', 'dialogue', 'recipe', 'payment', 'quest', 'sound'];
     if (!contentOptionalTypes.includes(typeTag) && !template.content) {
       errors.push('Missing content — add a description in the content field');
     }

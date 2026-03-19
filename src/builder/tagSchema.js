@@ -73,6 +73,7 @@ export const EVENT_TYPE_DESCRIPTIONS = {
   npc:         'A character in the world. Can have dialogue, combat stats, inventory, and roaming routes.',
   dialogue:    'A single dialogue node — NPC spoken text with player choice options.',
   consequence: 'A reusable outcome (death, victory, curse). Fires respawn, clears state, gives/removes items.',
+  sound:       'A named sound recipe. Defines note pattern, oscillator, and effects. Referenced by sound tags on other events.',
   world:       'The world manifest. Sets title, theme, starting place, player health, and collaboration mode.',
   vouch:       'A trust declaration — vouches for another author\'s content in this world.',
   quest:       'A named goal with completion conditions. Shows progress in the quest log.',
@@ -400,15 +401,46 @@ export const TAG_SCHEMAS = {
   // ── Sound ──────────────────────────────────────────────────────────────
   sound: {
     label: 'Sound',
-    desc: 'Sound layer. Role: bpm (tempo), ambient (loop), layer (adds to mix), effect (one-shot). Pattern uses mini-notation. Optional state gate.',
+    desc: 'Play a sound event. Role: ambient (loop), layer (adds to mix), effect (one-shot). Volume 0.0-1.0. Optional state gate.',
     repeatable: true,
     fields: [
-      { name: 'role', type: 'select', required: true, options: ['bpm', 'ambient', 'layer', 'effect'] },
-      { name: 'value', type: 'text', required: true, placeholder: 'BPM or volume (0.0-1.0)' },
-      { name: 'pattern', type: 'text', required: false, placeholder: 'c3 e3 g3 slow(pad)' },
+      { name: 'sound-ref', type: 'event-ref', required: true, placeholder: 'sound event to play', eventTypeFilter: 'sound' },
+      { name: 'role', type: 'select', required: true, options: ['ambient', 'layer', 'effect'] },
+      { name: 'volume', type: 'text', required: true, placeholder: '0.0-1.0' },
       { name: 'state', type: 'text', required: false, placeholder: 'state gate (blank = always)' },
     ],
   },
+
+  // ── Sound event tags ──────────────────────────────────────────────────
+  // Source
+  note:         { label: 'Note', desc: 'Mini-notation note pattern. First in the Strudel chain. Examples: c3 e3 g3, c2*4, c3 ~ ~ ~', fields: [{ name: 'pattern', type: 'text', required: true, placeholder: 'c3 e3 g3' }] },
+  oscillator:   { label: 'Oscillator', desc: 'Sound source waveform. sine = smooth, triangle = warm, sawtooth = buzzy, square = hollow/retro', fields: [{ name: 'type', type: 'select', required: true, options: ['sine', 'triangle', 'sawtooth', 'square'] }] },
+  // Volume & timing
+  gain:         { label: 'Gain', desc: 'Base volume baked into the sound definition (0.0–1.0). Multiplied with the play tag volume at point of use.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
+  slow:         { label: 'Slow', desc: 'Stretch time relative to global tempo. 2 = half speed, 4 = quarter speed.', fields: [{ name: 'factor', type: 'text', required: true, placeholder: '2' }] },
+  fast:         { label: 'Fast', desc: 'Compress time relative to global tempo. 2 = double speed, 4 = quadruple speed.', fields: [{ name: 'factor', type: 'text', required: true, placeholder: '2' }] },
+  pan:          { label: 'Pan', desc: 'Stereo position. -1 = left, 0 = centre, 1 = right.', fields: [{ name: 'position', type: 'text', required: true, placeholder: '0' }] },
+  // Filters
+  lpf:          { label: 'Low-pass Filter', desc: 'Removes frequencies above cutoff (Hz). Lower = warmer/muffled. Good for drones, underwater.', fields: [{ name: 'freq', type: 'text', required: true, placeholder: '400' }] },
+  hpf:          { label: 'High-pass Filter', desc: 'Removes frequencies below cutoff (Hz). Higher = thinner/airy. Good for shimmer, radio.', fields: [{ name: 'freq', type: 'text', required: true, placeholder: '1000' }] },
+  vowel:        { label: 'Vowel', desc: 'Formant filter — shapes sound to vocal vowels. Single or pattern: a e i o u', fields: [{ name: 'pattern', type: 'text', required: true, placeholder: 'a e i o' }] },
+  // Distortion
+  crush:        { label: 'Crush', desc: 'Bit crush for lo-fi texture. 1 = most crushed, 16 = least.', fields: [{ name: 'bits', type: 'text', required: true, placeholder: '8' }] },
+  shape:        { label: 'Shape', desc: 'Soft distortion/saturation. 0 = clean, 1 = aggressive. Adds warmth.', fields: [{ name: 'amount', type: 'text', required: true, placeholder: '0.5' }] },
+  // Effects
+  room:         { label: 'Room', desc: 'Reverb wet/dry. 0 = dry, 1 = fully wet. Adds space and depth.', fields: [{ name: 'amount', type: 'text', required: true, placeholder: '0.5' }] },
+  roomsize:     { label: 'Room Size', desc: 'Reverb room size (1–10). Only meaningful with room > 0.', fields: [{ name: 'size', type: 'text', required: true, placeholder: '4' }] },
+  delay:        { label: 'Delay', desc: 'Echo effect. Time = spacing (0–1), feedback = repeats (0–1).', fields: [{ name: 'time', type: 'text', required: true, placeholder: '0.5' }, { name: 'feedback', type: 'text', required: true, placeholder: '0.3' }] },
+  rev:          { label: 'Reverse', desc: 'Reverse the pattern order within each cycle. No value needed.', fields: [] },
+  palindrome:   { label: 'Palindrome', desc: 'Play pattern forward then backward — mirrored loop. No value needed.', fields: [] },
+  // Texture & randomness
+  'degrade-by': { label: 'Degrade By', desc: 'Randomly drop events each cycle (0.0–1.0). 0.3 = ~30% dropped. Creates organic texture.', fields: [{ name: 'amount', type: 'text', required: true, placeholder: '0.3' }] },
+  rand:         { label: 'Random Gain', desc: 'Random volume per event — crackle, shimmer, breathing. Two values: min, max.', fields: [{ name: 'min', type: 'text', required: true, placeholder: '0.1' }, { name: 'max', type: 'text', required: true, placeholder: '0.4' }] },
+  // Stereo & layering
+  jux:          { label: 'Jux', desc: 'Stereo width — normal in left, reversed in right. Creates spatial movement.', fields: [{ name: 'fn', type: 'select', required: true, options: ['rev'] }] },
+  arp:          { label: 'Arpeggio', desc: 'Arpeggiate chords — play notes in sequence. up = low-high, down = high-low.', fields: [{ name: 'direction', type: 'select', required: true, options: ['up', 'down', 'updown'] }] },
+  // Sample
+  sample:       { label: 'Sample', desc: 'Register external audio file by name. Use the name in note patterns.', repeatable: true, fields: [{ name: 'name', type: 'text', required: true, placeholder: 'kick' }, { name: 'url', type: 'text', required: true, placeholder: 'https://...' }] },
 
   // ── Consequence-level tags (direct on consequence events) ──────────────
   'set-state':    { label: 'Set State', desc: 'Set state on an external event (NPC, feature, portal). Used in consequences for side effects.', repeatable: true, fields: [{ name: 'state', type: 'text', required: true, placeholder: 'target state (e.g. burning, visible)' }, { name: 'ref', type: 'event-ref', required: true, placeholder: 'target event' }] },
@@ -443,14 +475,23 @@ export const TAG_SCHEMAS = {
   glow:          { label: 'Glow', desc: 'Phosphor glow intensity override (0.0–1.0)', fields: [{ name: 'value', type: 'text', required: false, placeholder: '0.4' }] },
   flicker:       { label: 'Flicker', desc: 'Screen flicker override', fields: [{ name: 'value', type: 'select', required: false, options: ['on', 'off'] }] },
   vignette:      { label: 'Vignette', desc: 'Edge vignette intensity override (0.0–1.0)', fields: [{ name: 'value', type: 'text', required: false, placeholder: '0.6' }] },
-  noise:         { label: 'Noise', desc: 'Grain/static overlay intensity (0.0–1.0)', fields: [{ name: 'value', type: 'text', required: false, placeholder: '0.3' }] },
+  noise: {
+    label: 'Noise',
+    desc: 'White noise source (sound) or grain overlay intensity (world)',
+    variants: {
+      sound: { fields: [], desc: 'White noise source. Use with filters for wind, rain, fire, static.' },
+      world: { fields: [{ name: 'value', type: 'text', required: false, placeholder: '0.3' }], desc: 'Grain/static overlay intensity (0.0–1.0)' },
+    },
+    fields: [{ name: 'value', type: 'text', required: false, placeholder: '0.3' }],
+  },
   puzzle:        { label: 'Puzzle NIP-44', desc: 'D-tag of the puzzle whose key decrypts NIP-44 content', fields: [{ name: 'ref', type: 'text', required: true, placeholder: 'puzzle d-tag for NIP-44' }] },
+  bpm:           { label: 'BPM', desc: 'Global tempo (world) or place override. Default 120. Affects all Strudel pattern cycle speeds.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '120' }] },
 };
 
 /** Which tags are valid for each event type */
 export const TAGS_BY_EVENT_TYPE = {
-  place:       ['title', 'content-type', 'exit', 'item', 'feature', 'npc', 'clue', 'noun', 'state', 'transition', 'requires', 'requires-not', 'on-enter', 'on-player-health', 'media', 'sound', 'cw', 'puzzle'],
-  portal:      ['title', 'exit', 'state', 'transition', 'requires', 'requires-not', 'consequence', 'cw'],
+  place:       ['title', 'content-type', 'exit', 'item', 'feature', 'npc', 'clue', 'noun', 'state', 'transition', 'requires', 'requires-not', 'on-enter', 'on-player-health', 'media', 'sound', 'bpm', 'cw', 'puzzle'],
+  portal:      ['title', 'exit', 'state', 'transition', 'requires', 'requires-not', 'consequence', 'cw', 'sound'],
   item:        ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-move', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'damage', 'hit-chance', 'media', 'sound'],
   feature:     ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'media', 'sound'],
   clue:        ['title', 'noun', 'state', 'transition', 'content-type', 'requires', 'requires-not', 'media', 'puzzle', 'sound'],
@@ -458,11 +499,12 @@ export const TAGS_BY_EVENT_TYPE = {
   recipe:      ['title', 'noun', 'verb', 'state', 'transition', 'requires', 'on-complete', 'on-fail', 'counter', 'on-counter', 'ordered', 'sound'],
   payment:     ['title', 'amount', 'unit', 'lnurl', 'on-complete', 'sound'],
   npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health', 'on-player-health', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not', 'sound'],
-  dialogue:    ['text', 'option', 'requires', 'requires-not', 'on-enter'],
+  dialogue:    ['text', 'option', 'requires', 'requires-not', 'on-enter', 'sound'],
   consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage', 'set-state', 'sound'],
-  world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'content-type', 'media', 'w'],
+  sound:       ['note', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan', 'lpf', 'hpf', 'vowel', 'crush', 'shape', 'room', 'roomsize', 'delay', 'rev', 'palindrome', 'degrade-by', 'rand', 'jux', 'arp', 'sample'],
+  world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'bpm', 'content-type', 'media', 'w'],
   vouch:       ['pubkey', 'scope', 'can-vouch'],
-  quest:       ['title', 'involves', 'requires', 'requires-not', 'on-complete'],
+  quest:       ['title', 'involves', 'requires', 'requires-not', 'on-complete', 'sound'],
 };
 
 /**
@@ -476,8 +518,8 @@ export function getTagSchema(tagName, eventType) {
   if (!schema) return null;
 
   if (schema.variants) {
-    const variant = schema.variants[eventType] || schema.variants.place;
-    return { ...schema, fields: variant.fields, repeatable: variant.repeatable ?? schema.repeatable };
+    const variant = schema.variants[eventType] || Object.values(schema.variants)[0];
+    return { ...schema, fields: variant.fields, repeatable: variant.repeatable ?? schema.repeatable, desc: variant.desc || schema.desc };
   }
 
   return schema;

@@ -24,7 +24,7 @@ import LoginPanel from './ui/LoginPanel.jsx';
 import { loadDrafts, saveDraft, updateDraft, deleteDraft, clearDrafts, importEvents, exportDrafts, bulkPublish, loadAnswers } from '../builder/draftStore.js';
 import { validateWorld, verifyPuzzleHashes } from '../builder/validateWorld.js';
 import SoundToggle from './SoundToggle.jsx';
-import { evaluateSoundTags, isAudioReady, playOneShot } from '../services/sound.js';
+import { evaluateSoundTags, isAudioReady, playOneShotRef, loadSamples } from '../services/sound.js';
 
 /** Map entry types to colour slots */
 const TYPE_COLOUR = {
@@ -261,7 +261,7 @@ export default function App() {
     const logEntries = [];
     for (const entry of entries) {
       if (entry.type === 'sound' && entry.sound) {
-        playOneShot(entry.sound, entry.volume);
+        playOneShotRef(entry.sound, entry.volume);
       } else {
         logEntries.push(entry);
       }
@@ -471,8 +471,9 @@ export default function App() {
             draftsCount={drafts.length}
             onOpenDrafts={() => setShowDrafts(true)}
           />
-          <SoundToggle onAudioReady={() => {
+          <SoundToggle onAudioReady={async () => {
             if (engineRef.current) {
+              await loadSamples(mergedEvents);
               evaluateSoundTags(
                 mergedEvents, engineRef.current.currentPlace,
                 engineRef.current.player.state, engineRef.current.player.npcStates,

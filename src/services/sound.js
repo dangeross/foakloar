@@ -1,10 +1,11 @@
 /**
  * sound.js — Sound scoring system using Strudel.
  *
- * Uses @strudel/web's initStrudel() which creates a global repl
- * and registers all pattern functions (note, s, slow, etc.) globally.
- * Patterns play via .play() and stop via hush().
+ * Sound tags reference `type: sound` events by a-tag. The client resolves
+ * the sound event, reads its tags (note, oscillator, slow, fast, room,
+ * delay, pan, crush), and builds a Strudel chain.
  *
+ * Uses @strudel/web's initStrudel() for WebAudio synthesis.
  * Progressive enhancement — errors caught silently.
  */
 
@@ -18,6 +19,12 @@ let strudelModule = null; // cached @strudel/web module
 let activePatternId = null;
 // Set of effect IDs that have already fired (to detect new ones)
 let firedEffects = new Set();
+// First evaluation flag — suppress effect one-shots on initial load
+let firstEval = true;
+// Track last active layers for restoring after one-shot
+let lastLayers = [];
+// Reference to events map (set on each evaluateSoundTags call)
+let eventsMap = null;
 
 const MUTE_KEY = 'foakloar:sound-muted';
 
@@ -30,8 +37,9 @@ export async function initAudio() {
     strudelModule = await import('@strudel/web');
     strudelReady = strudelModule.initStrudel();
     await strudelReady;
+    // Expose evaluate for dev testing
+    if (import.meta.env.DEV) window.__strudelEval = strudelModule.evaluate;
     audioReady = true;
-    // On first init, start unmuted (user clicked to enable)
     muted = false;
     localStorage.setItem(MUTE_KEY, 'false');
     return true;
@@ -43,6 +51,27 @@ export async function initAudio() {
 
 export function isAudioReady() { return audioReady; }
 export function isMuted() { return muted; }
+
+/**
+ * Load all samples from sound events on world init.
+ * Collects sample tags, dedupes by name, calls Strudel's samples().
+ */
+export async function loadSamples(events) {
+  if (!audioReady || !strudelModule) return;
+  const sampleMap = {};
+  for (const [, event] of events) {
+    if (getTag(event, 'type') !== 'sound') continue;
+    for (const tag of getTags(event, 'sample')) {
+      if (tag[1] && tag[2]) sampleMap[tag[1]] = tag[2];
+    }
+  }
+  if (Object.keys(sampleMap).length === 0) return;
+  try {
+    await strudelModule.samples(sampleMap);
+  } catch (e) {
+    console.warn('Sample loading failed:', e.message || e);
+  }
+}
 
 export function setMuted(val) {
   muted = val;
@@ -56,26 +85,34 @@ export function toggleMute() {
 }
 
 /**
- * Stop all sound.
+ * Stop all sound and suspend audio (for mute).
  */
 export function hush() {
+  _stopPatterns();
   try {
-    strudelModule?.hush();
-    // Suspend AudioContext for instant silence
     const ctx = strudelModule?.getAudioContext?.();
     if (ctx?.state === 'running') ctx.suspend();
   } catch { /* ignore */ }
+}
+
+/**
+ * Stop current patterns without suspending AudioContext.
+ * Used internally when switching layers.
+ */
+function _stopPatterns() {
+  try { strudelModule?.hush(); } catch { /* ignore */ }
   activePatternId = null;
 }
 
 /**
  * Collect and evaluate all sound tags in scope.
- * Builds a single combined pattern from all active layers.
+ * Sound tags now reference `type: sound` events by a-tag.
  */
 export function evaluateSoundTags(events, currentPlace, playerState, npcStates = {}) {
   if (!audioReady || muted) return;
+  eventsMap = events;
 
-  // Ensure AudioContext is running (may have been suspended by hush)
+  // Ensure AudioContext is running
   try {
     const ctx = strudelModule?.getAudioContext?.();
     if (ctx?.state === 'suspended') ctx.resume();
@@ -84,18 +121,20 @@ export function evaluateSoundTags(events, currentPlace, playerState, npcStates =
   const placeEvent = events.get(currentPlace);
   if (!placeEvent) return;
 
-  // Collect all sound tags in scope
+  // Collect all sound tags + bpm in scope
   const inScope = [];
 
   // 1. World event (global BPM)
   for (const [, event] of events) {
     if (getTag(event, 'type') === 'world') {
+      collectBpm(event);
       collectSoundTags(event, aTagOf(event), null, inScope);
       break;
     }
   }
 
-  // 2. Current place
+  // 2. Current place (bpm override + sound tags)
+  collectBpm(placeEvent);
   collectSoundTags(placeEvent, currentPlace, null, inScope);
 
   // 3. Features in place
@@ -117,7 +156,26 @@ export function evaluateSoundTags(events, currentPlace, playerState, npcStates =
     collectSoundTags(event, ref, npcState?.state, inScope);
   }
 
-  // 5. Items in inventory
+  // 5. Clues in place (effect sounds on reveal)
+  for (const tag of getTags(placeEvent, 'clue')) {
+    const ref = tag[1];
+    const event = events.get(ref);
+    if (!event) continue;
+    // Clue is "in scope" if it's been seen
+    const seen = playerState.cluesSeen?.[ref];
+    if (seen) collectSoundTags(event, ref, null, inScope);
+  }
+
+  // 6. Puzzles in place
+  for (const tag of getTags(placeEvent, 'puzzle')) {
+    const ref = tag[1];
+    const event = events.get(ref);
+    if (!event) continue;
+    const solved = playerState.puzzlesSolved?.includes?.(ref);
+    collectSoundTags(event, ref, solved ? 'solved' : 'unsolved', inScope);
+  }
+
+  // 7. Items in inventory
   for (const ref of playerState.inventory || []) {
     const event = events.get(ref);
     if (!event) continue;
@@ -125,28 +183,26 @@ export function evaluateSoundTags(events, currentPlace, playerState, npcStates =
     collectSoundTags(event, ref, state, inScope);
   }
 
-  // Filter passing layers, handle effects, build a combined pattern ID
+  // Filter passing layers, handle effects
   const layers = [];
   const activeEffectIds = new Set();
-  for (const { id, role, volume, pattern, stateGate, currentState } of inScope) {
+  for (const { id, role, volume, soundRef, stateGate, currentState } of inScope) {
     if (stateGate && currentState !== stateGate) continue;
-    if (role === 'bpm') {
-      currentBpm = parseInt(volume, 10) || 120;
-      continue;
-    }
     if (role === 'effect') {
-      // One-shot: fire only when newly entering scope
       activeEffectIds.add(id);
-      if (!firedEffects.has(id) && pattern) {
-        playOneShot(pattern, parseFloat(volume) || 1.0);
+      if (!firedEffects.has(id) && soundRef) {
+        // Suppress one-shots on first evaluation (page load)
+        if (!firstEval) {
+          playOneShotRef(soundRef, parseFloat(volume) || 1.0);
+        }
         firedEffects.add(id);
       }
       continue;
     }
-    if (!pattern) continue;
-    layers.push({ id, pattern, volume: parseFloat(volume) || 0.5, role });
+    if (!soundRef) continue;
+    layers.push({ id, soundRef, volume: parseFloat(volume) || 0.5, role });
   }
-  // Clean up effects no longer in scope (so they fire again on re-entry)
+  // Clean up effects no longer in scope
   for (const id of firedEffects) {
     if (!activeEffectIds.has(id)) firedEffects.delete(id);
   }
@@ -154,17 +210,42 @@ export function evaluateSoundTags(events, currentPlace, playerState, npcStates =
   // Build a combined pattern ID to detect changes
   const newPatternId = layers.map((l) => l.id).sort().join('|');
 
-  // Only restart if layers changed
   if (newPatternId === activePatternId) return;
   activePatternId = newPatternId;
 
-  // Stop current sound
-  hush();
+  firstEval = false;
+
+  // Stop current patterns then immediately start new stack
+  _stopPatterns();
 
   if (layers.length === 0) return;
 
-  // Build and play combined pattern using stack()
   playLayers(layers);
+}
+
+/**
+ * Play a one-shot sound by sound event ref (action-triggered).
+ */
+export async function playOneShotRef(soundRef, volume = 1.0) {
+  if (!audioReady || muted || !soundRef) return;
+  try {
+    const ctx = strudelModule?.getAudioContext?.();
+    if (ctx?.state === 'suspended') await ctx.resume();
+    await strudelReady;
+
+    const code = buildStrudelCodeFromRef(soundRef, volume);
+    if (!code) return;
+
+    await strudelModule.evaluate(code);
+    setTimeout(() => {
+      _stopPatterns();
+      if (lastLayers.length > 0) {
+        playLayers(lastLayers);
+      }
+    }, 2000);
+  } catch (e) {
+    console.warn('Sound one-shot error:', e.message || e);
+  }
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────
@@ -186,27 +267,126 @@ function aTagOf(event) {
   return d ? `30078:${event.pubkey}:${d}` : '';
 }
 
+function collectBpm(event) {
+  const bpm = getTag(event, 'bpm');
+  if (bpm) currentBpm = parseInt(bpm, 10) || 120;
+}
+
+/**
+ * Collect sound tags from an event.
+ * New shape: ["sound", "<sound-a-tag>", "<role>", "<volume>", "<state?>"]
+ */
 function collectSoundTags(event, eventRef, currentState, inScope) {
   for (const tag of getTags(event, 'sound')) {
-    const role = tag[1];
-    const volume = tag[2];
-    const pattern = tag[3];
-    const stateGate = tag[4];
-    const id = `${eventRef}:${role}:${pattern || 'bpm'}:${stateGate || ''}`;
-    inScope.push({ id, role, volume, pattern, stateGate, currentState });
+    const soundRef = tag[1];  // a-tag ref to type:sound event
+    // Skip old-format sound tags (role in position 1 instead of a-tag ref)
+    if (!soundRef || !soundRef.startsWith('30078:')) continue;
+    const role = tag[2];      // ambient, layer, effect
+    const volume = tag[3];    // 0.0-1.0
+    const stateGate = tag[4]; // optional state gate
+    const id = `${eventRef}:${role}:${soundRef}:${stateGate || ''}`;
+    inScope.push({ id, role, volume, soundRef, stateGate, currentState });
   }
 }
 
 /**
- * Build Strudel code from layers and play via .play().
+ * Build Strudel code from a `type: sound` event's tags.
+ * Tags are applied in declaration order to build the chain.
+ */
+function buildStrudelCodeFromRef(soundRef, volume) {
+  if (!eventsMap) return null;
+  const soundEvent = eventsMap.get(soundRef);
+  if (!soundEvent) return null;
+  return buildStrudelCodeFromEvent(soundEvent, volume);
+}
+
+/**
+ * Build Strudel code from a sound event's tags.
+ * Tags are processed in declaration order to build the Strudel chain.
+ */
+function buildStrudelCodeFromEvent(soundEvent, mixVolume) {
+  // Tags that take a single value
+  const SINGLE_TAG_MAP = {
+    note:         (v) => `note("${v}")`,
+    oscillator:   (v) => `.s("${v}")`,
+    noise:        ()  => `noise()`,
+    slow:         (v) => `.slow(${parseFloat(v)})`,
+    fast:         (v) => `.fast(${parseFloat(v)})`,
+    room:         (v) => `.room(${parseFloat(v)})`,
+    roomsize:     (v) => `.roomsize(${parseFloat(v)})`,
+    pan:          (v) => `.pan(${parseFloat(v)})`,
+    crush:        (v) => `.crush(${parseInt(v, 10)})`,
+    shape:        (v) => `.shape(${parseFloat(v)})`,
+    sustain:      (v) => `.sustain(${parseFloat(v)})`,
+    attack:       (v) => `.attack(${parseFloat(v)})`,
+    release:      (v) => `.release(${parseFloat(v)})`,
+    lpf:          (v) => `.lpf(${parseFloat(v)})`,
+    hpf:          (v) => `.hpf(${parseFloat(v)})`,
+    vowel:        (v) => `.vowel("${v}")`,
+    rev:          ()  => `.rev()`,
+    palindrome:   ()  => `.palindrome()`,
+    jux:          (v) => `.jux(${v})`,  // e.g. jux(rev)
+    arp:          (v) => `.arp("${v}")`,
+    'degrade-by': (v) => `.degradeBy(${parseFloat(v)})`,
+  };
+
+  let code = '';
+  let baseGain = null;
+  for (const tag of soundEvent.tags || []) {
+    const name = tag[0];
+    const val = tag[1];
+
+    // Handle special multi-value tags
+    if (name === 'delay') {
+      const time = parseFloat(val) || 0.5;
+      const feedback = parseFloat(tag[2]) || 0.3;
+      code += `.delay(${time}, ${feedback})`;
+      continue;
+    }
+    if (name === 'rand') {
+      const min = parseFloat(val) || 0;
+      const max = parseFloat(tag[2]) || 1;
+      code += `.gain(rand.range(${min}, ${max}))`;
+      continue;
+    }
+    if (name === 'gain') {
+      baseGain = parseFloat(val) || 1.0;
+      continue;  // Applied at the end with mixVolume
+    }
+
+    const fn = SINGLE_TAG_MAP[name];
+    if (fn) {
+      code += fn(val || '');
+    }
+  }
+
+  if (!code) return null;
+
+  // Gain = sound event's base gain × referencing tag's mix volume
+  const finalGain = (baseGain ?? 1.0) * (mixVolume ?? 1.0);
+  // Only add .gain() if rand isn't already controlling gain
+  if (!code.includes('rand.range')) {
+    code += `.gain(${finalGain})`;
+  } else {
+    // Scale the rand range by finalGain — already in the code, adjust via multiply
+    // For simplicity, append a secondary gain
+    code += `.gain(${finalGain})`;
+  }
+
+  return code;
+}
+
+/**
+ * Build and play combined pattern using stack().
  */
 async function playLayers(layers) {
   lastLayers = layers;
   try {
     await strudelReady;
 
-    // Build each layer as a Strudel expression, then stack them
-    const expressions = layers.map((l) => buildStrudelCode(l.pattern, l.volume)).filter(Boolean);
+    const expressions = layers
+      .map((l) => buildStrudelCodeFromRef(l.soundRef, l.volume))
+      .filter(Boolean);
     if (expressions.length === 0) return;
 
     const code = expressions.length === 1
@@ -217,92 +397,4 @@ async function playLayers(layers) {
   } catch (e) {
     console.warn('Sound play error:', e.message || e);
   }
-}
-
-/**
- * Play a one-shot sound effect (action-triggered).
- * Pattern is evaluated, plays once, then stops.
- */
-export async function playOneShot(pattern, volume = 1.0) {
-  if (!audioReady || muted || !pattern) return;
-  try {
-    // Ensure AudioContext is running
-    const ctx = strudelModule?.getAudioContext?.();
-    if (ctx?.state === 'suspended') await ctx.resume();
-
-    await strudelReady;
-    const code = buildStrudelCode(pattern, volume);
-    if (!code) return;
-    // Play for one cycle then stop — wrap in .firstOf(1, x => x, silence)
-    // Simpler: just evaluate and let it play one cycle
-    await strudelModule.evaluate(code);
-    // Stop after ~2 seconds (one cycle at typical BPM)
-    setTimeout(() => {
-      try { strudelModule?.hush(); } catch { /* ignore */ }
-      // Restart ambient layers if they were playing
-      if (activePatternId && lastLayers.length > 0) {
-        playLayers(lastLayers);
-      }
-    }, 2000);
-  } catch (e) {
-    console.warn('Sound one-shot error:', e.message || e);
-  }
-}
-
-// Track last active layers for restoring after one-shot
-let lastLayers = [];
-
-// Map spec preset names to built-in oscillator types
-const SYNTH_MAP = {
-  pad: 'sine',
-  strings: 'triangle',
-  bells: 'sine',
-  sine: 'sine',
-  triangle: 'triangle',
-  square: 'square',
-  saw: 'sawtooth',
-};
-
-/**
- * Convert spec sound notation to valid Strudel code.
- */
-function buildStrudelCode(patternStr, volume) {
-  if (!patternStr) return null;
-
-  let clean = patternStr;
-  let synth = null;
-  let modifier = '';
-
-  // perc(name) → use note with short percussive envelope
-  const percMatch = clean.match(/^perc\((\w+)\)(.*)$/);
-  if (percMatch) {
-    const sample = percMatch[1];
-    const rest = percMatch[2].trim();
-    // Map perc names to notes with short decay
-    const percNote = { bd: 'c1', sd: 'e2', hh: 'g5' }[sample] || 'c2';
-    const pattern = rest ? `${percNote} ${rest}` : percNote;
-    return `note("${pattern}").sound("square").decay(0.05).sustain(0).gain(${volume})`;
-  }
-
-  // slow(name) / fast(name) → synth + speed modifier
-  clean = clean.replace(/\bslow\((\w+)\)/g, (_, name) => {
-    synth = SYNTH_MAP[name] || name;
-    modifier += '.slow(2)';
-    return '';
-  });
-  clean = clean.replace(/\bfast\((\w+)\)/g, (_, name) => {
-    synth = SYNTH_MAP[name] || name;
-    modifier += '.fast(2)';
-    return '';
-  });
-
-  clean = clean.trim();
-  if (!clean || /^[~\s]+$/.test(clean)) return null;
-
-  let code = `note("${clean}")`;
-  if (synth) code += `.sound("${synth}")`;
-  code += modifier;
-  code += `.gain(${volume})`;
-
-  return code;
 }

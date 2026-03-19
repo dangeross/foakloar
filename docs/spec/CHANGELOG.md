@@ -106,8 +106,8 @@ Portal always uses extended form. Portal wins if conflict. Hidden portals still 
 
 **`plaintext-type` tag proposed and removed before shipping** — replaced by three-element `content-type`.
 
-**Sound system redesigned — `type: sound` event primitive**
-`type: sound` is a new event primitive. Sound definitions are named, reusable, relay-queryable events with a `d`-tag for uniqueness. Parameters (`note`, `oscillator`, `slow`, `fast`, `room`, `delay`, `pan`, `crush`, `loop`) applied in declaration order build a Strudel chain. `sound` play tags reference them by `a`-tag: `["sound", "<a-tag>", "<role>", "<volume>", "<state?>"]`. `bpm` moves off `sound` tag to a standalone tag on world/place events. Old inline pattern notation (`slow(pad)`) removed — replaced by `type: sound` events with real Strudel-mapped parameters. Built-in oscillators only: `sine`, `triangle`, `sawtooth`, `square`.
+**Sound system fully specced against working implementation**
+`type: sound` event primitive with complete Strudel-mapped parameter set: source (`note`, `oscillator`, `noise`), volume/timing (`gain`, `slow`, `fast`, `pan`), filters (`lpf`, `hpf`, `vowel`), distortion (`crush`, `shape`), effects (`room`, `roomsize`, `delay` with two values, `rev`, `palindrome`), texture (`degrade-by`, `rand`), stereo/layering (`jux`, `stack`), pitch (`arp`), and `sample` for external audio. `gain` × `volume` multiplication documented. `loop` removed (implicit in Strudel). `delay` updated to two values (time, feedback). `roomsize` added alongside `room`. Default BPM is 120.
 
 **Dialogue generalised — valid on any event, not just NPCs**
 `dialogue` tags and `type: dialogue` events are valid on features, items, places, and NPCs. The `talk`/`ask` verb on any event triggers the dialogue tree. Feature dialogue example added (oracle mirror). Client flow updated to reflect any event type as host.

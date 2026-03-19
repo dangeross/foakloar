@@ -122,6 +122,7 @@ const EVENT_TYPES = [
   { value: 'recipe', label: 'Recipe' },
   { value: 'quest', label: 'Quest' },
   { value: 'consequence', label: 'Consequence' },
+  { value: 'sound', label: 'Sound' },
   { value: 'payment', label: 'Payment' },
   { value: 'dialogue', label: 'Dialogue' },
 ];

@@ -180,7 +180,7 @@ export default function EventEditor({
   }
 
   // Determine if this event type has a title field
-  const hasTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest', 'portal', 'puzzle', 'recipe', 'consequence'].includes(eventType);
+  const hasTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest', 'portal', 'puzzle', 'recipe', 'consequence', 'sound'].includes(eventType);
   // Determine if this event type has content
   const hasContent = ['place', 'item', 'feature', 'npc', 'clue', 'puzzle', 'world', 'recipe', 'consequence', 'quest'].includes(eventType);
   // Current content-type from tags (default: text/plain)

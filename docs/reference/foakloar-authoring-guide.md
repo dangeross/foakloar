@@ -952,15 +952,25 @@ Play tag shape: `["sound", "<sound-a-tag>", "<role>", "<volume>", "<state?>"]`
 
 | Parameter | Values | Effect |
 |-----------|--------|--------|
-| `note` | mini-notation | Note sequence |
-| `oscillator` | `sine` `triangle` `sawtooth` `square` | Sound source |
-| `slow` | float | Stretch relative to global tempo |
-| `fast` | float | Compress relative to global tempo |
-| `room` | 0.0–1.0 | Reverb — 0 = dry, 1 = large space |
-| `delay` | 0.0–1.0 | Echo |
-| `pan` | -1.0–1.0 | Stereo — -1 left, 1 right |
-| `crush` | 1–16 | Bit crush — lo-fi texture |
-| `loop` | `true` `false` | Default `true` |
+| `note` | mini-notation | Pitch sequence — always first |
+| `noise` | *(no value)* | White noise source — for wind, rain, fire, static |
+| `oscillator` | `sine` `triangle` `sawtooth` `square` | Waveform shape |
+| `gain` | 0.0–1.0 | Base volume (multiplies with play tag volume) |
+| `slow` | float > 1 | Stretch relative to global tempo |
+| `fast` | float > 1 | Compress relative to global tempo |
+| `pan` | -1.0–1.0 | Stereo — -1 left, 0 centre, 1 right |
+| `lpf` | Hz | Low-pass filter — warmer, muffled. Drones, underwater. |
+| `hpf` | Hz | High-pass filter — thinner, airy. Shimmer, radio. |
+| `room` | 0.0–1.0 | Reverb wet/dry |
+| `roomsize` | 1–10 | Reverb room size (use with `room`) |
+| `delay` | time, feedback | Echo. Two values: `["delay", "0.5", "0.3"]` |
+| `crush` | 1–16 | Bit crush — lo-fi/retro distortion |
+| `shape` | 0.0–1.0 | Soft saturation — warmth |
+| `degrade-by` | 0.0–1.0 | Random note dropout — organic texture |
+| `rand` | min, max | Random gain — crackle, shimmer. Two values. |
+| `jux` | `rev` | Stereo width — normal left, reversed right |
+| `arp` | `up` `down` `updown` | Arpeggiate chords |
+| `rev` | *(no value)* | Reverse pattern order |
 
 Mini-notation: `c3 e3 g3` sequence, `c3*4` repeat, `c3 ~ ~ ~` note with rests, `[c3 e3] g3` sub-pattern.
 
@@ -970,18 +980,20 @@ Mini-notation: `c3 e3 g3` sequence, `c3*4` repeat, `c3 ~ ~ ~` note with rests, `
 
 Use these as building blocks:
 
-| Mood | `note` | `oscillator` | modifiers | Use when |
-|------|--------|-------------|-----------|----------|
-| Dread | `c2 ~ ~ ~` | `sine` | `slow 4`, `room 0.8` | Underground, ancient, heavy |
-| Tension | `b2 ~ b2 ~` | `triangle` | `slow 2` | Unsolved puzzle, danger |
-| Danger | `c3 b2 c3 b2` | `sawtooth` | `fast 2` | Active threat |
-| Mystery | `c3 ~ eb3 ~` | `sine` | `slow 3`, `delay 0.4` | Unknown territory |
-| Wonder | `c4 e4 g4 c5` | `triangle` | `slow 2`, `room 0.4` | Discovery, arrival |
-| Resolution | `c3 e3 g3` | `sine` | `slow 3` | Puzzle solved, door open |
-| Stillness | `~ ~ ~ ~` | `sine` | | Aftermath, emptiness |
-| Mechanical | `c2 ~ ~ ~` | `square` | `fast 4` | Machinery, clock |
-| Ethereal | `c5 g5 c6` | `sine` | `slow 4`, `room 0.9`, `delay 0.5` | Magical, otherworldly |
-| Horror | `c2 ~ ~ ~` | `sawtooth` | `slow 6`, `crush 4` | Degraded, corrupted |
+| Mood | Tags | Use when |
+|------|------|----------|
+| Dread | `note c2~~~`, `oscillator sine`, `slow 4`, `lpf 300`, `room 0.7` | Underground, ancient |
+| Tension | `note b2~b2~`, `oscillator triangle`, `slow 2` | Unsolved puzzle, danger |
+| Danger | `note c3 b2 c3 b2`, `oscillator sawtooth`, `fast 2` | Active threat |
+| Mystery | `note c3~eb3~`, `oscillator sine`, `slow 3`, `delay 0.4 0.2` | Unknown territory |
+| Wonder | `note c4 e4 g4 c5`, `oscillator triangle`, `slow 2`, `room 0.4` | Discovery, arrival |
+| Resolution | `note c3 e3 g3`, `oscillator sine`, `slow 3` | Puzzle solved, door open |
+| Stillness | `noise`, `lpf 100`, `gain 0.1` | Aftermath, near-silence |
+| Mechanical | `note c2~~~`, `oscillator square`, `fast 4` | Machinery, clock |
+| Ethereal | `note c5 g5 c6`, `oscillator sine`, `jux rev`, `slow 4`, `room 0.9` | Magical, otherworldly |
+| Horror | `noise`, `crush 4`, `rand 0.1 0.4`, `lpf 600` | Degraded, corrupted signal |
+| Wind | `noise`, `lpf 400`, `rand 0.05 0.2`, `slow 4` | Open air, caves |
+| Fire | `noise`, `lpf 800`, `crush 6`, `rand 0.1 0.4`, `degrade-by 0.3` | Campfire, hearth |
 
 ---
 
@@ -1019,14 +1031,14 @@ Silence is part of the palette. A place with no `sound` tags inherits a quieter 
 ### BPM
 
 ```json
-// World event — global tempo
+// World event — global default (Strudel default: 120 BPM)
 ["bpm", "72"]
 
 // Place — override on entry
 ["bpm", "96"]
 ```
 
-`bpm` is a standalone tag on world/place events, not a `sound` tag. Individual sound events can use `slow`/`fast` to move relative to the current global tempo.
+`bpm` is a standalone tag on world/place events. Individual sound events use `slow`/`fast` for relative adjustment.
 
 ---
 
@@ -1042,6 +1054,8 @@ For sounds that mark a specific moment rather than playing passively:
 ```
 
 **The rule:** moment → action type. State → `sound` play tag on the event.
+
+**`gain` × `volume`:** the sound event's `gain` tag sets a base level baked into the definition. The play tag's volume element controls the mix at point of use. They multiply: `finalVolume = gain × volume`. Same sound event at different volumes in different places.
 
 ---
 
