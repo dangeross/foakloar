@@ -113,7 +113,6 @@ export default function App() {
   const [generation, setGeneration] = useState(0);
   // Build mode state
   const [buildMode, setBuildMode] = useState(false);
-  const [showGraph, setShowGraph] = useState(false);
   const [showDrafts, setShowDrafts] = useState(false);
   const [editorState, setEditorState] = useState(null); // { eventType, draft?, initialTags?, ... }
   const [showWorldCreator, setShowWorldCreator] = useState(false);
@@ -140,10 +139,13 @@ export default function App() {
     }
   }, [worldTag]);
 
-  // Auto-enable build mode when drafts exist for this world
+  // Reset build mode on world change; auto-enable only for draft-only worlds
   useEffect(() => {
-    if (drafts.length > 0 && !buildMode) setBuildMode(true);
-  }, [drafts.length]); // eslint-disable-line react-hooks/exhaustive-deps
+    setBuildMode(false);
+  }, [worldTag]);
+  useEffect(() => {
+    if (status === 'ready' && drafts.length > 0 && events.size === 0 && !buildMode) setBuildMode(true);
+  }, [status, drafts.length, events.size]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Merge drafts into events so the engine can preview unpublished content.
   // Draft events become synthetic events keyed by their a-tag, with the
@@ -578,42 +580,14 @@ export default function App() {
         />
       )}
 
-      {/* Build mode overlay */}
+      {/* Build mode — event graph */}
       {buildMode && status === 'ready' && (
-        <BuildModeOverlay
-          events={mergedEvents}
-          currentPlace={engineRef.current?.currentPlace || player.state.place}
-          pubkey={identity.pubkey}
-          onNewEvent={(eventType) => setEditorState({ eventType })}
-          onEditPortal={(slot) => {
-            // Pre-fill portal editor with current place and slot
-            const currentPlaceRef = engineRef.current?.currentPlace || player.state.place;
-            setEditorState({
-              eventType: 'portal',
-              initialTags: [['exit', currentPlaceRef, slot, '']],
-            });
-          }}
-          onEditEvent={(aTag) => {
-            const event = mergedEvents.get(aTag);
-            if (!event) return;
-            const eventType = getTag(event, 'type') || 'place';
-            setEditorState({
-              eventType,
-              eventTemplate: { kind: 30078, tags: [...event.tags], content: event.content || '' },
-            });
-          }}
-          onShowGraph={() => setShowGraph(true)}
-          trustSet={trustInfo?.trustSet}
-          clientMode={trustInfo?.effectiveMode}
-          onVouch={(targetPubkey) => setVouchTarget(targetPubkey)}
-        />
-      )}
-
-      {/* Event graph view */}
-      {showGraph && (
         <EventGraph
           events={mergedEvents}
           currentPlace={engineRef.current?.currentPlace || player.state.place}
+          pubkey={identity.pubkey}
+          trustSet={trustInfo?.trustSet}
+          clientMode={trustInfo?.effectiveMode}
           onEditEvent={(aTag) => {
             const event = mergedEvents.get(aTag);
             if (!event) return;
@@ -624,7 +598,8 @@ export default function App() {
             });
           }}
           onNewEvent={(eventType) => setEditorState({ eventType })}
-          onClose={() => setShowGraph(false)}
+          onVouch={(targetPubkey) => setVouchTarget(targetPubkey)}
+          onClose={() => setBuildMode(false)}
         />
       )}
 
@@ -703,7 +678,7 @@ export default function App() {
           events={mergedEvents}
           eventTemplate={editorState.eventTemplate || null}
           initialTags={editorState.initialTags || []}
-          zIndex={showGraph ? 110 : undefined}
+          zIndex={buildMode ? 110 : undefined}
           startInPreview={editorState.showPreview || false}
           onSaveDraft={(eventTemplate) => {
             const draftId = editorState.eventTemplate?._draft?.id;

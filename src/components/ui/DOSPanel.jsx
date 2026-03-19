@@ -43,10 +43,9 @@ export default function DOSPanel({
       >
         {/* Title bar */}
         <div
-          className="flex justify-between px-2 py-1 shrink-0"
+          className="flex items-center px-2 py-1 shrink-0 gap-2"
           style={{ backgroundColor: 'var(--colour-dim)', color: 'var(--colour-bg)' }}
         >
-          <span>{title}</span>
           <button
             onClick={onClose}
             className="cursor-pointer"
@@ -54,10 +53,11 @@ export default function DOSPanel({
           >
             [X]
           </button>
+          <span>{title}</span>
         </div>
 
         {/* Content */}
-        <div className="p-3 overflow-y-auto flex-1">
+        <div className="p-3 overflow-y-auto overflow-x-hidden flex-1">
           {children}
         </div>
       </div>

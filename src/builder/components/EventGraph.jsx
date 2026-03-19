@@ -2,8 +2,8 @@
  * EventGraph — Interactive graph view of world events using React Flow.
  *
  * Places as nodes, portals as directed edges with direction labels.
- * Clean view: entities hidden (count shown on place node).
- * Orphans: only truly unreferenced events shown.
+ * Sidebar panel shows details when a node is selected.
+ * Replaces BuildModeOverlay as the primary build mode view.
  */
 
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
@@ -18,7 +18,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import Dagre from '@dagrejs/dagre';
-import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force';
+import { nip19 } from 'nostr-tools';
 
 const GRAPH_EVENT_TYPES = [
   { value: 'place', label: 'Place' },
@@ -42,10 +42,12 @@ const handleStyle = { background: 'transparent', width: 1, height: 1, border: 'n
 
 function PlaceNode({ data }) {
   const borderColour = data.current ? 'var(--colour-highlight)' : 'var(--colour-text)';
+  const borderStyle = data.isDraft ? 'dashed' : 'solid';
+  const opacity = data.untrusted ? 0.5 : 1;
   return (
     <div style={{
       padding: '10px 16px',
-      border: `1px solid ${borderColour}`,
+      border: `1px ${borderStyle} ${borderColour}`,
       background: 'color-mix(in srgb, var(--colour-bg) 90%, var(--colour-dim))',
       color: borderColour,
       fontSize: '0.75rem',
@@ -54,6 +56,7 @@ function PlaceNode({ data }) {
       textAlign: 'center',
       cursor: 'pointer',
       position: 'relative',
+      opacity,
     }}>
       <Handle type="target" position={Position.Top} style={handleStyle} />
       <Handle type="source" position={Position.Bottom} style={handleStyle} />
@@ -62,6 +65,9 @@ function PlaceNode({ data }) {
         <div style={{ color: 'var(--colour-dim)', fontSize: '0.5rem', lineHeight: 1.3 }}>
           {data.details.join(' · ')}
         </div>
+      )}
+      {data.isDraft && (
+        <div style={{ color: 'var(--colour-item)', fontSize: '0.4rem', marginTop: 1 }}>DRAFT</div>
       )}
     </div>
   );
@@ -82,7 +88,7 @@ function WorldNode({ data }) {
     }}>
       <Handle type="source" position={Position.Bottom} style={handleStyle} />
       <div style={{ fontWeight: 'bold' }}>{data.label}</div>
-      <div style={{ color: '#666', fontSize: '0.5rem' }}>world</div>
+      <div style={{ color: 'var(--colour-dim)', fontSize: '0.5rem' }}>world</div>
     </div>
   );
 }
@@ -110,7 +116,7 @@ const nodeTypes = {
   orphan: OrphanNode,
 };
 
-// ── Data conversion ─────────────────────────────────────────────────────
+// ── Helpers ─────────────────────────────────────────────────────────────
 
 function getTag(event, name) {
   return event.tags?.find((t) => t[0] === name)?.[1] ?? null;
@@ -120,18 +126,24 @@ function getTags(event, name) {
   return (event.tags || []).filter((t) => t[0] === name);
 }
 
-function eventsToGraph(events, currentPlace) {
+function shortPubkey(pk) {
+  if (!pk) return '?';
+  try { return nip19.npubEncode(pk).slice(0, 12) + '...'; } catch { return pk.slice(0, 8) + '...'; }
+}
+
+// ── Data conversion ─────────────────────────────────────────────────────
+
+function eventsToGraph(events, currentPlace, trustSet, clientMode) {
   const nodes = [];
   const edges = [];
-  const referencedRefs = new Set(); // all refs that are referenced by something
+  const referencedRefs = new Set();
 
-  // First pass: categorise events
+  const SKIP_TYPES = new Set(['vouch', 'player-state']);
   const places = new Map();
   const portals = [];
   let worldRef = null;
   let worldEvent = null;
 
-  const SKIP_TYPES = new Set(['vouch', 'player-state']);
   for (const [ref, event] of events) {
     const type = getTag(event, 'type');
     if (!type || SKIP_TYPES.has(type)) continue;
@@ -140,61 +152,63 @@ function eventsToGraph(events, currentPlace) {
     else if (type === 'portal') portals.push({ ref, event });
   }
 
-  // Mark world as referenced
   if (worldRef) referencedRefs.add(worldRef);
 
-  // Collect all refs referenced from places (entities, sounds, etc.)
+  // Collect all referenced events
   for (const [ref, event] of places) {
     referencedRefs.add(ref);
-    const refTags = ['feature', 'item', 'npc', 'clue', 'puzzle', 'sound'];
-    for (const t of refTags) {
+    for (const t of ['feature', 'item', 'npc', 'clue', 'puzzle', 'sound']) {
       for (const tag of getTags(event, t)) {
         if (tag[1]) referencedRefs.add(tag[1]);
       }
     }
   }
-
-  // Collect refs from entities (sounds on items, contains refs, etc.)
-  for (const [ref, event] of events) {
+  for (const [, event] of events) {
     const type = getTag(event, 'type');
     if (!type) continue;
-    // Mark portals as referenced
-    if (type === 'portal') { referencedRefs.add(ref); continue; }
-    // Mark events referenced by on-* triggers, requires, sound, etc.
+    if (type === 'portal') { referencedRefs.add(`30078:${event.pubkey}:${getTag(event, 'd')}`); continue; }
     for (const tag of event.tags || []) {
-      const val = tag[1];
-      if (val && typeof val === 'string' && val.startsWith('30078:')) {
-        referencedRefs.add(val);
-      }
-      // Also check positions 3, 4 for action targets
-      for (let i = 2; i < tag.length; i++) {
+      for (let i = 1; i < tag.length; i++) {
         const v = tag[i];
-        if (v && typeof v === 'string' && v.startsWith('30078:')) {
-          referencedRefs.add(v);
-        }
+        if (v && typeof v === 'string' && v.startsWith('30078:')) referencedRefs.add(v);
       }
     }
   }
 
-  // Build nodes (no positions yet — Dagre will compute them)
-  // World node
+  // Helper: check if event is a draft
+  const isDraft = (event) => !!event._isDraft;
+
+  // Helper: check trust level
+  const isUntrusted = (event) => {
+    if (!trustSet) return false;
+    // Import getTrustLevel inline to avoid circular deps
+    const pk = event.pubkey;
+    if (pk === trustSet.genesisPubkey) return false;
+    if (trustSet.collaborators?.has(pk)) return false;
+    if (trustSet.vouched?.has(pk)) return false;
+    return true;
+  };
+
+  // Build nodes
   if (worldRef) {
     nodes.push({
       id: worldRef,
       type: 'world',
       position: { x: 0, y: 0 },
-      data: { label: getTag(worldEvent, 'title') || 'World', ref: worldRef },
+      data: { label: getTag(worldEvent, 'title') || 'World', ref: worldRef, author: worldEvent.pubkey },
     });
   }
 
-  // Place nodes with entity summary
   for (const [ref, event] of places) {
     const title = getTag(event, 'title') || ref.split(':').pop();
     const details = [];
-    const counts = { item: 0, feature: 0, npc: 0, clue: 0, puzzle: 0 };
-    for (const t of Object.keys(counts)) {
-      counts[t] = getTags(event, t).length;
-      if (counts[t] > 0) details.push(`${counts[t]} ${t}${counts[t] > 1 ? 's' : ''}`);
+    const entityRefs = [];
+    for (const t of ['feature', 'item', 'npc', 'clue', 'puzzle']) {
+      const tags = getTags(event, t);
+      if (tags.length > 0) details.push(`${tags.length} ${t}${tags.length > 1 ? 's' : ''}`);
+      for (const tag of tags) {
+        if (tag[1]) entityRefs.push({ ref: tag[1], type: t });
+      }
     }
     const soundCount = getTags(event, 'sound').length;
     if (soundCount > 0) details.push(`${soundCount} sound${soundCount > 1 ? 's' : ''}`);
@@ -203,85 +217,74 @@ function eventsToGraph(events, currentPlace) {
       id: ref,
       type: 'place',
       position: { x: 0, y: 0 },
-      data: { label: title, ref, current: ref === currentPlace, details },
+      data: {
+        label: title, ref, current: ref === currentPlace, details,
+        author: event.pubkey, isDraft: isDraft(event), untrusted: isUntrusted(event),
+        entityRefs,
+      },
     });
   }
 
-  // Portal edges — bright, thick, with direction labels
-  // Deduplicate: only one edge per pair of places (pick the first direction found)
+  // Portal edges
   const edgePairs = new Set();
   for (const { ref: portalRef, event } of portals) {
     const exitTags = getTags(event, 'exit');
     if (exitTags.length < 2) continue;
-
     for (let i = 0; i < exitTags.length; i++) {
       const srcPlace = exitTags[i][1];
       const slot = exitTags[i][2] || '';
       if (!places.has(srcPlace)) continue;
-
       for (let j = 0; j < exitTags.length; j++) {
         if (j === i) continue;
         const destPlace = exitTags[j][1];
         if (!places.has(destPlace)) continue;
-
         const pairKey = [srcPlace, destPlace].sort().join('|');
         if (edgePairs.has(pairKey)) continue;
         edgePairs.add(pairKey);
-
         edges.push({
           id: `${portalRef}:${i}->${j}`,
           source: srcPlace,
           target: destPlace,
           label: slot,
-          data: { portalRef },
+          data: { portalRef, author: event.pubkey, isDraft: isDraft(event) },
           labelStyle: { fontSize: '0.55rem', fill: 'var(--colour-exits)', fontFamily: 'inherit' },
           labelBgStyle: { fill: 'var(--colour-bg)' },
           labelBgPadding: [4, 2],
-          style: { stroke: 'var(--colour-exits)', strokeWidth: 1.5, cursor: 'pointer' },
+          style: {
+            stroke: isDraft(event) ? 'var(--colour-item)' : 'var(--colour-exits)',
+            strokeWidth: 1.5,
+            strokeDasharray: isDraft(event) ? '4 2' : undefined,
+            cursor: 'pointer',
+          },
         });
       }
     }
   }
 
-  // Dagre hierarchical layout — minimises edge crossings
+  // Dagre layout
   const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
   g.setGraph({ rankdir: 'TB', nodesep: 100, ranksep: 120, align: 'DL', edgesep: 40 });
-  const NODE_W = 180;
-  const NODE_H = 60;
-  for (const node of nodes) {
-    g.setNode(node.id, { width: NODE_W, height: NODE_H });
-  }
-  for (const edge of edges) {
-    g.setEdge(edge.source, edge.target);
-  }
+  for (const node of nodes) g.setNode(node.id, { width: 180, height: 60 });
+  for (const edge of edges) g.setEdge(edge.source, edge.target);
   Dagre.layout(g);
-
-  // Apply computed positions
   for (const node of nodes) {
     const pos = g.node(node.id);
-    if (pos) {
-      node.position = { x: pos.x - (pos.width / 2), y: pos.y - (pos.height / 2) };
-    }
+    if (pos) node.position = { x: pos.x - (pos.width / 2), y: pos.y - (pos.height / 2) };
   }
 
-  // Orphan nodes — placed below the layout
+  // Orphans
   let maxY = 0;
   for (const node of nodes) maxY = Math.max(maxY, node.position.y);
   let orphanIdx = 0;
-  const orphanCols = 4;
   for (const [ref, event] of events) {
     if (referencedRefs.has(ref)) continue;
     const type = getTag(event, 'type');
     if (!type || SKIP_TYPES.has(type)) continue;
     const title = getTag(event, 'title') || ref.split(':').pop();
     nodes.push({
-      id: ref,
-      type: 'orphan',
-      position: {
-        x: (orphanIdx % orphanCols) * 200,
-        y: maxY + 120 + Math.floor(orphanIdx / orphanCols) * 45,
-      },
-      data: { label: title, entityType: type, ref },
+      id: ref, type: 'orphan',
+      position: { x: (orphanIdx % 4) * 200, y: maxY + 120 + Math.floor(orphanIdx / 4) * 45 },
+      data: { label: title, entityType: type, ref, author: event.pubkey },
     });
     orphanIdx++;
   }
@@ -289,45 +292,232 @@ function eventsToGraph(events, currentPlace) {
   return { nodes, edges };
 }
 
+// ── Sidebar ─────────────────────────────────────────────────────────────
+
+function GraphSidebar({ selectedRef, events, onEditEvent, onVouch, onClose, pubkey, trustSet }) {
+  if (!selectedRef) return null;
+  const event = events.get(selectedRef);
+  if (!event) return null;
+
+  const type = getTag(event, 'type') || '?';
+  const title = getTag(event, 'title') || selectedRef.split(':').pop();
+  const author = event.pubkey;
+  const isDraft = !!event._isDraft;
+
+  // Collect entities for places
+  const entities = [];
+  if (type === 'place') {
+    for (const t of ['feature', 'item', 'npc', 'clue', 'puzzle', 'sound']) {
+      for (const tag of getTags(event, t)) {
+        const eRef = tag[1];
+        const eEvent = events.get(eRef);
+        if (!eEvent) continue;
+        const eTitle = getTag(eEvent, 'title') || eRef.split(':').pop();
+        const eType = getTag(eEvent, 'type') || t;
+        entities.push({ ref: eRef, title: eTitle, type: eType, author: eEvent.pubkey, isDraft: !!eEvent._isDraft });
+      }
+    }
+  }
+
+  // Collect portals for places
+  const portals = [];
+  if (type === 'place') {
+    for (const [, ev] of events) {
+      if (getTag(ev, 'type') !== 'portal') continue;
+      const exits = getTags(ev, 'exit');
+      const matchesPlace = exits.some((e) => e[1] === selectedRef);
+      if (!matchesPlace) continue;
+      const portalRef = `30078:${ev.pubkey}:${getTag(ev, 'd')}`;
+      const slots = exits.filter((e) => e[1] === selectedRef).map((e) => e[2]).join(', ');
+      const dests = exits.filter((e) => e[1] !== selectedRef).map((e) => {
+        const dEvent = events.get(e[1]);
+        return dEvent ? getTag(dEvent, 'title') || 'unknown' : 'unknown';
+      });
+      portals.push({ ref: portalRef, slots, dests: dests.join(', '), author: ev.pubkey, isDraft: !!ev._isDraft });
+    }
+  }
+
+  const canVouch = (targetPk) => {
+    if (!trustSet || !onVouch || !pubkey || !targetPk) return false;
+    if (targetPk === pubkey) return false;
+    if (targetPk === trustSet.genesisPubkey) return false;
+    if (trustSet.collaborators?.has(targetPk)) return false;
+    if (trustSet.vouched?.has(targetPk)) return false;
+    return true;
+  };
+
+  const npubOf = (pk) => { try { return nip19.npubEncode(pk); } catch { return pk; } };
+
+  const trustLabel = (pk) => {
+    if (!trustSet || !pk) return null;
+    if (pk === trustSet.genesisPubkey) return { text: 'genesis', colour: 'var(--colour-highlight)' };
+    if (trustSet.collaborators?.has(pk)) return { text: 'collab', colour: 'var(--colour-highlight)' };
+    if (trustSet.vouched?.has(pk)) return { text: 'vouched', colour: 'var(--colour-dim)' };
+    return { text: 'untrusted', colour: 'var(--colour-error)' };
+  };
+
+  const AuthorLine = ({ pk, label }) => {
+    const trust = trustLabel(pk);
+    return (
+      <div style={{ fontSize: '0.5rem', color: 'var(--colour-dim)' }}>
+        {label && <span>{label}: </span>}
+        <a
+          href={`/u/${npubOf(pk)}`}
+          onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', `/u/${npubOf(pk)}`); window.dispatchEvent(new PopStateEvent('popstate')); }}
+          style={{ color: 'var(--colour-dim)', cursor: 'pointer', textDecoration: 'underline' }}
+        >{shortPubkey(pk)}</a>
+        {trust && (
+          <span style={{ color: trust.colour, marginLeft: 4, opacity: 0.7 }}>{trust.text}</span>
+        )}
+        {canVouch(pk) && (
+          <button
+            onClick={() => onVouch(pk)}
+            style={{ color: 'var(--colour-item)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', cursor: 'pointer', marginLeft: 4 }}
+          >[vouch]</button>
+        )}
+      </div>
+    );
+  };
+
+  const sidebarStyle = {
+    position: 'fixed', top: 34, right: 0, bottom: 0,
+    width: 260, zIndex: 102,
+    background: 'var(--colour-bg)',
+    borderLeft: '1px solid var(--colour-dim)',
+    overflowY: 'auto',
+    padding: '12px 10px',
+    fontSize: '0.6rem',
+    fontFamily: 'inherit',
+  };
+
+  return (
+    <div style={sidebarStyle}>
+      {/* Header with close */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+        <div style={{ flex: 1 }}>
+          <span style={{ color: 'var(--colour-text)', fontSize: '0.7rem', fontWeight: 'bold' }}>
+            {title}
+          </span>
+          <button
+            onClick={() => onEditEvent(selectedRef)}
+            style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: '0.55rem', cursor: 'pointer', marginLeft: 6 }}
+          >[edit]</button>
+        </div>
+        <button
+          onClick={onClose}
+          style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', fontSize: '0.6rem', cursor: 'pointer', padding: '0 2px' }}
+        >[X]</button>
+      </div>
+      <div style={{ color: 'var(--colour-dim)', fontSize: '0.5rem', marginBottom: 2 }}>
+        [{type}] {isDraft && <span style={{ color: 'var(--colour-item)' }}>DRAFT</span>}
+        {!isDraft && <span style={{ color: 'var(--colour-text)' }}>published</span>}
+      </div>
+      <AuthorLine pk={author} />
+      <div style={{ marginTop: 4, marginBottom: 8 }} />
+
+      {/* Portals */}
+      {portals.length > 0 && (
+        <div style={{ marginBottom: 8 }}>
+          <div style={{ color: 'var(--colour-dim)', marginBottom: 2 }}>Portals:</div>
+          {portals.map((p, i) => (
+            <div key={i} style={{ marginLeft: 8, marginBottom: 3 }}>
+              <div>
+                <span style={{ color: 'var(--colour-exits)' }}>{p.slots}</span>
+                <span style={{ color: 'var(--colour-dim)' }}> → </span><span style={{ color: 'var(--colour-text)' }}>{p.dests}</span>
+                {p.isDraft && <span style={{ color: 'var(--colour-item)', fontSize: '0.45rem' }}> DRAFT</span>}
+                <button
+                  onClick={() => onEditEvent(p.ref)}
+                  style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', cursor: 'pointer', marginLeft: 4 }}
+                >[edit]</button>
+              </div>
+              <AuthorLine pk={p.author} />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Entities grouped by type */}
+      {entities.length > 0 && (() => {
+        const grouped = {};
+        for (const e of entities) {
+          if (!grouped[e.type]) grouped[e.type] = [];
+          grouped[e.type].push(e);
+        }
+        const typeOrder = ['feature', 'item', 'npc', 'clue', 'puzzle', 'sound'];
+        const sortedTypes = Object.keys(grouped).sort((a, b) => {
+          const ai = typeOrder.indexOf(a), bi = typeOrder.indexOf(b);
+          return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+        });
+        return sortedTypes.map((t) => (
+          <div key={t} style={{ marginBottom: 6 }}>
+            <div style={{ color: 'var(--colour-dim)', marginBottom: 2, textTransform: 'capitalize' }}>
+              {t}{grouped[t].length > 1 ? 's' : ''}:
+            </div>
+            {grouped[t].map((e, i) => (
+              <div key={i} style={{ marginLeft: 8, marginBottom: 3 }}>
+                <div>
+                  <span style={{ color: 'var(--colour-text)' }}>{e.title}</span>
+                  {e.isDraft && <span style={{ color: 'var(--colour-item)', fontSize: '0.45rem' }}> DRAFT</span>}
+                  <button
+                    onClick={() => onEditEvent(e.ref)}
+                    style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', cursor: 'pointer', marginLeft: 4 }}
+                  >[edit]</button>
+                </div>
+                <AuthorLine pk={e.author} />
+              </div>
+            ))}
+          </div>
+        ));
+      })()}
+    </div>
+  );
+}
+
 // ── Persisted viewport ──────────────────────────────────────────────────
 
-let savedViewport = null; // { x, y, zoom } — survives unmount
+let savedViewport = null;
 
 // ── Main component ──────────────────────────────────────────────────────
 
-export default function EventGraph({ events, currentPlace, onEditEvent, onNewEvent, onClose }) {
+export default function EventGraph({
+  events, currentPlace, onEditEvent, onNewEvent, onClose,
+  pubkey, trustSet, clientMode, onVouch,
+}) {
   const [showNewMenu, setShowNewMenu] = useState(false);
+  const [selectedRef, setSelectedRef] = useState(null);
+
   const { nodes: initialNodes, edges: initialEdges } = useMemo(
-    () => eventsToGraph(events, currentPlace),
-    [events, currentPlace]
+    () => eventsToGraph(events, currentPlace, trustSet, clientMode),
+    [events, currentPlace, trustSet, clientMode]
   );
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  // Refresh graph when events change (new event added/published)
   useEffect(() => {
     setNodes(initialNodes);
     setEdges(initialEdges);
   }, [initialNodes, initialEdges, setNodes, setEdges]);
 
   const onNodeClick = useCallback((_, node) => {
-    if (onEditEvent && node.data?.ref) {
-      onEditEvent(node.data.ref);
-    }
-  }, [onEditEvent]);
+    setSelectedRef(node.data?.ref || null);
+  }, []);
 
   const onEdgeClick = useCallback((_, edge) => {
-    if (onEditEvent && edge.data?.portalRef) {
-      onEditEvent(edge.data.portalRef);
+    if (edge.data?.portalRef) {
+      // Select the source place to show portal in sidebar
+      setSelectedRef(edge.source);
     }
-  }, [onEditEvent]);
+  }, []);
+
+  const onPaneClick = useCallback(() => {
+    setSelectedRef(null);
+  }, []);
 
   const onMoveEnd = useCallback((_, viewport) => {
     savedViewport = viewport;
   }, []);
 
-  // On first load, fit to current place node then offset upward
   const onInit = useCallback((reactFlowInstance) => {
     if (savedViewport) {
       reactFlowInstance.setViewport(savedViewport);
@@ -335,18 +525,12 @@ export default function EventGraph({ events, currentPlace, onEditEvent, onNewEve
     }
     const currentNode = initialNodes.find(n => n.data?.current);
     if (currentNode) {
-      // Fit to current node, then shift so it's in upper third
       reactFlowInstance.fitView({ nodes: [currentNode], padding: 0.5, maxZoom: 0.8 });
-      setTimeout(() => {
-        const vp = reactFlowInstance.getViewport();
-        reactFlowInstance.setViewport({ ...vp, y: vp.y - 80 });
-      }, 100);
     } else {
       reactFlowInstance.fitView({ padding: 0.3, maxZoom: 0.8 });
     }
   }, [initialNodes]);
 
-  // Count orphans
   const orphanCount = nodes.filter((n) => n.type === 'orphan').length;
 
   return (
@@ -359,7 +543,7 @@ export default function EventGraph({ events, currentPlace, onEditEvent, onNewEve
       {/* Header */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0,
-        zIndex: 101,
+        zIndex: 103,
         padding: '6px 12px',
         display: 'flex',
         justifyContent: 'space-between',
@@ -367,71 +551,61 @@ export default function EventGraph({ events, currentPlace, onEditEvent, onNewEve
         borderBottom: '1px solid var(--colour-dim)',
         background: 'var(--colour-bg)',
       }}>
-        <span style={{ color: 'var(--colour-dim)', fontSize: '0.7rem', fontFamily: 'inherit' }}>
-          EVENT GRAPH — {nodes.filter((n) => n.type === 'place').length} places, {edges.length} connections
-          {orphanCount > 0 && <span style={{ color: 'var(--colour-error)' }}> · {orphanCount} orphan{orphanCount !== 1 ? 's' : ''}</span>}
-        </span>
-        <div style={{ display: 'flex', gap: 6, alignItems: 'stretch' }}>
-          {/* + new dropdown */}
-          {onNewEvent && (
-            <div style={{ position: 'relative', display: 'flex' }}>
-              <button
-                onClick={() => setShowNewMenu(!showNewMenu)}
-                style={{
-                  color: 'var(--colour-text)',
-                  background: 'none',
-                  border: '1px solid var(--colour-dim)',
-                  font: 'inherit',
-                  fontSize: '0.6rem',
-                  padding: '2px 8px',
-                  cursor: 'pointer',
-                }}
-              >
-                + new
-              </button>
-              {showNewMenu && (
-                <div style={{
-                  position: 'absolute', right: 0, top: '100%', zIndex: 110,
-                  border: '1px solid var(--colour-dim)', backgroundColor: 'var(--colour-bg)',
-                  padding: '2px 0', minWidth: 120, maxHeight: 260, overflowY: 'auto',
-                  fontSize: '0.6rem',
-                }}>
-                  {GRAPH_EVENT_TYPES.map(({ value, label }) => (
-                    <button
-                      key={value}
-                      onClick={() => { setShowNewMenu(false); onNewEvent(value); }}
-                      className="block w-full text-left"
-                      style={{
-                        color: 'var(--colour-text)', background: 'none', border: 'none',
-                        font: 'inherit', fontSize: 'inherit', padding: '2px 8px', cursor: 'pointer',
-                      }}
-                    >
-                      + {label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <button
             onClick={onClose}
             style={{
-              color: 'var(--colour-dim)',
-              background: 'none',
-              border: 'none',
-              font: 'inherit',
-              fontSize: '0.6rem',
-              padding: '2px 4px',
-              cursor: 'pointer',
+              color: 'var(--colour-dim)', background: 'none', border: 'none',
+              font: 'inherit', fontSize: '0.6rem', padding: '2px 4px', cursor: 'pointer',
             }}
           >
             [X]
           </button>
+          <span style={{ color: 'var(--colour-dim)', fontSize: '0.7rem', fontFamily: 'inherit' }}>
+            EVENT GRAPH — {nodes.filter((n) => n.type === 'place').length} places, {edges.length} connections
+            {orphanCount > 0 && <span style={{ color: 'var(--colour-error)' }}> · {orphanCount} orphan{orphanCount !== 1 ? 's' : ''}</span>}
+          </span>
         </div>
+        {onNewEvent && (
+          <div style={{ position: 'relative', display: 'flex' }}>
+            <button
+              onClick={() => setShowNewMenu(!showNewMenu)}
+              style={{
+                color: 'var(--colour-text)', background: 'none',
+                border: '1px solid var(--colour-dim)', font: 'inherit',
+                fontSize: '0.6rem', padding: '2px 8px', cursor: 'pointer',
+              }}
+            >
+              + new
+            </button>
+            {showNewMenu && (
+              <div style={{
+                position: 'absolute', right: 0, top: '100%', zIndex: 200,
+                border: '1px solid var(--colour-dim)', backgroundColor: 'var(--colour-bg)',
+                padding: '2px 0', minWidth: 120, maxHeight: 260, overflowY: 'auto',
+                fontSize: '0.6rem',
+              }}>
+                {GRAPH_EVENT_TYPES.map(({ value, label }) => (
+                  <button
+                    key={value}
+                    onClick={() => { setShowNewMenu(false); onNewEvent(value); }}
+                    className="block w-full text-left"
+                    style={{
+                      color: 'var(--colour-text)', background: 'none', border: 'none',
+                      font: 'inherit', fontSize: 'inherit', padding: '2px 8px', cursor: 'pointer',
+                    }}
+                  >
+                    + {label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Graph */}
-      <div style={{ width: '100%', height: '100%', paddingTop: 30 }}>
+      <div style={{ width: selectedRef ? 'calc(100% - 260px)' : '100%', height: '100%', paddingTop: 30, transition: 'width 0.15s' }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -439,6 +613,7 @@ export default function EventGraph({ events, currentPlace, onEditEvent, onNewEve
           onEdgesChange={onEdgesChange}
           onNodeClick={onNodeClick}
           onEdgeClick={onEdgeClick}
+          onPaneClick={onPaneClick}
           onMoveEnd={onMoveEnd}
           onInit={onInit}
           nodeTypes={nodeTypes}
@@ -449,12 +624,20 @@ export default function EventGraph({ events, currentPlace, onEditEvent, onNewEve
           defaultEdgeOptions={{ type: 'bezier' }}
         >
           <Background color="var(--colour-dim)" gap={40} size={1} style={{ opacity: 0.15 }} />
-          <Controls
-            showInteractive={false}
-            style={{ bottom: 10, left: 10 }}
-          />
+          <Controls showInteractive={false} style={{ bottom: 10, left: 10 }} />
         </ReactFlow>
       </div>
+
+      {/* Sidebar */}
+      <GraphSidebar
+        selectedRef={selectedRef}
+        events={events}
+        onEditEvent={onEditEvent}
+        onVouch={onVouch}
+        onClose={() => setSelectedRef(null)}
+        pubkey={pubkey}
+        trustSet={trustSet}
+      />
     </div>
   );
 }
