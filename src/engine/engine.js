@@ -28,8 +28,10 @@ export class GameEngine {
     this.player = player;
     this.config = config;
 
-    // Restore position from saved state, or start at genesis
-    this.currentPlace = player.state.place || config.GENESIS_PLACE;
+    // Restore position from saved state, or start at genesis.
+    // If saved place no longer exists in events (e.g. identity change), reset to start.
+    const savedPlace = player.state.place;
+    this.currentPlace = (savedPlace && events.has(savedPlace)) ? savedPlace : config.GENESIS_PLACE;
     this.puzzleActive = null;
     this.dialogueActive = null;
     this.paymentActive = null;   // { dtag, lnurl, amount, unit, description }

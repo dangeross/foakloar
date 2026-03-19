@@ -154,6 +154,12 @@ export default function App() {
     if (drafts.length === 0) return events;
     const pubkey = identity.pubkey || '0'.repeat(64);
     const merged = new Map(events);
+    // Build d-tag → existing a-tag lookup so drafts replace published events
+    const dTagToATag = new Map();
+    for (const [aTag, event] of events) {
+      const dTag = event.tags?.find((t) => t[0] === 'd')?.[1];
+      if (dTag) dTagToATag.set(dTag, aTag);
+    }
     for (const draft of drafts) {
       const dTag = draft.tags?.find((t) => t[0] === 'd')?.[1];
       if (!dTag) continue;
@@ -161,12 +167,15 @@ export default function App() {
       const resolvedTags = draft.tags.map((tag) =>
         tag.map((v) => (typeof v === 'string' ? v.replaceAll('<PUBKEY>', pubkey) : v))
       );
-      const aTag = `30078:${pubkey}:${dTag}`;
-      // Don't overwrite real relay events
-      if (merged.has(aTag)) continue;
+      // Use existing published key if same author, so portal refs stay connected
+      const existingKey = dTagToATag.get(dTag);
+      const existingEvent = existingKey ? merged.get(existingKey) : null;
+      const sameAuthor = existingEvent && existingEvent.pubkey === pubkey;
+      const aTag = sameAuthor ? existingKey : `30078:${pubkey}:${dTag}`;
+      const effectivePubkey = sameAuthor ? existingEvent.pubkey : pubkey;
       merged.set(aTag, {
         kind: 30078,
-        pubkey,
+        pubkey: effectivePubkey,
         id: `draft-${draft._draft?.id || dTag}`,
         sig: '',
         created_at: Math.floor((draft._draft?.updatedAt || Date.now()) / 1000),
@@ -437,7 +446,7 @@ export default function App() {
     <div className="max-w-2xl mx-auto p-6 flex flex-col h-screen game-text"
          style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}>
       <div className="text-sm mb-2 flex justify-between" style={{ color: 'var(--colour-dim)' }}>
-        <span>
+        <span className="flex items-center">
           <button
             onClick={navigateToLobby}
             className="cursor-pointer"
