@@ -97,7 +97,7 @@ Counter trigger — fires an action when a counter crosses a threshold in a decl
 ["transition",  "on", "flickering", "The lantern flickers ominously."]
 ```
 
-Spec-defined actions: `set-state`, `traverse`, `give-item`, `consume-item`, `deal-damage`, `deal-damage-npc`, `heal`, `consequence`, `steals-item`, `deposits`, `flees`, `decrement`, `increment`, `set-counter`
+Spec-defined actions: `set-state`, `traverse`, `give-item`, `consume-item`, `deal-damage`, `deal-damage-npc`, `heal`, `consequence`, `steals-item`, `deposits`, `flees`, `decrement`, `increment`, `set-counter`, `sound`
 
 ### state & transition
 
@@ -141,6 +141,12 @@ All previously tracked deviations have been fixed:
 | 26. Quest tracking | Done |
 | Combat system | Done |
 | Builder UX (tooltips, InlineList, + new dropdown) | Done |
+| Sound system (Strudel, ambient/layer/effect/bpm) | Done |
+| Sound as action type (on-* dispatchers) | Done |
+| Contains tag (item/feature containers) | Done |
+| Drop command | Done |
+| Vouch UI (contextual vouching) | Done |
+| Place on-enter dispatch | Done |
 
 ---
 

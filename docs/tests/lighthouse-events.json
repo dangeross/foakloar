@@ -99,17 +99,293 @@
           "text/markdown"
         ],
         [
-          "sound",
-          "bpm",
-          "60"
-        ],
-        [
-          "sound",
           "bpm",
           "60"
         ]
       ],
       "content": "The light has been dark for three years.\n\nThe keeper's cottage is empty. His logbook is sealed.\n\nSomething brought you here."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:sound:coastal-drone"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c3 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:sound:base-drone"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c2 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "6"
+        ],
+        [
+          "room",
+          "0.6"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:sound:base-pulse"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c2 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "square"
+        ],
+        [
+          "fast",
+          "2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:sound:lamp-tension"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "b2 ~ b2 ~"
+        ],
+        [
+          "oscillator",
+          "triangle"
+        ],
+        [
+          "slow",
+          "2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:sound:lamp-hum"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c5 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "fast",
+          "8"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:sound:mechanism-clunk"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c2 c3 c4"
+        ],
+        [
+          "oscillator",
+          "square"
+        ],
+        [
+          "fast",
+          "4"
+        ],
+        [
+          "crush",
+          "8"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:sound:signal-bells"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c4 ~ g4 ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "3"
+        ],
+        [
+          "room",
+          "0.8"
+        ],
+        [
+          "delay",
+          "0.4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:sound:resolution"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c3 e3 g3"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "lighthouse:sound:silence"
+        ],
+        [
+          "t",
+          "lighthouse"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ]
+      ],
+      "content": ""
     },
     {
       "kind": 30078,
@@ -157,15 +433,9 @@
         ],
         [
           "sound",
+          "30078:<PUBKEY>:lighthouse:sound:coastal-drone",
           "ambient",
-          "0.5",
-          "c3 ~ ~ ~ slow(pad)"
-        ],
-        [
-          "sound",
-          "ambient",
-          "0.5",
-          "c3 ~ ~ ~ slow(pad)"
+          "0.5"
         ]
       ],
       "content": "A shingle path runs north along the coast. The lighthouse rises against a grey sky \u2014 dark, as it has been for years. The tide has left something in the wrack line."
@@ -231,27 +501,15 @@
         ],
         [
           "sound",
+          "30078:<PUBKEY>:lighthouse:sound:base-drone",
           "ambient",
-          "0.6",
-          "c2*1 slow(pad)"
+          "0.6"
         ],
         [
           "sound",
+          "30078:<PUBKEY>:lighthouse:sound:base-pulse",
           "layer",
-          "0.3",
-          "perc(bd) ~ ~ ~"
-        ],
-        [
-          "sound",
-          "ambient",
-          "0.6",
-          "c2*1 slow(pad)"
-        ],
-        [
-          "sound",
-          "layer",
-          "0.3",
-          "perc(bd) ~ ~ ~"
+          "0.3"
         ]
       ],
       "content": "The base of the lighthouse. Salt and rust. A mechanism occupies the centre of the room \u2014 the lamp drive, seized for lack of use. A crank socket gapes at its side. On a shelf by the stairs, a row of logbooks ends abruptly \u2014 the last spine blank."
@@ -307,15 +565,9 @@
         ],
         [
           "sound",
+          "30078:<PUBKEY>:lighthouse:sound:lamp-tension",
           "ambient",
-          "0.5",
-          "b2 ~ b2 ~ slow(strings)"
-        ],
-        [
-          "sound",
-          "ambient",
-          "0.5",
-          "b2 ~ b2 ~ slow(strings)"
+          "0.5"
         ]
       ],
       "content": "The lamp room at the top of the tower. The great lens is intact, dusty but undamaged. The lamp is cold. Through the glass, the sea stretches to the horizon. Something is out there \u2014 has always been out there."
@@ -365,15 +617,9 @@
         ],
         [
           "sound",
+          "30078:<PUBKEY>:lighthouse:sound:silence",
           "ambient",
-          "0.2",
-          "~ ~ ~ ~"
-        ],
-        [
-          "sound",
-          "ambient",
-          "0.2",
-          "~ ~ ~ ~"
+          "0.2"
         ]
       ],
       "content": "The keeper's cottage. Everything is as he left it \u2014 almost. A writing desk faces the window that looks toward the sea. The hearth is cold. The walls hold his whole life in small objects."
@@ -432,28 +678,15 @@
         ],
         [
           "sound",
+          "30078:<PUBKEY>:lighthouse:sound:signal-bells",
           "ambient",
-          "0.5",
-          "c4 ~ g4 ~ slow(bells)"
+          "0.5"
         ],
         [
           "sound",
+          "30078:<PUBKEY>:lighthouse:sound:resolution",
           "layer",
           "0.4",
-          "c3 e3 g3 slow(pad)",
-          "decoded"
-        ],
-        [
-          "sound",
-          "ambient",
-          "0.5",
-          "c4 ~ g4 ~ slow(bells)"
-        ],
-        [
-          "sound",
-          "layer",
-          "0.4",
-          "c3 e3 g3 slow(pad)",
           "decoded"
         ]
       ],
@@ -793,10 +1026,11 @@
           "The lamp drive. A crank socket gapes at its side."
         ],
         [
+          "on-interact",
+          "use",
           "sound",
-          "effect",
-          "0.9",
-          "c2 c3 c4 fast(perc)"
+          "30078:<PUBKEY>:lighthouse:sound:mechanism-clunk",
+          "0.9"
         ]
       ],
       "content": ""
@@ -867,9 +1101,9 @@
         ],
         [
           "sound",
+          "30078:<PUBKEY>:lighthouse:sound:lamp-hum",
           "layer",
           "0.2",
-          "c5*16 fast(sine)",
           "running"
         ]
       ],

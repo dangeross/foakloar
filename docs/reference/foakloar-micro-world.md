@@ -70,11 +70,45 @@ derive key → decrypt keeper's final log
     ["font",         "courier"],
     ["cursor",       "beam"],
     ["effects",      "typewriter"],
-    ["sound",        "bpm",     "60"],
+    ["bpm",          "60"],
     ["content-type", "text/markdown"]
   ],
   "content": "The light has been dark for three years.\n\nThe keeper's cottage is empty. His logbook is sealed.\n\nSomething brought you here."
 }
+```
+
+---
+
+
+## Sound Events
+
+```json
+// Coastal drone — shore path atmosphere
+{ "kind": 30078, "tags": [["d","lighthouse:sound:coastal-drone"],["t","lighthouse"],["type","sound"],["note","c3 ~ ~ ~"],["oscillator","sine"],["slow","4"]], "content": "" }
+
+// Base drone — heavy, mechanism waiting
+{ "kind": 30078, "tags": [["d","lighthouse:sound:base-drone"],["t","lighthouse"],["type","sound"],["note","c2 ~ ~ ~"],["oscillator","sine"],["slow","6"],["room","0.6"]], "content": "" }
+
+// Base pulse — slow mechanical heartbeat
+{ "kind": 30078, "tags": [["d","lighthouse:sound:base-pulse"],["t","lighthouse"],["type","sound"],["note","c2 ~ ~ ~"],["oscillator","square"],["fast","2"]], "content": "" }
+
+// Lamp tension — dark, unsolved feel
+{ "kind": 30078, "tags": [["d","lighthouse:sound:lamp-tension"],["t","lighthouse"],["type","sound"],["note","b2 ~ b2 ~"],["oscillator","triangle"],["slow","2"]], "content": "" }
+
+// Lamp hum — electrical hum when running
+{ "kind": 30078, "tags": [["d","lighthouse:sound:lamp-hum"],["t","lighthouse"],["type","sound"],["note","c5 ~ ~ ~"],["oscillator","sine"],["fast","8"]], "content": "" }
+
+// Mechanism clunk — industrial one-shot
+{ "kind": 30078, "tags": [["d","lighthouse:sound:mechanism-clunk"],["t","lighthouse"],["type","sound"],["note","c2 c3 c4"],["oscillator","square"],["fast","4"],["crush","8"]], "content": "" }
+
+// Signal bells — ethereal, from out at sea
+{ "kind": 30078, "tags": [["d","lighthouse:sound:signal-bells"],["t","lighthouse"],["type","sound"],["note","c4 ~ g4 ~"],["oscillator","sine"],["slow","3"],["room","0.8"],["delay","0.4"]], "content": "" }
+
+// Resolution — major chord, decoded
+{ "kind": 30078, "tags": [["d","lighthouse:sound:resolution"],["t","lighthouse"],["type","sound"],["note","c3 e3 g3"],["oscillator","sine"],["slow","3"]], "content": "" }
+
+// Silence — cottage near-silence
+{ "kind": 30078, "tags": [["d","lighthouse:sound:silence"],["t","lighthouse"],["type","sound"],["note","~ ~ ~ ~"],["oscillator","sine"]], "content": "" }
 ```
 
 ---
@@ -96,7 +130,7 @@ derive key → decrypt keeper's final log
     ["exit",     "30078:<PUBKEY>:lighthouse:place:lighthouse-base", "north", "The lighthouse stands to the north."],
     ["exit",     "south", "The coast road south — beyond the edge of this map."],  // intentional dangling exit
     ["feature",  "30078:<PUBKEY>:lighthouse:feature:tide-wrack"],
-    ["sound",   "ambient", "0.5", "c3 ~ ~ ~ slow(pad)"],
+    ["sound", "30078:<PUBKEY>:lighthouse:sound:coastal-drone",  "ambient", "0.5"],
     ["content-type", "text/markdown"]
   ],
   "content": "A shingle path runs north along the coast. The lighthouse rises against a grey sky — dark, as it has been for years. The tide has left something in the wrack line."
@@ -121,8 +155,8 @@ derive key → decrypt keeper's final log
     ["feature",  "30078:<PUBKEY>:lighthouse:feature:mechanism"],
     ["feature",  "30078:<PUBKEY>:lighthouse:feature:logbook-shelf"],
     ["item",     "30078:<PUBKEY>:lighthouse:item:crank-handle"],
-    ["sound",   "ambient", "0.6", "c2*1 slow(pad)"],
-    ["sound",   "layer",   "0.3", "perc(bd) ~ ~ ~"],
+    ["sound", "30078:<PUBKEY>:lighthouse:sound:base-drone",     "ambient", "0.6"],
+    ["sound", "30078:<PUBKEY>:lighthouse:sound:base-pulse",     "layer",   "0.3"],
     ["content-type", "text/markdown"]
   ],
   "content": "The base of the lighthouse. Salt and rust. A mechanism occupies the centre of the room — the lamp drive, seized for lack of use. A crank socket gapes at its side. On a shelf by the stairs, a row of logbooks ends abruptly — the last spine blank."
@@ -144,7 +178,7 @@ derive key → decrypt keeper's final log
     ["exit",     "30078:<PUBKEY>:lighthouse:place:lighthouse-base", "down",  "Back down the stairs."],
     ["feature",  "30078:<PUBKEY>:lighthouse:feature:lamp"],
     ["feature",  "30078:<PUBKEY>:lighthouse:feature:lens"],,
-    ["sound", "ambient", "0.5", "b2 ~ b2 ~ slow(strings)"],
+    ["sound", "30078:<PUBKEY>:lighthouse:sound:lamp-tension",   "ambient", "0.5"],
     ["content-type", "text/markdown"]
   ],
   "content": "The lamp room at the top of the tower. The great lens is intact, dusty but undamaged. The lamp is cold. Through the glass, the sea stretches to the horizon. Something is out there — has always been out there."
@@ -166,7 +200,7 @@ derive key → decrypt keeper's final log
     ["exit",     "30078:<PUBKEY>:lighthouse:place:lighthouse-base", "east", "Back to the lighthouse."],
     ["feature",  "30078:<PUBKEY>:lighthouse:feature:writing-desk"],
     ["feature",  "30078:<PUBKEY>:lighthouse:feature:cold-hearth"],,
-    ["sound", "ambient", "0.2", "~ ~ ~ ~"],
+    ["sound", "30078:<PUBKEY>:lighthouse:sound:silence",        "ambient", "0.2"],
     ["content-type", "text/markdown"]
   ],
   "content": "The keeper's cottage. Everything is as he left it — almost. A writing desk faces the window that looks toward the sea. The hearth is cold. The walls hold his whole life in small objects."
@@ -191,8 +225,8 @@ derive key → decrypt keeper's final log
     ["feature",      "30078:<PUBKEY>:lighthouse:feature:final-log"],
     ["content-type", "application/nip44", "text/markdown"],
     ["puzzle",       "lighthouse:puzzle:signal-decode"],
-    ["sound",        "ambient", "0.5", "c4 ~ g4 ~ slow(bells)"],
-    ["sound",        "layer",   "0.4", "c3 e3 g3 slow(pad)", "decoded"]
+    ["sound", "30078:<PUBKEY>:lighthouse:sound:signal-bells",   "ambient", "0.5"],
+    ["sound", "30078:<PUBKEY>:lighthouse:sound:resolution",     "layer",   "0.4", "decoded"]
   ],
   "content": "# The Keeper's Final Log
 
@@ -330,7 +364,7 @@ I understand now why I stayed so long.
     ["on-interact","use",      "set-state",  "running",    "30078:<PUBKEY>:lighthouse:feature:lamp"],
     ["on-interact","use",      "set-state",  "visible",    "30078:<PUBKEY>:lighthouse:portal:lamp-to-alcove"],
     ["on-interact","use",      "consume-item","30078:<PUBKEY>:lighthouse:item:crank-handle"],
-    ["sound",      "effect",   "0.9", "c2 c3 c4 fast(perc)"],
+    ["on-interact","use",      "sound", "30078:<PUBKEY>:lighthouse:sound:mechanism-clunk", "0.9"],
     // Note: the portal reveal fires here — on the action that causes the lamp to run.
     // Never use on-interact with a state value as the verb — states are not player commands.
   ],
@@ -349,7 +383,7 @@ I understand now why I stayed so long.
     ["transition", "dark",     "cranking", "The lamp stirs. Warmth in the glass."],
     ["transition", "cranking", "running",  "The lamp is running. Light floods the room and cuts out to sea. Something out there catches it."],
     ["verb",       "examine",  "look"],
-    ["sound",      "layer",    "0.2", "c5*16 fast(sine)", "running"],
+    ["sound", "30078:<PUBKEY>:lighthouse:sound:lamp-hum",       "layer",   "0.2", "running"],
     ["on-interact","examine",  "set-state",  "visible", "30078:<PUBKEY>:lighthouse:clue:lamp-dark"],
     ["on-interact","examine",  "set-state",  "visible", "30078:<PUBKEY>:lighthouse:clue:lamp-running"],
     // lamp-running clue visibility is gated by requires on the clue itself (state: hidden until lamp running)

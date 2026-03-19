@@ -124,7 +124,7 @@ export function evalCounterLow(item, dtag, currentState, player, emit) {
 /**
  * Evaluate sequence puzzles in the current room after feature state changes.
  */
-export function evalSequencePuzzles(place, events, player, emit) {
+export function evalSequencePuzzles(place, events, player, emit, emitSound) {
   if (!place) return;
 
   for (const ref of getTags(place, 'puzzle')) {
@@ -171,6 +171,8 @@ export function evalSequencePuzzles(place, events, player, emit) {
       } else if (action === 'give-crypto-key') {
         player.addCryptoKey(value);
         emit('You feel a key take shape in your mind.', 'narrative');
+      } else if (action === 'sound' && value) {
+        if (emitSound) emitSound(value);
       }
     }
   }

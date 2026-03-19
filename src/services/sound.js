@@ -16,6 +16,8 @@ let strudelModule = null; // cached @strudel/web module
 
 // Currently playing pattern id
 let activePatternId = null;
+// Set of effect IDs that have already fired (to detect new ones)
+let firedEffects = new Set();
 
 const MUTE_KEY = 'foakloar:sound-muted';
 
@@ -123,17 +125,30 @@ export function evaluateSoundTags(events, currentPlace, playerState, npcStates =
     collectSoundTags(event, ref, state, inScope);
   }
 
-  // Filter passing layers and build a combined pattern ID
+  // Filter passing layers, handle effects, build a combined pattern ID
   const layers = [];
+  const activeEffectIds = new Set();
   for (const { id, role, volume, pattern, stateGate, currentState } of inScope) {
     if (stateGate && currentState !== stateGate) continue;
     if (role === 'bpm') {
       currentBpm = parseInt(volume, 10) || 120;
       continue;
     }
-    if (role === 'effect') continue;
+    if (role === 'effect') {
+      // One-shot: fire only when newly entering scope
+      activeEffectIds.add(id);
+      if (!firedEffects.has(id) && pattern) {
+        playOneShot(pattern, parseFloat(volume) || 1.0);
+        firedEffects.add(id);
+      }
+      continue;
+    }
     if (!pattern) continue;
     layers.push({ id, pattern, volume: parseFloat(volume) || 0.5, role });
+  }
+  // Clean up effects no longer in scope (so they fire again on re-entry)
+  for (const id of firedEffects) {
+    if (!activeEffectIds.has(id)) firedEffects.delete(id);
   }
 
   // Build a combined pattern ID to detect changes
@@ -186,6 +201,7 @@ function collectSoundTags(event, eventRef, currentState, inScope) {
  * Build Strudel code from layers and play via .play().
  */
 async function playLayers(layers) {
+  lastLayers = layers;
   try {
     await strudelReady;
 
@@ -202,6 +218,39 @@ async function playLayers(layers) {
     console.warn('Sound play error:', e.message || e);
   }
 }
+
+/**
+ * Play a one-shot sound effect (action-triggered).
+ * Pattern is evaluated, plays once, then stops.
+ */
+export async function playOneShot(pattern, volume = 1.0) {
+  if (!audioReady || muted || !pattern) return;
+  try {
+    // Ensure AudioContext is running
+    const ctx = strudelModule?.getAudioContext?.();
+    if (ctx?.state === 'suspended') await ctx.resume();
+
+    await strudelReady;
+    const code = buildStrudelCode(pattern, volume);
+    if (!code) return;
+    // Play for one cycle then stop — wrap in .firstOf(1, x => x, silence)
+    // Simpler: just evaluate and let it play one cycle
+    await strudelModule.evaluate(code);
+    // Stop after ~2 seconds (one cycle at typical BPM)
+    setTimeout(() => {
+      try { strudelModule?.hush(); } catch { /* ignore */ }
+      // Restart ambient layers if they were playing
+      if (activePatternId && lastLayers.length > 0) {
+        playLayers(lastLayers);
+      }
+    }, 2000);
+  } catch (e) {
+    console.warn('Sound one-shot error:', e.message || e);
+  }
+}
+
+// Track last active layers for restoring after one-shot
+let lastLayers = [];
 
 // Map spec preset names to built-in oscillator types
 const SYNTH_MAP = {

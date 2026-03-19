@@ -24,7 +24,7 @@ import LoginPanel from './ui/LoginPanel.jsx';
 import { loadDrafts, saveDraft, updateDraft, deleteDraft, clearDrafts, importEvents, exportDrafts, bulkPublish, loadAnswers } from '../builder/draftStore.js';
 import { validateWorld, verifyPuzzleHashes } from '../builder/validateWorld.js';
 import SoundToggle from './SoundToggle.jsx';
-import { evaluateSoundTags, isAudioReady } from '../services/sound.js';
+import { evaluateSoundTags, isAudioReady, playOneShot } from '../services/sound.js';
 
 /** Map entry types to colour slots */
 const TYPE_COLOUR = {
@@ -257,8 +257,17 @@ export default function App() {
   // Flush engine output into React log state and commit player state
   const commitEngine = useCallback((engine) => {
     const entries = engine.flush();
-    if (entries.length > 0) {
-      setLog((prev) => [...prev, ...entries]);
+    // Process sound entries — play one-shots, don't add to log
+    const logEntries = [];
+    for (const entry of entries) {
+      if (entry.type === 'sound' && entry.sound) {
+        playOneShot(entry.sound, entry.volume);
+      } else {
+        logEntries.push(entry);
+      }
+    }
+    if (logEntries.length > 0) {
+      setLog((prev) => [...prev, ...logEntries]);
     }
     player.replaceState(engine.getPlayerState(), engine.player.npcStates);
   }, [player]);

@@ -42,7 +42,7 @@ A decentralised, permissionless text adventure built entirely on NOSTR. The worl
 The schema uses a **single kind** for all dungeon primitives:
 
 - **`kind: 30078`** — the dungeon game kind. Signals to any client "this is a dungeon event" and that the the-lake schema applies. One kind, one protocol.
-- **`type` tag** — differentiates primitives within that kind: `world`, `place`, `portal`, `item`, `feature`, `clue`, `puzzle`, `recipe`, `npc`, `dialogue`, `quest`, `vouch`, `player-state`.
+- **`type` tag** — differentiates primitives within that kind: `world`, `place`, `portal`, `item`, `feature`, `clue`, `puzzle`, `recipe`, `npc`, `dialogue`, `quest`, `vouch`, `player-state`, `sound`.
 - **`t` tag** — identifies the specific game world instance. `the-lake`, `shadowrealm`, `my-dungeon` — all use the same kind and client, separated by `t` tag. Used for relay-level subscription filtering.
 - **`d` tag prefix** — prefixed with the world name (e.g. `the-lake:place:clearing`) to ensure global uniqueness per author. Without the prefix, the same author publishing two worlds would have colliding `d` tags. The prefix is correctness; the `t` tag is ergonomics. Both are needed.
 
@@ -1253,9 +1253,11 @@ NPC position is deterministic — seeded by player move count and the NPC's own 
 
 ### 2.10 Dialogue (`type: dialogue`)
 
-Each dialogue node is its own event. Nodes are grouped by `d` tag namespacing — all nodes for an NPC share a common prefix (e.g. `the-lake:dialogue:hermit:`), allowing the client to fetch the entire conversation in one relay query.
+Each dialogue node is its own event. Nodes are grouped by `d` tag namespacing — all nodes for a conversation share a common prefix (e.g. `the-lake:dialogue:hermit:`), allowing the client to fetch the entire conversation tree in one relay query.
 
-The NPC can carry multiple `dialogue` tags — each an alternative entry point with an optional `requires` condition. The client evaluates them in order and uses the **last one whose `requires` passes** — so the most advanced applicable entry point wins. If none have `requires`, the first is used as the unconditional root.
+`dialogue` tags are valid on **any event** — NPC, feature, item, or place. A magical mirror, an ancient tome, an oracle stone, or a whispering item can all carry dialogue trees. The `talk` / `ask` verb and `on-interact` trigger the conversation regardless of the host event type.
+
+Any event can carry multiple `dialogue` tags — each an alternative entry point with an optional `requires` condition. The client evaluates them in order and uses the **last one whose `requires` passes** — so the most advanced applicable entry point wins. If none have `requires`, the first is used as the unconditional root.
 
 ```json
 ["dialogue", "30078:<pubkey>:the-lake:dialogue:hermit:greeting"]
@@ -1325,9 +1327,34 @@ A node that gives an item on visit:
 }
 ```
 
+**Feature dialogue — a speaking mirror:**
+
+Any feature can host dialogue. The player types `talk to mirror` or `ask mirror` — the `talk`/`ask` verb is declared on the feature, and `on-interact` routes into the dialogue tree:
+
+```json
+{
+  "kind": 30078,
+  "tags": [
+    ["d",           "the-lake:feature:oracle-mirror"],
+    ["t",           "the-lake"],
+    ["type",        "feature"],
+    ["title",       "The Oracle Mirror"],
+    ["noun",        "mirror", "oracle", "glass"],
+    ["verb",        "examine", "look"],
+    ["verb",        "talk",    "ask",   "speak"],
+    ["dialogue",    "30078:<pubkey>:the-lake:dialogue:mirror:greeting"],
+    ["dialogue",    "30078:<pubkey>:the-lake:dialogue:mirror:after-sanctum",
+                    "30078:<pubkey>:the-lake:place:sanctum", "visited"]
+  ],
+  "content": "A mirror of black glass. It reflects nothing. It watches everything."
+}
+```
+
+The mirror's dialogue tree advances as the player progresses — it knows if the sanctum has been visited. No NPC event needed.
+
 **Client flow:**
-1. Player enters place → client fetches all `type:dialogue` events prefixed `the-lake:dialogue:hermit:`
-2. NPC's `dialogue` tags evaluated in order — last passing `requires` wins as entry point
+1. Player types `talk` / `ask` on a feature, item, or NPC → client resolves the target event
+2. Target event's `dialogue` tags evaluated in order — last passing `requires` wins as entry point
 3. Client renders entry node text and options
 4. For each `option`, evaluates destination node's `requires` — hides failing options
 5. Player selects option → client moves to destination node, repeats
@@ -2036,8 +2063,8 @@ The world event is a replaceable event (`kind: 30078`). The genesis author can u
     ["effects", "crt"],        // optional — defaults from theme if absent
 
     // Sound
-    ["sound", "bpm",     "72"],
-    ["sound", "ambient", "0.7", "c2*1 slow(pad)"],
+    ["bpm",   "72"],
+    ["sound", "30078:<genesis-pubkey>:the-lake:sound:surface-drone", "ambient", "0.7"],
 
     // Cover media
     ["content-type",  "text/markdown"],
@@ -2073,7 +2100,8 @@ The world event is a replaceable event (`kind: 30078`). The genesis author can u
 | `flicker` | `on` \| `off` | Override screen flicker |
 | `vignette` | 0.0–1.0 | Override edge vignette intensity |
 | `noise` | 0.0–1.0 | Grain/static overlay — adds texture without full CRT feel |
-| `sound` | Role + value + pattern + state | Sound layer — see sound scoring section |
+| `bpm` | Integer string | Global tempo in BPM. Place overrides world. |
+| `sound` | Sound `a`-tag + role + volume + state | Play a `type: sound` event — see sound scoring section |
 | `content-type` | MIME type | Format of `content` field |
 | `media` | Type + value | Cover art or world image |
 
@@ -2142,51 +2170,48 @@ Intensity values (0.0–1.0) give fine control where it matters — `glow` and `
 
 ---
 
-**Sound scoring (`sound` tag):**
+**Sound scoring:**
 
-Any event can declare sound layers using `sound` tags. The client collects all active `sound` tags from the current place, its features, items, NPCs, and player inventory, and mixes them in real time. Layers are added or removed as world state changes — a lamp goes on, its hum layer starts; an NPC enters, their theme joins the mix.
+Sound in FOAKLOAR uses two primitives — `type: sound` events define named sound recipes, and `sound` tags on any event play them. The engine is Strudel (TidalCycles-style) synthesised client-side via WebAudio. No audio files — patterns are text, tiny, deterministic. Built-in oscillators only: `sine`, `triangle`, `sawtooth`, `square`.
 
-Pattern notation follows a simplified mini-notation (Strudel/TidalCycles style) synthesised client-side via WebAudio. No audio files — patterns are text, tiny, deterministic.
+---
 
-**Shape:** `["sound", "<role>", "<value>", "<pattern?>", "<state?>"]`
+### `type: sound` — sound definition event
 
-| Element | Values | Meaning |
-|---------|--------|---------|
-| role | `bpm`, `ambient`, `layer`, `effect` | What this sound tag does |
-| value | BPM integer (for `bpm`) or 0.0–1.0 volume | Rate or volume |
-| pattern | Mini-notation string | The sound to play (omit for `bpm`) |
-| state | State string | Only play when event is in this state (optional) |
-
-**Roles:**
-
-| Role | Behaviour |
-|------|-----------|
-| `bpm` | Sets global tempo. Value is BPM. No pattern. Declared on world or place event. Place overrides world. |
-| `ambient` | Continuous loop. Crossfades on place entry/exit. Typically on place events. |
-| `layer` | Adds to current mix when event is in scope. Removed when out of scope or state condition fails. |
-| `effect` | One-shot. Fires on state change that brings the event into scope. |
-
-**Examples:**
+A named, reusable sound recipe. Declared as a FOAKLOAR event like any other primitive. The `d`-tag gives it world-scoped uniqueness and makes it relay-queryable.
 
 ```json
-// World event — global tempo
-["sound", "bpm",     "72"],
-
-// Place — atmospheric drone
-["sound", "ambient", "0.7", "c2*1 slow(pad)"],
-
-// Feature — clock adds ticking when examined
-["sound", "layer",   "0.5", "perc(sd)*8"],
-
-// Item — lantern hum only when on
-["sound", "layer",   "0.3", "c5*16 fast(sine)", "on"],
-
-// Place — tension layer only when puzzle unsolved
-["sound", "layer",   "0.4", "b2 ~ b2 ~ slow(strings)", "unsolved"],
-
-// NPC — one-shot on encounter
-["sound", "effect",  "1.0", "c3 e3 g3"]
+{
+  "kind": 30078,
+  "tags": [
+    ["d",          "the-lake:sound:cave-drone"],
+    ["t",          "the-lake"],
+    ["type",       "sound"],
+    ["note",       "c2 ~ ~ ~"],
+    ["oscillator", "sine"],
+    ["slow",       "4"],
+    ["room",       "0.8"],
+    ["delay",      "0.3"]
+  ],
+  "content": ""
+}
 ```
+
+Tags are applied in declaration order to build the Strudel chain. `note` should always come first — it establishes the pattern that all other parameters modify.
+
+**Sound parameters:**
+
+| Tag | Values | Strudel equivalent | Effect |
+|-----|--------|--------------------|--------|
+| `note` | mini-notation string | `note("...")` | Note sequence — always first |
+| `oscillator` | `sine` `triangle` `sawtooth` `square` | `.s("...")` | Sound source |
+| `slow` | float | `.slow(n)` | Stretch time relative to global tempo |
+| `fast` | float | `.fast(n)` | Compress time relative to global tempo |
+| `room` | 0.0–1.0 | `.room(n)` | Reverb — 0 = dry, 1 = large space |
+| `delay` | 0.0–1.0 | `.delay(n)` | Echo amount |
+| `pan` | -1.0–1.0 | `.pan(n)` | Stereo position — -1 = left, 1 = right |
+| `crush` | 1–16 | `.crush(n)` | Bit crush — lo-fi degraded texture |
+| `loop` | `true` `false` | — | Whether pattern loops. Default `true`. |
 
 **Mini-notation basics:**
 
@@ -2195,74 +2220,96 @@ Pattern notation follows a simplified mini-notation (Strudel/TidalCycles style) 
 | `c3 e3 g3` | Sequence of notes |
 | `c3*4` | Repeat 4 times per cycle |
 | `c3 ~ ~ ~` | Note with rests |
-| `slow(pad)` | Named instrument preset, slow attack |
-| `fast(sine)` | Named instrument, fast attack |
-| `perc(bd)` | Percussion — `bd` kick, `sd` snare, `hh` hi-hat |
+| `[c3 e3] g3` | Sub-pattern |
 
-**Sound tags on specific event types:**
+The client builds: `note("c2 ~ ~ ~").s("sine").slow(4).room(0.8).delay(0.3)` and plays it via Strudel's WebAudio engine.
 
-`sound` tags are valid on any event. Some event types have useful conventions:
+---
 
-| Event type | Typical use |
-|-----------|-------------|
-| `world` | `bpm` — global tempo |
-| `place` | `ambient` — room atmosphere, `bpm` — tempo override |
-| `feature` / `item` / `npc` | `layer` — adds to mix while in scope, `effect` — one-shot on state entry |
-| `clue` | `effect` — plays when clue becomes visible (eerie chord on inscription reveal) |
-| `puzzle` | `layer` — tension music while puzzle is active and unsolved |
-| `consequence` | `effect` — one-shot when consequence fires (death jingle, victory swell) |
-| `payment` | `layer` — plays while payment UI is open |
+**Playing a sound — `sound` tag on any event:**
 
 ```json
-// Clue — eerie chord when inscription is revealed
-["sound", "effect", "0.8", "eb3 ~ bb3 ~ slow(pad)"],
+["sound", "<sound-a-tag>", "<role>", "<volume>", "<state?>"]
+```
 
-// Puzzle — tension layer while unsolved
-["sound", "layer",  "0.5", "b2 ~ b2 ~ slow(strings)", "unsolved"],
+| Element | Values | Meaning |
+|---------|--------|---------|
+| sound ref | `a`-tag | Which `type: sound` event to play |
+| role | `ambient` `layer` `effect` | How it plays — see roles below |
+| volume | 0.0–1.0 | Mix volume |
+| state | state string | Only play when this event is in this state (optional) |
+
+**Roles:**
+
+| Role | Behaviour |
+|------|-----------|
+| `ambient` | Continuous loop. Crossfades on place entry/exit. One per place. |
+| `layer` | Adds to mix when event is in scope. Removed when out of scope or state fails. |
+| `effect` | One-shot. Fires when event comes into scope or state condition becomes true. |
+
+```json
+// Place — atmospheric drone
+["sound", "30078:<PUBKEY>:the-lake:sound:cave-drone",   "ambient", "0.7"],
+
+// Feature — clock ticking while in place
+["sound", "30078:<PUBKEY>:the-lake:sound:clock-tick",   "layer",   "0.5"],
+
+// Item — lantern hum only when on
+["sound", "30078:<PUBKEY>:the-lake:sound:lamp-hum",     "layer",   "0.3", "on"],
+
+// Clue — eerie chord when revealed
+["sound", "30078:<PUBKEY>:the-lake:sound:reveal-chord", "effect",  "0.8"],
+
+// Puzzle — tension while unsolved
+["sound", "30078:<PUBKEY>:the-lake:sound:tension",      "layer",   "0.5", "unsolved"],
 
 // Consequence — death jingle
-["sound", "effect", "1.0", "b1 ~ ~ ~ slow(pad)"]
+["sound", "30078:<PUBKEY>:the-lake:sound:death-jingle", "effect",  "1.0"]
 ```
+
+---
 
 **`sound` as an action type:**
 
-Sound can also be triggered imperatively from any `on-*` dispatcher. This is a one-shot effect fired at a specific moment — different from passive `sound` tags which play while an event is in scope.
-
-Shape:
-```json
-["on-complete",  "", "sound", "<pattern>", "<volume?>"]
-["on-interact",  "<verb>", "sound", "<pattern>", "<volume?>"]
-["on-health",    "down", "0", "sound", "<pattern>", "<volume?>"]
-["on-fail",      "", "sound", "<pattern>", "<volume?>"]
-```
+Sound can also be triggered imperatively from any `on-*` dispatcher — a one-shot fired at a specific moment:
 
 ```json
-// Puzzle solved — victory chord
-["on-complete", "", "sound", "c3 e3 g3 c4 fast(bells)", "0.9"],
-
-// Wrong answer — discordant sting
-["on-fail", "", "sound", "b2 f3 slow(pad)", "0.6"],
-
-// Lamp mechanism activates — mechanical clunk
-["on-interact", "use", "sound", "c2 c3 fast(perc)", "1.0"],
-
-// NPC dies — low swell
-["on-health", "down", "0", "sound", "b1 ~ ~ ~ slow(pad)", "0.7"],
-
-// Player enters place — arrival sound
-["on-enter", "player", "sound", "c4 ~ g4 slow(bells)", "0.5"]
+["on-complete", "", "sound", "30078:<PUBKEY>:the-lake:sound:victory-chord", "0.9"],
+["on-fail",     "", "sound", "30078:<PUBKEY>:the-lake:sound:wrong-answer",  "0.6"],
+["on-interact", "use", "sound", "30078:<PUBKEY>:the-lake:sound:mechanism-clunk", "1.0"],
+["on-health",   "down", "0", "sound", "30078:<PUBKEY>:the-lake:sound:death-jingle", "0.7"]
 ```
 
 Volume is optional — defaults to `1.0` if omitted.
 
+---
+
+**Tempo — `bpm` tag:**
+
+Global tempo lives on the world event. Place events override it on entry — all active sounds snap to the new tempo. `slow`/`fast` on individual `type: sound` events are relative to the current global tempo.
+
+```json
+// World event — global tempo
+["bpm", "72"],
+
+// Place — override on entry (tense, faster)
+["bpm", "96"],
+
+// Sound event — plays at half the current global tempo regardless
+["slow", "2"]
+```
+
+`bpm` is not a `sound` tag — it sits directly on the world or place event.
+
+---
+
 **Two sound models, two use cases:**
-- `sound` tags on events = passive, scope-driven. Plays while the event is relevant. Used for ambient atmosphere, state-conditional layers, NPC themes.
-- `sound` action = imperative, trigger-driven. Fires once at a specific moment. Used for punctuation — puzzle solve, death, key turning, door opening.
+- `sound` tags on events = passive, scope-driven. Plays while event is relevant.
+- `sound` action type = imperative, trigger-driven. Fires once at a specific moment.
 
-**Client mixing:**
-The client evaluates all `sound` tags in scope on every state change. Passing tags are mixed at their declared volumes. No two `ambient` tags should be active simultaneously on the same place — the world author controls layering through role selection.
+**Layering budget:** 3–4 active layers simultaneously maximum. One `ambient` per place.
 
-Sound is a progressive enhancement. Clients that do not implement the sound system ignore `sound` tags silently. World authors must not require sound for puzzle solving or navigation.
+Sound is a progressive enhancement. Clients that do not implement the sound system ignore all `sound` tags and `type: sound` events silently. World authors must not require sound for puzzle solving or navigation.
 
 Content warnings use a `cw` tag with a short string. Clients display these before the world loads — the player can choose not to enter. Common values: `violence`, `horror`, `mild-peril`, `adult`, `flashing-lights`. No enforced vocabulary — world authors choose their own, clients can filter on known values.
 

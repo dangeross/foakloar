@@ -23,18 +23,18 @@ const ACTION_TYPES = [
 // Trigger × Action compatibility matrix from spec
 // Each trigger only shows its valid action types in the dropdown
 export const TRIGGER_ACTIONS = {
-  'on-interact':           ['set-state', 'give-item', 'consume-item', 'traverse', 'deal-damage', 'deal-damage-npc', 'heal', 'consequence', 'decrement', 'increment', 'set-counter'],
-  'on-complete':           ['set-state', 'give-item', 'consume-item', 'traverse', 'heal', 'consequence', 'decrement', 'increment', 'set-counter'],
-  'on-enter':              ['set-state', 'give-item', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter'],
-  'on-encounter':          ['set-state', 'deal-damage', 'consequence', 'steals-item', 'deposits', 'flees', 'decrement'],
-  'on-attacked':           ['set-state', 'deal-damage', 'deal-damage-npc', 'consequence', 'steals-item', 'flees'],
-  'on-fail':               ['set-state', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter'],
-  'on-health':             ['set-state', 'give-item', 'consequence', 'flees', 'deposits'],
-  'on-player-health':      ['set-state', 'traverse', 'consequence'],
-  'on-health-zero':        ['set-state', 'give-item', 'consequence', 'deposits'],
-  'on-player-health-zero': ['set-state', 'traverse', 'consequence'],
-  'on-move':               ['set-state', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter'],
-  'on-counter':            ['set-state', 'give-item', 'deal-damage', 'heal', 'consequence'],
+  'on-interact':           ['set-state', 'give-item', 'consume-item', 'traverse', 'deal-damage', 'deal-damage-npc', 'heal', 'consequence', 'decrement', 'increment', 'set-counter', 'sound'],
+  'on-complete':           ['set-state', 'give-item', 'consume-item', 'traverse', 'heal', 'consequence', 'decrement', 'increment', 'set-counter', 'sound'],
+  'on-enter':              ['set-state', 'give-item', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter', 'sound'],
+  'on-encounter':          ['set-state', 'deal-damage', 'consequence', 'steals-item', 'deposits', 'flees', 'decrement', 'sound'],
+  'on-attacked':           ['set-state', 'deal-damage', 'deal-damage-npc', 'consequence', 'steals-item', 'flees', 'sound'],
+  'on-fail':               ['set-state', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter', 'sound'],
+  'on-health':             ['set-state', 'give-item', 'consequence', 'flees', 'deposits', 'sound'],
+  'on-player-health':      ['set-state', 'traverse', 'consequence', 'sound'],
+  'on-health-zero':        ['set-state', 'give-item', 'consequence', 'deposits', 'sound'],
+  'on-player-health-zero': ['set-state', 'traverse', 'consequence', 'sound'],
+  'on-move':               ['set-state', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter', 'sound'],
+  'on-counter':            ['set-state', 'give-item', 'deal-damage', 'heal', 'consequence', 'sound'],
 };
 
 /**
@@ -57,6 +57,7 @@ export const ACTION_TARGET_FIELD = {
   'set-counter':    { type: 'text', placeholder: 'counter:value (e.g. battery:100)', hidesEventRef: true },
   'deposits':       { type: 'text', placeholder: '(blank)', hidesEventRef: true },
   'flees':          { type: 'text', placeholder: '(blank)', hidesEventRef: true },
+  'sound':          { type: 'text', placeholder: 'Strudel pattern (e.g. note("c3 e3 g3").s("sine"))', hidesEventRef: true },
 };
 
 /** Short descriptions for each event type — shown at the top of the editor */
@@ -452,13 +453,13 @@ export const TAGS_BY_EVENT_TYPE = {
   portal:      ['title', 'exit', 'state', 'transition', 'requires', 'requires-not', 'consequence', 'cw'],
   item:        ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-move', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'damage', 'hit-chance', 'media', 'sound'],
   feature:     ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'media', 'sound'],
-  clue:        ['title', 'noun', 'state', 'transition', 'content-type', 'requires', 'requires-not', 'media', 'puzzle'],
-  puzzle:      ['puzzle-type', 'answer-hash', 'salt', 'ordered', 'requires', 'on-complete', 'on-fail', 'counter', 'on-counter', 'content-type'],
-  recipe:      ['title', 'noun', 'verb', 'state', 'transition', 'requires', 'on-complete', 'on-fail', 'counter', 'on-counter', 'ordered'],
-  payment:     ['title', 'amount', 'unit', 'lnurl', 'on-complete'],
+  clue:        ['title', 'noun', 'state', 'transition', 'content-type', 'requires', 'requires-not', 'media', 'puzzle', 'sound'],
+  puzzle:      ['puzzle-type', 'answer-hash', 'salt', 'ordered', 'requires', 'on-complete', 'on-fail', 'counter', 'on-counter', 'content-type', 'sound'],
+  recipe:      ['title', 'noun', 'verb', 'state', 'transition', 'requires', 'on-complete', 'on-fail', 'counter', 'on-counter', 'ordered', 'sound'],
+  payment:     ['title', 'amount', 'unit', 'lnurl', 'on-complete', 'sound'],
   npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health', 'on-player-health', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not', 'sound'],
   dialogue:    ['text', 'option', 'requires', 'requires-not', 'on-enter'],
-  consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage', 'set-state'],
+  consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage', 'set-state', 'sound'],
   world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'content-type', 'media', 'w'],
   vouch:       ['pubkey', 'scope', 'can-vouch'],
   quest:       ['title', 'involves', 'requires', 'requires-not', 'on-complete'],

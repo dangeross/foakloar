@@ -71,6 +71,10 @@ export class GameEngine {
     this.output.push({ html, type });
   }
 
+  _emitSound(pattern, volume = 1.0) {
+    this.output.push({ sound: pattern, volume: parseFloat(volume) || 1.0, type: 'sound' });
+  }
+
   /**
    * Return and clear the output buffer.
    */
@@ -189,6 +193,38 @@ export class GameEngine {
       // Fire on-encounter triggers only on actual movement, not on look
       if (isMoving) {
         this._fireNpcEncounter(npcEvent, npcDtag);
+      }
+    }
+
+    // Place on-enter triggers (only on actual movement)
+    if (isMoving) {
+      for (const tag of getTags(room, 'on-enter')) {
+        if (tag[1] !== 'player') continue;
+        const action = tag[2];
+        const actionTarget = tag[3];
+        const extTarget = tag[4];
+
+        if (action === 'set-state' && actionTarget) {
+          if (extTarget) {
+            applyExternalSetState(
+              extTarget, actionTarget, this.events, this.player,
+              (t, ty) => this._emit(t, ty),
+              (h, ty) => this._emitHtml(h, ty),
+            );
+          }
+        } else if (action === 'give-item' && actionTarget) {
+          giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty));
+        } else if (action === 'deal-damage') {
+          const dmg = parseInt(actionTarget, 10) || 1;
+          this._dealDamageToPlayer(dmg, null, null);
+        } else if (action === 'consequence' && actionTarget) {
+          this._executeConsequence(actionTarget);
+        } else if (action === 'sound') {
+          this._emitSound(actionTarget, extTarget);
+        } else if (action === 'increment' || action === 'decrement' || action === 'set-counter') {
+          // Counter actions on the place event
+          this._applyCounterAction(action, dtag, actionTarget, extTarget, room);
+        }
       }
     }
 
@@ -655,10 +691,13 @@ export class GameEngine {
         const amount = parseInt(targetState, 10) || 1;
         this._dealDamageToPlayer(amount, null, null);
         acted = true;
+      } else if (action === 'sound') {
+        this._emitSound(targetState, targetRef);
+        acted = true;
       }
     }
     if (acted) {
-      evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty));
+      evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty), (p, v) => this._emitSound(p, v));
       this._evalQuests();
     }
     return acted;
@@ -819,7 +858,7 @@ export class GameEngine {
             }
             if (transition.text) this._emit(transition.text, 'narrative');
             acted = true;
-            evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty));
+            evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty), (p, v) => this._emitSound(p, v));
           }
         } else if (extType === 'portal') {
           const extCurrentState = this.player.getState(extDTag) ?? getDefaultState(extEvent);
@@ -1209,6 +1248,8 @@ export class GameEngine {
       this._npcFlees(sourceEvent, npcDtag);
     } else if (action === 'give-item' && target) {
       giveItem(target, this.events, this.player, (t, ty) => this._emit(t, ty));
+    } else if (action === 'sound' && target) {
+      this._emitSound(target, extRef);
     }
   }
 
@@ -1293,6 +1334,8 @@ export class GameEngine {
           this._npcFlees(npcEvent, npcDtag);
         } else if (action === 'steals-item') {
           this._npcStealsItem(npcDtag, actionTarget);
+        } else if (action === 'sound') {
+          this._emitSound(actionTarget, extTarget);
         }
       }
     }
@@ -1402,6 +1445,8 @@ export class GameEngine {
           this._executeConsequence(ctTarget);
         } else if (ctAction === 'traverse' && ctTarget) {
           this._traverse(ctTarget);
+        } else if (ctAction === 'sound' && ctTarget) {
+          this._emitSound(ctTarget);
         }
       }
     }
@@ -1546,6 +1591,8 @@ export class GameEngine {
         this._applyCounterAction(action, npcDtag, actionTarget, extTarget, npcEvent);
       } else if (action === 'flees') {
         this._npcFlees(npcEvent, npcDtag);
+      } else if (action === 'sound') {
+        this._emitSound(actionTarget, extTarget);
       }
     }
   }
@@ -1620,8 +1667,12 @@ export class GameEngine {
         if (placeRef !== npcPlace) continue;
 
         const action = tag[2];
+        const actionTarget = tag[3];
+        const extTarget = tag[4];
         if (action === 'deposits') {
           this._npcDeposits(dtag, npcPlace);
+        } else if (action === 'sound') {
+          this._emitSound(actionTarget, extTarget);
         }
       }
     }
@@ -1746,6 +1797,8 @@ export class GameEngine {
             if (transition?.text) this._emit(transition.text, 'narrative');
           }
         }
+      } else if (action === 'sound') {
+        this._emitSound(value, extRef);
       }
     }
 
@@ -1788,6 +1841,8 @@ export class GameEngine {
         this._applyCounterAction('increment', puzzleDtag, value, extRef, puzzleEvent);
       } else if (action === 'set-counter') {
         this._applyCounterAction('set-counter', puzzleDtag, value, extRef, puzzleEvent);
+      } else if (action === 'sound') {
+        this._emitSound(value, extRef);
       }
     }
   }

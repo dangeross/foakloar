@@ -106,6 +106,12 @@ Portal always uses extended form. Portal wins if conflict. Hidden portals still 
 
 **`plaintext-type` tag proposed and removed before shipping** — replaced by three-element `content-type`.
 
+**Sound system redesigned — `type: sound` event primitive**
+`type: sound` is a new event primitive. Sound definitions are named, reusable, relay-queryable events with a `d`-tag for uniqueness. Parameters (`note`, `oscillator`, `slow`, `fast`, `room`, `delay`, `pan`, `crush`, `loop`) applied in declaration order build a Strudel chain. `sound` play tags reference them by `a`-tag: `["sound", "<a-tag>", "<role>", "<volume>", "<state?>"]`. `bpm` moves off `sound` tag to a standalone tag on world/place events. Old inline pattern notation (`slow(pad)`) removed — replaced by `type: sound` events with real Strudel-mapped parameters. Built-in oscillators only: `sine`, `triangle`, `sawtooth`, `square`.
+
+**Dialogue generalised — valid on any event, not just NPCs**
+`dialogue` tags and `type: dialogue` events are valid on features, items, places, and NPCs. The `talk`/`ask` verb on any event triggers the dialogue tree. Feature dialogue example added (oracle mirror). Client flow updated to reflect any event type as host.
+
 **`sound` extended — event tags on clue/puzzle/consequence/payment, and `sound` as action type**
 Event `sound` tags: documented conventions per event type — clue (`effect` on reveal), puzzle (`layer` while unsolved), consequence (`effect` on fire), payment (`layer` while UI open). `sound` as action type: one-shot triggered from any `on-*` dispatcher. Shape: `["on-complete", "", "sound", "<pattern>", "<volume?>"]`. Added to action types table and trigger × action matrix. Two models: passive tags (scope-driven) vs action type (trigger-driven).
 

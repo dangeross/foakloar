@@ -909,146 +909,183 @@ Sound is a progressive enhancement — players who can't hear it miss nothing. S
 
 ---
 
-### Pattern library — moods and their notation
+### How it works — `type: sound` events
 
-Use these as building blocks. Pick the mood that fits the moment:
-
-| Mood | Pattern | Notes |
-|------|---------|-------|
-| Dread | `"c2*1 slow(pad)"` | Low drone, barely moving. Underground, ancient. |
-| Tension | `"b2 ~ b2 ~ slow(strings)"` | Minor root, slow pulse. Unsolved puzzle, danger nearby. |
-| Danger | `"c3 b2 c3 b2 fast(strings)"` | Minor second oscillation. Rapid threat. |
-| Urgency | `"c3*8 fast(perc)"` | Rapid repeat. Chase, countdown. |
-| Mystery | `"c3 ~ eb3 ~ slow(pad)"` | Minor third, spaced out. Unknown territory. |
-| Wonder | `"c4 e4 g4 c5 slow(bells)"` | Ascending major. Discovery, arrival. |
-| Resolution | `"c3 e3 g3 slow(pad)"` | Major chord, settling. Puzzle solved, door open. |
-| Stillness | `"~ ~ ~ ~"` | Silence. Aftermath, emptiness, weight. |
-| Mechanical | `"perc(bd)*4"` | Steady kick. Machinery running, clock ticking. |
-| Ethereal | `"c5 g5 c6 slow(bells)"` | High, sparse. Magical, otherworldly. |
-
-Patterns can be combined — a place ambient plus a state-conditional layer:
+Sound definitions are FOAKLOAR events with their own `d`-tag. You define them once and reference them anywhere. The client builds a Strudel chain from the tags in declaration order.
 
 ```json
-["sound", "ambient", "0.6", "c2*1 slow(pad)"],                          // always present
-["sound", "layer",   "0.4", "b2 ~ b2 ~ slow(strings)", "unsolved"]      // only while puzzle unsolved
+{
+  "kind": 30078,
+  "tags": [
+    ["d",          "the-lake:sound:cave-drone"],
+    ["t",          "the-lake"],
+    ["type",       "sound"],
+    ["note",       "c2 ~ ~ ~"],
+    ["oscillator", "sine"],
+    ["slow",       "4"],
+    ["room",       "0.8"]
+  ],
+  "content": ""
+}
 ```
+
+Then play it on any event:
+
+```json
+// Place — atmospheric drone, always present
+["sound", "30078:<PUBKEY>:the-lake:sound:cave-drone", "ambient", "0.7"],
+
+// Item — lamp hum, only when on
+["sound", "30078:<PUBKEY>:the-lake:sound:lamp-hum",   "layer",   "0.3", "on"],
+
+// Consequence — death jingle
+["sound", "30078:<PUBKEY>:the-lake:sound:death-jingle", "effect", "1.0"]
+```
+
+Play tag shape: `["sound", "<sound-a-tag>", "<role>", "<volume>", "<state?>"]`
+
+---
+
+### Sound parameters
+
+`note` always comes first — it establishes the pattern everything else modifies:
+
+| Parameter | Values | Effect |
+|-----------|--------|--------|
+| `note` | mini-notation | Note sequence |
+| `oscillator` | `sine` `triangle` `sawtooth` `square` | Sound source |
+| `slow` | float | Stretch relative to global tempo |
+| `fast` | float | Compress relative to global tempo |
+| `room` | 0.0–1.0 | Reverb — 0 = dry, 1 = large space |
+| `delay` | 0.0–1.0 | Echo |
+| `pan` | -1.0–1.0 | Stereo — -1 left, 1 right |
+| `crush` | 1–16 | Bit crush — lo-fi texture |
+| `loop` | `true` `false` | Default `true` |
+
+Mini-notation: `c3 e3 g3` sequence, `c3*4` repeat, `c3 ~ ~ ~` note with rests, `[c3 e3] g3` sub-pattern.
+
+---
+
+### Pattern library — moods and their recipes
+
+Use these as building blocks:
+
+| Mood | `note` | `oscillator` | modifiers | Use when |
+|------|--------|-------------|-----------|----------|
+| Dread | `c2 ~ ~ ~` | `sine` | `slow 4`, `room 0.8` | Underground, ancient, heavy |
+| Tension | `b2 ~ b2 ~` | `triangle` | `slow 2` | Unsolved puzzle, danger |
+| Danger | `c3 b2 c3 b2` | `sawtooth` | `fast 2` | Active threat |
+| Mystery | `c3 ~ eb3 ~` | `sine` | `slow 3`, `delay 0.4` | Unknown territory |
+| Wonder | `c4 e4 g4 c5` | `triangle` | `slow 2`, `room 0.4` | Discovery, arrival |
+| Resolution | `c3 e3 g3` | `sine` | `slow 3` | Puzzle solved, door open |
+| Stillness | `~ ~ ~ ~` | `sine` | | Aftermath, emptiness |
+| Mechanical | `c2 ~ ~ ~` | `square` | `fast 4` | Machinery, clock |
+| Ethereal | `c5 g5 c6` | `sine` | `slow 4`, `room 0.9`, `delay 0.5` | Magical, otherworldly |
+| Horror | `c2 ~ ~ ~` | `sawtooth` | `slow 6`, `crush 4` | Degraded, corrupted |
 
 ---
 
 ### State-conditional layers — the most powerful tool
 
-A layer can be gated to a specific event state. When the state changes, the layer enters or leaves the mix automatically. This is the FOAKLOAR equivalent of iMUSE — dynamic music without a music engine.
+The state element on the `sound` play tag gates the layer to a specific event state. When the state changes, the layer enters or leaves the mix automatically:
 
 ```json
-// Always-on drone
-["sound", "ambient", "0.7", "c2*1 slow(pad)"],
+// Two sound events
+// cave-drone: note "c2 ~ ~ ~", oscillator sine, slow 4
+// tension:    note "b2 ~ b2 ~", oscillator triangle, slow 2
 
-// Lamp hum — only when lamp is on
-["sound", "layer", "0.3", "c5*16 fast(sine)", "on"],
+// Lamp room — drone always, tension only while lamp is dark
+["sound", "30078:<PUBKEY>:the-lake:sound:cave-drone", "ambient", "0.6"],
+["sound", "30078:<PUBKEY>:the-lake:sound:tension",    "layer",   "0.4", "dark"],
 
-// Tension — only while puzzle unsolved  
-["sound", "layer", "0.4", "b2 ~ b2 ~", "unsolved"],
-
-// Victory swell — only after puzzle solved
-["sound", "effect", "0.8", "c3 e3 g3 c4 slow(pad)", "solved"]
+// The moment the lamp runs, tension layer drops. No extra code needed.
 ```
-
-The state string is the event's own state — the fourth element on the `sound` tag is evaluated against the event it's declared on.
 
 ---
 
-### Layering budget — how many layers is too many
-
-The client mixes all active `sound` tags simultaneously. Too many layers becomes noise.
+### Layering budget
 
 | Event type | Sound budget |
 |-----------|-------------|
 | World event | `bpm` only |
 | Place | 1 `ambient`, 1 optional `layer` |
-| Feature/item | 1 `layer` or `effect` — only if the sound is meaningful to that specific object |
-| NPC | 1 `effect` on encounter |
-| **Active simultaneously** | **3–4 layers maximum** |
+| Feature / item / NPC | 1 `layer` or `effect` |
+| **Active simultaneously** | **3–4 maximum** |
 
-Resist the urge to add sound to everything. Silence is part of the palette — a place with no sound tags inherits a quieter mix.
-
----
-
-### BPM and place overrides
-
-Declare the world BPM on the world event. Place events can override it for tempo shifts:
-
-```json
-// World event — comfortable walking pace
-["sound", "bpm", "72"],
-
-// Mechanism chamber — faster, more tense
-["sound", "bpm", "96"],
-
-// The sanctum — slower, ancient
-["sound", "bpm", "52"]
-```
-
-Tempo shifts are felt even when players don't consciously notice them. Use them for threshold moments — descent underground, entering a significant place, approaching the win state.
+Silence is part of the palette. A place with no `sound` tags inherits a quieter mix.
 
 ---
 
-### Worked example — The Lighthouse Keeper with sound
+### BPM
 
 ```json
-// World event — slow coastal tempo
-["sound", "bpm", "60"],
+// World event — global tempo
+["bpm", "72"]
 
-// Shore Path — open air, distant waves
-["sound", "ambient", "0.5", "c3 ~ ~ ~ slow(pad)"],
-
-// Lighthouse Base — heavier, mechanism waiting
-["sound", "ambient", "0.6", "c2*1 slow(pad)"],
-["sound", "layer",   "0.3", "perc(bd) ~ ~ ~"],            // slow mechanical pulse
-
-// Lamp Room — tension while lamp is dark, resolution when running
-["sound", "ambient", "0.5", "b2 ~ b2 ~ slow(strings)", "dark"],
-["sound", "ambient", "0.4", "c3 e3 g3 slow(pad)",      "running"],
-
-// Brass Lantern item — hum when on
-["sound", "layer", "0.2", "c5*16 fast(sine)", "on"],
-
-// Lamp Mechanism feature — one-shot on activation
-["sound", "effect", "0.9", "c2 c3 c4 fast(perc)"],
-
-// Signal Alcove — ethereal signal from out at sea
-["sound", "ambient", "0.5", "c4 ~ g4 ~ slow(bells)"],
-["sound", "layer",   "0.4", "b2 ~ b2 ~", "dark"],         // still tense until decoded
-["sound", "layer",   "0.5", "c3 e3 g3 slow(pad)", "decoded"], // resolution on decode
-
-// Keeper's Cottage — quiet, lived-in
-["sound", "ambient", "0.3", "~ ~ ~ ~"]                    // near-silence
+// Place — override on entry
+["bpm", "96"]
 ```
 
-The lamp room shows the pattern clearly: two `ambient` tags on the same place, each gated to a different lamp state. Only one plays at a time. The mix changes the moment the lamp runs — without the author doing anything else.
+`bpm` is a standalone tag on world/place events, not a `sound` tag. Individual sound events can use `slow`/`fast` to move relative to the current global tempo.
 
 ---
 
 ### `sound` as an action type — triggered one-shots
 
-For sounds that should fire at a specific moment rather than play passively, use `sound` as an action in any `on-*` dispatcher:
+For sounds that mark a specific moment rather than playing passively:
 
 ```json
-// Puzzle solved — victory chord
-["on-complete", "", "sound", "c3 e3 g3 c4 fast(bells)", "0.9"],
-
-// Wrong answer — discordant sting
-["on-fail", "", "sound", "b2 f3 slow(pad)", "0.6"],
-
-// Key turns in lock
-["on-interact", "use", "sound", "c2 c3 fast(perc)", "1.0"],
-
-// NPC dies
-["on-health", "down", "0", "sound", "b1 ~ ~ ~ slow(pad)", "0.7"]
+["on-complete", "", "sound", "30078:<PUBKEY>:the-lake:sound:victory", "0.9"],
+["on-fail",     "", "sound", "30078:<PUBKEY>:the-lake:sound:wrong",   "0.6"],
+["on-interact", "use", "sound", "30078:<PUBKEY>:the-lake:sound:mechanism-clunk"],
+["on-health",   "down", "0", "sound", "30078:<PUBKEY>:the-lake:sound:death-jingle"]
 ```
 
-Volume is optional — defaults to `1.0`.
+**The rule:** moment → action type. State → `sound` play tag on the event.
 
-**The rule:** if the sound marks a moment (solve, death, unlock, reveal), use the action type. If the sound characterises a state (in this room, lamp is on, puzzle unsolved), use a `sound` tag on the event.
+---
+
+### Worked example — The Lighthouse Keeper
+
+```json
+// Sound events (type: sound)
+{ "d": "lighthouse:sound:coastal-drone",  "note": "c3 ~ ~ ~",  "oscillator": "sine",     "slow": "4" }
+{ "d": "lighthouse:sound:base-drone",     "note": "c2 ~ ~ ~",  "oscillator": "sine",     "slow": "6", "room": "0.6" }
+{ "d": "lighthouse:sound:base-pulse",     "note": "c2 ~ ~ ~",  "oscillator": "square",   "fast": "2" }
+{ "d": "lighthouse:sound:lamp-tension",   "note": "b2 ~ b2 ~", "oscillator": "triangle", "slow": "2" }
+{ "d": "lighthouse:sound:lamp-hum",       "note": "c5 ~ ~ ~",  "oscillator": "sine",     "fast": "8" }
+{ "d": "lighthouse:sound:mechanism",      "note": "c2 c3 c4",  "oscillator": "square",   "fast": "4", "crush": "8" }
+{ "d": "lighthouse:sound:signal-bells",   "note": "c4 ~ g4 ~", "oscillator": "sine",     "slow": "3", "room": "0.8", "delay": "0.4" }
+{ "d": "lighthouse:sound:resolution",     "note": "c3 e3 g3",  "oscillator": "sine",     "slow": "3" }
+{ "d": "lighthouse:sound:cottage-silence","note": "~ ~ ~ ~",   "oscillator": "sine" }
+
+// World event
+["bpm", "60"]
+
+// Shore Path
+["sound", "30078:<PUBKEY>:lighthouse:sound:coastal-drone", "ambient", "0.5"]
+
+// Lighthouse Base
+["sound", "30078:<PUBKEY>:lighthouse:sound:base-drone",  "ambient", "0.6"],
+["sound", "30078:<PUBKEY>:lighthouse:sound:base-pulse",  "layer",   "0.3"]
+
+// Lamp Room
+["sound", "30078:<PUBKEY>:lighthouse:sound:lamp-tension", "ambient", "0.5"]
+// (tension drops when lamp runs — gated by lamp feature state)
+
+// Lamp feature — hum when running
+["sound", "30078:<PUBKEY>:lighthouse:sound:lamp-hum", "layer", "0.2", "running"]
+
+// Mechanism feature — one-shot on use
+["on-interact", "use", "sound", "30078:<PUBKEY>:lighthouse:sound:mechanism", "0.9"]
+
+// Signal Alcove
+["sound", "30078:<PUBKEY>:lighthouse:sound:signal-bells", "ambient", "0.5"],
+["sound", "30078:<PUBKEY>:lighthouse:sound:resolution",   "layer",   "0.4", "decoded"]
+
+// Keeper's Cottage
+["sound", "30078:<PUBKEY>:lighthouse:sound:cottage-silence", "ambient", "0.2"]
+```
 
 ---
 
@@ -1056,19 +1093,15 @@ Volume is optional — defaults to `1.0`.
 
 ```json
 // DON'T — sound carries puzzle information
-["sound", "effect", "1.0", "c3 e3 g3", "solved"]
-// If this is the only signal that the puzzle was solved, deaf players are stuck.
-// Always pair sound effects with visible state changes or transition text.
+// If the only signal that a puzzle solved is a sound effect, deaf players miss it.
+// Always pair sound with visible state changes or transition text.
 
 // DON'T — too many layers
-["sound", "layer", "0.5", "c2*1 slow(pad)"],
-["sound", "layer", "0.4", "b2 ~ b2 ~"],
-["sound", "layer", "0.3", "e3 ~ g3 ~"],
-["sound", "layer", "0.3", "perc(bd)*4"],
-["sound", "layer", "0.2", "c5*8 fast(sine)"]
-// Five layers simultaneously — the mix is unlistenable.
+// More than 3-4 active layers simultaneously becomes noise. Less is more.
 
-// DON'T — generic sound on everything
-// Not every feature, item, and NPC needs a sound tag.
-// Sound should mean something. Silence is also a choice.
+// DON'T — inline patterns in play tags
+// WRONG:
+["sound", "c2 ~ ~ ~ slow(pad)", "ambient", "0.7"]
+// RIGHT — define a type:sound event, reference by a-tag
+["sound", "30078:<PUBKEY>:the-lake:sound:cave-drone", "ambient", "0.7"]
 ```
