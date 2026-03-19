@@ -134,6 +134,7 @@ export default function BuildModeOverlay({
   onNewEvent,
   onEditPortal,
   onEditEvent,
+  onShowGraph,
   trustSet,
   clientMode,
   onVouch,
@@ -237,7 +238,23 @@ export default function BuildModeOverlay({
             </button>
           )}
         </div>
-        {/* New event dropdown */}
+        {/* Graph + New event dropdown */}
+        {!minimized && onShowGraph && (
+          <button
+            onClick={onShowGraph}
+            className="cursor-pointer hover:opacity-80"
+            style={{
+              color: 'var(--colour-highlight)',
+              background: 'none',
+              border: '1px solid var(--colour-dim)',
+              font: 'inherit',
+              padding: '1px 6px',
+              flexShrink: 0,
+            }}
+          >
+            graph
+          </button>
+        )}
         {!minimized && (
           <div style={{ position: 'relative', flexShrink: 0 }}>
             <button

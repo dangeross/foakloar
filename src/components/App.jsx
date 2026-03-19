@@ -16,6 +16,7 @@ import DraftListPanel from '../builder/components/DraftListPanel.jsx';
 import ModeDropdown from '../builder/components/ModeDropdown.jsx';
 import WorldCreator from '../builder/components/WorldCreator.jsx';
 import VouchPanel from '../builder/components/VouchPanel.jsx';
+import EventGraph from '../builder/components/EventGraph.jsx';
 import Lobby from './Lobby.jsx';
 import AuthorProfile from './AuthorProfile.jsx';
 import TipPanel from './TipPanel.jsx';
@@ -112,6 +113,7 @@ export default function App() {
   const [generation, setGeneration] = useState(0);
   // Build mode state
   const [buildMode, setBuildMode] = useState(false);
+  const [showGraph, setShowGraph] = useState(false);
   const [showDrafts, setShowDrafts] = useState(false);
   const [editorState, setEditorState] = useState(null); // { eventType, draft?, initialTags?, ... }
   const [showWorldCreator, setShowWorldCreator] = useState(false);
@@ -600,9 +602,28 @@ export default function App() {
               eventTemplate: { kind: 30078, tags: [...event.tags], content: event.content || '' },
             });
           }}
+          onShowGraph={() => setShowGraph(true)}
           trustSet={trustInfo?.trustSet}
           clientMode={trustInfo?.effectiveMode}
           onVouch={(targetPubkey) => setVouchTarget(targetPubkey)}
+        />
+      )}
+
+      {/* Event graph view */}
+      {showGraph && (
+        <EventGraph
+          events={mergedEvents}
+          currentPlace={engineRef.current?.currentPlace || player.state.place}
+          onEditEvent={(aTag) => {
+            const event = mergedEvents.get(aTag);
+            if (!event) return;
+            const eventType = getTag(event, 'type') || 'place';
+            setEditorState({
+              eventType,
+              eventTemplate: { kind: 30078, tags: [...event.tags], content: event.content || '' },
+            });
+          }}
+          onClose={() => setShowGraph(false)}
         />
       )}
 
