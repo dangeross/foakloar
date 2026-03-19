@@ -15,6 +15,18 @@
 const STORAGE_PREFIX = 'drafts:';
 const PUBKEY_PLACEHOLDER = '<PUBKEY>';
 
+/**
+ * Parse JSON with lenient handling — strips // comments and trailing commas.
+ * Standard JSON doesn't support comments, but world authors may add them.
+ */
+export function parseJsonLenient(raw) {
+  // Strip single-line // comments (not inside strings)
+  const stripped = raw.replace(/^\s*\/\/.*$/gm, '');
+  // Strip trailing commas before } or ]
+  const cleaned = stripped.replace(/,\s*([}\]])/g, '$1');
+  return JSON.parse(cleaned);
+}
+
 function getKey(worldSlug) {
   return `${STORAGE_PREFIX}${worldSlug}`;
 }

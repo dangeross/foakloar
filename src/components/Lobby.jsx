@@ -16,7 +16,7 @@ import LoginPanel from './ui/LoginPanel.jsx';
 import WorldCard from './WorldCard.jsx';
 import TipPanel from './TipPanel.jsx';
 import { useWorldDiscovery } from '../hooks/useWorldDiscovery.js';
-import { listDraftWorlds, validateImport, importEvents } from '../builder/draftStore.js';
+import { listDraftWorlds, validateImport, importEvents, parseJsonLenient } from '../builder/draftStore.js';
 import ImportPreviewPanel from '../builder/components/ImportPreviewPanel.jsx';
 import { APP_PUBKEY } from '../config.js';
 
@@ -216,7 +216,7 @@ export default function Lobby({
             const reader = new FileReader();
             reader.onload = () => {
               try {
-                const data = JSON.parse(reader.result);
+                const data = parseJsonLenient(reader.result);
                 // Detect world slug from the imported data
                 const worldEvent = data.events?.find((ev) =>
                   ev.tags?.find((t) => t[0] === 'type')?.[1] === 'world'

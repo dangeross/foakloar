@@ -9,7 +9,7 @@ import DOSPanel from '../../components/ui/DOSPanel.jsx';
 import DOSButton from './ui/DOSButton.jsx';
 import ImportPreviewPanel from './ImportPreviewPanel.jsx';
 import { validateEvent } from '../eventBuilder.js';
-import { validateImport, loadAnswers } from '../draftStore.js';
+import { validateImport, loadAnswers, parseJsonLenient } from '../draftStore.js';
 import { validateWorld, verifyPuzzleHashes } from '../validateWorld.js';
 
 function getTagValue(event, name) {
@@ -207,7 +207,7 @@ export default function DraftListPanel({
               const reader = new FileReader();
               reader.onload = () => {
                 try {
-                  const data = JSON.parse(reader.result);
+                  const data = parseJsonLenient(reader.result);
                   const validation = validateImport(worldSlug, data);
                   // Run cross-event validation on combined set
                   const combinedEvents = [...drafts, ...validation.valid];
