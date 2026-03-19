@@ -238,3 +238,9 @@ Combat is data-driven via `on-*` dispatcher:
 - The client should be event/data-driven — behaviour comes from tags, not hardcoded logic
 - Test each phase with world content that exercises the new mechanic
 - Run `npm test` to verify all engine tests pass before committing
+
+## Git Workflow
+
+- **Feature branches:** use `git rebase main` to sync with main, not `git merge main`. This keeps a linear history.
+- Commit to main directly for small fixes. Use feature branches for larger work.
+- Always push feature branches with `-u origin <branch>` on first push.
