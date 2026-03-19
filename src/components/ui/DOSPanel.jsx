@@ -14,16 +14,20 @@ export default function DOSPanel({
   minWidth = '28em',
   maxWidth = '90vw',
   maxHeight = '80vh',
+  zIndex,
 }) {
+  const backdropZ = zIndex ? zIndex - 1 : undefined;
   return (
     <>
       <div
         className="fixed inset-0 z-40"
+        style={backdropZ ? { zIndex: backdropZ } : undefined}
         onClick={onClose}
       />
       <div
-        className="fixed z-50 font-mono text-xs flex flex-col"
+        className="fixed font-mono text-xs flex flex-col"
         style={{
+          zIndex: zIndex || 50,
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',

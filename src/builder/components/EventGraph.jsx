@@ -21,7 +21,7 @@ import Dagre from '@dagrejs/dagre';
 
 // ── Custom node components ──────────────────────────────────────────────
 
-const handleStyle = { background: '#ffff66', width: 6, height: 6, border: 'none' };
+const handleStyle = { background: 'transparent', width: 1, height: 1, border: 'none', opacity: 0 };
 
 function PlaceNode({ data }) {
   const borderColour = data.current ? '#ffff00' : '#88ff88';
@@ -29,12 +29,11 @@ function PlaceNode({ data }) {
     <div style={{
       padding: '10px 16px',
       border: `2px solid ${borderColour}`,
-      borderRadius: 6,
       background: 'rgba(0,0,0,0.8)',
       color: borderColour,
       fontSize: '0.75rem',
       fontFamily: 'inherit',
-      minWidth: 120,
+      width: 160,
       textAlign: 'center',
       cursor: 'pointer',
       position: 'relative',
@@ -58,7 +57,6 @@ function WorldNode({ data }) {
     <div style={{
       padding: '10px 18px',
       border: '2px solid #ff8800',
-      borderRadius: 8,
       background: 'rgba(0,0,0,0.8)',
       color: '#ff8800',
       fontSize: '0.8rem',
@@ -79,7 +77,6 @@ function OrphanNode({ data }) {
     <div style={{
       padding: '5px 10px',
       border: '1px dashed #ff4444',
-      borderRadius: 4,
       background: 'rgba(0,0,0,0.7)',
       color: '#ff4444',
       fontSize: '0.6rem',
@@ -221,11 +218,11 @@ function eventsToGraph(events, currentPlace) {
           source: srcPlace,
           target: destPlace,
           label: slot,
-          labelStyle: { fontSize: '0.6rem', fill: '#ffffff', fontFamily: 'inherit' },
-          labelBgStyle: { fill: 'rgba(0,60,0,0.9)' },
-          labelBgPadding: [6, 3],
-          style: { stroke: '#ffff66', strokeWidth: 3 },
-          markerEnd: { type: 'arrowclosed', color: '#ffff66', width: 20, height: 20 },
+          data: { portalRef },
+          labelStyle: { fontSize: '0.55rem', fill: 'var(--colour-dim)', fontFamily: 'inherit' },
+          labelBgStyle: { fill: 'rgba(0,0,0,0.8)' },
+          labelBgPadding: [4, 2],
+          style: { stroke: 'var(--colour-highlight)', strokeWidth: 1.5, cursor: 'pointer' },
         });
       }
     }
@@ -233,11 +230,11 @@ function eventsToGraph(events, currentPlace) {
 
   // Run Dagre auto-layout
   const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
-  g.setGraph({ rankdir: 'TB', nodesep: 80, ranksep: 100 });
+  g.setGraph({ rankdir: 'TB', nodesep: 60, ranksep: 80, align: 'DL' });
+  const NODE_W = 180;
+  const NODE_H = 60;
   for (const node of nodes) {
-    const w = node.type === 'world' ? 140 : 160;
-    const h = node.type === 'world' ? 50 : 60;
-    g.setNode(node.id, { width: w, height: h });
+    g.setNode(node.id, { width: NODE_W, height: NODE_H });
   }
   for (const edge of edges) {
     g.setEdge(edge.source, edge.target);
@@ -277,6 +274,10 @@ function eventsToGraph(events, currentPlace) {
   return { nodes, edges };
 }
 
+// ── Persisted viewport ──────────────────────────────────────────────────
+
+let savedViewport = null; // { x, y, zoom } — survives unmount
+
 // ── Main component ──────────────────────────────────────────────────────
 
 export default function EventGraph({ events, currentPlace, onEditEvent, onClose }) {
@@ -293,6 +294,35 @@ export default function EventGraph({ events, currentPlace, onEditEvent, onClose 
       onEditEvent(node.data.ref);
     }
   }, [onEditEvent]);
+
+  const onEdgeClick = useCallback((_, edge) => {
+    if (onEditEvent && edge.data?.portalRef) {
+      onEditEvent(edge.data.portalRef);
+    }
+  }, [onEditEvent]);
+
+  const onMoveEnd = useCallback((_, viewport) => {
+    savedViewport = viewport;
+  }, []);
+
+  // On first load, fit to current place node then offset upward
+  const onInit = useCallback((reactFlowInstance) => {
+    if (savedViewport) {
+      reactFlowInstance.setViewport(savedViewport);
+      return;
+    }
+    const currentNode = initialNodes.find(n => n.data?.current);
+    if (currentNode) {
+      // Fit to current node, then shift so it's in upper third
+      reactFlowInstance.fitView({ nodes: [currentNode], padding: 0.5, maxZoom: 0.8 });
+      setTimeout(() => {
+        const vp = reactFlowInstance.getViewport();
+        reactFlowInstance.setViewport({ ...vp, y: vp.y - 80 });
+      }, 100);
+    } else {
+      reactFlowInstance.fitView({ padding: 0.3, maxZoom: 0.8 });
+    }
+  }, [initialNodes]);
 
   // Count orphans
   const orphanCount = nodes.filter((n) => n.type === 'orphan').length;
@@ -343,13 +373,15 @@ export default function EventGraph({ events, currentPlace, onEditEvent, onClose 
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onNodeClick={onNodeClick}
+          onEdgeClick={onEdgeClick}
+          onMoveEnd={onMoveEnd}
+          onInit={onInit}
           nodeTypes={nodeTypes}
-          fitView
-          fitViewOptions={{ padding: 0.3 }}
-          minZoom={0.3}
-          maxZoom={3}
+          defaultViewport={savedViewport || { x: 0, y: 0, zoom: 0.5 }}
+          minZoom={0.2}
+          maxZoom={4}
           proOptions={{ hideAttribution: true }}
-          defaultEdgeOptions={{ type: 'smoothstep' }}
+          defaultEdgeOptions={{ type: 'bezier' }}
         >
           <Background color="#333" gap={40} size={1} />
           <Controls

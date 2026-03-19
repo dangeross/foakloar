@@ -52,6 +52,7 @@ export default function EventEditor({
   onSaveDraft,       // (eventTemplate) => void
   // Start in preview mode (e.g. from draft list "Pub" button)
   startInPreview = false,
+  zIndex,
 }) {
   // Parse from event template if editing, otherwise use props
   const parsed = useMemo(() => parseEventTemplate(eventTemplate), [eventTemplate]);
@@ -203,6 +204,7 @@ export default function EventEditor({
       onClose={onClose}
       minWidth="32em"
       maxWidth="95vw"
+      zIndex={zIndex}
     >
       {/* Event type description */}
       {EVENT_TYPE_DESCRIPTIONS[eventType] && (

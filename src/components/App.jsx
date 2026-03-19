@@ -702,6 +702,7 @@ export default function App() {
           events={mergedEvents}
           eventTemplate={editorState.eventTemplate || null}
           initialTags={editorState.initialTags || []}
+          zIndex={showGraph ? 110 : undefined}
           startInPreview={editorState.showPreview || false}
           onSaveDraft={(eventTemplate) => {
             const draftId = editorState.eventTemplate?._draft?.id;
