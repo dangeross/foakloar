@@ -623,6 +623,7 @@ export default function App() {
               eventTemplate: { kind: 30078, tags: [...event.tags], content: event.content || '' },
             });
           }}
+          onNewEvent={(eventType) => setEditorState({ eventType })}
           onClose={() => setShowGraph(false)}
         />
       )}

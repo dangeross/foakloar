@@ -6,7 +6,7 @@
  * Orphans: only truly unreferenced events shown.
  */
 
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import {
   ReactFlow,
   Background,
@@ -18,18 +18,35 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import Dagre from '@dagrejs/dagre';
+import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force';
+
+const GRAPH_EVENT_TYPES = [
+  { value: 'place', label: 'Place' },
+  { value: 'portal', label: 'Portal' },
+  { value: 'item', label: 'Item' },
+  { value: 'feature', label: 'Feature' },
+  { value: 'npc', label: 'NPC' },
+  { value: 'clue', label: 'Clue' },
+  { value: 'puzzle', label: 'Puzzle' },
+  { value: 'recipe', label: 'Recipe' },
+  { value: 'quest', label: 'Quest' },
+  { value: 'consequence', label: 'Consequence' },
+  { value: 'sound', label: 'Sound' },
+  { value: 'payment', label: 'Payment' },
+  { value: 'dialogue', label: 'Dialogue' },
+];
 
 // ── Custom node components ──────────────────────────────────────────────
 
 const handleStyle = { background: 'transparent', width: 1, height: 1, border: 'none', opacity: 0 };
 
 function PlaceNode({ data }) {
-  const borderColour = data.current ? '#ffff00' : '#88ff88';
+  const borderColour = data.current ? 'var(--colour-highlight)' : 'var(--colour-text)';
   return (
     <div style={{
       padding: '10px 16px',
-      border: `2px solid ${borderColour}`,
-      background: 'rgba(0,0,0,0.8)',
+      border: `1px solid ${borderColour}`,
+      background: 'color-mix(in srgb, var(--colour-bg) 90%, var(--colour-dim))',
       color: borderColour,
       fontSize: '0.75rem',
       fontFamily: 'inherit',
@@ -40,11 +57,9 @@ function PlaceNode({ data }) {
     }}>
       <Handle type="target" position={Position.Top} style={handleStyle} />
       <Handle type="source" position={Position.Bottom} style={handleStyle} />
-      <Handle type="target" position={Position.Left} id="left-in" style={handleStyle} />
-      <Handle type="source" position={Position.Right} id="right-out" style={handleStyle} />
       <div style={{ fontWeight: 'bold', marginBottom: 2 }}>{data.label}</div>
       {data.details.length > 0 && (
-        <div style={{ color: '#888', fontSize: '0.5rem', lineHeight: 1.3 }}>
+        <div style={{ color: 'var(--colour-dim)', fontSize: '0.5rem', lineHeight: 1.3 }}>
           {data.details.join(' · ')}
         </div>
       )}
@@ -56,9 +71,9 @@ function WorldNode({ data }) {
   return (
     <div style={{
       padding: '10px 18px',
-      border: '2px solid #ff8800',
-      background: 'rgba(0,0,0,0.8)',
-      color: '#ff8800',
+      border: '1px solid var(--colour-npc)',
+      background: 'color-mix(in srgb, var(--colour-bg) 90%, var(--colour-dim))',
+      color: 'var(--colour-npc)',
       fontSize: '0.8rem',
       fontFamily: 'inherit',
       textAlign: 'center',
@@ -76,9 +91,9 @@ function OrphanNode({ data }) {
   return (
     <div style={{
       padding: '5px 10px',
-      border: '1px dashed #ff4444',
-      background: 'rgba(0,0,0,0.7)',
-      color: '#ff4444',
+      border: '1px dashed var(--colour-error)',
+      background: 'color-mix(in srgb, var(--colour-bg) 90%, var(--colour-dim))',
+      color: 'var(--colour-error)',
       fontSize: '0.6rem',
       fontFamily: 'inherit',
       cursor: 'pointer',
@@ -219,18 +234,18 @@ function eventsToGraph(events, currentPlace) {
           target: destPlace,
           label: slot,
           data: { portalRef },
-          labelStyle: { fontSize: '0.55rem', fill: 'var(--colour-dim)', fontFamily: 'inherit' },
-          labelBgStyle: { fill: 'rgba(0,0,0,0.8)' },
+          labelStyle: { fontSize: '0.55rem', fill: 'var(--colour-exits)', fontFamily: 'inherit' },
+          labelBgStyle: { fill: 'var(--colour-bg)' },
           labelBgPadding: [4, 2],
-          style: { stroke: 'var(--colour-highlight)', strokeWidth: 1.5, cursor: 'pointer' },
+          style: { stroke: 'var(--colour-exits)', strokeWidth: 1.5, cursor: 'pointer' },
         });
       }
     }
   }
 
-  // Run Dagre auto-layout
+  // Dagre hierarchical layout — minimises edge crossings
   const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
-  g.setGraph({ rankdir: 'TB', nodesep: 60, ranksep: 80, align: 'DL' });
+  g.setGraph({ rankdir: 'TB', nodesep: 100, ranksep: 120, align: 'DL', edgesep: 40 });
   const NODE_W = 180;
   const NODE_H = 60;
   for (const node of nodes) {
@@ -249,7 +264,7 @@ function eventsToGraph(events, currentPlace) {
     }
   }
 
-  // Orphan nodes — placed below the Dagre layout
+  // Orphan nodes — placed below the layout
   let maxY = 0;
   for (const node of nodes) maxY = Math.max(maxY, node.position.y);
   let orphanIdx = 0;
@@ -280,7 +295,8 @@ let savedViewport = null; // { x, y, zoom } — survives unmount
 
 // ── Main component ──────────────────────────────────────────────────────
 
-export default function EventGraph({ events, currentPlace, onEditEvent, onClose }) {
+export default function EventGraph({ events, currentPlace, onEditEvent, onNewEvent, onClose }) {
+  const [showNewMenu, setShowNewMenu] = useState(false);
   const { nodes: initialNodes, edges: initialEdges } = useMemo(
     () => eventsToGraph(events, currentPlace),
     [events, currentPlace]
@@ -288,6 +304,12 @@ export default function EventGraph({ events, currentPlace, onEditEvent, onClose 
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  // Refresh graph when events change (new event added/published)
+  useEffect(() => {
+    setNodes(initialNodes);
+    setEdges(initialEdges);
+  }, [initialNodes, initialEdges, setNodes, setEdges]);
 
   const onNodeClick = useCallback((_, node) => {
     if (onEditEvent && node.data?.ref) {
@@ -332,7 +354,7 @@ export default function EventGraph({ events, currentPlace, onEditEvent, onClose 
       position: 'fixed',
       top: 0, left: 0, right: 0, bottom: 0,
       zIndex: 100,
-      background: '#111',
+      background: 'var(--colour-bg)',
     }}>
       {/* Header */}
       <div style={{
@@ -342,27 +364,70 @@ export default function EventGraph({ events, currentPlace, onEditEvent, onClose 
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderBottom: '1px solid #333',
-        background: '#111',
+        borderBottom: '1px solid var(--colour-dim)',
+        background: 'var(--colour-bg)',
       }}>
-        <span style={{ color: '#aaa', fontSize: '0.7rem', fontFamily: 'inherit' }}>
+        <span style={{ color: 'var(--colour-dim)', fontSize: '0.7rem', fontFamily: 'inherit' }}>
           EVENT GRAPH — {nodes.filter((n) => n.type === 'place').length} places, {edges.length} connections
-          {orphanCount > 0 && <span style={{ color: '#ff4444' }}> · {orphanCount} orphan{orphanCount !== 1 ? 's' : ''}</span>}
+          {orphanCount > 0 && <span style={{ color: 'var(--colour-error)' }}> · {orphanCount} orphan{orphanCount !== 1 ? 's' : ''}</span>}
         </span>
-        <button
-          onClick={onClose}
-          style={{
-            color: '#ff4444',
-            background: 'none',
-            border: '1px solid #ff4444',
-            font: 'inherit',
-            fontSize: '0.6rem',
-            padding: '2px 10px',
-            cursor: 'pointer',
-          }}
-        >
-          [X] Close
-        </button>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'stretch' }}>
+          {/* + new dropdown */}
+          {onNewEvent && (
+            <div style={{ position: 'relative', display: 'flex' }}>
+              <button
+                onClick={() => setShowNewMenu(!showNewMenu)}
+                style={{
+                  color: 'var(--colour-text)',
+                  background: 'none',
+                  border: '1px solid var(--colour-dim)',
+                  font: 'inherit',
+                  fontSize: '0.6rem',
+                  padding: '2px 8px',
+                  cursor: 'pointer',
+                }}
+              >
+                + new
+              </button>
+              {showNewMenu && (
+                <div style={{
+                  position: 'absolute', right: 0, top: '100%', zIndex: 110,
+                  border: '1px solid var(--colour-dim)', backgroundColor: 'var(--colour-bg)',
+                  padding: '2px 0', minWidth: 120, maxHeight: 260, overflowY: 'auto',
+                  fontSize: '0.6rem',
+                }}>
+                  {GRAPH_EVENT_TYPES.map(({ value, label }) => (
+                    <button
+                      key={value}
+                      onClick={() => { setShowNewMenu(false); onNewEvent(value); }}
+                      className="block w-full text-left"
+                      style={{
+                        color: 'var(--colour-text)', background: 'none', border: 'none',
+                        font: 'inherit', fontSize: 'inherit', padding: '2px 8px', cursor: 'pointer',
+                      }}
+                    >
+                      + {label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+          <button
+            onClick={onClose}
+            style={{
+              color: 'var(--colour-dim)',
+              background: 'none',
+              border: 'none',
+              font: 'inherit',
+              fontSize: '0.6rem',
+              padding: '2px 4px',
+              cursor: 'pointer',
+            }}
+          >
+            [X]
+          </button>
+        </div>
       </div>
 
       {/* Graph */}
@@ -383,7 +448,7 @@ export default function EventGraph({ events, currentPlace, onEditEvent, onClose 
           proOptions={{ hideAttribution: true }}
           defaultEdgeOptions={{ type: 'bezier' }}
         >
-          <Background color="#333" gap={40} size={1} />
+          <Background color="var(--colour-dim)" gap={40} size={1} style={{ opacity: 0.15 }} />
           <Controls
             showInteractive={false}
             style={{ bottom: 10, left: 10 }}
