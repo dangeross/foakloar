@@ -194,6 +194,9 @@ function readRawBody(req) {
   });
 }
 
+// Disable Vercel's body parser so we can handle JSON with comments ourselves
+export const config = { api: { bodyParser: false } };
+
 // ── Vercel handler (default export) ──────────────────────────────────────────
 
 export default async function handler(req, res) {
