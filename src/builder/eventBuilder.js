@@ -92,6 +92,31 @@ export function validateEvent(template) {
     warnings.push(warn('missing-tag', 'World event missing w-tag (protocol identifier)', `Add a ["w", "foakloar"] tag for relay discovery.`));
   }
 
+  // World event d-tag must follow <slug>:world convention
+  if (typeTag === 'world' && dTag?.[1]) {
+    const tTag = template.tags.find((t) => t[0] === 't')?.[1];
+    const expectedDTag = tTag ? `${tTag}:world` : null;
+    if (expectedDTag && dTag[1] !== expectedDTag) {
+      errors.push(err(
+        'invalid-dtag',
+        `World event d-tag must be "<slug>:world" — got "${dTag[1]}"`,
+        `Change the d-tag to ["d", "${expectedDTag}"]. The client expects world events to use the format "<world-slug>:world".`,
+      ));
+    }
+  }
+
+  // Non-world event d-tags should follow <slug>:<type>:<name> convention
+  if (typeTag && typeTag !== 'world' && dTag?.[1]) {
+    const tTag = template.tags.find((t) => t[0] === 't')?.[1];
+    if (tTag && !dTag[1].startsWith(`${tTag}:`)) {
+      warnings.push(warn(
+        'dtag-convention',
+        `D-tag "${dTag[1]}" does not start with world slug "${tTag}:"`,
+        `Convention is ["d", "${tTag}:${typeTag}:<name>"]. This helps group events by world.`,
+      ));
+    }
+  }
+
   // ── Event ref format ─────────────────────────────────────────────────────
   for (const tag of template.tags) {
     for (let i = 1; i < tag.length; i++) {
@@ -391,6 +416,19 @@ export function validateEvent(template) {
             'unused-verb',
             `Verb "${verb}" has no matching on-interact — players can type it but nothing happens`,
             `Add an ["on-interact", "${verb}", "<action>", "<target>"] tag, or remove "${verb}" from the verb tag.`,
+          ));
+        }
+      }
+      // on-interact verb without matching verb tag (players can't trigger it)
+      const declaredVerbs = new Set(
+        template.tags.filter((t) => t[0] === 'verb').flatMap((t) => t.slice(1))
+      );
+      for (const onVerb of onInteractVerbs) {
+        if (onVerb && onVerb !== 'examine' && !declaredVerbs.has(onVerb)) {
+          errors.push(err(
+            'undeclared-verb',
+            `on-interact uses verb "${onVerb}" but no ["verb", "${onVerb}"] tag exists — players cannot trigger this action`,
+            `Add a ["verb", "${onVerb}"] tag so the parser recognises this command.`,
           ));
         }
       }

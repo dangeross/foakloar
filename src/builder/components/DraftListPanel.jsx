@@ -213,6 +213,17 @@ export default function DraftListPanel({
                 try {
                   const data = parseJsonLenient(reader.result);
                   const validation = validateImport(worldSlug, data);
+                  // Run per-event validation — surface issues as warnings
+                  for (const event of validation.valid) {
+                    const dTag = event.tags?.find((t) => t[0] === 'd')?.[1] || '?';
+                    const result = validateEvent(event);
+                    for (const issue of result.errors) {
+                      validation.warnings.push(`${dTag}: ${issue.message}`);
+                    }
+                    for (const issue of result.warnings) {
+                      validation.warnings.push(`${dTag}: ${issue.message}`);
+                    }
+                  }
                   // Run cross-event validation on combined set
                   const combinedEvents = [...drafts, ...validation.valid];
                   const answers = { ...loadAnswers(worldSlug), ...(data.answers || {}) };
