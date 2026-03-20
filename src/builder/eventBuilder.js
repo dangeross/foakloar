@@ -502,3 +502,37 @@ export async function encryptEventContent(template, signer, answers, allEvents) 
     content: encrypted,
   };
 }
+
+/**
+ * Sign and publish an event template to a relay.
+ *
+ * @param {Object} signer - { signEvent(event), encryptTo?(pubkey, plaintext) }
+ * @param {Object} relay - relay ref (.current is the connected relay)
+ * @param {Object} template - from buildEventTemplate
+ * @param {Object} [options] - { answers, allEvents } for NIP-44 encryption
+ * @returns {Promise<{ ok: boolean, event?: Object, error?: string }>}
+ */
+export async function publishEvent(signer, relay, template, options = {}) {
+  try {
+    // Encrypt NIP-44 content if needed
+    const prepared = await encryptEventContent(
+      template, signer, options.answers, options.allEvents
+    );
+
+    const unsigned = {
+      ...prepared,
+      created_at: Math.floor(Date.now() / 1000),
+    };
+
+    const signed = await signer.signEvent(unsigned);
+
+    if (!relay.current) {
+      return { ok: false, error: 'Not connected to relay.' };
+    }
+
+    await relay.current.publish(signed);
+    return { ok: true, event: signed };
+  } catch (err) {
+    return { ok: false, error: err.message || 'Publish failed.' };
+  }
+}
