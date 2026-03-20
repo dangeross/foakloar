@@ -31,6 +31,9 @@ export default function ModeDropdown({
   draftsCount,
   onOpenDrafts,
   onNewWorld,
+  // Relay status
+  relayStatus,         // Map<url, status>
+  onOpenRelaySettings,
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -166,6 +169,41 @@ export default function ModeDropdown({
                   {'  '}+ new world
                 </button>
               )}
+            </>
+          )}
+
+          {/* Relay status */}
+          {relayStatus && relayStatus.size > 0 && (
+            <>
+              <div style={{ borderTop: '1px solid var(--colour-dim)' }}>
+                <button
+                  onClick={() => {
+                    onOpenRelaySettings?.();
+                    setOpen(false);
+                  }}
+                  className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                  style={{
+                    color: 'var(--colour-dim)',
+                    background: 'none',
+                    border: 'none',
+                    font: 'inherit',
+                  }}
+                >
+                  {(() => {
+                    const connected = [...relayStatus.values()].filter((s) => s === 'connected').length;
+                    const total = relayStatus.size;
+                    const color = connected === total ? 'var(--colour-highlight)'
+                      : connected > 0 ? 'var(--colour-title)'
+                      : 'var(--colour-error)';
+                    return (
+                      <>
+                        {'  '}relays{' '}
+                        <span style={{ color }}>{connected}/{total}</span>
+                      </>
+                    );
+                  })()}
+                </button>
+              </div>
             </>
           )}
         </div>
