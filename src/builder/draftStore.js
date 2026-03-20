@@ -383,52 +383,145 @@ export function resolvePubkeyPlaceholder(event, pubkey) {
 }
 
 /**
- * Bulk publish all drafts.
+ * Bulk publish all drafts to multiple relays.
  *
  * Handles NIP-44 encryption: events with content-type application/nip44
  * are encrypted using the puzzle answer from the answers store before publishing.
  *
+ * Publishes sequentially per relay (200ms delay) to avoid rate limits,
+ * parallel across relays. Only removes a draft when it has been published
+ * to ALL target relays.
+ *
  * @param {string} worldSlug
  * @param {string} pubkey - publisher's pubkey (for placeholder substitution)
  * @param {Object} signer - { signEvent(event), encryptTo?(pubkey, plaintext) }
- * @param {Object} relay - relay ref (.current)
- * @returns {Promise<{ published: number, failed: number, errors: string[] }>}
+ * @param {Object} pool - pool ref (.current is RelayPool)
+ * @param {Object} [options]
+ * @param {Function} [options.onProgress] - called after each event with { total, published, failed, details }
+ * @returns {Promise<{ published: number, failed: number, errors: string[], details: Array }>}
  */
-export async function bulkPublish(worldSlug, pubkey, signer, relay) {
-  const { publishEvent } = await import('./eventBuilder.js');
+export async function bulkPublish(worldSlug, pubkey, signer, pool, options = {}) {
+  const { publishEvent, encryptEventContent } = await import('./eventBuilder.js');
   const store = readStore(worldSlug);
   const answers = store.answers || {};
-  let published = 0;
-  let failed = 0;
+  const allResolved = store.events.map((e) => resolvePubkeyPlaceholder(e, pubkey));
   const errors = [];
-  const publishedIds = [];
 
-  for (const event of store.events) {
+  // Sign all events first
+  const signed = [];
+  for (let i = 0; i < store.events.length; i++) {
+    const event = store.events[i];
+    const resolved = allResolved[i];
+    const dTag = getTagValue(event, 'd') || '?';
     try {
-      const resolved = resolvePubkeyPlaceholder(event, pubkey);
-      const res = await publishEvent(signer, relay, resolved, {
-        answers,
-        allEvents: store.events.map((e) => resolvePubkeyPlaceholder(e, pubkey)),
-      });
-      if (res.ok) {
-        published++;
-        if (event._draft?.id) publishedIds.push(event._draft.id);
-      } else {
-        throw new Error(res.error);
-      }
+      const prepared = await encryptEventContent(resolved, signer, answers, allResolved);
+      const unsigned = { ...prepared, created_at: Math.floor(Date.now() / 1000) };
+      const signedEvent = await signer.signEvent(unsigned);
+      signed.push({ draftId: event._draft?.id, dTag, signed: signedEvent });
     } catch (err) {
-      failed++;
-      const dTag = getTagValue(event, 'd') || '?';
       errors.push(`${dTag}: ${err.message}`);
+      signed.push({ draftId: event._draft?.id, dTag, signed: null, error: err.message });
     }
   }
 
-  // Remove successfully published drafts
+  // Publish to all connected relays
+  const target = pool.current;
+  if (!target || typeof target.connectedUrls === 'undefined') {
+    // Legacy single relay fallback
+    return _bulkPublishLegacy(worldSlug, store, signed, target, errors, options);
+  }
+
+  const relayUrls = target.connectedUrls;
+  const total = signed.filter((s) => s.signed).length;
+
+  // Track per-event per-relay status
+  const details = signed.map((s) => ({
+    draftId: s.draftId,
+    dTag: s.dTag,
+    relays: Object.fromEntries(relayUrls.map((url) => [url, s.signed ? 'pending' : 'skipped'])),
+    signError: s.error || null,
+  }));
+
+  let publishedCount = 0;
+  let failedCount = 0;
+
+  // Publish sequentially per relay (delay between events), parallel across relays
+  const DELAY_MS = 200;
+  await Promise.allSettled(relayUrls.map(async (url) => {
+    const relay = target.getAnyRelay(); // We need per-url, but pool handles routing
+    for (let i = 0; i < signed.length; i++) {
+      const { signed: ev, dTag } = signed[i];
+      if (!ev) continue;
+      try {
+        const results = await target.publishTo(ev, [url]);
+        const result = results.get(url);
+        details[i].relays[url] = result?.ok ? 'ok' : 'failed';
+        if (!result?.ok) {
+          errors.push(`${dTag} → ${url}: ${result?.error || 'unknown'}`);
+        }
+      } catch (err) {
+        details[i].relays[url] = 'failed';
+        errors.push(`${dTag} → ${url}: ${err.message}`);
+      }
+      // Delay between events per relay
+      if (DELAY_MS > 0) await new Promise((r) => setTimeout(r, DELAY_MS));
+    }
+  }));
+
+  // Count results and remove fully-published drafts
+  const publishedIds = [];
+  for (const detail of details) {
+    if (detail.signError) { failedCount++; continue; }
+    const statuses = Object.values(detail.relays);
+    const allOk = statuses.every((s) => s === 'ok');
+    const anyOk = statuses.some((s) => s === 'ok');
+    if (allOk) {
+      publishedCount++;
+      if (detail.draftId) publishedIds.push(detail.draftId);
+    } else if (anyOk) {
+      // Partially published — keep draft (not fully replicated)
+      publishedCount++;
+    } else {
+      failedCount++;
+    }
+  }
+
+  // Only remove drafts that succeeded on ALL relays
   if (publishedIds.length > 0) {
     const idSet = new Set(publishedIds);
     store.events = store.events.filter((e) => !idSet.has(e._draft?.id));
     writeStore(worldSlug, store);
   }
 
-  return { published, failed, errors };
+  options.onProgress?.({ total, published: publishedCount, failed: failedCount, details });
+
+  return { published: publishedCount, failed: failedCount, errors, details };
+}
+
+/** Legacy fallback for single relay. */
+async function _bulkPublishLegacy(worldSlug, store, signed, relay, errors, options) {
+  let published = 0;
+  let failed = 0;
+  const publishedIds = [];
+
+  for (const { draftId, dTag, signed: ev, error } of signed) {
+    if (!ev) { failed++; continue; }
+    try {
+      if (!relay) throw new Error('Not connected to relay.');
+      await relay.publish(ev);
+      published++;
+      if (draftId) publishedIds.push(draftId);
+    } catch (err) {
+      failed++;
+      errors.push(`${dTag}: ${err.message}`);
+    }
+  }
+
+  if (publishedIds.length > 0) {
+    const idSet = new Set(publishedIds);
+    store.events = store.events.filter((e) => !idSet.has(e._draft?.id));
+    writeStore(worldSlug, store);
+  }
+
+  return { published, failed, errors, details: [] };
 }

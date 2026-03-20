@@ -42,7 +42,7 @@ export default function EventEditor({
   worldSlug,
   pubkey,
   signer,
-  relay,
+  pool,
   events,
   onClose,
   onPublished,
@@ -126,7 +126,7 @@ export default function EventEditor({
     // Resolve <PUBKEY> placeholders before publishing
     const resolved = resolvePubkeyPlaceholder(template, pubkey);
     const answers = loadAnswers(worldSlug);
-    const res = await publishEvent(signer, relay, resolved, {
+    const res = await publishEvent(signer, pool, resolved, {
       answers,
       allEvents: events,
     });
@@ -135,7 +135,7 @@ export default function EventEditor({
       onClose();
     }
     return res;
-  }, [signer, relay, template, pubkey, worldSlug, events, onPublished, onClose]);
+  }, [signer, pool, template, pubkey, worldSlug, events, onPublished, onClose]);
 
   const handleSaveDraft = useCallback(async () => {
     if (!onSaveDraft) return;
