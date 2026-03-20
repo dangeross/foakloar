@@ -103,7 +103,7 @@ export async function fetchNip65Relays(pubkey, pool) {
 }
 
 /** Parse a NIP-65 kind:10002 event into read/write relay lists. */
-function parseNip65(event) {
+export function parseNip65(event) {
   if (!event?.tags) return { read: [], write: [] };
 
   const read = [];
