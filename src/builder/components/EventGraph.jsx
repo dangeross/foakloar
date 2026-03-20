@@ -437,11 +437,12 @@ function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, 
     );
   };
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
   const sidebarStyle = {
     position: 'fixed', top: 34, right: 0, bottom: 0,
-    width: 260, zIndex: 102,
+    width: isMobile ? '100%' : 260, zIndex: 102,
     background: 'var(--colour-bg)',
-    borderLeft: '1px solid var(--colour-dim)',
+    borderLeft: isMobile ? 'none' : '1px solid var(--colour-dim)',
     overflowY: 'auto',
     padding: '12px 10px',
     fontSize: '0.6rem',
@@ -583,6 +584,7 @@ export default function EventGraph({
 }) {
   const [showNewMenu, setShowNewMenu] = useState(false);
   const [selectedRef, setSelectedRef] = useState(null);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
 
   const { nodes: initialNodes, edges: initialEdges, issuesByDTag } = useMemo(
     () => eventsToGraph(events, currentPlace, trustSet, clientMode),
@@ -670,10 +672,10 @@ export default function EventGraph({
           >
             [X]
           </button>
-          <span style={{ color: 'var(--colour-dim)', fontSize: '0.7rem', fontFamily: 'inherit' }}>
-            EVENT GRAPH — {nodes.filter((n) => n.type === 'place').length} places, {edges.length} connections
-            {orphanCount > 0 && <span style={{ color: 'var(--colour-error)' }}> · {orphanCount} orphan{orphanCount !== 1 ? 's' : ''}</span>}
-            {issuesByDTag.size > 0 && <span style={{ color: 'var(--colour-npc)' }}> · {issuesByDTag.size} issue{issuesByDTag.size !== 1 ? 's' : ''}</span>}
+          <span style={{ color: 'var(--colour-dim)', fontFamily: 'inherit' }} className="text-xs sm:text-sm">
+            {orphanCount > 0 && <span style={{ color: 'var(--colour-error)' }}>{orphanCount} orphan{orphanCount !== 1 ? 's' : ''}</span>}
+            {orphanCount > 0 && issuesByDTag.size > 0 && ' · '}
+            {issuesByDTag.size > 0 && <span style={{ color: 'var(--colour-npc)' }}>{issuesByDTag.size} issue{issuesByDTag.size !== 1 ? 's' : ''}</span>}
           </span>
         </div>
         {onNewEvent && (
@@ -733,7 +735,7 @@ export default function EventGraph({
       </div>
 
       {/* Graph */}
-      <div style={{ width: selectedRef ? 'calc(100% - 260px)' : '100%', height: '100%', paddingTop: 30, transition: 'width 0.15s' }}>
+      <div style={{ width: selectedRef && !isMobile ? 'calc(100% - 260px)' : '100%', height: '100%', paddingTop: 30, transition: 'width 0.15s' }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}

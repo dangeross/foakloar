@@ -10,6 +10,7 @@ import React from 'react';
 export default function IdentityButton({ identity, onClick }) {
   const isLoggedIn = identity?.method !== 'ephemeral';
   const shortPubkey = identity?.pubkey ? identity.pubkey.slice(0, 8) + '...' : '';
+  const tinyPubkey = identity?.pubkey ? identity.pubkey.slice(0, 4) + '...' : '';
 
   const Tag = onClick ? 'button' : 'span';
 
@@ -26,7 +27,12 @@ export default function IdentityButton({ identity, onClick }) {
       }}
       title={`${identity?.method}: ${identity?.pubkey || 'none'}`}
     >
-      {isLoggedIn ? `[${shortPubkey}]` : '[--]'}
+      {isLoggedIn ? (
+        <>
+          <span className="hidden sm:inline">[{shortPubkey}]</span>
+          <span className="sm:hidden">[{tinyPubkey}]</span>
+        </>
+      ) : '[--]'}
     </Tag>
   );
 }

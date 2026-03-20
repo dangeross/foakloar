@@ -447,17 +447,17 @@ export default function App() {
   return (
     <>
     {noiseOverlay}
-    <div className="max-w-2xl mx-auto p-6 flex flex-col h-screen game-text"
+    <div className="max-w-2xl mx-auto p-6 flex flex-col h-dvh game-text game-container"
          style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}>
-      <div className="text-sm mb-2 flex justify-between" style={{ color: 'var(--colour-dim)' }}>
-        <span className="flex items-center">
+      <div className="text-sm mb-2 flex justify-between items-center shrink-0" style={{ color: 'var(--colour-dim)' }}>
+        <span className="flex items-center min-w-0">
           <button
             onClick={navigateToLobby}
-            className="cursor-pointer"
+            className="cursor-pointer shrink-0"
             style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: 0 }}
           >w</button>
-          {' / '}
-          <span style={{ color: 'var(--colour-title)' }}>{worldTitle}</span>
+          <span className="shrink-0">{' / '}</span>
+          <span className="truncate" style={{ color: 'var(--colour-title)' }}>{worldTitle}</span>
           {worldConfig?.authorPubkey && worldConfig?.worldEvent?.id && (
             <button
               onClick={() => setShowZap(true)}
@@ -472,12 +472,13 @@ export default function App() {
                 marginLeft: '0.5em',
               }}
             >
-              zap
+              <span className="hidden sm:inline">zap</span>
+              <span className="sm:hidden">⚡</span>
             </button>
           )}
           {status !== 'ready' ? <span style={{ color: 'var(--colour-dim)' }}>{' | '}{status}</span> : ''}
         </span>
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-2 shrink-0">
           <ModeDropdown
             availableModes={availableModes.length > 0 ? availableModes : [effectiveMode]}
             effectiveMode={effectiveMode}
@@ -746,7 +747,7 @@ export default function App() {
       </div>
 
       {status === 'ready' && (
-        <form onSubmit={onSubmit} className="flex gap-2">
+        <form onSubmit={onSubmit} className="flex gap-2 shrink-0 pb-1">
           <span style={{ color: craftingActive ? 'var(--colour-puzzle)' : 'var(--colour-text)' }}>
             {dialogueActive ? '#' : puzzleActive ? '?' : craftingActive ? '+' : '>'}
           </span>

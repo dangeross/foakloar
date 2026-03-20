@@ -217,3 +217,42 @@ input {
   background: color-mix(in srgb, var(--colour-text) 30%, transparent);
   border-radius: 3px;
 }
+
+/* ── Mobile responsiveness ─────────────────────────────────────────── */
+
+/* Prevent iOS zoom on input focus */
+@supports (-webkit-touch-callout: none) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Safe area insets for notched devices */
+.game-container {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Mobile: tighter padding, full width */
+@media (max-width: 640px) {
+  :root {
+    --font-size: 14px;
+  }
+  .game-container {
+    padding: 0.5rem;
+    max-width: 100%;
+  }
+  .game-header {
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .game-container {
+    padding: 1rem;
+    max-width: 48rem;
+  }
+}

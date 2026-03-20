@@ -14,6 +14,13 @@ const MODE_LABELS = {
   build: 'build',
 };
 
+const MODE_LABELS_SHORT = {
+  canonical: 'orig',
+  community: 'collab',
+  explorer: 'open',
+  build: 'build',
+};
+
 export default function ModeDropdown({
   availableModes,
   effectiveMode,
@@ -41,6 +48,7 @@ export default function ModeDropdown({
   }, [open]);
 
   const currentLabel = buildMode ? MODE_LABELS.build : (MODE_LABELS[effectiveMode] || effectiveMode);
+  const currentLabelShort = buildMode ? MODE_LABELS_SHORT.build : (MODE_LABELS_SHORT[effectiveMode] || effectiveMode);
 
   return (
     <span ref={ref} style={{ position: 'relative' }}>
@@ -55,7 +63,8 @@ export default function ModeDropdown({
           padding: 0,
         }}
       >
-        [{currentLabel}]
+        <span className="hidden sm:inline">[{currentLabel}]</span>
+        <span className="sm:hidden">[{currentLabelShort}]</span>
       </button>
 
       {open && (

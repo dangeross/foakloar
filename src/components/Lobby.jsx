@@ -106,7 +106,7 @@ export default function Lobby({
 
   return (
     <div
-      className="max-w-2xl mx-auto p-6 flex flex-col h-screen font-mono text-xs game-text"
+      className="max-w-2xl mx-auto p-6 flex flex-col h-dvh font-mono text-xs game-text game-container"
       style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}
     >
       {/* ── Header ──────────────────────────────────────────────────────── */}

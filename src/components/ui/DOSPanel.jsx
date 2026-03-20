@@ -41,8 +41,8 @@ export default function DOSPanel({
           border: '2px solid var(--colour-dim)',
           boxShadow: '4px 4px 0 var(--colour-dim)',
           padding: 0,
-          minWidth,
-          maxWidth,
+          minWidth: `min(${minWidth}, calc(100vw - 1rem))`,
+          maxWidth: `min(${maxWidth}, calc(100vw - 1rem))`,
           maxHeight,
         }}
       >
