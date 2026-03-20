@@ -97,13 +97,13 @@ export default function App() {
   const worldTag = route.worldSlug;
 
   // ── Core hooks (worldTag-scoped) ─────────────────────────────────────────
-  const { events, status, relay } = useRelay(worldTag);
+  const { events, status, pool, relayStatus, publishUrls } = useRelay(worldTag);
   const player = usePlayerState(worldTag);
   const identity = useSigner();
   const backup = useStateBackup({
     worldTag,
     signer: identity.signer,
-    relay,
+    pool,
     playerState: player.state,
     npcStates: player.npcStates,
     replaceState: player.replaceState,
@@ -592,7 +592,7 @@ export default function App() {
           targetPubkey={vouchTarget}
           worldSlug={worldTag}
           signer={identity.signer}
-          relay={relay}
+          pool={pool}
           onClose={() => setVouchTarget(null)}
         />
       )}
@@ -681,7 +681,7 @@ export default function App() {
               alert(`Cannot publish — ${allErrors.length} error(s):\n\n${msgs.join('\n')}`);
               return;
             }
-            const result = await bulkPublish(worldTag, identity.pubkey, identity.signer, relay);
+            const result = await bulkPublish(worldTag, identity.pubkey, identity.signer, pool);
             setDrafts(loadDrafts(worldTag));
             // TODO: show result.published / result.failed feedback
           }}
@@ -702,7 +702,7 @@ export default function App() {
           worldSlug={worldTag}
           pubkey={identity.pubkey}
           signer={identity.signer}
-          relay={relay}
+          pool={pool}
           events={mergedEvents}
           eventTemplate={editorState.eventTemplate || null}
           initialTags={editorState.initialTags || []}

@@ -53,6 +53,7 @@ A decentralised text adventure built on NOSTR (kind 30078). The world is a graph
 | `src/builder/components/ui/InlineList.jsx` | Shared chip-tag input (aliases, tags, relays) |
 | `src/builder/components/ui/DOSSelect.jsx` | Themed dropdown select |
 | `src/builder/components/ui/DOSButton.jsx` | Themed button |
+| `.claude/proposals.md` | Feature proposals — tracked ideas and their status |
 | `lib/events/*.mjs` | World event definitions (places, portals, items, features, clues) |
 | `lib/events/trust-test.mjs` | Trust test events — collaborator, vouched, untrusted authors |
 | `tools/publish-world.mjs` | Publishes events to relays (4 author keypairs) |

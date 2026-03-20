@@ -19,7 +19,7 @@ export default function VouchPanel({
   targetPubkey,
   worldSlug,
   signer,
-  relay,
+  pool,
   onClose,
 }) {
   const [scope, setScope] = useState('all');
@@ -49,7 +49,7 @@ export default function VouchPanel({
       content: '',
     });
 
-    const result = await publishEvent(signer, relay, template);
+    const result = await publishEvent(signer, pool, template);
     if (result.ok) {
       setStatus('success');
       setTimeout(onClose, 800);
@@ -57,7 +57,7 @@ export default function VouchPanel({
       setStatus('error');
       setError(result.error || 'Failed to publish vouch.');
     }
-  }, [signer, relay, targetPubkey, worldSlug, scope, canVouch, onClose]);
+  }, [signer, pool, targetPubkey, worldSlug, scope, canVouch, onClose]);
 
   return (
     <DOSPanel title="VOUCH" onClose={onClose} minWidth="24em" maxWidth="90vw">

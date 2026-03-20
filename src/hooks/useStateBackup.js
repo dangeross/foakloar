@@ -4,6 +4,9 @@
  * Publishes player state as a kind 30078 replaceable event encrypted
  * to the player's own pubkey. Only the player can decrypt it.
  *
+ * Works with RelayPool — publishes to all connected relays,
+ * loads from the first relay that has the state.
+ *
  * Event shape:
  *   kind: 30078
  *   tags: [["d", "<world>:player-state:<pubkey>"], ["t", "<world>"], ["type", "player-state"]]
@@ -16,13 +19,13 @@ import { useState, useCallback } from 'react';
  * @param {{
  *   worldTag: string,
  *   signer: { signEvent, encrypt?, decrypt?, pubkey } | null,
- *   relay: { current: Relay | null },
+ *   pool: { current: RelayPool | null },
  *   playerState: object,
  *   npcStates: object,
  *   replaceState: (playerState, npcStates) => void,
  * }} opts
  */
-export function useStateBackup({ worldTag, signer, relay, playerState, npcStates, replaceState }) {
+export function useStateBackup({ worldTag, signer, pool, playerState, npcStates, replaceState }) {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
@@ -31,15 +34,15 @@ export function useStateBackup({ worldTag, signer, relay, playerState, npcStates
   const canBackup = !!(signer?.encrypt && signer?.decrypt && signer?.pubkey);
 
   /**
-   * Serialise current state, encrypt with NIP-44, and publish to relay.
+   * Serialise current state, encrypt with NIP-44, and publish to relays.
    */
   const saveToRelay = useCallback(async () => {
     if (!canBackup) {
       setError('Encryption not available.');
       return { ok: false };
     }
-    const r = relay.current;
-    if (!r) {
+    const target = pool.current;
+    if (!target) {
       setError('Not connected to relay.');
       return { ok: false };
     }
@@ -71,7 +74,15 @@ export function useStateBackup({ worldTag, signer, relay, playerState, npcStates
       };
 
       const signed = await signer.signEvent(eventTemplate);
-      await r.publish(signed);
+
+      // Publish to all connected relays (pool or legacy)
+      if (typeof target.publish === 'function' && typeof target.connectedUrls !== 'undefined') {
+        const results = await target.publish(signed);
+        const anyOk = [...results.values()].some((r) => r.ok);
+        if (!anyOk) throw new Error('Failed to publish to any relay.');
+      } else {
+        await target.publish(signed);
+      }
 
       setLastSaved(new Date());
       setSaving(false);
@@ -81,18 +92,19 @@ export function useStateBackup({ worldTag, signer, relay, playerState, npcStates
       setSaving(false);
       return { ok: false, error: err.message };
     }
-  }, [canBackup, relay, signer, playerState, npcStates]);
+  }, [canBackup, pool, signer, playerState, npcStates]);
 
   /**
-   * Fetch player-state event from relay, decrypt, and restore.
+   * Fetch player-state event from relays, decrypt, and restore.
+   * Tries the first connected relay that has the state.
    */
   const loadFromRelay = useCallback(async () => {
     if (!canBackup) {
       setError('Encryption not available.');
       return { ok: false };
     }
-    const r = relay.current;
-    if (!r) {
+    const target = pool.current;
+    if (!target) {
       setError('Not connected to relay.');
       return { ok: false };
     }
@@ -102,6 +114,13 @@ export function useStateBackup({ worldTag, signer, relay, playerState, npcStates
 
     try {
       const dTag = `${worldTag}:player-state:${signer.pubkey}`;
+
+      // Use pool subscribe if available, else legacy
+      const r = (typeof target.getAnyRelay === 'function')
+        ? target.getAnyRelay()
+        : target;
+
+      if (!r) throw new Error('No relay connected.');
 
       // Fetch the player-state event
       const event = await new Promise((resolve, reject) => {
@@ -151,7 +170,7 @@ export function useStateBackup({ worldTag, signer, relay, playerState, npcStates
       setLoading(false);
       return { ok: false, error: err.message };
     }
-  }, [canBackup, relay, signer, replaceState]);
+  }, [canBackup, pool, signer, replaceState]);
 
   return {
     canBackup,

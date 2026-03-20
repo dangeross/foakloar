@@ -504,15 +504,18 @@ export async function encryptEventContent(template, signer, answers, allEvents) 
 }
 
 /**
- * Sign and publish an event template to a relay.
+ * Sign and publish an event template to relays.
+ *
+ * Accepts either a RelayPool ref (pool.current) or a legacy relay ref.
+ * When a pool is provided, publishes to all connected relays.
  *
  * @param {Object} signer - { signEvent(event), encryptTo?(pubkey, plaintext) }
- * @param {Object} relay - relay ref (.current is the connected relay)
+ * @param {Object} poolOrRelay - pool ref (.current is RelayPool or legacy Relay)
  * @param {Object} template - from buildEventTemplate
  * @param {Object} [options] - { answers, allEvents } for NIP-44 encryption
- * @returns {Promise<{ ok: boolean, event?: Object, error?: string }>}
+ * @returns {Promise<{ ok: boolean, event?: Object, error?: string, results?: Map }>}
  */
-export async function publishEvent(signer, relay, template, options = {}) {
+export async function publishEvent(signer, poolOrRelay, template, options = {}) {
   try {
     // Encrypt NIP-44 content if needed
     const prepared = await encryptEventContent(
@@ -526,11 +529,27 @@ export async function publishEvent(signer, relay, template, options = {}) {
 
     const signed = await signer.signEvent(unsigned);
 
-    if (!relay.current) {
-      return { ok: false, error: 'Not connected to relay.' };
+    const target = poolOrRelay.current;
+    if (!target) {
+      return { ok: false, error: 'Not connected to any relay.' };
     }
 
-    await relay.current.publish(signed);
+    // RelayPool (has .publish that returns Map of results)
+    if (typeof target.publish === 'function' && typeof target.connectedUrls !== 'undefined') {
+      const results = await target.publish(signed);
+      const anyOk = [...results.values()].some((r) => r.ok);
+      if (!anyOk) {
+        const errors = [...results.entries()]
+          .filter(([, r]) => !r.ok)
+          .map(([url, r]) => `${url}: ${r.error}`)
+          .join('; ');
+        return { ok: false, error: errors, results };
+      }
+      return { ok: true, event: signed, results };
+    }
+
+    // Legacy single relay
+    await target.publish(signed);
     return { ok: true, event: signed };
   } catch (err) {
     return { ok: false, error: err.message || 'Publish failed.' };
