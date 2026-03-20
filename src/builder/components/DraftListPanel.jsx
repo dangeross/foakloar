@@ -28,6 +28,7 @@ export default function DraftListPanel({
   onExport,
   onBulkPublish,
   onDeleteAll,
+  zIndex,
 }) {
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
@@ -107,7 +108,9 @@ export default function DraftListPanel({
   }
 
   return (
-    <DOSPanel title="DRAFTS" onClose={onClose} minWidth="30em">
+    <DOSPanel title="DRAFTS" onClose={onClose} minWidth="30em" zIndex={zIndex} noPadding>
+      <div style={{ display: 'flex', flexDirection: 'column', maxHeight: 'calc(80vh - 6em)', minHeight: 0 }}>
+      <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', minHeight: 0, padding: '0.5rem 0.75rem 0' }}>
       {drafts.length === 0 && (
         <div style={{ color: 'var(--colour-dim)' }}>No drafts yet.</div>
       )}
@@ -191,7 +194,8 @@ export default function DraftListPanel({
         );
       })}
 
-      <div className="mt-3 flex gap-2 flex-wrap">
+      </div>{/* end scrollable list */}
+      <div className="flex gap-2 flex-wrap shrink-0" style={{ borderTop: '1px solid var(--colour-dim)', padding: '0.5rem 0.75rem' }}>
         {/* Import */}
         <DOSButton onClick={() => fileRef.current?.click()} colour="dim">
           Import
@@ -262,7 +266,8 @@ export default function DraftListPanel({
             </DOSButton>
           </span>
         )}
-      </div>
+      </div>{/* end footer */}
+      </div>{/* end flex wrapper */}
     </DOSPanel>
   );
 }

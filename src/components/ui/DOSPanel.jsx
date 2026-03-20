@@ -15,6 +15,7 @@ export default function DOSPanel({
   maxWidth = '90vw',
   maxHeight = '80vh',
   zIndex,
+  noPadding,
 }) {
   return (
     <div
@@ -61,7 +62,7 @@ export default function DOSPanel({
         </div>
 
         {/* Content */}
-        <div className="p-3 overflow-y-auto overflow-x-hidden flex-1">
+        <div className={`${noPadding ? '' : 'p-3'} overflow-y-auto overflow-x-hidden flex-1`}>
           {children}
         </div>
       </div>

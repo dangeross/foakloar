@@ -579,7 +579,7 @@ let savedViewport = null;
 
 export default function EventGraph({
   events, currentPlace, onEditEvent, onNewEvent, onNewPortal, onClose,
-  pubkey, trustSet, clientMode, onVouch,
+  pubkey, trustSet, clientMode, onVouch, onOpenDrafts, draftsCount,
 }) {
   const [showNewMenu, setShowNewMenu] = useState(false);
   const [selectedRef, setSelectedRef] = useState(null);
@@ -681,33 +681,51 @@ export default function EventGraph({
             <button
               onClick={() => setShowNewMenu(!showNewMenu)}
               style={{
-                color: 'var(--colour-text)', background: 'none',
-                border: '1px solid var(--colour-dim)', font: 'inherit',
-                fontSize: '0.6rem', padding: '2px 8px', cursor: 'pointer',
+                color: 'var(--colour-item)', background: 'none',
+                border: 'none', font: 'inherit',
+                padding: '2px 4px', cursor: 'pointer',
               }}
             >
-              + new
+              [build]
             </button>
             {showNewMenu && (
-              <div style={{
-                position: 'absolute', right: 0, top: '100%', zIndex: 200,
-                border: '1px solid var(--colour-dim)', backgroundColor: 'var(--colour-bg)',
-                padding: '2px 0', minWidth: 120, maxHeight: 260, overflowY: 'auto',
-                fontSize: '0.6rem',
-              }}>
+              <div
+                className="font-mono text-xs"
+                style={{
+                  position: 'absolute', right: 0, top: '100%', zIndex: 200,
+                  border: '1px solid var(--colour-dim)', backgroundColor: 'var(--colour-bg)',
+                  boxShadow: '2px 2px 0 var(--colour-dim)',
+                  padding: '2px 0', minWidth: 140, maxHeight: 300, overflowY: 'auto',
+                }}
+              >
                 {GRAPH_EVENT_TYPES.map(({ value, label }) => (
                   <button
                     key={value}
                     onClick={() => { setShowNewMenu(false); onNewEvent(value); }}
-                    className="block w-full text-left"
+                    className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
                     style={{
                       color: 'var(--colour-text)', background: 'none', border: 'none',
-                      font: 'inherit', fontSize: 'inherit', padding: '2px 8px', cursor: 'pointer',
+                      font: 'inherit',
                     }}
                   >
                     + {label}
                   </button>
                 ))}
+                {onOpenDrafts && (
+                  <>
+                    <div style={{ borderTop: '1px solid var(--colour-dim)', margin: '2px 0' }} />
+                    <button
+                      onClick={() => { setShowNewMenu(false); onOpenDrafts(); }}
+                      className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                      style={{
+                        color: 'var(--colour-item)', background: 'none', border: 'none',
+                        font: 'inherit',
+                      }}
+                    >
+                      drafts{draftsCount > 0 ? ` (${draftsCount})` : ''}
+                    </button>
+                  </>
+                )}
               </div>
             )}
           </div>

@@ -617,6 +617,8 @@ export default function App() {
             setEditorState({ eventType: 'portal', initialTags });
           }}
           onVouch={(targetPubkey) => setVouchTarget(targetPubkey)}
+          onOpenDrafts={() => setShowDrafts(true)}
+          draftsCount={drafts.length}
           onClose={() => setBuildMode(false)}
         />
       )}
@@ -626,6 +628,7 @@ export default function App() {
         <DraftListPanel
           drafts={drafts}
           worldSlug={worldTag}
+          zIndex={buildMode ? 110 : undefined}
           onClose={() => setShowDrafts(false)}
           onEdit={(draft) => {
             const eventType = draft.tags?.find((t) => t[0] === 'type')?.[1] || 'place';

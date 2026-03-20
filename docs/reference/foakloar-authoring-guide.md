@@ -798,11 +798,20 @@ Before publishing, validate your world file against the validation API. This cat
 
 **Endpoint:** `POST https://foakloar.vercel.app/api/validate`
 
-**New world:**
+If your JSON file contains `//` comments (as LLM-generated files often do), set `Content-Type: text/plain` — the API will strip comments before parsing. For comment-free JSON, use `application/json`.
+
+**New world (with comments):**
+```bash
+curl -X POST https://foakloar.vercel.app/api/validate \
+  -H "Content-Type: text/plain" \
+  --data-binary @my-world-events.json
+```
+
+**New world (no comments):**
 ```bash
 curl -X POST https://foakloar.vercel.app/api/validate \
   -H "Content-Type: application/json" \
-  -d @my-world-events.json
+  --data-binary @my-world-events.json
 ```
 
 **Expansion (adding to an existing published world):**
