@@ -607,6 +607,11 @@ export default function App() {
             });
           }}
           onNewEvent={(eventType) => setEditorState({ eventType })}
+          onNewPortal={(placeRef, slot, destRef) => {
+            const initialTags = [['exit', placeRef, slot, '']];
+            if (destRef) initialTags.push(['exit', destRef, '', '']);
+            setEditorState({ eventType: 'portal', initialTags });
+          }}
           onVouch={(targetPubkey) => setVouchTarget(targetPubkey)}
           onClose={() => setBuildMode(false)}
         />

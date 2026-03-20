@@ -38,7 +38,7 @@ const GRAPH_EVENT_TYPES = [
 
 // ── Custom node components ──────────────────────────────────────────────
 
-const handleStyle = { background: 'transparent', width: 1, height: 1, border: 'none', opacity: 0 };
+const handleStyle = { background: 'color-mix(in srgb, var(--colour-bg) 90%, var(--colour-dim))', width: 10, height: 10, border: '1px solid var(--colour-npc)', opacity: 0.6 };
 
 function PlaceNode({ data }) {
   const borderColour = data.current ? 'var(--colour-highlight)' : 'var(--colour-text)';
@@ -294,7 +294,7 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode) {
 
 // ── Sidebar ─────────────────────────────────────────────────────────────
 
-function GraphSidebar({ selectedRef, events, onEditEvent, onVouch, onClose, pubkey, trustSet }) {
+function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, onClose, pubkey, trustSet }) {
   if (!selectedRef) return null;
   const event = events.get(selectedRef);
   if (!event) return null;
@@ -319,7 +319,7 @@ function GraphSidebar({ selectedRef, events, onEditEvent, onVouch, onClose, pubk
     }
   }
 
-  // Collect portals for places
+  // Collect portals for places (from portal events)
   const portals = [];
   if (type === 'place') {
     for (const [, ev] of events) {
@@ -334,6 +334,25 @@ function GraphSidebar({ selectedRef, events, onEditEvent, onVouch, onClose, pubk
         return dEvent ? getTag(dEvent, 'title') || 'unknown' : 'unknown';
       });
       portals.push({ ref: portalRef, slots, dests: dests.join(', '), author: ev.pubkey, isDraft: !!ev._isDraft });
+    }
+    // Also collect exit tags directly on the place event.
+    // Two forms: ["exit", "north"] — slot only (portal is sole source of destination)
+    //            ["exit", "30078:...", "north", "label"] — extended, hints destination
+    const placeExits = getTags(event, 'exit');
+    for (const exitTag of placeExits) {
+      const destRef = exitTag[1];
+      const slotOnly = !destRef?.startsWith('30078:');
+      const effectiveSlot = slotOnly ? destRef : (exitTag[2] || '');
+      // Skip if this slot is already covered by a portal
+      const alreadyCovered = portals.some((p) => p.slots.split(', ').includes(effectiveSlot));
+      if (alreadyCovered) continue;
+      if (slotOnly) {
+        portals.push({ ref: selectedRef, slots: destRef, dests: null, author, isDraft, isPlaceExit: true });
+      } else {
+        const dEvent = events.get(destRef);
+        const destTitle = dEvent ? getTag(dEvent, 'title') || 'unknown' : 'unknown';
+        portals.push({ ref: selectedRef, slots: effectiveSlot, dests: destTitle, author, isDraft, isPlaceExit: true });
+      }
     }
   }
 
@@ -415,22 +434,40 @@ function GraphSidebar({ selectedRef, events, onEditEvent, onVouch, onClose, pubk
       <AuthorLine pk={author} />
       <div style={{ marginTop: 4, marginBottom: 8 }} />
 
-      {/* Portals */}
-      {portals.length > 0 && (
+      {/* Exits */}
+      {type === 'place' && (
         <div style={{ marginBottom: 8 }}>
-          <div style={{ color: 'var(--colour-dim)', marginBottom: 2 }}>Portals:</div>
+          <div style={{ color: 'var(--colour-dim)', marginBottom: 2 }}>
+            Exits:
+            <button
+              onClick={() => onNewPortal(selectedRef, '')}
+              style={{ color: 'var(--colour-item)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', cursor: 'pointer', marginLeft: 6 }}
+            >[+]</button>
+          </div>
           {portals.map((p, i) => (
             <div key={i} style={{ marginLeft: 8, marginBottom: 3 }}>
-              <div>
-                <span style={{ color: 'var(--colour-exits)' }}>{p.slots}</span>
-                <span style={{ color: 'var(--colour-dim)' }}> → </span><span style={{ color: 'var(--colour-text)' }}>{p.dests}</span>
-                {p.isDraft && <span style={{ color: 'var(--colour-item)', fontSize: '0.45rem' }}> DRAFT</span>}
-                <button
-                  onClick={() => onEditEvent(p.ref)}
-                  style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', cursor: 'pointer', marginLeft: 4 }}
-                >[edit]</button>
-              </div>
-              <AuthorLine pk={p.author} />
+              {p.isPlaceExit ? (
+                <div>
+                  <span style={{ color: 'var(--colour-error)' }}>{p.slots}</span>
+                  {p.dests && <><span style={{ color: 'var(--colour-dim)' }}> → </span><span style={{ color: 'var(--colour-dim)', fontSize: '0.45rem' }}>{p.dests}</span></>}
+                  <span style={{ color: 'var(--colour-dim)', fontSize: '0.45rem' }}> (no portal)</span>
+                  <button
+                    onClick={() => onNewPortal(selectedRef, p.slots)}
+                    style={{ color: 'var(--colour-item)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', cursor: 'pointer', marginLeft: 4 }}
+                  >[+ add]</button>
+                </div>
+              ) : (
+                <div>
+                  <span style={{ color: 'var(--colour-exits)' }}>{p.slots}</span>
+                  <span style={{ color: 'var(--colour-dim)' }}> → </span><span style={{ color: 'var(--colour-text)' }}>{p.dests}</span>
+                  {p.isDraft && <span style={{ color: 'var(--colour-item)', fontSize: '0.45rem' }}> DRAFT</span>}
+                  <button
+                    onClick={() => onEditEvent(p.ref)}
+                    style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', cursor: 'pointer', marginLeft: 4 }}
+                  >[edit]</button>
+                </div>
+              )}
+              {!p.isPlaceExit && <AuthorLine pk={p.author} />}
             </div>
           ))}
         </div>
@@ -480,7 +517,7 @@ let savedViewport = null;
 // ── Main component ──────────────────────────────────────────────────────
 
 export default function EventGraph({
-  events, currentPlace, onEditEvent, onNewEvent, onClose,
+  events, currentPlace, onEditEvent, onNewEvent, onNewPortal, onClose,
   pubkey, trustSet, clientMode, onVouch,
 }) {
   const [showNewMenu, setShowNewMenu] = useState(false);
@@ -513,6 +550,17 @@ export default function EventGraph({
   const onPaneClick = useCallback(() => {
     setSelectedRef(null);
   }, []);
+
+  // Drag edge between two place nodes → create portal
+  const onConnect = useCallback((connection) => {
+    if (!onNewPortal || !connection.source || !connection.target) return;
+    // Only allow connecting place nodes
+    const srcNode = initialNodes.find((n) => n.id === connection.source);
+    const tgtNode = initialNodes.find((n) => n.id === connection.target);
+    if (!srcNode || !tgtNode) return;
+    if (srcNode.type !== 'place' || tgtNode.type !== 'place') return;
+    onNewPortal(connection.source, '', connection.target);
+  }, [onNewPortal, initialNodes]);
 
   const onMoveEnd = useCallback((_, viewport) => {
     savedViewport = viewport;
@@ -614,6 +662,7 @@ export default function EventGraph({
           onNodeClick={onNodeClick}
           onEdgeClick={onEdgeClick}
           onPaneClick={onPaneClick}
+          onConnect={onConnect}
           onMoveEnd={onMoveEnd}
           onInit={onInit}
           nodeTypes={nodeTypes}
@@ -633,6 +682,7 @@ export default function EventGraph({
         selectedRef={selectedRef}
         events={events}
         onEditEvent={onEditEvent}
+        onNewPortal={onNewPortal}
         onVouch={onVouch}
         onClose={() => setSelectedRef(null)}
         pubkey={pubkey}

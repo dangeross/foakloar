@@ -16,16 +16,20 @@ export default function DOSPanel({
   maxHeight = '80vh',
   zIndex,
 }) {
-  const backdropZ = zIndex ? zIndex - 1 : undefined;
   return (
-    <>
-      <div
-        className="fixed inset-0 z-40"
-        style={backdropZ ? { zIndex: backdropZ } : undefined}
-        onClick={onClose}
-      />
+    <div
+      className="fixed inset-0"
+      style={{ zIndex: zIndex || 50 }}
+      onClick={onClose}
+      onMouseDown={(e) => {
+        // Only close if clicking the backdrop itself, not children
+        if (e.target === e.currentTarget) e.stopPropagation();
+      }}
+    >
       <div
         className="fixed font-mono text-xs flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
         style={{
           zIndex: zIndex || 50,
           top: '50%',
@@ -61,6 +65,6 @@ export default function DOSPanel({
           {children}
         </div>
       </div>
-    </>
+    </div>
   );
 }

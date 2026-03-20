@@ -150,7 +150,8 @@ function DOSSelect({ value, onChange, options, placeholder }) {
         ref={triggerRef}
         className="flex items-center cursor-pointer px-1 w-full"
         style={{ border: '1px solid var(--colour-dim)', minHeight: '1.5em' }}
-        onClick={() => setOpen(!open)}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
       >
         <span className="flex-1 text-xs truncate" style={{ color: value ? 'var(--colour-text)' : 'var(--colour-dim)' }}>
           {value || placeholder || 'Select...'}
@@ -162,6 +163,8 @@ function DOSSelect({ value, onChange, options, placeholder }) {
         <div
           ref={dropdownRef}
           className="font-mono text-xs"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
           style={{
             position: 'fixed',
             left: pos.left,
@@ -348,8 +351,47 @@ function EventRefSelect({ value, onChange, events, eventTypeFilter, placeholder:
   );
 }
 
+/** Compute exit slots already used by portal events for a given place ref */
+function getUsedSlots(placeRef, events) {
+  if (!placeRef || !events) return [];
+  const used = new Set();
+  for (const [, ev] of events) {
+    const type = ev.tags?.find((t) => t[0] === 'type')?.[1];
+    if (type !== 'portal') continue;
+    const exits = ev.tags.filter((t) => t[0] === 'exit');
+    const matchesPlace = exits.some((e) => e[1] === placeRef);
+    if (!matchesPlace) continue;
+    for (const e of exits) {
+      if (e[1] === placeRef && e[2]) used.add(e[2]);
+    }
+  }
+  return [...used];
+}
+
 /** Render a single field based on its type */
-function TagField({ field, value, onChange, events }) {
+function TagField({ field, value, onChange, events, tagName, siblingValues }) {
+  // Special case: exit slot on portals shows free slots when place is selected
+  if (tagName === 'exit' && field.name === 'slot' && siblingValues?.['place-ref'] && events) {
+    const placeRef = siblingValues['place-ref'];
+    const placeEvent = events.get(placeRef);
+    if (placeEvent) {
+      // Collect all slots defined on the place event
+      const placeSlots = [];
+      for (const t of placeEvent.tags.filter((t) => t[0] === 'exit')) {
+        if (t[1] && !t[1].startsWith('30078:')) placeSlots.push(t[1]); // slot-only: ["exit", "north"]
+        else if (t[2]) placeSlots.push(t[2]); // extended: ["exit", "30078:...", "north", "label"]
+      }
+      // Filter out slots already used by portals
+      const usedSlots = getUsedSlots(placeRef, events);
+      const freeSlots = placeSlots.filter((s) => !usedSlots.includes(s));
+      if (freeSlots.length > 0 || value) {
+        const slots = [...freeSlots];
+        if (value && !slots.includes(value)) slots.unshift(value);
+        return <DOSSelect value={value} onChange={onChange} options={slots} />;
+      }
+    }
+  }
+
   switch (field.type) {
     case 'text':
       return <DOSInput value={value} onChange={onChange} placeholder={field.placeholder} />;
@@ -453,6 +495,8 @@ function TagRow({ tagName, tag, fields, onChange, onRemove, onMoveUp, onMoveDown
                 value={values[field.name] || ''}
                 onChange={(v) => updateField(field.name, v)}
                 events={events}
+                tagName={tagName}
+                siblingValues={values}
               />
             </div>
           );

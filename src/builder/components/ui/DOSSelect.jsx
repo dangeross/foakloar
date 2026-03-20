@@ -6,12 +6,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
-export default function DOSSelect({ value, onChange, options }) {
+export default function DOSSelect({ value, onChange, options: rawOptions }) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
   const [pos, setPos] = useState(null);
 
+  // Normalize options: accept strings or {value, label} objects
+  const options = rawOptions.map((o) => typeof o === 'string' ? { value: o, label: o } : o);
   const selected = options.find((o) => o.value === value);
 
   // Reposition on open, scroll, and resize
@@ -47,7 +49,8 @@ export default function DOSSelect({ value, onChange, options }) {
         ref={triggerRef}
         className="flex items-center cursor-pointer px-1 w-full"
         style={{ border: '1px solid var(--colour-dim)', minHeight: '1.5em' }}
-        onClick={() => setOpen(!open)}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
       >
         <span className="flex-1 text-xs truncate" style={{ color: 'var(--colour-text)' }}>
           {selected?.label || value}
@@ -59,6 +62,8 @@ export default function DOSSelect({ value, onChange, options }) {
         <div
           ref={dropdownRef}
           className="font-mono text-xs"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
           style={{
             position: 'fixed',
             left: pos.left,
