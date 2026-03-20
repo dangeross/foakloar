@@ -228,6 +228,29 @@ export function validateWorld(events, answers = {}) {
     // would collide at every place — noisy false positives.
     // Only flag collisions between entities co-located at this place.
 
+    // Check for verb tags that shadow built-in commands
+    const builtInVerbs = new Set([
+      'look', 'l', 'examine', 'x',
+      'talk', 'speak',
+      'take', 'get', 'grab', 'pick up',
+      'drop',
+      'attack',
+      'inventory', 'i',
+      'help', 'h',
+      'quests', 'quest', 'q',
+      'go',
+    ]);
+    for (const { eventDTag, alias } of verbSources) {
+      if (builtInVerbs.has(alias)) {
+        warnings.push({
+          dTag: eventDTag,
+          category: 'verb-collision',
+          message: `Verb alias "${alias}" shadows a built-in command and will be unreachable`,
+          fix: `Remove "${alias}" from the verb tag on "${eventDTag}" — the engine handles "${alias}" as a built-in command before checking data-driven verbs.`,
+        });
+      }
+    }
+
     // Find collisions: same alias, different canonical
     const aliasMap = new Map();
     for (const { eventDTag, canonical, alias } of verbSources) {

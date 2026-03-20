@@ -2417,7 +2417,7 @@ export class GameEngine {
       ['take &lt;item&gt; from &lt;container&gt;', 'Take from a container'],
       ['drop &lt;item&gt;', 'Drop an item on the ground'],
       ['inventory (i)', 'Show what you are carrying'],
-      ['talk &lt;npc&gt;', 'Talk to someone'],
+      ['talk &lt;someone&gt;', 'Talk to someone'],
       ['quests (q)', 'Show quest log'],
       ['help (h)', 'Show this help'],
     ];
@@ -2695,6 +2695,10 @@ export class GameEngine {
     // Built-in: pick up / take
     const pickupMatch = trimmed.match(/^(?:pick up|take|get|grab)\s+(.+)$/);
     if (pickupMatch) { this.handlePickup(pickupMatch[1]); return; }
+
+    // Built-in: talk / speak
+    const talkMatch = trimmed.match(/^(?:talk to|talk|speak with|speak to|speak)\s+(.+)$/);
+    if (talkMatch) { this.handleInteraction('talk', talkMatch[1], null); return; }
 
     // Data-driven verb/noun parser — include roaming NPCs as verb sources
     const roamingHere = findRoamingNpcsAtPlace(

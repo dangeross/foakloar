@@ -684,6 +684,9 @@ export default function App() {
           onDeleteAll={() => {
             clearDrafts(worldTag);
             setDrafts([]);
+            if (events.size === 0) {
+              navigateToLobby();
+            }
           }}
         />
       )}
