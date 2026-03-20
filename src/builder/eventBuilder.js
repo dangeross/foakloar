@@ -2,105 +2,109 @@
  * eventBuilder.js — Construct valid NOSTR dungeon events from form data.
  */
 
-import { TAG_SCHEMAS, TAGS_BY_EVENT_TYPE, getTagSchema, tagToValues } from './tagSchema.js';
-import { derivePuzzleKeypair } from '../engine/nip44-client.js';
+import { TAG_SCHEMAS, TAGS_BY_EVENT_TYPE, TRIGGER_ACTIONS, ACTION_TARGET_FIELD, getTagSchema, tagToValues } from './tagSchema.js';
 
-/**
- * Slugify a title for use in d-tags.
- * Lowercases, replaces spaces/special chars with hyphens, trims.
- */
-export function slugify(str) {
-  return str
+// ── Slug helpers ────────────────────────────────────────────────────────────
+
+export function slugify(text) {
+  return text
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
 }
 
-/**
- * Build a d-tag from components.
- */
-export function buildDTag(worldSlug, eventType, name) {
-  // World events use <slug>:world (no name suffix)
-  if (eventType === 'world') return `${worldSlug}:world`;
-  return `${worldSlug}:${eventType}:${slugify(name)}`;
+export function buildDTag(worldSlug, type, title) {
+  return `${worldSlug}:${type}:${slugify(title)}`;
 }
 
-/**
- * Build a full a-tag reference.
- */
 export function buildATag(pubkey, dTag) {
   return `30078:${pubkey}:${dTag}`;
 }
 
-/**
- * Build an unsigned event template from draft data.
- * The signer will add pubkey, id, sig, and created_at.
- *
- * @param {Object} opts
- * @param {string} opts.eventType - place, portal, item, etc.
- * @param {string} opts.worldSlug - world t-tag value
- * @param {string} opts.dTag - full d-tag value
- * @param {Array} opts.tags - user-defined tags (from TagEditor)
- * @param {string} opts.content - event content field
- * @returns {{ kind: number, tags: string[][], content: string }}
- */
+// ── Template builder ────────────────────────────────────────────────────────
+
 export function buildEventTemplate({ eventType, worldSlug, dTag, tags, content }) {
-  // Start with identity tags (d, t, type) — always present, always first
-  const allTags = [
+  const identityTags = [
     ['d', dTag],
     ['t', worldSlug],
-    ...(eventType === 'world' ? [['w', 'foakloar']] : []),
     ['type', eventType],
   ];
-
-  // Add user-defined tags (skip any that duplicate identity tags)
-  const identityNames = new Set(['d', 't', 'type', 'w']);
-  for (const tag of tags) {
-    if (!identityNames.has(tag[0])) {
-      allTags.push(tag);
-    }
-  }
-
+  const userTags = tags.filter(
+    (t) => t[0] !== 'd' && t[0] !== 't' && t[0] !== 'type'
+  );
   return {
     kind: 30078,
-    tags: allTags,
+    tags: [...identityTags, ...userTags],
     content: content || '',
   };
 }
 
+// ── Issue factory helpers ───────────────────────────────────────────────────
+
+function err(category, message, fix, tag) {
+  const issue = { category, message, fix };
+  if (tag) issue.tag = tag;
+  return issue;
+}
+
+function warn(category, message, fix, tag) {
+  const issue = { category, message, fix };
+  if (tag) issue.tag = tag;
+  return issue;
+}
+
+// ── Validation ──────────────────────────────────────────────────────────────
+
 /**
- * Validate an event template before publishing.
- * Returns { valid: true } or { valid: false, errors: string[] }.
+ * Validate a single event template.
+ *
+ * @param {Object} template - { kind, tags, content }
+ * @returns {{ valid: boolean, errors: Array<{category, message, fix, tag?}>, warnings: Array<{category, message, fix, tag?}> }}
  */
 export function validateEvent(template) {
   const errors = [];
   const warnings = [];
 
+  const dTagValue = template.tags?.find((t) => t[0] === 'd')?.[1] || '?';
+
   // ── Identity tags ────────────────────────────────────────────────────────
   const tagNames = new Set(template.tags.map((t) => t[0]));
-  if (!tagNames.has('d')) errors.push('Missing d-tag');
-  if (!tagNames.has('t')) errors.push('Missing t-tag (world)');
-  if (!tagNames.has('type')) errors.push('Missing type tag');
+
+  if (!tagNames.has('d')) {
+    errors.push(err('missing-tag', 'Missing d-tag', `Add a ["d", "<world>:<type>:<slug>"] tag to identify this event.`));
+  }
+  if (!tagNames.has('t')) {
+    errors.push(err('missing-tag', 'Missing t-tag (world)', `Add a ["t", "<world-slug>"] tag to associate this event with a world.`));
+  }
+  if (!tagNames.has('type')) {
+    errors.push(err('missing-tag', 'Missing type tag', `Add a ["type", "<event-type>"] tag (e.g. "place", "item", "feature", "npc", "portal").`));
+  }
 
   const dTag = template.tags.find((t) => t[0] === 'd');
-  if (dTag && !dTag[1]) errors.push('D-tag value is empty');
+  if (dTag && !dTag[1]) {
+    errors.push(err('missing-tag', 'D-tag value is empty', `Set the d-tag value to a unique identifier like "<world>:<type>:<slug>".`));
+  }
 
   const typeTag = template.tags.find((t) => t[0] === 'type')?.[1];
 
   // World events need the protocol tag for relay discovery
   if (typeTag === 'world' && !tagNames.has('w')) {
-    warnings.push('World event missing w-tag (protocol identifier)');
+    warnings.push(warn('missing-tag', 'World event missing w-tag (protocol identifier)', `Add a ["w", "foakloar"] tag for relay discovery.`));
   }
 
   // ── Event ref format ─────────────────────────────────────────────────────
   for (const tag of template.tags) {
     for (let i = 1; i < tag.length; i++) {
       if (typeof tag[i] === 'string' && tag[i].startsWith('30078:')) {
-        // Skip validation for refs with <PUBKEY> placeholder (resolved at publish time)
         if (tag[i].includes('<PUBKEY>')) continue;
         const parts = tag[i].split(':');
         if (parts.length < 3 || parts[1].length !== 64) {
-          errors.push(`Invalid event ref in ${tag[0]}: ${tag[i]}`);
+          errors.push(err(
+            'invalid-ref',
+            `Invalid event ref in ${tag[0]}: ${tag[i]}`,
+            `Event refs must be "30078:<64-char-hex-pubkey>:<d-tag>". Check the pubkey length and format.`,
+            tag.join(', '),
+          ));
         }
       }
     }
@@ -108,7 +112,6 @@ export function validateEvent(template) {
 
   // ── Schema-based field validation ────────────────────────────────────────
   if (typeTag) {
-    // Check required fields on each tag
     for (const tag of template.tags) {
       const tagName = tag[0];
       const schema = getTagSchema(tagName, typeTag);
@@ -117,40 +120,53 @@ export function validateEvent(template) {
       const values = tagToValues(tag, schema.fields);
       for (const field of schema.fields) {
         if (field.required && !values[field.name]) {
-          errors.push(`${schema.label || tagName}: "${field.name}" is required`);
+          errors.push(err(
+            'required-field',
+            `${schema.label || tagName}: "${field.name}" is required`,
+            `Set the "${field.name}" field on the ["${tagName}", ...] tag.`,
+            tag.join(', '),
+          ));
         }
       }
     }
 
-    // Check event type has at least a title (for types that use one)
+    // Title required on most event types
     const typesWithTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest', 'recipe'];
     if (typesWithTitle.includes(typeTag) && !tagNames.has('title')) {
-      errors.push('Missing title tag');
+      errors.push(err('missing-tag', 'Missing title tag', `Add a ["title", "<display name>"] tag to "${dTagValue}".`));
     }
 
-    // Content field required on most event types (optional on portals and world events)
+    // Content required on most event types
     const contentOptionalTypes = ['portal', 'world', 'vouch', 'consequence', 'dialogue', 'recipe', 'payment', 'quest', 'sound'];
     if (!contentOptionalTypes.includes(typeTag) && !template.content) {
-      errors.push('Missing content — add a description in the content field');
+      errors.push(err(
+        'missing-content',
+        'Missing content — add a description in the content field',
+        `Add descriptive text to the "content" field of "${dTagValue}". This is what players see when they examine or enter this ${typeTag}.`,
+      ));
     }
 
     // Portal must have at least one exit
     if (typeTag === 'portal' && !tagNames.has('exit')) {
-      errors.push('Portal must have at least one exit');
+      errors.push(err('missing-tag', 'Portal must have at least one exit', `Add an ["exit", "30078:<pubkey>:<place-d-tag>", "<direction>", "<label>"] tag.`));
     }
 
-    // Place should have at least one exit (warning, not error)
+    // Place should have at least one exit (warning)
     if (typeTag === 'place' && !tagNames.has('exit')) {
-      warnings.push('Place has no exits — players cannot leave');
+      warnings.push(warn('no-exits', 'Place has no exits — players cannot leave', `Add at least one ["exit", "<direction>"] tag to "${dTagValue}".`));
     }
 
-    // Items/features/NPCs need at least one noun for parser
+    // Items/features/NPCs need at least one noun
     const typesWithNoun = ['item', 'feature', 'npc'];
     if (typesWithNoun.includes(typeTag) && !tagNames.has('noun')) {
-      warnings.push(`${typeTag} has no noun — players cannot refer to it`);
+      warnings.push(warn(
+        'missing-noun',
+        `${typeTag} has no noun — players cannot refer to it`,
+        `Add a ["noun", "<name>", "<alias1>", ...] tag to "${dTagValue}" so players can refer to it in commands.`,
+      ));
     }
 
-    // Triggers with no action selected
+    // Triggers with no action
     const triggerNames = ['on-interact', 'on-enter', 'on-encounter', 'on-attacked',
       'on-health', 'on-player-health', 'on-health-zero', 'on-player-health-zero', 'on-move', 'on-counter', 'on-complete', 'on-fail'];
     for (const tag of template.tags) {
@@ -159,15 +175,207 @@ export function validateEvent(template) {
         if (schema) {
           const values = tagToValues(tag, schema.fields);
           if (!values.action) {
-            errors.push(`${schema.label}: no action type selected`);
+            errors.push(err(
+              'trigger-no-action',
+              `${schema.label}: no action type selected`,
+              `Add an action type (e.g. "set-state", "give-item", "deal-damage") to the ["${tag[0]}", ...] tag, or remove the trigger.`,
+              tag.join(', '),
+            ));
           }
         }
       }
     }
 
-    // State machine: transitions without initial state
+    // ── Direction field: on-counter, on-health, on-player-health ───────────
+    // Must be "down" or "up". LLMs commonly omit direction or put the wrong field first.
+    const directionTriggers = {
+      'on-counter': { pos: 1, shape: '["on-counter", "<direction>", "<counter>", "<threshold>", "<action>", "<target?>"]' },
+      'on-health': { pos: 1, shape: '["on-health", "<direction>", "<threshold>", "<action>", "<target?>", "<event-ref?>"]' },
+      'on-player-health': { pos: 1, shape: '["on-player-health", "<direction>", "<threshold>", "<action>", "<target?>"]' },
+    };
+    for (const tag of template.tags) {
+      const spec = directionTriggers[tag[0]];
+      if (!spec) continue;
+      const direction = tag[spec.pos];
+      if (direction !== 'down' && direction !== 'up') {
+        errors.push(err(
+          'invalid-direction',
+          `${tag[0]} direction must be "down" or "up", got "${direction || '(empty)'}" — the tag shape is ${spec.shape}`,
+          `Set field ${spec.pos} to "down" (fires at-or-below threshold) or "up" (fires at-or-above threshold).`,
+          tag.join(', '),
+        ));
+      }
+    }
+
+    // ── Blank trigger-target: on-complete, on-fail ──────────────────────────
+    // Position 1 must be "" (blank). LLMs often put a value there.
+    for (const tag of template.tags) {
+      if (tag[0] !== 'on-complete' && tag[0] !== 'on-fail') continue;
+      if (tag[1] && tag[1].trim() !== '') {
+        errors.push(err(
+          'trigger-target-not-blank',
+          `${tag[0]} trigger-target must be blank (""), got "${tag[1]}" — the tag shape is ["${tag[0]}", "", "<action>", "<target?>"]`,
+          `Change the first field to "" (empty string). The value "${tag[1]}" should not be in position 1. The correct shape is: ["${tag[0]}", "", "${tag[2] || 'set-state'}", "${tag[3] || ''}"].`,
+          tag.join(', '),
+        ));
+      }
+    }
+
+    // ── Invalid action type on triggers ─────────────────────────────────────
+    // LLMs invent actions like "unlock", "remove", "teleport" that don't exist.
+    for (const tag of template.tags) {
+      const validActions = TRIGGER_ACTIONS[tag[0]];
+      if (!validActions) continue;
+      const schema = getTagSchema(tag[0], typeTag);
+      if (!schema) continue;
+      const values = tagToValues(tag, schema.fields);
+      const action = values.action;
+      if (action && !validActions.includes(action)) {
+        errors.push(err(
+          'invalid-action',
+          `${tag[0]} action "${action}" is not valid — allowed actions: ${validActions.join(', ')}`,
+          `Change the action to one of: ${validActions.join(', ')}. The action "${action}" does not exist in the spec.`,
+          tag.join(', '),
+        ));
+      }
+    }
+
+    // ── Constrained select values ───────────────────────────────────────────
+    // Validate fields with type 'select' have a value from their options list.
+    // Catches LLMs using "public" instead of "open", "room" instead of "place", etc.
+    const selectChecks = [
+      { tag: 'type', field: 'value', label: 'Event type' },
+      { tag: 'collaboration', field: 'value', label: 'Collaboration mode' },
+      { tag: 'puzzle-type', field: 'value', label: 'Puzzle type' },
+      { tag: 'order', field: 'value', label: 'Route order' },
+      { tag: 'unit', field: 'value', label: 'Payment unit' },
+      { tag: 'scope', field: 'value', label: 'Vouch scope' },
+      { tag: 'theme', field: 'value', label: 'Theme preset' },
+      { tag: 'font', field: 'value', label: 'Font' },
+      { tag: 'cursor', field: 'value', label: 'Cursor style' },
+      { tag: 'effects', field: 'value', label: 'Effect bundle' },
+      { tag: 'flicker', field: 'value', label: 'Flicker' },
+      { tag: 'colour', field: 'slot', label: 'Colour slot' },
+    ];
+    for (const check of selectChecks) {
+      for (const tag of template.tags) {
+        if (tag[0] !== check.tag) continue;
+        const schema = getTagSchema(tag[0], typeTag || tag[1]); // type tag is its own type
+        if (!schema) continue;
+        const field = schema.fields.find((f) => f.name === check.field);
+        if (!field?.options) continue;
+        const values = tagToValues(tag, schema.fields);
+        const val = values[check.field];
+        if (val && !field.options.includes(val)) {
+          errors.push(err(
+            'invalid-enum',
+            `${check.label} "${val}" is not valid — allowed values: ${field.options.join(', ')}`,
+            `Change "${val}" to one of: ${field.options.join(', ')}.`,
+            tag.join(', '),
+          ));
+        }
+      }
+    }
+
+    // ── Numeric field validation ─────────────────────────────────────────────
+    // Validate that fields declared as type 'number' in the schema are parseable.
+    // Catches LLMs writing "ten" instead of "10", "high" instead of "3", etc.
+    for (const tag of template.tags) {
+      const schema = getTagSchema(tag[0], typeTag);
+      if (!schema?.fields) continue;
+      const values = tagToValues(tag, schema.fields);
+      for (const field of schema.fields) {
+        if (field.type !== 'number') continue;
+        const val = values[field.name];
+        if (val === undefined || val === '') continue; // blank is handled by required-field checks
+        if (isNaN(Number(val))) {
+          errors.push(err(
+            'invalid-number',
+            `${schema.label || tag[0]} ${field.name} "${val}" is not a valid number`,
+            `Change "${val}" to a numeric value (e.g. ${field.placeholder || '10'}).`,
+            tag.join(', '),
+          ));
+        }
+      }
+    }
+
+    // ── Numeric action targets ────────────────────────────────────────────────
+    // Some action targets (deal-damage, heal) expect numbers, not event refs.
+    const triggerPrefixes = ['on-interact', 'on-complete', 'on-fail', 'on-enter', 'on-encounter', 'on-attacked', 'on-health-zero', 'on-player-health-zero', 'on-move'];
+    for (const tag of template.tags) {
+      if (!triggerPrefixes.includes(tag[0])) continue;
+      const actionType = tag[2]; // ["on-*", "trigger-target", "action", "action-target"]
+      const actionTarget = tag[3];
+      if (!actionType || actionTarget === undefined || actionTarget === '') continue;
+      const targetField = ACTION_TARGET_FIELD[actionType];
+      if (!targetField || targetField.type !== 'number') continue;
+      if (isNaN(Number(actionTarget))) {
+        errors.push(err(
+          'invalid-number',
+          `${tag[0]} action target "${actionTarget}" is not a valid number — ${actionType} expects a numeric value`,
+          `Change "${actionTarget}" to a number (e.g. ${targetField.placeholder || '5'}).`,
+          tag.join(', '),
+        ));
+      }
+    }
+
+    // Also check on-counter and on-health which have different positions
+    for (const tag of template.tags) {
+      if (tag[0] === 'on-counter') {
+        // ["on-counter", "direction", "counter", "threshold", "action", "target"]
+        const actionType = tag[4];
+        const actionTarget = tag[5];
+        if (!actionType || actionTarget === undefined || actionTarget === '') continue;
+        const targetField = ACTION_TARGET_FIELD[actionType];
+        if (!targetField || targetField.type !== 'number') continue;
+        if (isNaN(Number(actionTarget))) {
+          errors.push(err(
+            'invalid-number',
+            `on-counter action target "${actionTarget}" is not a valid number — ${actionType} expects a numeric value`,
+            `Change "${actionTarget}" to a number (e.g. ${targetField.placeholder || '5'}).`,
+            tag.join(', '),
+          ));
+        }
+      }
+      if (tag[0] === 'on-health' || tag[0] === 'on-player-health') {
+        // ["on-health", "direction", "threshold", "action", "target"]
+        const actionType = tag[3];
+        const actionTarget = tag[4];
+        if (!actionType || actionTarget === undefined || actionTarget === '') continue;
+        const targetField = ACTION_TARGET_FIELD[actionType];
+        if (!targetField || targetField.type !== 'number') continue;
+        if (isNaN(Number(actionTarget))) {
+          errors.push(err(
+            'invalid-number',
+            `${tag[0]} action target "${actionTarget}" is not a valid number — ${actionType} expects a numeric value`,
+            `Change "${actionTarget}" to a number (e.g. ${targetField.placeholder || '5'}).`,
+            tag.join(', '),
+          ));
+        }
+      }
+    }
+
+    // Sound role validation (on the sound play tag, not the sound event itself)
+    for (const tag of template.tags) {
+      if (tag[0] !== 'sound') continue;
+      const role = tag[2]; // ["sound", "ref", "role", "volume", "state?"]
+      if (role && !['ambient', 'layer', 'effect'].includes(role)) {
+        errors.push(err(
+          'invalid-enum',
+          `Sound role "${role}" is not valid — allowed values: ambient, layer, effect`,
+          `Change "${role}" to one of: ambient (loops), layer (adds to mix), effect (one-shot).`,
+          tag.join(', '),
+        ));
+      }
+    }
+
+    // Transitions without initial state
     if (tagNames.has('transition') && !tagNames.has('state')) {
-      warnings.push('Has transitions but no initial state');
+      warnings.push(warn(
+        'missing-state',
+        'Has transitions but no initial state',
+        `Add a ["state", "<initial-state>"] tag to set the starting state.`,
+      ));
     }
 
     // Verb declared but no matching on-interact
@@ -179,29 +387,47 @@ export function validateEvent(template) {
       );
       for (const verb of verbs) {
         if (verb && verb !== 'examine' && !onInteractVerbs.has(verb)) {
-          warnings.push(`Verb "${verb}" has no matching on-interact — players can type it but nothing happens`);
+          warnings.push(warn(
+            'unused-verb',
+            `Verb "${verb}" has no matching on-interact — players can type it but nothing happens`,
+            `Add an ["on-interact", "${verb}", "<action>", "<target>"] tag, or remove "${verb}" from the verb tag.`,
+          ));
         }
       }
     }
 
-    // on-interact tag with unexpected element count (>5)
+    // on-interact with too many elements
     for (const tag of template.tags) {
       if (tag[0] === 'on-interact' && tag.length > 5) {
-        warnings.push(`on-interact "${tag[1]}" has ${tag.length - 1} fields (expected max 4) — extra elements are ignored`);
+        warnings.push(warn(
+          'extra-fields',
+          `on-interact "${tag[1]}" has ${tag.length - 1} fields (expected max 4) — extra elements are ignored`,
+          `Remove the extra fields from ["on-interact", "${tag[1]}", ...]. The spec defines 4 fields: verb, action, target, ext-ref.`,
+          tag.join(', '),
+        ));
       }
     }
 
     // NIP-44 content-type without puzzle tag
     const contentTypeTag = template.tags.find((t) => t[0] === 'content-type');
     if (contentTypeTag?.[1] === 'application/nip44' && !tagNames.has('puzzle')) {
-      errors.push('NIP-44 encrypted content requires a puzzle tag to determine the encryption key');
+      errors.push(err(
+        'nip44',
+        'NIP-44 encrypted content requires a puzzle tag to determine the encryption key',
+        `Add a ["puzzle", "30078:<pubkey>:<puzzle-d-tag>"] tag referencing the puzzle whose answer derives the encryption key.`,
+      ));
     }
 
-    // Warn about unknown tags for this event type
+    // Unknown tags for this event type
     const allowedTags = new Set([...(TAGS_BY_EVENT_TYPE[typeTag] || []), 'd', 't', 'type']);
     for (const tag of template.tags) {
       if (!allowedTags.has(tag[0])) {
-        warnings.push(`"${tag[0]}" is not expected on ${typeTag} events`);
+        warnings.push(warn(
+          'unknown-tag',
+          `"${tag[0]}" is not expected on ${typeTag} events`,
+          `The tag "${tag[0]}" is not in the spec for ${typeTag} events. Remove it, or check the spec for the correct tag name.`,
+          tag.join(', '),
+        ));
       }
     }
   }
@@ -221,91 +447,58 @@ export function validateEvent(template) {
  * @param {Object} signer - signer with encryptTo(pubkey, plaintext)
  * @param {Object} answers - { puzzleDTag: answer } map
  * @param {Map|Object} allEvents - events map to look up puzzle salt
- * @returns {Promise<Object>} - template with encrypted content (or unchanged)
  */
-async function maybeEncryptContent(template, signer, answers, allEvents) {
-  const contentTypeTag = template.tags.find((t) => t[0] === 'content-type');
-  if (!contentTypeTag || contentTypeTag[1] !== 'application/nip44') return template;
-  if (!template.content) return template;
-  if (!signer?.encryptTo) {
-    throw new Error('NIP-44 encryption requires a signer with encryptTo support');
-  }
+export async function encryptEventContent(template, signer, answers, allEvents) {
+  const contentType = template.tags.find((t) => t[0] === 'content-type');
+  if (!contentType || contentType[1] !== 'application/nip44') return template;
 
-  // Find puzzle d-tag — either from a "puzzle" tag on this event or matching puzzle event
   const puzzleTag = template.tags.find((t) => t[0] === 'puzzle');
-  const puzzleDTag = puzzleTag?.[1];
-  if (!puzzleDTag) {
-    throw new Error('NIP-44 event has no puzzle tag — cannot determine encryption key');
-  }
+  if (!puzzleTag) return template;
 
-  // Look up the answer
-  const answer = answers?.[puzzleDTag];
+  const puzzleRef = puzzleTag[1];
+  const puzzleDTag = puzzleRef.split(':').slice(2).join(':');
+
+  const answer = answers[puzzleDTag];
   if (!answer) {
-    throw new Error(`No answer found for puzzle "${puzzleDTag}" — cannot encrypt content`);
+    console.warn(`No answer stored for puzzle ${puzzleDTag} — skipping encryption`);
+    return template;
   }
 
-  // Find the puzzle event to get its salt
-  let salt = null;
+  // Look up puzzle event to get salt
+  let puzzleEvent;
   if (allEvents instanceof Map) {
-    for (const [, evt] of allEvents) {
-      const d = evt.tags?.find((t) => t[0] === 'd')?.[1];
-      if (d === puzzleDTag) {
-        salt = evt.tags?.find((t) => t[0] === 'salt')?.[1];
+    for (const [, ev] of allEvents) {
+      if (ev.tags?.find((t) => t[0] === 'd')?.[1] === puzzleDTag) {
+        puzzleEvent = ev;
         break;
       }
     }
-  }
-  // Also check if allEvents is an array-like (draft events)
-  if (!salt && Array.isArray(allEvents)) {
-    for (const evt of allEvents) {
-      const d = evt.tags?.find((t) => t[0] === 'd')?.[1];
-      if (d === puzzleDTag) {
-        salt = evt.tags?.find((t) => t[0] === 'salt')?.[1];
-        break;
-      }
-    }
-  }
-  if (!salt) {
-    throw new Error(`Puzzle "${puzzleDTag}" has no salt — cannot derive encryption key`);
-  }
-
-  // Derive puzzle keypair and encrypt
-  const { pubKeyHex } = await derivePuzzleKeypair(answer, salt);
-  const ciphertext = await signer.encryptTo(pubKeyHex, template.content);
-
-  return { ...template, content: ciphertext };
-}
-
-/**
- * Sign and publish an event template to a relay.
- *
- * @param {Object} signer - { signEvent(event), encryptTo?(pubkey, plaintext) }
- * @param {Object} relay - relay ref (.current is the connected relay)
- * @param {Object} template - from buildEventTemplate
- * @param {Object} [options] - { answers, allEvents } for NIP-44 encryption
- * @returns {Promise<{ ok: boolean, event?: Object, error?: string }>}
- */
-export async function publishEvent(signer, relay, template, options = {}) {
-  try {
-    // Encrypt NIP-44 content if needed
-    const prepared = await maybeEncryptContent(
-      template, signer, options.answers, options.allEvents
+  } else if (Array.isArray(allEvents)) {
+    puzzleEvent = allEvents.find(
+      (ev) => ev.tags?.find((t) => t[0] === 'd')?.[1] === puzzleDTag
     );
-
-    const unsigned = {
-      ...prepared,
-      created_at: Math.floor(Date.now() / 1000),
-    };
-
-    const signed = await signer.signEvent(unsigned);
-
-    if (!relay.current) {
-      return { ok: false, error: 'Not connected to relay.' };
-    }
-
-    await relay.current.publish(signed);
-    return { ok: true, event: signed };
-  } catch (err) {
-    return { ok: false, error: err.message || 'Publish failed.' };
   }
+
+  if (!puzzleEvent) {
+    console.warn(`Puzzle event ${puzzleDTag} not found — skipping encryption`);
+    return template;
+  }
+
+  const salt = puzzleEvent.tags.find((t) => t[0] === 'salt')?.[1];
+  if (!salt) {
+    console.warn(`Puzzle ${puzzleDTag} has no salt — skipping encryption`);
+    return template;
+  }
+
+  // Derive puzzle keypair from answer + salt
+  const { derivePuzzleKey } = await import('../../lib/crypto.mjs');
+  const puzzleKey = await derivePuzzleKey(answer.trim(), salt);
+
+  // Encrypt content
+  const encrypted = await signer.encryptTo(puzzleKey.pubkey, template.content);
+
+  return {
+    ...template,
+    content: encrypted,
+  };
 }

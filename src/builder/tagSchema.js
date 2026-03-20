@@ -27,9 +27,9 @@ export const TRIGGER_ACTIONS = {
   'on-complete':           ['set-state', 'give-item', 'consume-item', 'traverse', 'heal', 'consequence', 'decrement', 'increment', 'set-counter', 'sound'],
   'on-enter':              ['set-state', 'give-item', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter', 'sound'],
   'on-encounter':          ['set-state', 'deal-damage', 'consequence', 'steals-item', 'deposits', 'flees', 'decrement', 'sound'],
-  'on-attacked':           ['set-state', 'deal-damage', 'deal-damage-npc', 'consequence', 'steals-item', 'flees', 'sound'],
+  'on-attacked':           ['set-state', 'deal-damage', 'deal-damage-npc', 'consequence', 'steals-item', 'flees', 'decrement', 'increment', 'set-counter', 'sound'],
   'on-fail':               ['set-state', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter', 'sound'],
-  'on-health':             ['set-state', 'give-item', 'consequence', 'flees', 'deposits', 'sound'],
+  'on-health':             ['set-state', 'give-item', 'traverse', 'consequence', 'flees', 'deposits', 'sound'],
   'on-player-health':      ['set-state', 'traverse', 'consequence', 'sound'],
   'on-health-zero':        ['set-state', 'give-item', 'consequence', 'deposits', 'sound'],
   'on-player-health-zero': ['set-state', 'traverse', 'consequence', 'sound'],
@@ -83,7 +83,7 @@ export const TAG_SCHEMAS = {
   // ── Identity tags ────────────────────────────────────────────────────────
   d:              { label: 'D-Tag', desc: 'Unique identifier for this event (auto-generated)', auto: true, fields: [{ name: 'value', type: 'text', required: true, placeholder: 'world:type:name' }] },
   t:              { label: 'World Tag', desc: 'World this event belongs to (auto-set)', auto: true, fields: [{ name: 'value', type: 'text', required: true, placeholder: 'the-lake' }] },
-  type:           { label: 'Type', desc: 'Event type (auto-set from editor)', auto: true, fields: [{ name: 'value', type: 'select', required: true, options: ['place', 'portal', 'item', 'feature', 'clue', 'puzzle', 'recipe', 'payment', 'npc', 'dialogue', 'consequence', 'world', 'vouch', 'quest'] }] },
+  type:           { label: 'Type', desc: 'Event type (auto-set from editor)', auto: true, fields: [{ name: 'value', type: 'select', required: true, options: ['place', 'portal', 'item', 'feature', 'clue', 'puzzle', 'recipe', 'payment', 'npc', 'dialogue', 'consequence', 'world', 'vouch', 'quest', 'sound', 'player-state'] }] },
   w:              { label: 'Protocol', desc: 'Protocol identifier for relay discovery (auto-set on world events)', auto: true, fields: [{ name: 'value', type: 'text', required: true, placeholder: 'foakloar' }] },
 
   // ── Display ──────────────────────────────────────────────────────────────
@@ -357,7 +357,7 @@ export const TAG_SCHEMAS = {
   text: { label: 'Dialogue Text', desc: 'The NPC\'s spoken text in this dialogue node', fields: [{ name: 'value', type: 'textarea', required: true, placeholder: 'NPC dialogue text' }] },
 
   // ── Puzzle ───────────────────────────────────────────────────────────────
-  'puzzle-type': { label: 'Puzzle Type', desc: 'Category of puzzle mechanic', fields: [{ name: 'value', type: 'select', required: true, options: ['riddle', 'sequence', 'cipher'] }] },
+  'puzzle-type': { label: 'Puzzle Type', desc: 'Category of puzzle mechanic', fields: [{ name: 'value', type: 'select', required: true, options: ['riddle', 'sequence', 'cipher', 'observe'] }] },
   'answer-hash': { label: 'Answer Hash', desc: 'SHA-256 hash of (salt + answer) — keeps the answer secret on relays', fields: [{ name: 'value', type: 'text', required: true, placeholder: 'SHA-256 hash' }] },
   salt:          { label: 'Salt', desc: 'Random salt prepended to the answer before hashing', fields: [{ name: 'value', type: 'text', required: true }] },
   ordered:       { label: 'Ordered', desc: 'Whether sequence puzzle steps must be completed in order', fields: [{ name: 'value', type: 'select', required: true, options: ['true', 'false'] }] },

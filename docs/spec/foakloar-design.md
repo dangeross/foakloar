@@ -551,8 +551,8 @@ New action types can be added without changing the tag structure — the dispatc
 | `on-complete` | ✓ | ✓ | ✓ | ✓ | — | — | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ | | ✓ |
 | `on-enter` | ✓ | ✓ | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ | | ✓ |
 | `on-encounter` | ✓ | — | — | — | ✓ | — | — | ✓ | ✓ | ✓ | ✓ | ✓ | — | — | | ✓ |
-| `on-attacked` | ✓ | — | — | — | ✓ | ✓ | — | ✓ | ✓ | — | ✓ | — | — | — | | ✓ |
-| `on-health` | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — | — | — | — | | ✓ |
+| `on-attacked` | ✓ | — | — | — | ✓ | ✓ | — | ✓ | ✓ | — | ✓ | ✓ | ✓ | ✓ | | ✓ |
+| `on-health` | ✓ | ✓ | — | ✓ | — | — | — | ✓ | — | ✓ | — | — | — | — | | ✓ |
 | `on-player-health` | ✓ | — | — | ✓ | — | — | — | ✓ | — | — | — | — | — | — | | ✓ |
 | `on-move` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ | | ✓ |
 | `on-counter` | ✓ | ✓ | — | — | ✓ | — | ✓ | ✓ | — | — | — | — | — | — | | ✓ |
@@ -564,6 +564,8 @@ New action types can be added without changing the tag structure — the dispatc
 - `deal-damage` on `on-enter` / `on-move` — damage traps and hazardous terrain
 - `consume-item` on `on-interact` — single-use items consumed on use
 - `give-item` on `on-health` — NPC drops loot on death
+- `traverse` on `on-health` — teleport player on NPC death (reward chamber, cutscene location)
+- `increment`/`decrement`/`set-counter` on `on-attacked` — track hits taken, shield durability, attack counters
 - `on-fail` only fires on `riddle` and `cipher` puzzles — sequence/observe puzzles have no wrong-answer state
 - The matrix reflects intent, not hard enforcement. The client should handle unexpected combinations gracefully rather than erroring.
 

@@ -666,7 +666,7 @@ export default function App() {
             const hashErrors = await verifyPuzzleHashes(worldCheck.puzzlesToVerify || []);
             const allErrors = [...worldCheck.errors, ...hashErrors];
             if (allErrors.length > 0) {
-              const msgs = allErrors.map((e) => `${e.dTag}: ${e.message}`);
+              const msgs = allErrors.map((e) => `${e.dTag}: ${e.message}${e.fix ? `\n  → ${e.fix}` : ''}`);
               alert(`Cannot publish — ${allErrors.length} error(s):\n\n${msgs.join('\n')}`);
               return;
             }

@@ -22,6 +22,11 @@ function makeTemplate(overrides = {}) {
   };
 }
 
+/** Check if any issue in array has message matching substring */
+function hasMessage(issues, substring) {
+  return issues.some((i) => i.message.includes(substring));
+}
+
 // ── slugify ──────────────────────────────────────────────────────────────────
 
 describe('slugify', () => {
@@ -96,7 +101,7 @@ describe('validateEvent — identity tags', () => {
     const tmpl = makeTemplate({ tags: [['t', 'the-lake'], ['type', 'place'], ['title', 'X'], ['exit', 'n']] });
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain('Missing d-tag');
+    expect(hasMessage(result.errors, 'Missing d-tag')).toBe(true);
   });
 
   it('fails when d-tag value is empty', () => {
@@ -104,14 +109,14 @@ describe('validateEvent — identity tags', () => {
     tmpl.tags[0] = ['d', ''];
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain('D-tag value is empty');
+    expect(hasMessage(result.errors, 'D-tag value is empty')).toBe(true);
   });
 
   it('fails when t-tag is missing', () => {
     const tmpl = makeTemplate({ tags: [['d', 'x:place:y'], ['type', 'place'], ['title', 'X'], ['exit', 'n']] });
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain('Missing t-tag (world)');
+    expect(hasMessage(result.errors, 'Missing t-tag (world)')).toBe(true);
   });
 
   it('fails when type tag is missing', () => {
@@ -136,7 +141,7 @@ describe('validateEvent — event refs', () => {
     tmpl.tags.push(['requires', '30078:short:the-lake:item:key', '', '']);
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(false);
-    expect(result.errors.some((e) => e.includes('Invalid event ref'))).toBe(true);
+    expect(hasMessage(result.errors, 'Invalid event ref')).toBe(true);
   });
 });
 
@@ -147,7 +152,7 @@ describe('validateEvent — schema checks', () => {
     const tmpl = makeTemplate({ tags: [['d', 'x:place:y'], ['t', 'the-lake'], ['type', 'place'], ['exit', 'n']], content: 'A room.' });
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain('Missing title tag');
+    expect(hasMessage(result.errors, 'Missing title tag')).toBe(true);
   });
 
   it('fails when title is missing on an item', () => {
@@ -157,7 +162,7 @@ describe('validateEvent — schema checks', () => {
     });
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain('Missing title tag');
+    expect(hasMessage(result.errors, 'Missing title tag')).toBe(true);
   });
 
   it('does not require title on portal', () => {
@@ -169,7 +174,7 @@ describe('validateEvent — schema checks', () => {
       ],
     });
     const result = validateEvent(tmpl);
-    expect(result.errors).not.toContain('Missing title tag');
+    expect(hasMessage(result.errors, 'Missing title tag')).toBe(false);
   });
 
   it('fails when portal has no exit', () => {
@@ -178,7 +183,7 @@ describe('validateEvent — schema checks', () => {
     });
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain('Portal must have at least one exit');
+    expect(hasMessage(result.errors, 'Portal must have at least one exit')).toBe(true);
   });
 
   it('fails when trigger has no action selected', () => {
@@ -186,7 +191,7 @@ describe('validateEvent — schema checks', () => {
     tmpl.tags.push(['on-interact', 'examine', '', '', '']);
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(false);
-    expect(result.errors.some((e) => e.includes('no action type selected'))).toBe(true);
+    expect(hasMessage(result.errors, 'no action type selected')).toBe(true);
   });
 
   it('passes when trigger has action selected', () => {
@@ -200,7 +205,7 @@ describe('validateEvent — schema checks', () => {
     const tmpl = makeTemplate({ content: '' });
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(false);
-    expect(result.errors.some((e) => e.includes('Missing content'))).toBe(true);
+    expect(hasMessage(result.errors, 'Missing content')).toBe(true);
   });
 
   it('does not require content on portal', () => {
@@ -213,7 +218,7 @@ describe('validateEvent — schema checks', () => {
       content: '',
     });
     const result = validateEvent(tmpl);
-    expect(result.errors.some((e) => e.includes('Missing content'))).toBe(false);
+    expect(hasMessage(result.errors, 'Missing content')).toBe(false);
   });
 
   it('fails on required field empty (requires ref)', () => {
@@ -221,7 +226,7 @@ describe('validateEvent — schema checks', () => {
     tmpl.tags.push(['requires', '', '', '']);
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(false);
-    expect(result.errors.some((e) => e.includes('"ref" is required'))).toBe(true);
+    expect(hasMessage(result.errors, '"ref" is required')).toBe(true);
   });
 });
 
@@ -235,7 +240,7 @@ describe('validateEvent — warnings', () => {
     });
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(true); // warning, not error
-    expect(result.warnings.some((w) => w.includes('no exits'))).toBe(true);
+    expect(hasMessage(result.warnings, 'no exits')).toBe(true);
   });
 
   it('warns when item has no noun', () => {
@@ -244,21 +249,21 @@ describe('validateEvent — warnings', () => {
       content: 'A rusty key.',
     });
     const result = validateEvent(tmpl);
-    expect(result.warnings.some((w) => w.includes('no noun'))).toBe(true);
+    expect(hasMessage(result.warnings, 'no noun')).toBe(true);
   });
 
   it('warns when transitions exist without initial state', () => {
     const tmpl = makeTemplate();
     tmpl.tags.push(['transition', 'off', 'on', 'It lights up.']);
     const result = validateEvent(tmpl);
-    expect(result.warnings.some((w) => w.includes('no initial state'))).toBe(true);
+    expect(hasMessage(result.warnings, 'no initial state')).toBe(true);
   });
 
   it('warns about unexpected tags for event type', () => {
     const tmpl = makeTemplate();
     tmpl.tags.push(['health', '100']); // health not valid on place
     const result = validateEvent(tmpl);
-    expect(result.warnings.some((w) => w.includes('"health" is not expected'))).toBe(true);
+    expect(hasMessage(result.warnings, '"health" is not expected')).toBe(true);
   });
 
   it('no warnings on well-formed item', () => {
@@ -286,7 +291,7 @@ describe('validateEvent — warnings', () => {
       content: 'A panel.',
     });
     const result = validateEvent(tmpl);
-    expect(result.warnings.some((w) => w.includes('Verb "use"') && w.includes('no matching on-interact'))).toBe(true);
+    expect(hasMessage(result.warnings, 'Verb "use"') && hasMessage(result.warnings, 'no matching on-interact')).toBe(true);
   });
 
   it('does not warn when verb is examine (built-in fallback)', () => {
@@ -295,12 +300,11 @@ describe('validateEvent — warnings', () => {
         ['d', 'x:feature:lamp'], ['t', 'the-lake'], ['type', 'feature'],
         ['title', 'Lamp'], ['noun', 'lamp'],
         ['verb', 'examine'],
-        // no on-interact for examine — that's fine, examine shows content
       ],
       content: 'A lamp.',
     });
     const result = validateEvent(tmpl);
-    expect(result.warnings.some((w) => w.includes('Verb "examine"'))).toBe(false);
+    expect(hasMessage(result.warnings, 'Verb "examine"')).toBe(false);
   });
 
   it('warns when on-interact has too many elements', () => {
@@ -314,7 +318,7 @@ describe('validateEvent — warnings', () => {
       content: 'A lamp.',
     });
     const result = validateEvent(tmpl);
-    expect(result.warnings.some((w) => w.includes('on-interact') && w.includes('extra elements'))).toBe(true);
+    expect(hasMessage(result.warnings, 'on-interact') && hasMessage(result.warnings, 'extra elements')).toBe(true);
   });
 
   it('errors when NIP-44 content-type has no puzzle tag', () => {
@@ -328,7 +332,7 @@ describe('validateEvent — warnings', () => {
     });
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(false);
-    expect(result.errors.some((e) => e.includes('NIP-44') && e.includes('puzzle tag'))).toBe(true);
+    expect(hasMessage(result.errors, 'NIP-44') && hasMessage(result.errors, 'puzzle tag')).toBe(true);
   });
 
   it('no error when NIP-44 content-type has puzzle tag', () => {
@@ -342,6 +346,486 @@ describe('validateEvent — warnings', () => {
       content: 'Sealed content.',
     });
     const result = validateEvent(tmpl);
-    expect(result.errors.some((e) => e.includes('NIP-44'))).toBe(false);
+    expect(hasMessage(result.errors, 'NIP-44')).toBe(false);
+  });
+});
+
+// ── validateEvent: on-counter direction ───────────────────────────────────────
+
+describe('validateEvent — on-counter direction', () => {
+  it('passes when direction is "down"', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:feature:lamp'], ['t', 'the-lake'], ['type', 'feature'],
+        ['title', 'Lamp'], ['noun', 'lamp'],
+        ['counter', 'battery', '100'],
+        ['on-counter', 'down', 'battery', '0', 'set-state', 'dead'],
+      ],
+      content: 'A lamp.',
+    });
+    const result = validateEvent(tmpl);
+    expect(hasMessage(result.errors, 'direction must be')).toBe(false);
+  });
+
+  it('passes when direction is "up"', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:feature:lamp'], ['t', 'the-lake'], ['type', 'feature'],
+        ['title', 'Lamp'], ['noun', 'lamp'],
+        ['counter', 'charge', '0'],
+        ['on-counter', 'up', 'charge', '100', 'set-state', 'full'],
+      ],
+      content: 'A lamp.',
+    });
+    const result = validateEvent(tmpl);
+    expect(hasMessage(result.errors, 'direction must be')).toBe(false);
+  });
+
+  it('errors when direction is missing (counter name in position 1)', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:feature:lamp'], ['t', 'the-lake'], ['type', 'feature'],
+        ['title', 'Lamp'], ['noun', 'lamp'],
+        ['counter', 'battery', '100'],
+        ['on-counter', 'battery', '0', 'set-state', 'dead'],
+      ],
+      content: 'A lamp.',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.valid).toBe(false);
+    const issue = result.errors.find((e) => e.category === 'invalid-direction');
+    expect(issue).toBeDefined();
+    expect(issue.message).toContain('"battery"');
+    expect(issue.fix).toContain('"down"');
+  });
+
+  it('errors when direction is empty', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:feature:lamp'], ['t', 'the-lake'], ['type', 'feature'],
+        ['title', 'Lamp'], ['noun', 'lamp'],
+        ['on-counter', '', 'battery', '0', 'set-state', 'dead'],
+      ],
+      content: 'A lamp.',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.valid).toBe(false);
+    expect(hasMessage(result.errors, 'direction must be')).toBe(true);
+  });
+});
+
+// ── validateEvent: on-complete/on-fail blank trigger-target ──────────────────
+
+describe('validateEvent — on-complete/on-fail blank trigger-target', () => {
+  it('passes when on-complete trigger-target is blank', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:puzzle:riddle'], ['t', 'the-lake'], ['type', 'puzzle'],
+        ['puzzle-type', 'riddle'], ['answer-hash', 'abc'], ['salt', 'xyz'],
+        ['on-complete', '', 'set-state', 'solved'],
+      ],
+    });
+    const result = validateEvent(tmpl);
+    expect(hasMessage(result.errors, 'trigger-target must be blank')).toBe(false);
+  });
+
+  it('errors when on-complete trigger-target has a value', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:puzzle:riddle'], ['t', 'the-lake'], ['type', 'puzzle'],
+        ['puzzle-type', 'riddle'], ['answer-hash', 'abc'], ['salt', 'xyz'],
+        ['on-complete', 'solved', 'set-state', 'open'],
+      ],
+    });
+    const result = validateEvent(tmpl);
+    expect(result.valid).toBe(false);
+    const issue = result.errors.find((e) => e.category === 'trigger-target-not-blank');
+    expect(issue).toBeDefined();
+    expect(issue.message).toContain('"solved"');
+    expect(issue.fix).toContain('empty string');
+  });
+
+  it('errors when on-fail trigger-target has a value', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:puzzle:riddle'], ['t', 'the-lake'], ['type', 'puzzle'],
+        ['puzzle-type', 'riddle'], ['answer-hash', 'abc'], ['salt', 'xyz'],
+        ['on-fail', 'wrong', 'decrement', 'attempts'],
+      ],
+    });
+    const result = validateEvent(tmpl);
+    expect(result.valid).toBe(false);
+    const issue = result.errors.find((e) => e.category === 'trigger-target-not-blank');
+    expect(issue).toBeDefined();
+    expect(issue.message).toContain('"wrong"');
+  });
+
+  it('passes when on-fail trigger-target is blank', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:puzzle:riddle'], ['t', 'the-lake'], ['type', 'puzzle'],
+        ['puzzle-type', 'riddle'], ['answer-hash', 'abc'], ['salt', 'xyz'],
+        ['on-fail', '', 'decrement', 'attempts'],
+      ],
+    });
+    const result = validateEvent(tmpl);
+    expect(hasMessage(result.errors, 'trigger-target must be blank')).toBe(false);
+  });
+});
+
+// ── validateEvent: structured issues ─────────────────────────────────────────
+
+describe('validateEvent — structured issues', () => {
+  it('errors have category and fix fields', () => {
+    const tmpl = makeTemplate({ tags: [['t', 'the-lake'], ['type', 'place'], ['title', 'X'], ['exit', 'n']] });
+    const result = validateEvent(tmpl);
+    const missingD = result.errors.find((e) => e.message.includes('Missing d-tag'));
+    expect(missingD).toBeDefined();
+    expect(missingD.category).toBe('missing-tag');
+    expect(missingD.fix).toBeTruthy();
+  });
+
+  it('warnings have category and fix fields', () => {
+    const tmpl = makeTemplate({
+      tags: [['d', 'x:item:key'], ['t', 'the-lake'], ['type', 'item'], ['title', 'Key']],
+      content: 'A rusty key.',
+    });
+    const result = validateEvent(tmpl);
+    const noNoun = result.warnings.find((w) => w.message.includes('no noun'));
+    expect(noNoun).toBeDefined();
+    expect(noNoun.category).toBe('missing-noun');
+    expect(noNoun.fix).toBeTruthy();
+  });
+
+  it('invalid ref error includes tag field', () => {
+    const tmpl = makeTemplate();
+    tmpl.tags.push(['requires', '30078:short:the-lake:item:key', '', '']);
+    const result = validateEvent(tmpl);
+    const refError = result.errors.find((e) => e.message.includes('Invalid event ref'));
+    expect(refError).toBeDefined();
+    expect(refError.category).toBe('invalid-ref');
+    expect(refError.tag).toBeTruthy();
+  });
+});
+
+// ── validateEvent: on-health direction ────────────────────────────────────────
+
+describe('validateEvent — on-health direction', () => {
+  it('passes with valid on-health direction', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:npc:guard'], ['t', 'x'], ['type', 'npc'], ['title', 'Guard'],
+        ['noun', 'guard'], ['health', '10'], ['damage', '2'],
+        ['on-health', 'down', '50%', 'set-state', 'wounded'],
+      ],
+      content: 'A guard.',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.errors.filter((e) => e.category === 'invalid-direction')).toHaveLength(0);
+  });
+
+  it('errors when on-health has wrong direction', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:npc:guard'], ['t', 'x'], ['type', 'npc'], ['title', 'Guard'],
+        ['noun', 'guard'], ['health', '10'], ['damage', '2'],
+        ['on-health', '50%', 'set-state', 'wounded'],
+      ],
+      content: 'A guard.',
+    });
+    const result = validateEvent(tmpl);
+    const dirErr = result.errors.find((e) => e.category === 'invalid-direction');
+    expect(dirErr).toBeDefined();
+    expect(dirErr.message).toContain('on-health');
+  });
+
+  it('errors when on-player-health has wrong direction', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:world'], ['t', 'x'], ['type', 'world'], ['title', 'X'],
+        ['start', '30078:abc123def456abc123def456abc123def456abc123def456abc123def456abcd:x:place:start'],
+        ['on-player-health', '0', 'consequence', '30078:abc123def456abc123def456abc123def456abc123def456abc123def456abcd:x:place:death'],
+      ],
+      content: '',
+    });
+    const result = validateEvent(tmpl);
+    const dirErr = result.errors.find((e) => e.category === 'invalid-direction');
+    expect(dirErr).toBeDefined();
+    expect(dirErr.message).toContain('on-player-health');
+  });
+});
+
+// ── validateEvent: invalid action type ────────────────────────────────────────
+
+describe('validateEvent — invalid action type', () => {
+  it('errors when on-interact has unknown action', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:feature:lever'], ['t', 'x'], ['type', 'feature'], ['title', 'Lever'],
+        ['noun', 'lever'], ['verb', 'pull'],
+        ['on-interact', 'pull', 'toggle-state', 'open'],
+      ],
+      content: 'A rusty lever.',
+    });
+    const result = validateEvent(tmpl);
+    const actionErr = result.errors.find((e) => e.category === 'invalid-action');
+    expect(actionErr).toBeDefined();
+    expect(actionErr.message).toContain('toggle-state');
+  });
+
+  it('passes with valid action type', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:feature:lever'], ['t', 'x'], ['type', 'feature'], ['title', 'Lever'],
+        ['noun', 'lever'], ['verb', 'pull'],
+        ['on-interact', 'pull', 'set-state', 'open'],
+      ],
+      content: 'A rusty lever.',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.errors.filter((e) => e.category === 'invalid-action')).toHaveLength(0);
+  });
+});
+
+// ── validateEvent: invalid enum values ────────────────────────────────────────
+
+describe('validateEvent — invalid enum values', () => {
+  it('errors when theme preset is invalid', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:world'], ['t', 'x'], ['type', 'world'], ['title', 'X'],
+        ['start', '30078:abc123def456abc123def456abc123def456abc123def456abc123def456abcd:x:place:start'],
+        ['theme', 'terminal'],
+      ],
+      content: '',
+    });
+    const result = validateEvent(tmpl);
+    const enumErr = result.errors.find((e) => e.category === 'invalid-enum' && e.message.includes('Theme'));
+    expect(enumErr).toBeDefined();
+    expect(enumErr.message).toContain('terminal');
+    expect(enumErr.message).toContain('terminal-green');
+  });
+
+  it('passes with valid theme preset', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:world'], ['t', 'x'], ['type', 'world'], ['title', 'X'],
+        ['start', '30078:abc123def456abc123def456abc123def456abc123def456abc123def456abcd:x:place:start'],
+        ['theme', 'terminal-green'],
+      ],
+      content: '',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.errors.filter((e) => e.category === 'invalid-enum' && e.message.includes('Theme'))).toHaveLength(0);
+  });
+
+  it('errors when collaboration mode is invalid', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:world'], ['t', 'x'], ['type', 'world'], ['title', 'X'],
+        ['start', '30078:abc123def456abc123def456abc123def456abc123def456abc123def456abcd:x:place:start'],
+        ['collaboration', 'public'],
+      ],
+      content: '',
+    });
+    const result = validateEvent(tmpl);
+    const enumErr = result.errors.find((e) => e.category === 'invalid-enum' && e.message.includes('Collaboration'));
+    expect(enumErr).toBeDefined();
+    expect(enumErr.message).toContain('public');
+  });
+
+  it('errors when effects bundle is invalid', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:world'], ['t', 'x'], ['type', 'world'], ['title', 'X'],
+        ['start', '30078:abc123def456abc123def456abc123def456abc123def456abc123def456abcd:x:place:start'],
+        ['effects', 'retro'],
+      ],
+      content: '',
+    });
+    const result = validateEvent(tmpl);
+    const enumErr = result.errors.find((e) => e.category === 'invalid-enum' && e.message.includes('Effect'));
+    expect(enumErr).toBeDefined();
+  });
+
+  it('errors when sound role is invalid', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:place:room'], ['t', 'x'], ['type', 'place'], ['title', 'Room'],
+        ['exit', 'north'],
+        ['sound', '30078:abc123def456abc123def456abc123def456abc123def456abc123def456abcd:x:sound:rain', 'background', '0.5'],
+      ],
+      content: 'A room.',
+    });
+    const result = validateEvent(tmpl);
+    const enumErr = result.errors.find((e) => e.category === 'invalid-enum' && e.message.includes('Sound role'));
+    expect(enumErr).toBeDefined();
+    expect(enumErr.message).toContain('background');
+  });
+
+  it('passes with valid sound role', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:place:room'], ['t', 'x'], ['type', 'place'], ['title', 'Room'],
+        ['exit', 'north'],
+        ['sound', '30078:abc123def456abc123def456abc123def456abc123def456abc123def456abcd:x:sound:rain', 'ambient', '0.5'],
+      ],
+      content: 'A room.',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.errors.filter((e) => e.category === 'invalid-enum' && e.message.includes('Sound role'))).toHaveLength(0);
+  });
+
+  it('errors when colour slot is invalid', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:world'], ['t', 'x'], ['type', 'world'], ['title', 'X'],
+        ['start', '30078:abc123def456abc123def456abc123def456abc123def456abc123def456abcd:x:place:start'],
+        ['colour', 'background', '#000000'],
+      ],
+      content: '',
+    });
+    const result = validateEvent(tmpl);
+    const enumErr = result.errors.find((e) => e.category === 'invalid-enum' && e.message.includes('Colour slot'));
+    expect(enumErr).toBeDefined();
+    expect(enumErr.message).toContain('background');
+  });
+});
+
+// ── validateEvent: numeric field validation ───────────────────────────────────
+
+describe('validateEvent — numeric field validation', () => {
+  it('errors when health is not a number', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:npc:guard'], ['t', 'x'], ['type', 'npc'], ['title', 'Guard'],
+        ['noun', 'guard'], ['health', 'ten'], ['damage', '2'],
+      ],
+      content: 'A guard.',
+    });
+    const result = validateEvent(tmpl);
+    const numErr = result.errors.find((e) => e.category === 'invalid-number' && e.message.includes('ten'));
+    expect(numErr).toBeDefined();
+    expect(numErr.fix).toContain('numeric');
+  });
+
+  it('passes when health is a valid number', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:npc:guard'], ['t', 'x'], ['type', 'npc'], ['title', 'Guard'],
+        ['noun', 'guard'], ['health', '10'], ['damage', '2'],
+      ],
+      content: 'A guard.',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.errors.filter((e) => e.category === 'invalid-number')).toHaveLength(0);
+  });
+
+  it('errors when damage is not a number', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:npc:guard'], ['t', 'x'], ['type', 'npc'], ['title', 'Guard'],
+        ['noun', 'guard'], ['health', '10'], ['damage', 'high'],
+      ],
+      content: 'A guard.',
+    });
+    const result = validateEvent(tmpl);
+    const numErr = result.errors.find((e) => e.category === 'invalid-number' && e.message.includes('high'));
+    expect(numErr).toBeDefined();
+  });
+
+  it('errors when counter initial value is not a number', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:feature:lever'], ['t', 'x'], ['type', 'feature'], ['title', 'Lever'],
+        ['noun', 'lever'], ['counter', 'uses', 'full'],
+      ],
+      content: 'A lever.',
+    });
+    const result = validateEvent(tmpl);
+    const numErr = result.errors.find((e) => e.category === 'invalid-number' && e.message.includes('full'));
+    expect(numErr).toBeDefined();
+  });
+
+  it('errors when speed is not a number', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:npc:guard'], ['t', 'x'], ['type', 'npc'], ['title', 'Guard'],
+        ['noun', 'guard'], ['health', '10'], ['damage', '2'], ['speed', 'fast'],
+      ],
+      content: 'A guard.',
+    });
+    const result = validateEvent(tmpl);
+    const numErr = result.errors.find((e) => e.category === 'invalid-number' && e.message.includes('fast'));
+    expect(numErr).toBeDefined();
+  });
+
+  it('accepts decimal numbers', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:npc:guard'], ['t', 'x'], ['type', 'npc'], ['title', 'Guard'],
+        ['noun', 'guard'], ['health', '10'], ['damage', '2.5'],
+      ],
+      content: 'A guard.',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.errors.filter((e) => e.category === 'invalid-number')).toHaveLength(0);
+  });
+
+  it('errors when on-counter threshold is not a number', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:feature:lever'], ['t', 'x'], ['type', 'feature'], ['title', 'Lever'],
+        ['noun', 'lever'], ['counter', 'uses', '3'],
+        ['on-counter', 'down', 'uses', 'empty', 'set-state', 'broken'],
+      ],
+      content: 'A lever.',
+    });
+    const result = validateEvent(tmpl);
+    const numErr = result.errors.find((e) => e.category === 'invalid-number' && e.message.includes('empty'));
+    expect(numErr).toBeDefined();
+  });
+
+  it('errors when deal-damage action target is not a number', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:feature:trap'], ['t', 'x'], ['type', 'feature'], ['title', 'Trap'],
+        ['noun', 'trap'], ['verb', 'touch'],
+        ['on-interact', 'touch', 'deal-damage', 'lots'],
+      ],
+      content: 'A trap.',
+    });
+    const result = validateEvent(tmpl);
+    const numErr = result.errors.find((e) => e.category === 'invalid-number' && e.message.includes('lots'));
+    expect(numErr).toBeDefined();
+    expect(numErr.message).toContain('deal-damage');
+  });
+
+  it('passes when deal-damage action target is a number', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:feature:trap'], ['t', 'x'], ['type', 'feature'], ['title', 'Trap'],
+        ['noun', 'trap'], ['verb', 'touch'],
+        ['on-interact', 'touch', 'deal-damage', '5'],
+      ],
+      content: 'A trap.',
+    });
+    const result = validateEvent(tmpl);
+    expect(result.errors.filter((e) => e.category === 'invalid-number')).toHaveLength(0);
+  });
+
+  it('errors when heal action target is not a number', () => {
+    const tmpl = makeTemplate({
+      tags: [
+        ['d', 'x:item:potion'], ['t', 'x'], ['type', 'item'], ['title', 'Potion'],
+        ['noun', 'potion'], ['verb', 'drink'],
+        ['on-interact', 'drink', 'heal', 'full'],
+      ],
+      content: 'A potion.',
+    });
+    const result = validateEvent(tmpl);
+    const numErr = result.errors.find((e) => e.category === 'invalid-number' && e.message.includes('full'));
+    expect(numErr).toBeDefined();
+    expect(numErr.message).toContain('heal');
   });
 });

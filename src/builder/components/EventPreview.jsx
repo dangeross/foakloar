@@ -30,10 +30,10 @@ export default function EventPreview({ template, onPublish, onBack, onClose }) {
       {(!validation.valid || validation.warnings?.length > 0) && (
         <div className="mb-2">
           {validation.errors.map((err, i) => (
-            <div key={`e${i}`} style={{ color: 'var(--colour-error)' }}>✗ {err}</div>
+            <div key={`e${i}`} style={{ color: 'var(--colour-error)' }}>✗ {err.message}</div>
           ))}
           {validation.warnings?.map((warn, i) => (
-            <div key={`w${i}`} style={{ color: 'var(--colour-dim)' }}>⚠ {warn}</div>
+            <div key={`w${i}`} style={{ color: 'var(--colour-dim)' }}>⚠ {warn.message}</div>
           ))}
         </div>
       )}

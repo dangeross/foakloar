@@ -26,6 +26,11 @@ function ref(dTag) {
   return `30078:${PK}:${dTag}`;
 }
 
+/** Check if any issue in array has message matching substring */
+function hasMessage(issues, substring) {
+  return issues.some((i) => i.message.includes(substring));
+}
+
 // ── extractDTagFromRef ───────────────────────────────────────────────────────
 
 describe('extractDTagFromRef', () => {
@@ -55,10 +60,23 @@ describe('validateWorld — dangling refs', () => {
       makeEvent('test:place:room', 'place', [
         ['exit', ref('test:place:other'), 'north', 'North.'],
       ]),
-      // test:place:other does not exist
     ];
     const { warnings } = validateWorld(events);
-    expect(warnings.some((w) => w.message.includes('test:place:other') && w.message.includes('not in this world'))).toBe(true);
+    expect(hasMessage(warnings, 'test:place:other') && hasMessage(warnings, 'not in this world')).toBe(true);
+  });
+
+  it('dangling ref has structured fields', () => {
+    const events = [
+      makeEvent('test:place:room', 'place', [
+        ['exit', ref('test:place:other'), 'north', 'North.'],
+      ]),
+    ];
+    const { warnings } = validateWorld(events);
+    const dangling = warnings.find((w) => w.category === 'dangling-ref');
+    expect(dangling).toBeDefined();
+    expect(dangling.dTag).toBe('test:place:room');
+    expect(dangling.fix).toBeTruthy();
+    expect(dangling.tag).toBeTruthy();
   });
 
   it('no warning when ref resolves', () => {
@@ -69,7 +87,7 @@ describe('validateWorld — dangling refs', () => {
       makeEvent('test:place:other', 'place'),
     ];
     const { warnings } = validateWorld(events);
-    expect(warnings.some((w) => w.message.includes('not in this world'))).toBe(false);
+    expect(hasMessage(warnings, 'not in this world')).toBe(false);
   });
 });
 
@@ -88,7 +106,10 @@ describe('validateWorld — place puzzle tag', () => {
       ]),
     ];
     const { warnings } = validateWorld(events);
-    expect(warnings.some((w) => w.message.includes('only sequence puzzles'))).toBe(true);
+    expect(hasMessage(warnings, 'only sequence puzzles')).toBe(true);
+    const mismatch = warnings.find((w) => w.category === 'puzzle-type-mismatch');
+    expect(mismatch).toBeDefined();
+    expect(mismatch.fix).toBeTruthy();
   });
 
   it('no warning when place puzzle tag references a sequence puzzle', () => {
@@ -101,7 +122,7 @@ describe('validateWorld — place puzzle tag', () => {
       ]),
     ];
     const { warnings } = validateWorld(events);
-    expect(warnings.some((w) => w.message.includes('only sequence puzzles'))).toBe(false);
+    expect(hasMessage(warnings, 'only sequence puzzles')).toBe(false);
   });
 });
 
@@ -116,7 +137,7 @@ describe('validateWorld — NIP-44 content', () => {
       ], 'Sealed.'),
     ];
     const { errors } = validateWorld(events);
-    expect(errors.some((e) => e.message.includes('test:puzzle:missing') && e.message.includes('not in this world'))).toBe(true);
+    expect(hasMessage(errors, 'test:puzzle:missing') && hasMessage(errors, 'not in this world')).toBe(true);
   });
 
   it('errors when puzzle has no salt', () => {
@@ -128,11 +149,10 @@ describe('validateWorld — NIP-44 content', () => {
       makeEvent('test:puzzle:riddle', 'puzzle', [
         ['puzzle-type', 'riddle'],
         ['answer-hash', 'abc'],
-        // no salt
       ]),
     ];
     const { errors } = validateWorld(events);
-    expect(errors.some((e) => e.message.includes('no salt tag'))).toBe(true);
+    expect(hasMessage(errors, 'no salt tag')).toBe(true);
   });
 
   it('errors when no answer stored for puzzle', () => {
@@ -147,8 +167,8 @@ describe('validateWorld — NIP-44 content', () => {
         ['salt', 'test:puzzle:riddle:v1'],
       ]),
     ];
-    const { errors } = validateWorld(events, {}); // no answers
-    expect(errors.some((e) => e.message.includes('no answer is stored'))).toBe(true);
+    const { errors } = validateWorld(events, {});
+    expect(hasMessage(errors, 'no answer is stored')).toBe(true);
   });
 
   it('no errors when puzzle, salt, and answer all present', () => {
@@ -167,6 +187,19 @@ describe('validateWorld — NIP-44 content', () => {
     const { errors } = validateWorld(events, answers);
     expect(errors).toHaveLength(0);
   });
+
+  it('NIP-44 errors have structured fields', () => {
+    const events = [
+      makeEvent('test:place:secret', 'place', [
+        ['content-type', 'application/nip44', 'text/markdown'],
+        ['puzzle', ref('test:puzzle:missing')],
+      ], 'Sealed.'),
+    ];
+    const { errors } = validateWorld(events);
+    const nip44 = errors.find((e) => e.category === 'nip44');
+    expect(nip44).toBeDefined();
+    expect(nip44.fix).toBeTruthy();
+  });
 });
 
 // ── on-interact targeting puzzle without answer ──────────────────────────────
@@ -184,7 +217,7 @@ describe('validateWorld — on-interact puzzle answer', () => {
       ]),
     ];
     const { warnings } = validateWorld(events, {});
-    expect(warnings.some((w) => w.message.includes('test:puzzle:riddle') && w.message.includes('no answer stored'))).toBe(true);
+    expect(hasMessage(warnings, 'test:puzzle:riddle') && hasMessage(warnings, 'no answer stored')).toBe(true);
   });
 
   it('no warning when answer is stored', () => {
@@ -200,7 +233,7 @@ describe('validateWorld — on-interact puzzle answer', () => {
     ];
     const answers = { 'test:puzzle:riddle': 'the-answer' };
     const { warnings } = validateWorld(events, answers);
-    expect(warnings.some((w) => w.message.includes('no answer stored'))).toBe(false);
+    expect(hasMessage(warnings, 'no answer stored')).toBe(false);
   });
 });
 
@@ -208,7 +241,6 @@ describe('validateWorld — on-interact puzzle answer', () => {
 
 describe('verifyPuzzleHashes', () => {
   it('returns no errors when answer hashes match (case-sensitive)', async () => {
-    // Pre-compute: SHA-256("Hello" + "salt1") — engine preserves case, only trims
     const data = new TextEncoder().encode('Hello' + 'salt1');
     const buf = await crypto.subtle.digest('SHA-256', data);
     const hash = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
@@ -220,7 +252,6 @@ describe('verifyPuzzleHashes', () => {
   });
 
   it('returns error when case differs (case-sensitive hashing)', async () => {
-    // Hash computed from lowercase "hello", but answer stored as "Hello"
     const data = new TextEncoder().encode('hello' + 'salt1');
     const buf = await crypto.subtle.digest('SHA-256', data);
     const hash = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
@@ -230,6 +261,8 @@ describe('verifyPuzzleHashes', () => {
     ]);
     expect(errors).toHaveLength(1);
     expect(errors[0].message).toContain('Answer hash mismatch');
+    expect(errors[0].category).toBe('hash-mismatch');
+    expect(errors[0].fix).toBeTruthy();
   });
 
   it('returns error when answer hash does not match', async () => {

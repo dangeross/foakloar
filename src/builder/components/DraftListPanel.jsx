@@ -53,17 +53,17 @@ export default function DraftListPanel({
       const id = draft._draft?.id;
       if (dTag && id) dTagToId[dTag] = id;
     }
-    for (const { dTag, message } of worldResult.errors) {
-      const id = dTagToId[dTag];
+    for (const issue of worldResult.errors) {
+      const id = dTagToId[issue.dTag];
       if (id && map[id]) {
-        map[id].errors.push(message);
+        map[id].errors.push(issue);
         map[id].valid = false;
       }
     }
-    for (const { dTag, message } of worldResult.warnings) {
-      const id = dTagToId[dTag];
+    for (const issue of worldResult.warnings) {
+      const id = dTagToId[issue.dTag];
       if (id && map[id]) {
-        map[id].warnings.push(message);
+        map[id].warnings.push(issue);
       }
     }
     return { map, puzzlesToVerify: worldResult.puzzlesToVerify || [], dTagToId };
@@ -75,10 +75,10 @@ export default function DraftListPanel({
     verifyPuzzleHashes(validations.puzzlesToVerify).then((hashErrors) => {
       if (hashErrors.length === 0) return;
       // Merge hash errors into validation map
-      for (const { dTag, message } of hashErrors) {
-        const id = validations.dTagToId[dTag];
+      for (const issue of hashErrors) {
+        const id = validations.dTagToId[issue.dTag];
         if (id && validations.map[id]) {
-          validations.map[id].errors.push(message);
+          validations.map[id].errors.push(issue);
           validations.map[id].valid = false;
         }
       }
@@ -177,10 +177,10 @@ export default function DraftListPanel({
             {isExpanded && validation && (
               <div className="pb-1 pl-4" style={{ fontSize: '0.6rem' }}>
                 {validation.errors.map((err, i) => (
-                  <div key={`e${i}`} style={{ color: 'var(--colour-error)' }}>✗ {err}</div>
+                  <div key={`e${i}`} style={{ color: 'var(--colour-error)' }}>✗ {err.message}</div>
                 ))}
                 {validation.warnings?.map((warn, i) => (
-                  <div key={`w${i}`} style={{ color: 'var(--colour-dim)' }}>⚠ {warn}</div>
+                  <div key={`w${i}`} style={{ color: 'var(--colour-dim)' }}>⚠ {warn.message}</div>
                 ))}
                 {isValid && !hasWarnings && (
                   <div style={{ color: 'var(--colour-highlight)' }}>✓ Ready to publish</div>
@@ -214,11 +214,11 @@ export default function DraftListPanel({
                   const answers = { ...loadAnswers(worldSlug), ...(data.answers || {}) };
                   const worldResult = validateWorld(combinedEvents, answers);
                   // Merge world warnings into import warnings
-                  for (const { dTag, message } of worldResult.warnings) {
-                    validation.warnings.push(`${dTag}: ${message}`);
+                  for (const issue of worldResult.warnings) {
+                    validation.warnings.push(`${issue.dTag}: ${issue.message}`);
                   }
-                  for (const { dTag, message } of worldResult.errors) {
-                    validation.warnings.push(`⚠ ${dTag}: ${message}`);
+                  for (const issue of worldResult.errors) {
+                    validation.warnings.push(`⚠ ${issue.dTag}: ${issue.message}`);
                   }
                   setImportPreview({ validation, data });
                 } catch {

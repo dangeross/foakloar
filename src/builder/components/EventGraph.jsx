@@ -19,6 +19,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import Dagre from '@dagrejs/dagre';
 import { nip19 } from 'nostr-tools';
+import { validateWorld, extractDTagFromRef } from '../../builder/validateWorld.js';
 
 const GRAPH_EVENT_TYPES = [
   { value: 'place', label: 'Place' },
@@ -39,6 +40,22 @@ const GRAPH_EVENT_TYPES = [
 // ── Custom node components ──────────────────────────────────────────────
 
 const handleStyle = { background: 'color-mix(in srgb, var(--colour-bg) 90%, var(--colour-dim))', width: 10, height: 10, border: '1px solid var(--colour-npc)', opacity: 0.6 };
+
+/** Compact validation label shown below node content */
+function IssueLabel({ issues }) {
+  if (!issues || issues.length === 0) return null;
+  const hasError = issues.some((i) => i.level === 'error');
+  const colour = hasError ? 'var(--colour-error)' : 'var(--colour-npc)';
+  // Show first issue message, truncated
+  const first = issues[0].message;
+  const label = first.length > 30 ? first.substring(0, 28) + '...' : first;
+  const suffix = issues.length > 1 ? ` +${issues.length - 1}` : '';
+  return (
+    <div style={{ color: colour, fontSize: '0.4rem', marginTop: 2, lineHeight: 1.2 }}>
+      ! {label}{suffix}
+    </div>
+  );
+}
 
 function PlaceNode({ data }) {
   const borderColour = data.current ? 'var(--colour-highlight)' : 'var(--colour-text)';
@@ -69,6 +86,7 @@ function PlaceNode({ data }) {
       {data.isDraft && (
         <div style={{ color: 'var(--colour-item)', fontSize: '0.4rem', marginTop: 1 }}>DRAFT</div>
       )}
+      <IssueLabel issues={data.issues} />
     </div>
   );
 }
@@ -89,6 +107,7 @@ function WorldNode({ data }) {
       <Handle type="source" position={Position.Bottom} style={handleStyle} />
       <div style={{ fontWeight: 'bold' }}>{data.label}</div>
       <div style={{ color: 'var(--colour-dim)', fontSize: '0.5rem' }}>world</div>
+      <IssueLabel issues={data.issues} />
     </div>
   );
 }
@@ -106,6 +125,7 @@ function OrphanNode({ data }) {
     }}>
       <span style={{ fontSize: '0.45rem', marginRight: 4, opacity: 0.7 }}>[{data.entityType}]</span>
       {data.label}
+      <IssueLabel issues={data.issues} />
     </div>
   );
 }
@@ -137,6 +157,25 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode) {
   const nodes = [];
   const edges = [];
   const referencedRefs = new Set();
+
+  // Run cross-event validation and build d-tag → issues map
+  const eventsArray = Array.from(events.values());
+  const { errors, warnings } = validateWorld(eventsArray);
+  const issuesByDTag = new Map();
+  for (const e of errors) {
+    if (!issuesByDTag.has(e.dTag)) issuesByDTag.set(e.dTag, []);
+    issuesByDTag.get(e.dTag).push({ level: 'error', ...e });
+  }
+  for (const w of warnings) {
+    if (!issuesByDTag.has(w.dTag)) issuesByDTag.set(w.dTag, []);
+    issuesByDTag.get(w.dTag).push({ level: 'warning', ...w });
+  }
+
+  // Helper: get issues for an event by its a-tag ref
+  function getIssues(ref) {
+    const dTag = extractDTagFromRef(ref);
+    return dTag ? (issuesByDTag.get(dTag) || []) : [];
+  }
 
   const SKIP_TYPES = new Set(['vouch', 'player-state']);
   const places = new Map();
@@ -195,7 +234,7 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode) {
       id: worldRef,
       type: 'world',
       position: { x: 0, y: 0 },
-      data: { label: getTag(worldEvent, 'title') || 'World', ref: worldRef, author: worldEvent.pubkey },
+      data: { label: getTag(worldEvent, 'title') || 'World', ref: worldRef, author: worldEvent.pubkey, issues: getIssues(worldRef) },
     });
   }
 
@@ -220,7 +259,7 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode) {
       data: {
         label: title, ref, current: ref === currentPlace, details,
         author: event.pubkey, isDraft: isDraft(event), untrusted: isUntrusted(event),
-        entityRefs,
+        entityRefs, issues: getIssues(ref),
       },
     });
   }
@@ -284,17 +323,17 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode) {
     nodes.push({
       id: ref, type: 'orphan',
       position: { x: (orphanIdx % 4) * 200, y: maxY + 120 + Math.floor(orphanIdx / 4) * 45 },
-      data: { label: title, entityType: type, ref, author: event.pubkey },
+      data: { label: title, entityType: type, ref, author: event.pubkey, issues: getIssues(ref) },
     });
     orphanIdx++;
   }
 
-  return { nodes, edges };
+  return { nodes, edges, issuesByDTag };
 }
 
 // ── Sidebar ─────────────────────────────────────────────────────────────
 
-function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, onClose, pubkey, trustSet }) {
+function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, onClose, pubkey, trustSet, issuesByDTag }) {
   if (!selectedRef) return null;
   const event = events.get(selectedRef);
   if (!event) return null;
@@ -432,6 +471,28 @@ function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, 
         {!isDraft && <span style={{ color: 'var(--colour-text)' }}>published</span>}
       </div>
       <AuthorLine pk={author} />
+
+      {/* Validation issues */}
+      {(() => {
+        const dTag = event.tags?.find((t) => t[0] === 'd')?.[1];
+        const issues = dTag && issuesByDTag ? (issuesByDTag.get(dTag) || []) : [];
+        if (issues.length === 0) return null;
+        return (
+          <div style={{ marginTop: 4, marginBottom: 4 }}>
+            {issues.map((issue, i) => (
+              <div key={i} style={{
+                color: issue.level === 'error' ? 'var(--colour-error)' : 'var(--colour-npc)',
+                fontSize: '0.5rem',
+                lineHeight: 1.3,
+                marginBottom: 1,
+              }}>
+                ! {issue.message}
+              </div>
+            ))}
+          </div>
+        );
+      })()}
+
       <div style={{ marginTop: 4, marginBottom: 8 }} />
 
       {/* Exits */}
@@ -523,7 +584,7 @@ export default function EventGraph({
   const [showNewMenu, setShowNewMenu] = useState(false);
   const [selectedRef, setSelectedRef] = useState(null);
 
-  const { nodes: initialNodes, edges: initialEdges } = useMemo(
+  const { nodes: initialNodes, edges: initialEdges, issuesByDTag } = useMemo(
     () => eventsToGraph(events, currentPlace, trustSet, clientMode),
     [events, currentPlace, trustSet, clientMode]
   );
@@ -612,6 +673,7 @@ export default function EventGraph({
           <span style={{ color: 'var(--colour-dim)', fontSize: '0.7rem', fontFamily: 'inherit' }}>
             EVENT GRAPH — {nodes.filter((n) => n.type === 'place').length} places, {edges.length} connections
             {orphanCount > 0 && <span style={{ color: 'var(--colour-error)' }}> · {orphanCount} orphan{orphanCount !== 1 ? 's' : ''}</span>}
+            {issuesByDTag.size > 0 && <span style={{ color: 'var(--colour-npc)' }}> · {issuesByDTag.size} issue{issuesByDTag.size !== 1 ? 's' : ''}</span>}
           </span>
         </div>
         {onNewEvent && (
@@ -687,6 +749,7 @@ export default function EventGraph({
         onClose={() => setSelectedRef(null)}
         pubkey={pubkey}
         trustSet={trustSet}
+        issuesByDTag={issuesByDTag}
       />
     </div>
   );

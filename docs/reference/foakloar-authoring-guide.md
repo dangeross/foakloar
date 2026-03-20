@@ -792,6 +792,76 @@ localStorage state keys are full `a`-tags, not d-tags. This is collision-proof a
 
 ---
 
+## Validation
+
+Before publishing, validate your world file against the validation API. This catches structural errors that are invisible at authoring time — dangling references, placeholder hashes, missing tags, verb collisions — and returns actionable fix instructions you can iterate on directly.
+
+**Endpoint:** `POST https://foakloar.vercel.app/api/validate`
+
+**New world:**
+```bash
+curl -X POST https://foakloar.vercel.app/api/validate \
+  -H "Content-Type: application/json" \
+  -d @my-world-events.json
+```
+
+**Expansion (adding to an existing published world):**
+```json
+{
+  "events": [ ...new events only... ],
+  "answers": { "my-world:puzzle:new-riddle": "the answer" },
+  "externalRefs": [
+    "my-world:place:clearing",
+    "my-world:npc:hermit",
+    "my-world:item:iron-key"
+  ]
+}
+```
+
+`externalRefs` lists d-tags that exist in the already-published base world but aren't in this file. References to them are silently skipped — without this, every reference to the base world looks like a dangling ref. The presence of `externalRefs` tells the validator this is an expansion.
+
+**Response:**
+```json
+{
+  "valid": false,
+  "eventCount": 12,
+  "summary": { "errors": 1, "warnings": 2 },
+  "issues": [
+    {
+      "level": "error",
+      "dTag": "my-world:place:gate",
+      "eventType": "place",
+      "category": "dangling-ref",
+      "message": "npc references \"my-world:npc:ghost\" which is not in this world",
+      "tag": "npc, 30078:<PUBKEY>:my-world:npc:ghost",
+      "fix": "Either create a new event with type \"npc\" with d-tag \"my-world:npc:ghost\", or remove the [\"npc\", \"...\"] tag from \"my-world:place:gate\"."
+    }
+  ]
+}
+```
+
+**Workflow:**
+1. Generate world JSON from this guide and the design spec
+2. POST to the validation endpoint
+3. Apply each `fix` instruction to resolve issues
+4. Re-validate until `"valid": true`
+5. Publish
+
+`valid: true` means zero errors. Warnings should be resolved but do not block publishing.
+
+**What the validator checks:**
+- Missing or empty required tags
+- Dangling cross-event references
+- Answer hash verification (SHA-256) — catches placeholder hashes
+- NIP-44 encryption requirements
+- Puzzle type mismatches
+- Verb alias collisions between co-located entities
+- `on-complete` blank trigger-target
+- `on-counter` direction argument
+- Inline `requires` on exit tags (must be on the portal, not the place exit)
+
+---
+
 ## Publishing Your World
 
 Once your events are written, collect them into a single JSON file — an array of unsigned event objects. Name the file after your world slug:

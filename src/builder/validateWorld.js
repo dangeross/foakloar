@@ -6,6 +6,9 @@
  * puzzle answer availability, puzzle-type mismatches, etc.
  *
  * Works with both draft events (<PUBKEY> placeholders) and published events.
+ *
+ * All errors/warnings are structured objects:
+ * { dTag, category, message, fix, tag? }
  */
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -63,6 +66,19 @@ function resolveRef(ref, dTags) {
   return dTags.has(dTag) ? dTag : null;
 }
 
+/**
+ * Infer event type from a d-tag pattern like "world:npc:broker-solis" → "npc"
+ */
+function inferTypeFromDTag(dTagStr) {
+  const validTypes = ['place', 'item', 'feature', 'npc', 'portal', 'puzzle', 'clue', 'dialogue', 'sound', 'quest', 'recipe', 'consequence', 'payment'];
+  const parts = dTagStr.split(':');
+  if (parts.length >= 2) {
+    const candidate = parts[parts.length - 2];
+    if (validTypes.includes(candidate)) return candidate;
+  }
+  return null;
+}
+
 // ── Main validator ───────────────────────────────────────────────────────────
 
 /**
@@ -70,7 +86,7 @@ function resolveRef(ref, dTags) {
  *
  * @param {Array} events - array of event templates { kind, tags, content }
  * @param {Object} answers - { puzzleDTag: answer } map (for NIP-44 checks)
- * @returns {{ errors: Array<{dTag, message}>, warnings: Array<{dTag, message}> }}
+ * @returns {{ errors: Array<{dTag, category, message, fix, tag?}>, warnings: Array<{dTag, category, message, fix, tag?}> }}
  */
 export function validateWorld(events, answers = {}) {
   const errors = [];
@@ -88,9 +104,14 @@ export function validateWorld(events, answers = {}) {
         const resolved = resolveRef(tag[i], dTags);
         if (!resolved) {
           const refDTag = extractDTagFromRef(tag[i]);
+          const inferredType = inferTypeFromDTag(refDTag);
+          const typeHint = inferredType ? ` with type "${inferredType}"` : '';
           warnings.push({
             dTag,
+            category: 'dangling-ref',
             message: `${tag[0]} references "${refDTag}" which is not in this world`,
+            tag: tag.join(', '),
+            fix: `Either create a new event${typeHint} with d-tag "${refDTag}", or remove the ["${tag[0]}", "..."] tag from "${dTag}".`,
           });
         }
       }
@@ -106,7 +127,10 @@ export function validateWorld(events, answers = {}) {
           if (puzzleType && puzzleType !== 'sequence') {
             warnings.push({
               dTag,
+              category: 'puzzle-type-mismatch',
               message: `puzzle tag references "${puzzleDTag}" which is type "${puzzleType}" — only sequence puzzles auto-evaluate from place puzzle tags. Riddle puzzles need an on-interact trigger on a feature`,
+              tag: tag.join(', '),
+              fix: `The puzzle "${puzzleDTag}" is type "${puzzleType}". Change it to type "sequence", or remove the puzzle tag from "${dTag}" and instead add an on-interact trigger on a feature in this place that targets the puzzle.`,
             });
           }
         }
@@ -124,20 +148,26 @@ export function validateWorld(events, answers = {}) {
         if (!puzzleEvent) {
           errors.push({
             dTag,
+            category: 'nip44',
             message: `NIP-44 content references puzzle "${puzzleDTagStr}" which is not in this world`,
+            fix: `Create the puzzle event with d-tag "${puzzleDTagStr}", or check the puzzle reference.`,
           });
         } else {
           const salt = getTagValue(puzzleEvent, 'salt');
           if (!salt) {
             errors.push({
               dTag,
+              category: 'nip44',
               message: `NIP-44 content references puzzle "${puzzleDTagStr}" which has no salt tag — cannot derive encryption key`,
+              fix: `Add a ["salt", "<random-hex>"] tag to the puzzle event "${puzzleDTagStr}".`,
             });
           }
           if (!answers[puzzleDTagStr]) {
             errors.push({
               dTag,
+              category: 'nip44',
               message: `NIP-44 content references puzzle "${puzzleDTagStr}" but no answer is stored — content cannot be encrypted at publish time`,
+              fix: `Add the puzzle answer to the top-level "answers" object: { "${puzzleDTagStr}": "<answer>" }.`,
             });
           }
         }
@@ -158,7 +188,10 @@ export function validateWorld(events, answers = {}) {
             if (answerHash && !answers[targetDTag]) {
               warnings.push({
                 dTag,
+                category: 'nip44',
                 message: `on-interact targets puzzle "${targetDTag}" which has an answer-hash but no answer stored — puzzle will activate but cannot verify answers at publish time for NIP-44`,
+                tag: tag.join(', '),
+                fix: `Add the puzzle answer to the "answers" object: { "${targetDTag}": "<answer>" }.`,
               });
             }
           }
@@ -168,15 +201,13 @@ export function validateWorld(events, answers = {}) {
   }
 
   // ── 5. Verb alias collisions per place ──────────────────────────────────
-  // Check if any verb alias maps to different canonical verbs across
-  // features/items in the same place (causes parser to use the wrong verb).
   for (const event of events) {
     if (getTagValue(event, 'type') !== 'place') continue;
     const placeDTag = getTagValue(event, 'd') || '?';
 
-    // Collect all verb sources: features + items referenced by this place
+    // Collect verb sources: features + items + npcs referenced by this place
     const refTypes = ['feature', 'item', 'npc'];
-    const verbSources = []; // { eventDTag, canonical, alias }
+    const verbSources = [];
     for (const type of refTypes) {
       for (const tag of getTags(event, type)) {
         const ref = tag[1];
@@ -192,28 +223,23 @@ export function validateWorld(events, answers = {}) {
       }
     }
 
-    // Also check all items in the world (could be in inventory at this place)
-    for (const ev of events) {
-      if (getTagValue(ev, 'type') !== 'item') continue;
-      const itemDTag = getTagValue(ev, 'd');
-      // Skip items already counted as place items
-      if (verbSources.some((v) => v.eventDTag === itemDTag)) continue;
-      for (const vt of getTags(ev, 'verb')) {
-        const canonical = vt[1];
-        for (let i = 1; i < vt.length; i++) {
-          verbSources.push({ eventDTag: itemDTag, canonical, alias: vt[i].toLowerCase() });
-        }
-      }
-    }
+    // NOTE: We intentionally skip global inventory items here.
+    // Items travel everywhere, so their common verbs ("use", "examine")
+    // would collide at every place — noisy false positives.
+    // Only flag collisions between entities co-located at this place.
 
     // Find collisions: same alias, different canonical
-    const aliasMap = new Map(); // alias → { canonical, eventDTag }
+    const aliasMap = new Map();
     for (const { eventDTag, canonical, alias } of verbSources) {
       const existing = aliasMap.get(alias);
       if (existing && existing.canonical !== canonical) {
+        const entity1Short = existing.eventDTag.split(':').pop();
+        const entity2Short = eventDTag.split(':').pop();
         warnings.push({
           dTag: placeDTag,
-          message: `Verb collision: "${alias}" maps to "${existing.canonical}" (${existing.eventDTag.split(':').pop()}) and "${canonical}" (${eventDTag.split(':').pop()}) — last one wins, may cause unexpected behaviour`,
+          category: 'verb-collision',
+          message: `Verb collision: "${alias}" maps to "${existing.canonical}" (${entity1Short}) and "${canonical}" (${entity2Short}) — last one wins, may cause unexpected behaviour`,
+          fix: `The alias "${alias}" is claimed by both entities. Remove "${alias}" from the verb tag on either "${entity1Short}" (${existing.eventDTag}) or "${entity2Short}" (${eventDTag}), or rename one to a unique alias.`,
         });
       }
       aliasMap.set(alias, { canonical, eventDTag });
@@ -242,7 +268,7 @@ export function validateWorld(events, answers = {}) {
  * This catches mismatches between stored answers and answer-hash tags.
  *
  * @param {Array<{dTag, answerHash, salt, answer}>} puzzlesToVerify
- * @returns {Promise<Array<{dTag, message}>>} — additional errors
+ * @returns {Promise<Array<{dTag, category, message, fix}>>} — additional errors
  */
 export async function verifyPuzzleHashes(puzzlesToVerify) {
   const errors = [];
@@ -256,7 +282,9 @@ export async function verifyPuzzleHashes(puzzlesToVerify) {
     if (hashHex !== answerHash) {
       errors.push({
         dTag,
+        category: 'hash-mismatch',
         message: `Answer hash mismatch — stored answer "${answer}" does not match answer-hash.`,
+        fix: `The answer "${answer}" does not produce the expected hash. Update the "answers" object with the correct answer, or regenerate the ["answer-hash", "..."] tag using SHA-256(answer + salt).`,
       });
     }
   }

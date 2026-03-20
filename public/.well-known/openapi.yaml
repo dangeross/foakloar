@@ -1,0 +1,255 @@
+openapi: 3.1.0
+info:
+  title: Foakloar World Validator
+  version: 1.0.0
+  description: |
+    Validates NOSTR dungeon world files (kind 30078 events) for the Foakloar protocol.
+
+    Returns structured, actionable issues that tell you exactly which event and tag
+    to fix, what category of problem it is, and how to resolve it.
+
+    Accepts JSON with comments (//) and trailing commas for convenience.
+
+servers:
+  - url: https://foakloar.com
+    description: Production
+  - url: http://localhost:5173
+    description: Local development
+
+paths:
+  /api/validate:
+    post:
+      operationId: validateWorld
+      summary: Validate a world file
+      description: |
+        Send an array of NOSTR dungeon events and receive structured validation results.
+
+        **Per-event checks:** missing tags, invalid refs, required fields, unknown tags,
+        triggers without actions, verbs without on-interact handlers.
+
+        **Cross-event checks:** dangling references, puzzle type mismatches, verb alias
+        collisions between co-located entities, NIP-44 encryption requirements, answer hash verification.
+
+        **External refs:** If this file is a partial update or expansion to an existing world,
+        declare the d-tags of events that exist in the base world using `externalRefs`.
+        Dangling references matching these are silently skipped.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateRequest'
+            examples:
+              complete-world:
+                summary: Complete world with one place
+                value:
+                  events:
+                    - kind: 30078
+                      tags:
+                        - ["d", "my-world:world"]
+                        - ["t", "my-world"]
+                        - ["type", "world"]
+                        - ["title", "My World"]
+                        - ["w", "foakloar"]
+                        - ["start", "30078:<PUBKEY>:my-world:place:start"]
+                        - ["collaboration", "open"]
+                      content: ""
+                    - kind: 30078
+                      tags:
+                        - ["d", "my-world:place:start"]
+                        - ["t", "my-world"]
+                        - ["type", "place"]
+                        - ["title", "Starting Room"]
+                        - ["exit", "north"]
+                      content: "You stand in a dimly lit room."
+              expansion:
+                summary: Expansion with external refs to existing world
+                value:
+                  externalRefs:
+                    - "my-world:place:town-square"
+                    - "my-world:npc:innkeeper"
+                  events:
+                    - kind: 30078
+                      tags:
+                        - ["d", "my-world:place:cellar"]
+                        - ["t", "my-world"]
+                        - ["type", "place"]
+                        - ["title", "Inn Cellar"]
+                        - ["exit", "up"]
+                        - ["npc", "30078:<PUBKEY>:my-world:npc:innkeeper"]
+                      content: "A damp cellar beneath the inn."
+                    - kind: 30078
+                      tags:
+                        - ["d", "my-world:portal:cellar-to-inn"]
+                        - ["t", "my-world"]
+                        - ["type", "portal"]
+                        - ["exit", "30078:<PUBKEY>:my-world:place:town-square", "up", "Back to the inn"]
+                        - ["exit", "30078:<PUBKEY>:my-world:place:cellar", "down", "Into the cellar"]
+                      content: ""
+      responses:
+        '200':
+          description: Validation passed — no errors (may have warnings)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateResponse'
+        '422':
+          description: Validation failed — errors found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateResponse'
+        '400':
+          description: Request body could not be parsed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateResponse'
+
+components:
+  schemas:
+    ValidateRequest:
+      type: object
+      required:
+        - events
+      properties:
+        events:
+          type: array
+          description: Array of NOSTR dungeon event templates
+          items:
+            $ref: '#/components/schemas/Event'
+        answers:
+          type: object
+          description: |
+            Map of puzzle d-tag → answer string. Required for NIP-44 encrypted
+            content validation and answer hash verification.
+          additionalProperties:
+            type: string
+          example:
+            my-world:puzzle:riddle: "the answer"
+        externalRefs:
+          type: array
+          description: |
+            D-tags (or full a-tag refs) of events that exist in the base world
+            but are not included in this file. Dangling references matching
+            these are silently skipped instead of being reported as warnings.
+
+            Accepts both formats:
+            - D-tag: `"my-world:npc:guard"`
+            - A-tag ref: `"30078:<PUBKEY>:my-world:npc:guard"`
+          items:
+            type: string
+          example:
+            - "my-world:place:town-square"
+            - "my-world:npc:innkeeper"
+
+    Event:
+      type: object
+      required:
+        - kind
+        - tags
+      properties:
+        kind:
+          type: integer
+          const: 30078
+        tags:
+          type: array
+          description: |
+            Array of tag arrays. Each tag is ["name", "value1", "value2", ...].
+            Required tags: d (identifier), t (world slug), type (event type).
+          items:
+            type: array
+            items:
+              type: string
+        content:
+          type: string
+          description: Event content — description text, markdown, or NIP-44 ciphertext
+
+    ValidateResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          description: True if there are zero errors (warnings don't fail validation)
+        eventCount:
+          type: integer
+          description: Number of events validated
+        externalRefs:
+          type: integer
+          description: Number of external refs declared (omitted if none)
+        summary:
+          type: object
+          properties:
+            errors:
+              type: integer
+            warnings:
+              type: integer
+        issues:
+          type: array
+          description: |
+            All validation issues, ordered by event. Each issue is actionable —
+            the `fix` field tells you exactly what to change.
+          items:
+            $ref: '#/components/schemas/Issue'
+
+    Issue:
+      type: object
+      required:
+        - level
+        - category
+        - message
+      properties:
+        level:
+          type: string
+          enum: [error, warning]
+          description: |
+            - error: Must fix before publishing. Causes `valid: false`.
+            - warning: Should fix. May cause runtime issues.
+        dTag:
+          type: string
+          description: The d-tag of the event with the issue
+          example: my-world:place:start
+        eventType:
+          type: string
+          description: The type of the event (place, item, feature, npc, portal, etc.)
+          example: place
+        category:
+          type: string
+          description: Machine-readable issue category for filtering
+          enum:
+            - missing-tag
+            - invalid-ref
+            - required-field
+            - missing-content
+            - no-exits
+            - missing-noun
+            - trigger-no-action
+            - invalid-direction
+            - trigger-target-not-blank
+            - invalid-action
+            - invalid-enum
+            - invalid-number
+            - missing-state
+            - unused-verb
+            - extra-fields
+            - nip44
+            - unknown-tag
+            - dangling-ref
+            - puzzle-type-mismatch
+            - verb-collision
+            - hash-mismatch
+            - parse-error
+        message:
+          type: string
+          description: Human-readable description of the issue
+          example: 'npc references "my-world:npc:guard" which is not in this world'
+        tag:
+          type: string
+          description: The offending tag serialised as comma-separated values (when applicable)
+          example: 'npc, 30078:<PUBKEY>:my-world:npc:guard'
+        fix:
+          type: string
+          description: |
+            Actionable fix instruction. Tells you exactly what to add, remove,
+            or change to resolve the issue.
+          example: 'Either create a new event with type "npc" with d-tag "my-world:npc:guard", or remove the ["npc", "..."] tag from "my-world:place:start".'

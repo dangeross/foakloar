@@ -106,6 +106,9 @@ Portal always uses extended form. Portal wins if conflict. Hidden portals still 
 
 **`plaintext-type` tag proposed and removed before shipping** — replaced by three-element `content-type`.
 
+**Sample presets documented — `dirt` and `classic`**
+`reference/sample-presets.md` added. `dirt` preset: 217 Dirt-Samples banks (drums, synths, nature, voice, world instruments). `classic` preset: 53 VCSL acoustic/orchestral samples (recorder, ocarina, sax, harmonica, pipe organ, timpani, world percussion). Custom GitHub repos with `strudel.json` index supported. Spec and authoring guide updated with preset descriptions, world-type recommendations, and GitHub repo pattern.
+
 **Sound system — envelope, samples library, noise correction**
 `attack`, `sustain`, `release` tags added for envelope control. `sustain` is critical for state-gated layers — short sustain makes layers cut off cleanly when their state gate deactivates. `noise` corrected: it is a DSP oscillator generating `noise()`, not `s("noise")` (which would look for a sample). `samples` tag added to world event for loading sample libraries: `["samples", "dirt"]` loads Strudel Dirt-Samples; GitHub repos and direct URLs also supported. `type: sound` events do not carry the `w` discovery tag — they are referenced by `a`-tag, not relay-discovered.
 
@@ -165,6 +168,12 @@ Two-noun commands with `with` keep noun order: `attack guard with sword` → tar
 
 **`requires` supports NPC and portal state checks**
 `["requires", "<npc-ref>", "fled", "..."]` checks NPC state. NPC state changes sync to `player.states` so `checkRequires` can evaluate them. Portal state also supported.
+
+**Matrix: `on-attacked` now allows `increment`/`decrement`/`set-counter`**
+Counting hits taken, tracking shield durability, attack-count puzzles. Consistent with `on-encounter` and `on-move` which already allow counter actions.
+
+**Matrix: `on-health` now allows `traverse`**
+Teleport player on NPC death — reward chamber, cutscene location. Consistent with `on-player-health` which already allows `traverse` for respawn.
 
 **`on-counter` direction argument added**
 Shape changed from `["on-counter", "<counter>", "<threshold>", ...]` to `["on-counter", "<direction>", "<counter>", "<threshold>", ...]`. Direction is `down` (fires crossing at-or-below) or `up` (fires crossing at-or-above). All existing `on-counter` tags updated to `"down"`. Enables upward-crossing counters (hit counts, charge accumulation) without new tag names.
