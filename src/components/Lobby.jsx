@@ -17,6 +17,7 @@ import WorldCard from './WorldCard.jsx';
 import TipPanel from './TipPanel.jsx';
 import { useWorldDiscovery } from '../hooks/useWorldDiscovery.js';
 import { listDraftWorlds, validateImport, importEvents, parseJsonLenient } from '../builder/draftStore.js';
+import { validateEvent } from '../builder/eventBuilder.js';
 import ImportPreviewPanel from '../builder/components/ImportPreviewPanel.jsx';
 import { APP_PUBKEY } from '../config.js';
 
@@ -230,6 +231,17 @@ export default function Lobby({
                   return;
                 }
                 const validation = validateImport(detectedSlug, data);
+                // Run per-event validation — surface issues as warnings
+                for (const event of validation.valid) {
+                  const dTag = event.tags?.find((t) => t[0] === 'd')?.[1] || '?';
+                  const result = validateEvent(event);
+                  for (const issue of result.errors) {
+                    validation.warnings.push(`${dTag}: ${issue.message}`);
+                  }
+                  for (const issue of result.warnings) {
+                    validation.warnings.push(`${dTag}: ${issue.message}`);
+                  }
+                }
                 setImportPreview({ validation, data, worldSlug: detectedSlug });
               } catch {
                 // Invalid JSON

@@ -287,6 +287,13 @@ export function validateImport(worldSlug, data) {
     existingDTags.add(dTag); // prevent intra-import duplicates
   }
 
+  // Warn if no world event in the valid set (and none already in drafts)
+  const hasWorldInValid = valid.some((e) => getTagValue(e, 'type') === 'world');
+  const hasWorldInStore = store.events.some((e) => e.tags?.find((t) => t[0] === 'type')?.[1] === 'world');
+  if (!hasWorldInValid && !hasWorldInStore) {
+    warnings.unshift('No world event found — the world will not appear in the lobby');
+  }
+
   // Note walkthrough presence
   const walkthroughSteps = Array.isArray(data.walkthrough) ? data.walkthrough.length : 0;
 

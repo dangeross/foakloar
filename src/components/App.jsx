@@ -202,13 +202,13 @@ export default function App() {
   const worldConfig = useMemo(() => {
     if (mergedEvents.size === 0 || !worldTag) return null;
 
-    // Find the world event: d-tag = "<slug>:world", type = "world"
+    // Find the world event: d-tag = "<slug>:world" or "<slug>", type = "world"
     const expectedDTag = `${worldTag}:world`;
     let worldEvent = null;
     for (const [, ev] of mergedEvents) {
       const dTag = ev.tags.find((t) => t[0] === 'd')?.[1];
       const typeTag = ev.tags.find((t) => t[0] === 'type')?.[1];
-      if (dTag === expectedDTag && typeTag === 'world') {
+      if (typeTag === 'world' && (dTag === expectedDTag || dTag === worldTag)) {
         worldEvent = ev;
         break;
       }
@@ -634,8 +634,8 @@ export default function App() {
           currentPlace={engineRef.current?.currentPlace || player.state.place}
           pubkey={identity.pubkey}
           trustSet={trustInfo?.trustSet}
-          clientMode={trustInfo?.effectiveMode}
           answers={draftAnswers}
+          clientMode={trustInfo?.effectiveMode}
           onEditEvent={(aTag) => {
             const event = mergedEvents.get(aTag);
             if (!event) return;

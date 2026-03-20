@@ -269,7 +269,7 @@ describe('validateEvent — warnings', () => {
   it('no warnings on well-formed item', () => {
     const tmpl = makeTemplate({
       tags: [
-        ['d', 'x:item:key'], ['t', 'the-lake'], ['type', 'item'],
+        ['d', 'the-lake:item:key'], ['t', 'the-lake'], ['type', 'item'],
         ['title', 'Key'], ['noun', 'key'],
       ],
       content: 'A rusty key.',
@@ -827,5 +827,74 @@ describe('validateEvent — numeric field validation', () => {
     const numErr = result.errors.find((e) => e.category === 'invalid-number' && e.message.includes('full'));
     expect(numErr).toBeDefined();
     expect(numErr.message).toContain('heal');
+  });
+});
+
+// ── validateEvent: d-tag conventions ──────────────────────────────────────────
+
+describe('validateEvent — d-tag conventions', () => {
+  it('errors when world event d-tag is not <slug>:world', () => {
+    const tmpl = {
+      kind: 30078,
+      tags: [
+        ['d', 'voidrun'],
+        ['t', 'voidrun'],
+        ['type', 'world'],
+        ['title', 'Voidrun'],
+        ['w', 'foakloar'],
+      ],
+      content: '',
+    };
+    const result = validateEvent(tmpl);
+    expect(hasMessage(result.errors, 'World event d-tag must be')).toBe(true);
+    expect(result.errors.find((e) => e.category === 'invalid-dtag').fix).toContain('voidrun:world');
+  });
+
+  it('passes when world event d-tag follows convention', () => {
+    const tmpl = {
+      kind: 30078,
+      tags: [
+        ['d', 'voidrun:world'],
+        ['t', 'voidrun'],
+        ['type', 'world'],
+        ['title', 'Voidrun'],
+        ['w', 'foakloar'],
+      ],
+      content: '',
+    };
+    const result = validateEvent(tmpl);
+    expect(hasMessage(result.errors, 'World event d-tag must be')).toBe(false);
+  });
+
+  it('warns when non-world d-tag does not start with world slug', () => {
+    const tmpl = {
+      kind: 30078,
+      tags: [
+        ['d', 'random-tag'],
+        ['t', 'voidrun'],
+        ['type', 'place'],
+        ['title', 'Some Place'],
+        ['exit', 'north'],
+      ],
+      content: 'A place.',
+    };
+    const result = validateEvent(tmpl);
+    expect(hasMessage(result.warnings, 'does not start with world slug')).toBe(true);
+  });
+
+  it('no warning when non-world d-tag follows convention', () => {
+    const tmpl = {
+      kind: 30078,
+      tags: [
+        ['d', 'voidrun:place:hub'],
+        ['t', 'voidrun'],
+        ['type', 'place'],
+        ['title', 'Hub'],
+        ['exit', 'north'],
+      ],
+      content: 'A hub.',
+    };
+    const result = validateEvent(tmpl);
+    expect(hasMessage(result.warnings, 'does not start with world slug')).toBe(false);
   });
 });
