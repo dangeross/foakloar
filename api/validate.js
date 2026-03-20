@@ -227,6 +227,11 @@ export default async function handler(req, res) {
     });
     res.end(JSON.stringify(result));
   } catch (e) {
+    const bodyType = req.body === undefined ? 'undefined'
+      : req.body === null ? 'null'
+      : Buffer.isBuffer(req.body) ? `Buffer(${req.body.length})`
+      : typeof req.body === 'string' ? `string(${req.body.length})`
+      : typeof req.body;
     res.writeHead(400, { ...CORS_HEADERS, 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       valid: false,
@@ -234,7 +239,7 @@ export default async function handler(req, res) {
       issues: [{
         level: 'error',
         category: 'parse-error',
-        message: `Failed to parse request body: ${e.message}`,
+        message: `Failed to parse request body: ${e.message} [bodyType=${bodyType}]`,
         fix: 'Send a valid JSON object with an "events" array. Comments (//) and trailing commas are allowed.',
       }],
     }));
