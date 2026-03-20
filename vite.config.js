@@ -32,9 +32,9 @@ export default defineConfig({
           const body = Buffer.concat(chunks).toString();
 
           try {
-            const { validate } = await server.ssrLoadModule('/api/validate.js');
-            const data = JSON.parse(body);
-            const result = await validate(data);
+            const mod = await server.ssrLoadModule('/api/validate.js');
+            const data = mod.parseLenient(body);
+            const result = await mod.validate(data);
             res.writeHead(result.valid ? 200 : 422, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(result));
           } catch (e) {

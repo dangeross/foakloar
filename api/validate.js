@@ -180,6 +180,20 @@ async function validate(data) {
   };
 }
 
+// ── Read raw body (bypass Vercel's auto-JSON-parse for commented JSON) ───────
+
+function readRawBody(req) {
+  // If Vercel already parsed it successfully, use that
+  if (req.body && typeof req.body === 'object' && req.body.events) return Promise.resolve(req.body);
+  // Otherwise read the raw stream so we can strip comments ourselves
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on('data', (chunk) => chunks.push(chunk));
+    req.on('end', () => resolve(Buffer.concat(chunks).toString('utf-8')));
+    req.on('error', reject);
+  });
+}
+
 // ── Vercel handler (default export) ──────────────────────────────────────────
 
 export default async function handler(req, res) {
@@ -196,7 +210,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const body = typeof req.body === 'string' ? req.body : req.body;
+    const body = await readRawBody(req);
     const data = parseLenient(body);
     const result = await validate(data);
 
@@ -253,4 +267,4 @@ export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: CORS_HEADERS });
 }
 
-export { validate };
+export { validate, parseLenient };
