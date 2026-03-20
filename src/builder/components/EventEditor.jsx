@@ -19,6 +19,7 @@ import { EVENT_TYPE_DESCRIPTIONS } from '../tagSchema.js';
 import { Tooltip } from './TagEditor.jsx';
 import { resolvePubkeyPlaceholder, loadAnswers, saveAnswer } from '../draftStore.js';
 import { renderMarkdown } from '../../engine/content.js';
+import Nip44Preview from './Nip44Preview.jsx';
 
 /**
  * Extract fields from an event template for editing.
@@ -319,6 +320,15 @@ export default function EventEditor({
               rows={4}
               className="w-full bg-transparent outline-none font-mono text-xs px-1 resize-y"
               style={{ color: 'var(--colour-text)', border: '1px solid var(--colour-dim)' }}
+            />
+          )}
+          {contentType === 'application/nip44' && (
+            <Nip44Preview
+              content={content}
+              tags={tags}
+              events={events}
+              worldSlug={worldSlug}
+              pubkey={pubkey}
             />
           )}
         </div>
