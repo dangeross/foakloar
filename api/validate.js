@@ -180,26 +180,10 @@ async function validate(data) {
   };
 }
 
-// ── Read raw body (bypass Vercel's auto-JSON-parse for commented JSON) ───────
-
-async function readRawBody(req) {
-  // Vercel with bodyParser:false — try req.body first
-  if (Buffer.isBuffer(req.body)) return req.body.toString('utf-8');
-  if (typeof req.body === 'string' && req.body.length > 0) return req.body;
-  if (req.body && typeof req.body === 'object' && req.body.events) return req.body;
-  // Read from stream (Vercel serverless uses Node IncomingMessage)
-  const chunks = [];
-  for await (const chunk of req) {
-    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
-  }
-  if (chunks.length === 0) throw new Error('Empty request body');
-  return Buffer.concat(chunks).toString('utf-8');
-}
-
-// Disable Vercel's body parser — we handle JSON with comments ourselves.
-export const config = { api: { bodyParser: false } };
-
 // ── Vercel handler (default export) ──────────────────────────────────────────
+//
+// Accepts application/json (strict JSON) or text/plain (JSON with comments).
+// Vercel auto-parses application/json — commented JSON must use text/plain.
 
 export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
@@ -215,8 +199,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const body = await readRawBody(req);
-    const data = parseLenient(body);
+    const data = parseLenient(req.body);
     const result = await validate(data);
 
     res.writeHead(result.valid ? 200 : 422, {
@@ -225,11 +208,6 @@ export default async function handler(req, res) {
     });
     res.end(JSON.stringify(result));
   } catch (e) {
-    const bodyType = req.body === undefined ? 'undefined'
-      : req.body === null ? 'null'
-      : Buffer.isBuffer(req.body) ? `Buffer(${req.body.length})`
-      : typeof req.body === 'string' ? `string(${req.body.length})`
-      : typeof req.body;
     res.writeHead(400, { ...CORS_HEADERS, 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       valid: false,
@@ -237,8 +215,8 @@ export default async function handler(req, res) {
       issues: [{
         level: 'error',
         category: 'parse-error',
-        message: `Failed to parse request body: ${e.message} [bodyType=${bodyType}]`,
-        fix: 'Send a valid JSON object with an "events" array. Comments (//) and trailing commas are allowed.',
+        message: `Failed to parse request body: ${e.message}`,
+        fix: 'Send a valid JSON object with an "events" array. For JSON with // comments, use Content-Type: text/plain.',
       }],
     }));
   }
