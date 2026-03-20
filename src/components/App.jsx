@@ -293,14 +293,16 @@ export default function App() {
     logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [log]);
 
-  // Keep input focused (skip when builder panels are open)
+  // Keep input focused (skip when builder panels are open, or on touch devices to avoid keyboard popup)
   const panelOpen = showDrafts || editorState || showLogin;
+  const isTouchDevice = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
   useEffect(() => {
-    if (!panelOpen) inputRef.current?.focus();
+    if (!panelOpen && !isTouchDevice) inputRef.current?.focus();
   }, [status, log, panelOpen]);
 
   useEffect(() => {
+    if (isTouchDevice) return;
     function refocus(e) {
       if (panelOpen) return;
       const tag = e.target.tagName;
@@ -350,6 +352,7 @@ export default function App() {
     const val = inputRef.current.value;
     if (!val.trim()) return;
     inputRef.current.value = '';
+    if (isTouchDevice) inputRef.current.blur();
     const engine = getEngine();
     if (!engine.dialogueActive && !engine.puzzleActive) {
       const hist = historyRef.current;
@@ -758,7 +761,7 @@ export default function App() {
             style={{ color: craftingActive ? 'var(--colour-puzzle)' : 'var(--colour-text)' }}
             placeholder={dialogueActive ? 'Choose an option...' : puzzleActive ? 'Enter your answer...' : craftingActive ? 'Select an item...' : ''}
             onKeyDown={onKeyDown}
-            autoFocus
+            autoFocus={!isTouchDevice}
           />
         </form>
       )}
