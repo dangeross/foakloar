@@ -7,6 +7,9 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import { DndContext, closestCenter, PointerSensor, TouchSensor, KeyboardSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { TAG_SCHEMAS, TAGS_BY_EVENT_TYPE, getTagSchema, valuesToTag, tagToValues, ACTION_TARGET_FIELD } from '../tagSchema.js';
 import DOSButton from './ui/DOSButton.jsx';
 import InlineList from './ui/InlineList.jsx';
@@ -443,23 +446,48 @@ function shouldHideField(field, values) {
   return override?.hidesEventRef === true;
 }
 
-/** A single tag row with its fields */
-/** Reorder arrows for tag rows */
-function ReorderButtons({ index, total, onMove }) {
-  const btnStyle = { color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: '0 1px', cursor: 'pointer', fontSize: '0.6rem', lineHeight: 1 };
+/** Drag handle for sortable tag rows */
+function DragHandle({ listeners, attributes, disabled }) {
   return (
-    <span className="shrink-0 flex flex-col" style={{ marginTop: '1px' }}>
-      {index > 0 ? (
-        <button onClick={() => onMove(index, -1)} style={btnStyle} title="Move up">▲</button>
-      ) : <span style={{ ...btnStyle, visibility: 'hidden' }}>▲</span>}
-      {index < total - 1 ? (
-        <button onClick={() => onMove(index, 1)} style={btnStyle} title="Move down">▼</button>
-      ) : <span style={{ ...btnStyle, visibility: 'hidden' }}>▼</span>}
+    <span
+      {...listeners}
+      {...attributes}
+      className="shrink-0 inline-flex items-center"
+      style={{
+        color: disabled ? 'transparent' : 'var(--colour-dim)',
+        cursor: disabled ? 'default' : 'grab',
+        fontSize: '0.75rem',
+        lineHeight: 1,
+        padding: '0 2px',
+        marginTop: '3px',
+        touchAction: 'none',
+        userSelect: 'none',
+      }}
+      title={disabled ? '' : 'Drag to reorder'}
+    >
+      ⠿
     </span>
   );
 }
 
-function TagRow({ tagName, tag, fields, onChange, onRemove, onMoveUp, onMoveDown, events }) {
+/** Sortable wrapper for tag rows */
+function SortableTagItem({ id, disabled, children }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id, disabled });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    position: 'relative',
+    zIndex: isDragging ? 10 : 'auto',
+  };
+  return (
+    <div ref={setNodeRef} style={style}>
+      {children({ listeners, attributes, isDragging })}
+    </div>
+  );
+}
+
+function TagRow({ tagName, tag, fields, onChange, onRemove, dragListeners, dragAttributes, dragDisabled, events }) {
   const values = tagToValues(tag, fields);
   const schemaDesc = TAG_SCHEMAS[tagName]?.desc;
 
@@ -470,14 +498,7 @@ function TagRow({ tagName, tag, fields, onChange, onRemove, onMoveUp, onMoveDown
 
   return (
     <div className="flex gap-1 items-start mb-1">
-      <span className="shrink-0 flex flex-col" style={{ marginTop: '1px' }}>
-        {onMoveUp ? (
-          <button onClick={onMoveUp} style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: '0 1px', cursor: 'pointer', fontSize: '0.6rem', lineHeight: 1 }} title="Move up">▲</button>
-        ) : <span style={{ fontSize: '0.6rem', lineHeight: 1, padding: '0 1px', visibility: 'hidden' }}>▲</span>}
-        {onMoveDown ? (
-          <button onClick={onMoveDown} style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: '0 1px', cursor: 'pointer', fontSize: '0.6rem', lineHeight: 1 }} title="Move down">▼</button>
-        ) : <span style={{ fontSize: '0.6rem', lineHeight: 1, padding: '0 1px', visibility: 'hidden' }}>▼</span>}
-      </span>
+      <DragHandle listeners={dragListeners} attributes={dragAttributes} disabled={dragDisabled} />
       <span
         className="shrink-0 px-1 mt-0.5"
         style={{ color: 'var(--colour-text)', minWidth: '8em', fontSize: '0.65rem' }}
@@ -667,54 +688,99 @@ export default function TagEditor({ eventType, tags, onChange, events }) {
     onChange(tags.filter((_, i) => i !== index));
   }
 
-  function moveTag(from, direction) {
-    const to = from + direction;
-    if (to < 0 || to >= tags.length) return;
+  function moveTag(fromIndex, toIndex) {
+    if (toIndex < 0 || toIndex >= tags.length) return;
+    // Check sound event constraints
+    if (eventType === 'sound') {
+      const SOURCES = new Set(['note', 'noise']);
+      const tagName = tags[fromIndex]?.[0];
+      if (SOURCES.has(tagName)) return; // Source tags locked at 0
+      if (toIndex === 0 && SOURCES.has(tags[0]?.[0])) return; // Can't displace source
+    }
     const updated = [...tags];
-    [updated[from], updated[to]] = [updated[to], updated[from]];
+    const [moved] = updated.splice(fromIndex, 1);
+    updated.splice(toIndex, 0, moved);
     onChange(updated);
+  }
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 5 } }),
+    useSensor(KeyboardSensor),
+  );
+
+  function handleDragEnd(event) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const fromIndex = tagIds.indexOf(active.id);
+    const toIndex = tagIds.indexOf(over.id);
+    if (fromIndex === -1 || toIndex === -1) return;
+    moveTag(fromIndex, toIndex);
+  }
+
+  // Stable IDs for sortable — use index-based since tags can repeat
+  const tagIds = tags.map((_, i) => `tag-${i}`);
+
+  // Check if a tag at index is drag-disabled (sound source tags)
+  function isDragDisabled(index) {
+    if (eventType !== 'sound') return false;
+    const SOURCES = new Set(['note', 'noise']);
+    return SOURCES.has(tags[index]?.[0]);
   }
 
   return (
     <div>
       {/* Existing tags */}
-      {tags.map((tag, i) => {
-        const schema = getTagSchema(tag[0], eventType);
-        if (!schema) {
-          // Unknown tag — render raw
-          return (
-            <div key={i} className="flex gap-1 items-center mb-1">
-              <span className="shrink-0 px-1" style={{ color: 'var(--colour-dim)', minWidth: '8em', fontSize: '0.65rem' }}>
-                {tag[0]}
-              </span>
-              <span className="flex-1 text-xs" style={{ color: 'var(--colour-dim)' }}>
-                {tag.slice(1).join(' | ')}
-              </span>
-              <ReorderButtons index={i} total={tags.length} onMove={moveTag} />
-              <button
-                onClick={() => removeTag(i)}
-                className="shrink-0 cursor-pointer"
-                style={{ color: 'var(--colour-error)', background: 'none', border: 'none', font: 'inherit', padding: '0 2px' }}
-              >
-                ×
-              </button>
-            </div>
-          );
-        }
-        return (
-          <TagRow
-            key={`${tag[0]}-${i}`}
-            tagName={tag[0]}
-            tag={tag}
-            fields={schema.fields}
-            onChange={(newTag) => updateTag(i, newTag)}
-            onRemove={() => removeTag(i)}
-            onMoveUp={i > 0 && canMoveTag(tags, i, -1, eventType) ? () => moveTag(i, -1) : null}
-            onMoveDown={i < tags.length - 1 && canMoveTag(tags, i, 1, eventType) ? () => moveTag(i, 1) : null}
-            events={events}
-          />
-        );
-      })}
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={tagIds} strategy={verticalListSortingStrategy}>
+          {tags.map((tag, i) => {
+            const schema = getTagSchema(tag[0], eventType);
+            const disabled = isDragDisabled(i);
+            if (!schema) {
+              // Unknown tag — render raw
+              return (
+                <SortableTagItem key={tagIds[i]} id={tagIds[i]} disabled={disabled}>
+                  {({ listeners, attributes }) => (
+                    <div className="flex gap-1 items-center mb-1">
+                      <DragHandle listeners={listeners} attributes={attributes} disabled={disabled} />
+                      <span className="shrink-0 px-1" style={{ color: 'var(--colour-dim)', minWidth: '8em', fontSize: '0.65rem' }}>
+                        {tag[0]}
+                      </span>
+                      <span className="flex-1 text-xs" style={{ color: 'var(--colour-dim)' }}>
+                        {tag.slice(1).join(' | ')}
+                      </span>
+                      <button
+                        onClick={() => removeTag(i)}
+                        className="shrink-0 cursor-pointer"
+                        style={{ color: 'var(--colour-error)', background: 'none', border: 'none', font: 'inherit', padding: '0 2px' }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  )}
+                </SortableTagItem>
+              );
+            }
+            return (
+              <SortableTagItem key={tagIds[i]} id={tagIds[i]} disabled={disabled}>
+                {({ listeners, attributes }) => (
+                  <TagRow
+                    tagName={tag[0]}
+                    tag={tag}
+                    fields={schema.fields}
+                    onChange={(newTag) => updateTag(i, newTag)}
+                    onRemove={() => removeTag(i)}
+                    dragListeners={listeners}
+                    dragAttributes={attributes}
+                    dragDisabled={disabled}
+                    events={events}
+                  />
+                )}
+              </SortableTagItem>
+            );
+          })}
+        </SortableContext>
+      </DndContext>
 
       {/* Add tag — themed dropdown, adds immediately on selection */}
       {availableTags.length > 0 && (
