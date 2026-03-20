@@ -183,9 +183,13 @@ async function validate(data) {
 // ── Read raw body (bypass Vercel's auto-JSON-parse for commented JSON) ───────
 
 function readRawBody(req) {
-  // If Vercel already parsed it successfully, use that
+  // Vercel with bodyParser:false gives raw Buffer on req.body
+  if (Buffer.isBuffer(req.body)) return Promise.resolve(req.body.toString('utf-8'));
+  // If body is already a parsed object (valid JSON, no comments), use it
   if (req.body && typeof req.body === 'object' && req.body.events) return Promise.resolve(req.body);
-  // Otherwise read the raw stream so we can strip comments ourselves
+  // If body is already a string, use it
+  if (typeof req.body === 'string') return Promise.resolve(req.body);
+  // Fallback: read from stream
   return new Promise((resolve, reject) => {
     const chunks = [];
     req.on('data', (chunk) => chunks.push(chunk));
