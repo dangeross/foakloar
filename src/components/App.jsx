@@ -52,6 +52,8 @@ const TYPE_COLOUR = {
   markdown:         'text',
   'media-markdown': 'text',
   'media-ascii':    'text',
+  death:            'error',
+  'death-separator':'dim',
 };
 
 /** Map entry types to extra CSS classes (layout, weight, etc.) */
@@ -78,6 +80,8 @@ const TYPE_CLASS = {
   'media-markdown': 'prose-dungeon mt-1',
   'media-ascii':    'whitespace-pre font-mono text-sm mt-2 leading-none',
   'media-image':    'mt-2',
+  death:            'font-bold text-center mt-4 mb-2 whitespace-pre-wrap',
+  'death-separator':'text-center mt-1 mb-3 text-sm',
 };
 
 export default function App() {
@@ -724,6 +728,9 @@ export default function App() {
           const extraClass = TYPE_CLASS[entry.type] || '';
           const style = { color: `var(--colour-${colourSlot})` };
 
+          if (entry.type === 'death-separator') {
+            return <p key={i} className={extraClass} style={style}>{'─'.repeat(40)}</p>;
+          }
           if (entry.html) {
             return <div key={i} className={extraClass} style={style} dangerouslySetInnerHTML={{ __html: entry.html }} />;
           }

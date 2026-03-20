@@ -1537,12 +1537,13 @@ export class GameEngine {
       else if (key === 'visited') this.player.state.visited = [];
     }
 
-    // 9. Content
-    if (event.content) this._emit(event.content, 'narrative');
-
-    // 10. Respawn — always last
+    // 9. Content + 10. Respawn
     const respawnRef = getTag(event, 'respawn');
+    if (event.content) {
+      this._emit(event.content, respawnRef ? 'death' : 'narrative');
+    }
     if (respawnRef) {
+      this._emit('', 'death-separator');
       this.enterRoom(respawnRef);
     }
   }
