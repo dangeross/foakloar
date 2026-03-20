@@ -84,7 +84,8 @@ export default function RelaySettingsPanel({
       setError('Must start with wss:// or ws://');
       return;
     }
-    if (customRelays.includes(url)) {
+    const normalized = url.replace(/\/+$/, '');
+    if (customRelays.includes(url) || allRelays.has(normalized) || allRelays.has(url)) {
       setError('Already added');
       return;
     }
