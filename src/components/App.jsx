@@ -498,22 +498,9 @@ export default function App() {
             showBuildOption={identity.isProperIdentity}
             draftsCount={drafts.length}
             onOpenDrafts={() => setShowDrafts(true)}
+            relayStatus={relayStatus}
+            onOpenRelaySettings={() => setShowRelaySettings(true)}
           />
-          <button
-            className="cursor-pointer"
-            style={{ background: 'none', border: 'none', font: 'inherit', color: 'var(--colour-dim)', padding: 0 }}
-            onClick={() => setShowRelaySettings(!showRelaySettings)}
-            title="Relay settings"
-          >
-            {(() => {
-              const connected = relayStatus ? [...relayStatus.values()].filter((s) => s === 'connected').length : 0;
-              const total = relayStatus?.size || 0;
-              const color = connected === total && total > 0 ? 'var(--colour-highlight)'
-                : connected > 0 ? 'var(--colour-title)'
-                : 'var(--colour-error)';
-              return <span style={{ color }}>{connected}<span className="hidden sm:inline">/{total}</span></span>;
-            })()}
-          </button>
           <SoundToggle onAudioReady={async () => {
             if (engineRef.current) {
               await loadSamples(mergedEvents);
