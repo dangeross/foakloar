@@ -3,7 +3,7 @@
  * Portaled, opens upward, click-outside-to-close.
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useId } from 'react';
 import ReactDOM from 'react-dom';
 
 export default function DOSSelect({ value, onChange, options: rawOptions }) {
@@ -11,6 +11,7 @@ export default function DOSSelect({ value, onChange, options: rawOptions }) {
   const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
   const [pos, setPos] = useState(null);
+  const instanceId = useId();
 
   // Normalize options: accept strings or {value, label} objects
   const options = rawOptions.map((o) => typeof o === 'string' ? { value: o, label: o } : o);
@@ -32,6 +33,16 @@ export default function DOSSelect({ value, onChange, options: rawOptions }) {
     };
   }, [open]);
 
+  // Close when another dropdown opens or when a close-all is broadcast
+  useEffect(() => {
+    if (!open) return;
+    function onOtherOpen(e) {
+      if (e.detail !== instanceId) setOpen(false);
+    }
+    document.addEventListener('dropdown-open', onOtherOpen);
+    return () => document.removeEventListener('dropdown-open', onOtherOpen);
+  }, [open, instanceId]);
+
   useEffect(() => {
     if (!open) return;
     function handleClick(e) {
@@ -43,6 +54,12 @@ export default function DOSSelect({ value, onChange, options: rawOptions }) {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [open]);
 
+  function toggle() {
+    const next = !open;
+    if (next) document.dispatchEvent(new CustomEvent('dropdown-open', { detail: instanceId }));
+    setOpen(next);
+  }
+
   return (
     <>
       <div
@@ -50,7 +67,7 @@ export default function DOSSelect({ value, onChange, options: rawOptions }) {
         className="flex items-center cursor-pointer px-1 w-full"
         style={{ border: '1px solid var(--colour-dim)', minHeight: '1.5em' }}
         onMouseDown={(e) => e.stopPropagation()}
-        onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
+        onClick={(e) => { e.stopPropagation(); toggle(); }}
       >
         <span className="flex-1 text-xs truncate" style={{ color: 'var(--colour-text)' }}>
           {selected?.label || value}

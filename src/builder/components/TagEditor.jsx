@@ -113,11 +113,15 @@ function DOSTextarea({ value, onChange, placeholder, rows = 3, style = {} }) {
 }
 
 /** Themed dropdown replacing native <select> — portaled to float above panel */
+// Unique ID counter for dropdown instances
+let dropdownIdCounter = 0;
+
 function DOSSelect({ value, onChange, options, placeholder }) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
   const [pos, setPos] = useState(null);
+  const instanceId = useRef(++dropdownIdCounter);
 
   // Reposition on open, scroll, and resize
   useEffect(() => {
@@ -133,6 +137,20 @@ function DOSSelect({ value, onChange, options, placeholder }) {
       window.removeEventListener('scroll', updatePos, true);
       window.removeEventListener('resize', updatePos);
     };
+  }, [open]);
+
+  // Close when another dropdown opens
+  useEffect(() => {
+    function onOtherOpen(e) {
+      if (e.detail !== instanceId.current) setOpen(false);
+    }
+    document.addEventListener('dropdown-open', onOtherOpen);
+    return () => document.removeEventListener('dropdown-open', onOtherOpen);
+  }, []);
+
+  // Broadcast open
+  useEffect(() => {
+    if (open) document.dispatchEvent(new CustomEvent('dropdown-open', { detail: instanceId.current }));
   }, [open]);
 
   // Close on outside click
@@ -153,8 +171,7 @@ function DOSSelect({ value, onChange, options, placeholder }) {
         ref={triggerRef}
         className="flex items-center cursor-pointer px-1 w-full"
         style={{ border: '1px solid var(--colour-dim)', minHeight: '1.5em' }}
-        onMouseDown={(e) => e.stopPropagation()}
-        onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
+        onClick={() => setOpen(!open)}
       >
         <span className="flex-1 text-xs truncate" style={{ color: value ? 'var(--colour-text)' : 'var(--colour-dim)' }}>
           {value || placeholder || 'Select...'}
@@ -166,8 +183,6 @@ function DOSSelect({ value, onChange, options, placeholder }) {
         <div
           ref={dropdownRef}
           className="font-mono text-xs"
-          onMouseDown={(e) => e.stopPropagation()}
-          onClick={(e) => e.stopPropagation()}
           style={{
             position: 'fixed',
             left: pos.left,
@@ -217,6 +232,7 @@ function EventRefSelect({ value, onChange, events, eventTypeFilter, placeholder:
   const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
   const [pos, setPos] = useState(null);
+  const instanceId = useRef(++dropdownIdCounter);
 
   // Reposition on open, scroll, and resize
   useEffect(() => {
@@ -232,6 +248,20 @@ function EventRefSelect({ value, onChange, events, eventTypeFilter, placeholder:
       window.removeEventListener('scroll', updatePos, true);
       window.removeEventListener('resize', updatePos);
     };
+  }, [open]);
+
+  // Close when another dropdown opens
+  useEffect(() => {
+    function onOtherOpen(e) {
+      if (e.detail !== instanceId.current) setOpen(false);
+    }
+    document.addEventListener('dropdown-open', onOtherOpen);
+    return () => document.removeEventListener('dropdown-open', onOtherOpen);
+  }, []);
+
+  // Broadcast open
+  useEffect(() => {
+    if (open) document.dispatchEvent(new CustomEvent('dropdown-open', { detail: instanceId.current }));
   }, [open]);
 
   // Close on outside click
@@ -549,6 +579,21 @@ function AddTagDropdown({ options, onSelect }) {
   const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
   const [pos, setPos] = useState(null);
+  const instanceId = useRef(++dropdownIdCounter);
+
+  // Close when another dropdown opens
+  useEffect(() => {
+    function onOtherOpen(e) {
+      if (e.detail !== instanceId.current) setOpen(false);
+    }
+    document.addEventListener('dropdown-open', onOtherOpen);
+    return () => document.removeEventListener('dropdown-open', onOtherOpen);
+  }, []);
+
+  // Broadcast open
+  useEffect(() => {
+    if (open) document.dispatchEvent(new CustomEvent('dropdown-open', { detail: instanceId.current }));
+  }, [open]);
 
   // Reposition on open, scroll, and resize
   useEffect(() => {

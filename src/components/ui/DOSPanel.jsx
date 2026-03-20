@@ -30,7 +30,11 @@ export default function DOSPanel({
       <div
         className="fixed font-mono text-xs flex flex-col"
         onClick={(e) => e.stopPropagation()}
-        onMouseDown={(e) => e.stopPropagation()}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          // Close any open dropdowns inside the panel
+          document.dispatchEvent(new CustomEvent('dropdown-open', { detail: -1 }));
+        }}
         style={{
           zIndex: zIndex || 50,
           top: '50%',
