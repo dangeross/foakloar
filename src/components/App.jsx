@@ -9,6 +9,7 @@ import { getTag, getTags } from '../engine/world.js';
 import { resolveTheme, applyTheme, resolveEffects, applyEffects, resolveFont, resolveFontSize, resolveFontSizePanel, resolveCursor, applyFontAndCursor, loadFont } from '../services/theme.js';
 import { buildTrustSet, resolveClientMode } from '../engine/trust.js';
 import { useStateBackup } from '../hooks/useStateBackup.js';
+import { useNip65 } from '../hooks/useNip65.js';
 import PaymentPanel from './PaymentPanel.jsx';
 import BuildModeOverlay from '../builder/components/BuildModeOverlay.jsx';
 import EventEditor from '../builder/components/EventEditor.jsx';
@@ -24,6 +25,8 @@ import IdentityButton from './ui/IdentityButton.jsx';
 import LoginPanel from './ui/LoginPanel.jsx';
 import { loadDrafts, saveDraft, updateDraft, deleteDraft, clearDrafts, importEvents, exportDrafts, bulkPublish, loadAnswers } from '../builder/draftStore.js';
 import { validateWorld, verifyPuzzleHashes } from '../builder/validateWorld.js';
+import RelaySettingsPanel from './RelaySettingsPanel.jsx';
+import PublishProgressPanel from '../builder/components/PublishProgressPanel.jsx';
 import SoundToggle from './SoundToggle.jsx';
 import { evaluateSoundTags, isAudioReady, playOneShotRef, loadSamples } from '../services/sound.js';
 
@@ -100,6 +103,7 @@ export default function App() {
   const { events, status, pool, relayStatus, publishUrls } = useRelay(worldTag);
   const player = usePlayerState(worldTag);
   const identity = useSigner();
+  const nip65 = useNip65(identity?.pubkey, pool);
   const backup = useStateBackup({
     worldTag,
     signer: identity.signer,
@@ -123,6 +127,8 @@ export default function App() {
   const [showZap, setShowZap] = useState(false);
   const [vouchTarget, setVouchTarget] = useState(null); // pubkey to vouch for
   const [drafts, setDrafts] = useState(() => loadDrafts(worldTag || ''));
+  const [publishResult, setPublishResult] = useState(null); // { published, failed, errors, details }
+  const [showRelaySettings, setShowRelaySettings] = useState(false);
   const engineRef = useRef(null);
   const inputRef = useRef(null);
   const logEndRef = useRef(null);
@@ -492,6 +498,21 @@ export default function App() {
             draftsCount={drafts.length}
             onOpenDrafts={() => setShowDrafts(true)}
           />
+          <button
+            className="cursor-pointer"
+            style={{ background: 'none', border: 'none', font: 'inherit', color: 'var(--colour-dim)', padding: 0 }}
+            onClick={() => setShowRelaySettings(!showRelaySettings)}
+            title="Relay settings"
+          >
+            {(() => {
+              const connected = relayStatus ? [...relayStatus.values()].filter((s) => s === 'connected').length : 0;
+              const total = relayStatus?.size || 0;
+              const color = connected === total && total > 0 ? 'var(--colour-highlight)'
+                : connected > 0 ? 'var(--colour-title)'
+                : 'var(--colour-error)';
+              return <span style={{ color }}>{connected}<span className="hidden sm:inline">/{total}</span></span>;
+            })()}
+          </button>
           <SoundToggle onAudioReady={async () => {
             if (engineRef.current) {
               await loadSamples(mergedEvents);
@@ -597,6 +618,27 @@ export default function App() {
         />
       )}
 
+      {/* Relay settings */}
+      {showRelaySettings && (
+        <RelaySettingsPanel
+          worldSlug={worldTag}
+          relayStatus={relayStatus}
+          worldRelays={worldConfig?.worldEvent?.tags?.filter((t) => t[0] === 'relay').map((t) => t[1]) || []}
+          nip65Read={nip65.readRelays}
+          nip65Write={nip65.writeRelays}
+          onClose={() => setShowRelaySettings(false)}
+        />
+      )}
+
+      {/* Publish results */}
+      {publishResult && (
+        <PublishProgressPanel
+          result={publishResult}
+          zIndex={buildMode ? 120 : undefined}
+          onClose={() => setPublishResult(null)}
+        />
+      )}
+
       {/* Build mode — event graph */}
       {buildMode && status === 'ready' && (
         <EventGraph
@@ -683,7 +725,7 @@ export default function App() {
             }
             const result = await bulkPublish(worldTag, identity.pubkey, identity.signer, pool);
             setDrafts(loadDrafts(worldTag));
-            // TODO: show result.published / result.failed feedback
+            setPublishResult(result);
           }}
           onDeleteAll={() => {
             clearDrafts(worldTag);
