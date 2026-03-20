@@ -182,23 +182,21 @@ async function validate(data) {
 
 // ── Read raw body (bypass Vercel's auto-JSON-parse for commented JSON) ───────
 
-function readRawBody(req) {
-  // Vercel with bodyParser:false gives raw Buffer on req.body
-  if (Buffer.isBuffer(req.body)) return Promise.resolve(req.body.toString('utf-8'));
-  // If body is already a parsed object (valid JSON, no comments), use it
-  if (req.body && typeof req.body === 'object' && req.body.events) return Promise.resolve(req.body);
-  // If body is already a string, use it
-  if (typeof req.body === 'string') return Promise.resolve(req.body);
-  // Fallback: read from stream
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    req.on('data', (chunk) => chunks.push(chunk));
-    req.on('end', () => resolve(Buffer.concat(chunks).toString('utf-8')));
-    req.on('error', reject);
-  });
+async function readRawBody(req) {
+  // Vercel with bodyParser:false — try req.body first
+  if (Buffer.isBuffer(req.body)) return req.body.toString('utf-8');
+  if (typeof req.body === 'string' && req.body.length > 0) return req.body;
+  if (req.body && typeof req.body === 'object' && req.body.events) return req.body;
+  // Read from stream (Vercel serverless uses Node IncomingMessage)
+  const chunks = [];
+  for await (const chunk of req) {
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+  }
+  if (chunks.length === 0) throw new Error('Empty request body');
+  return Buffer.concat(chunks).toString('utf-8');
 }
 
-// Disable Vercel's body parser so we can handle JSON with comments ourselves
+// Disable Vercel's body parser — we handle JSON with comments ourselves.
 export const config = { api: { bodyParser: false } };
 
 // ── Vercel handler (default export) ──────────────────────────────────────────
