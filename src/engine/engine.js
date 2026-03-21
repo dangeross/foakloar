@@ -1785,7 +1785,6 @@ export class GameEngine {
 
       if (action === 'give-crypto-key') {
         this.player.addCryptoKey(derivedPrivKey);
-        this._emit('You feel a key take shape in your mind.', 'narrative');
       } else if (action === 'consequence' && (value || extRef)) {
         this._executeConsequence(extRef || value);
       } else if (action === 'traverse' && (value || extRef)) {
