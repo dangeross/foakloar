@@ -492,11 +492,11 @@ export async function encryptEventContent(template, signer, answers, allEvents) 
   }
 
   // Derive puzzle keypair from answer + salt
-  const { derivePuzzleKey } = await import('../../lib/crypto.mjs');
-  const puzzleKey = await derivePuzzleKey(answer.trim(), salt);
+  const { derivePuzzleKeypair } = await import('../engine/nip44-client.js');
+  const puzzleKey = await derivePuzzleKeypair(answer.trim(), salt);
 
   // Encrypt content
-  const encrypted = await signer.encryptTo(puzzleKey.pubkey, template.content);
+  const encrypted = await signer.encryptTo(puzzleKey.pubKeyHex, template.content);
 
   return {
     ...template,

@@ -631,6 +631,7 @@ export default function App() {
       {showDrafts && (
         <DraftListPanel
           drafts={drafts}
+          events={mergedEvents}
           worldSlug={worldTag}
           zIndex={buildMode ? 110 : undefined}
           onClose={() => setShowDrafts(false)}

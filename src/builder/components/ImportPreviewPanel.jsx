@@ -14,7 +14,7 @@ function getTagValue(event, name) {
 }
 
 export default function ImportPreviewPanel({ validation, onConfirm, onClose }) {
-  const { valid, rejected, warnings, worldSlug } = validation;
+  const { valid, rejected, warnings, worldSlug, walkthroughSteps } = validation;
 
   return (
     <DOSPanel title="IMPORT PREVIEW" onClose={onClose} minWidth="28em">
@@ -39,6 +39,9 @@ export default function ImportPreviewPanel({ validation, onConfirm, onClose }) {
             {warnings.length} warning{warnings.length !== 1 ? 's' : ''}
           </div>
         )}
+        <div style={{ color: walkthroughSteps ? 'var(--colour-highlight)' : 'var(--colour-dim)' }}>
+          {walkthroughSteps ? `Walkthrough: ${walkthroughSteps} steps` : 'No walkthrough'}
+        </div>
       </div>
 
       {/* Valid events */}

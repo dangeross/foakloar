@@ -105,6 +105,13 @@ export function loadAnswers(worldSlug) {
 }
 
 /**
+ * Load the walkthrough array (if any).
+ */
+export function loadWalkthrough(worldSlug) {
+  return readStore(worldSlug).walkthrough || null;
+}
+
+/**
  * Save a new draft event template. Returns the entry with _draft metadata.
  */
 export function saveDraft(worldSlug, event) {
@@ -280,7 +287,10 @@ export function validateImport(worldSlug, data) {
     existingDTags.add(dTag); // prevent intra-import duplicates
   }
 
-  return { valid, rejected, warnings, worldSlug: detectedSlug };
+  // Note walkthrough presence
+  const walkthroughSteps = Array.isArray(data.walkthrough) ? data.walkthrough.length : 0;
+
+  return { valid, rejected, warnings, worldSlug: detectedSlug, walkthroughSteps };
 }
 
 // ── Import / Export ────────────────────────────────────────────────────────
@@ -323,6 +333,11 @@ export function importEvents(worldSlug, data) {
   // Merge answers
   if (data.answers) {
     store.answers = { ...(store.answers || {}), ...data.answers };
+  }
+
+  // Store walkthrough (replace, not merge)
+  if (data.walkthrough) {
+    store.walkthrough = data.walkthrough;
   }
 
   writeStore(worldSlug, store);
