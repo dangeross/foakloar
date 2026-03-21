@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { GameEngine } from '../engine.js';
 import {
   ref, PUBKEY, WORLD,
-  makePlace, makeFeature, makeItem, makePortal, makeClue, makeNPC, makeDialogueNode,
+  makePlace, makeFeature, makeItem, makePortal, makeClue, makeNPC, makeDialogueNode, makeQuest,
   buildEvents, freshState, makeMutator,
 } from './helpers.js';
 
@@ -573,5 +573,131 @@ describe('unknown command', () => {
     await engine.handleCommand('xyzzy');
     const output = engine.flush();
     expect(output.some((e) => e.type === 'error')).toBe(true);
+  });
+});
+
+// ── Quest display types ──────────────────────────────────────────────────
+
+describe('quest display types', () => {
+  // Shared quest setup: 3 involves steps — puzzle, item, feature
+  function makeQuestWorld(questType) {
+    const puzzle = {
+      kind: 30078, pubkey: PUBKEY, created_at: 1,
+      tags: [['d', `${WORLD}:puzzle:p1`], ['type', 'puzzle'], ['title', 'Riddle']],
+      content: 'Solve the riddle.',
+    };
+    const item = {
+      kind: 30078, pubkey: PUBKEY, created_at: 1,
+      tags: [['d', `${WORLD}:item:gem`], ['type', 'item'], ['title', 'Gem'], ['noun', 'gem']],
+      content: 'A shiny gem.',
+    };
+    const feature = {
+      kind: 30078, pubkey: PUBKEY, created_at: 1,
+      tags: [['d', `${WORLD}:feature:altar`], ['type', 'feature'], ['title', 'Altar'], ['state', 'inactive']],
+      content: 'An ancient altar.',
+    };
+    const place = makePlace('start', { puzzles: [`${WORLD}:puzzle:p1`], features: [`${WORLD}:feature:altar`] });
+    const quest = makeQuest('test-quest', {
+      questType,
+      involves: [`${WORLD}:puzzle:p1`, `${WORLD}:item:gem`, `${WORLD}:feature:altar`],
+      requires: [
+        [ref(`${WORLD}:puzzle:p1`), 'solved', ''],
+        [ref(`${WORLD}:item:gem`), '', ''],
+        [ref(`${WORLD}:feature:altar`), 'active', ''],
+      ],
+    });
+    return buildEvents(place, puzzle, item, feature, quest);
+  }
+
+  function getQuestOutput(engine) {
+    engine._showQuestLog();
+    return engine.flush().map((e) => e.text);
+  }
+
+  it('open (default) shows all step titles', () => {
+    const events = makeQuestWorld(undefined);
+    const player = makeMutator();
+    const engine = new GameEngine({ events, player, config: CONFIG });
+    engine.enterRoom(ref(`${WORLD}:place:start`));
+    engine.flush();
+
+    const lines = getQuestOutput(engine);
+    expect(lines.some((l) => l.includes('✗ Riddle'))).toBe(true);
+    expect(lines.some((l) => l.includes('✗ Gem'))).toBe(true);
+    expect(lines.some((l) => l.includes('✗ Altar'))).toBe(true);
+  });
+
+  it('open shows completed steps with checkmark', () => {
+    const events = makeQuestWorld('open');
+    const player = makeMutator();
+    player.markPuzzleSolved(ref(`${WORLD}:puzzle:p1`));
+    const engine = new GameEngine({ events, player, config: CONFIG });
+    engine.enterRoom(ref(`${WORLD}:place:start`));
+    engine.flush();
+
+    const lines = getQuestOutput(engine);
+    expect(lines.some((l) => l.includes('✓ Riddle'))).toBe(true);
+    expect(lines.some((l) => l.includes('✗ Gem'))).toBe(true);
+    expect(lines.some((l) => l.includes('✗ Altar'))).toBe(true);
+  });
+
+  it('hidden shows ??? for uncompleted steps', () => {
+    const events = makeQuestWorld('hidden');
+    const player = makeMutator();
+    player.markPuzzleSolved(ref(`${WORLD}:puzzle:p1`));
+    const engine = new GameEngine({ events, player, config: CONFIG });
+    engine.enterRoom(ref(`${WORLD}:place:start`));
+    engine.flush();
+
+    const lines = getQuestOutput(engine);
+    expect(lines.some((l) => l.includes('✓ Riddle'))).toBe(true);
+    expect(lines.filter((l) => l.includes('✗ ???')).length).toBe(2);
+    expect(lines.some((l) => l.includes('Gem'))).toBe(false);
+    expect(lines.some((l) => l.includes('Altar'))).toBe(false);
+  });
+
+  it('mystery hides uncompleted steps entirely', () => {
+    const events = makeQuestWorld('mystery');
+    const player = makeMutator();
+    player.markPuzzleSolved(ref(`${WORLD}:puzzle:p1`));
+    const engine = new GameEngine({ events, player, config: CONFIG });
+    engine.enterRoom(ref(`${WORLD}:place:start`));
+    engine.flush();
+
+    const lines = getQuestOutput(engine);
+    expect(lines.some((l) => l.includes('✓ Riddle'))).toBe(true);
+    expect(lines.some((l) => l.includes('✗'))).toBe(false);
+    expect(lines.some((l) => l.includes('Gem'))).toBe(false);
+    expect(lines.some((l) => l.includes('Altar'))).toBe(false);
+  });
+
+  it('sequential shows only the next undone step', () => {
+    const events = makeQuestWorld('sequential');
+    const player = makeMutator();
+    player.markPuzzleSolved(ref(`${WORLD}:puzzle:p1`));
+    const engine = new GameEngine({ events, player, config: CONFIG });
+    engine.enterRoom(ref(`${WORLD}:place:start`));
+    engine.flush();
+
+    const lines = getQuestOutput(engine);
+    expect(lines.some((l) => l.includes('✓ Riddle'))).toBe(true);
+    // Next undone step (Gem) should show title
+    expect(lines.some((l) => l.includes('✗ Gem'))).toBe(true);
+    // Remaining undone step (Altar) should be hidden
+    expect(lines.some((l) => l.includes('Altar'))).toBe(false);
+  });
+
+  it('sequential with nothing done shows only first step', () => {
+    const events = makeQuestWorld('sequential');
+    const player = makeMutator();
+    const engine = new GameEngine({ events, player, config: CONFIG });
+    engine.enterRoom(ref(`${WORLD}:place:start`));
+    engine.flush();
+
+    const lines = getQuestOutput(engine);
+    // Only first undone step shown
+    expect(lines.some((l) => l.includes('✗ Riddle'))).toBe(true);
+    expect(lines.some((l) => l.includes('Gem'))).toBe(false);
+    expect(lines.some((l) => l.includes('Altar'))).toBe(false);
   });
 });

@@ -19,6 +19,7 @@ import {
 import { paymentEvents } from '../lib/events/payment.mjs';
 import { sounds } from '../lib/events/sounds.mjs';
 import { consequences } from '../lib/events/consequences.mjs';
+import { quests } from '../lib/events/quests.mjs';
 
 function bytesToHex(bytes) {
   return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
@@ -111,6 +112,7 @@ const genesisUnsigned = [
   ...paymentEvents(author.pubkey),
   ...sounds(author.pubkey),
   ...consequences(author.pubkey),
+  ...quests(author.pubkey),
 ];
 
 console.log(`Genesis events (${genesisUnsigned.length}):\n`);

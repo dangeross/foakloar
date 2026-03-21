@@ -2827,6 +2827,21 @@ For named, trackable quests, an optional quest event groups the chain and define
 
 `involves` tags are optional hints for the client's quest log UI — they indicate which events are part of this quest chain without affecting completion logic.
 
+**Quest display types via `quest-type`:** controls how the quest log reveals progress to the player:
+
+```json
+["quest-type", "hidden"]
+```
+
+| `quest-type` | Completed | Uncompleted | Count visible? |
+|---|---|---|---|
+| `open` (default) | `✓ Title` | `✗ Title` | Yes |
+| `hidden` | `✓ Title` | `✗ ???` | Yes |
+| `mystery` | `✓ Title` | not shown | No |
+| `sequential` | `✓ Title` | next: `✗ Title`, rest hidden | No |
+
+`open` is the default when no `quest-type` tag is present — backwards compatible. `hidden` shows the scope of the quest without spoiling details. `mystery` reveals nothing about remaining steps. `sequential` is a breadcrumb trail — only the next undone step is named.
+
 **Quest rewards via `on-complete`:** when all `requires` conditions pass, the quest fires its `on-complete` tags — same dispatcher as puzzles and recipes. Use this to give reward items, open portals, change world state:
 
 ```json

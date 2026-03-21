@@ -1,0 +1,3304 @@
+{
+  "answers": {
+    "the-lake:puzzle:chapel-riddle": "bottle"
+  },
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:world"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "The Lake"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "mystery"
+        ],
+        [
+          "tag",
+          "ancient"
+        ],
+        [
+          "tag",
+          "exploration"
+        ],
+        [
+          "tag",
+          "puzzle"
+        ],
+        [
+          "cw",
+          "mild-peril"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:the-lake:place:clearing"
+        ],
+        [
+          "relay",
+          "wss://relay.primal.net"
+        ],
+        [
+          "relay",
+          "wss://nos.lol"
+        ],
+        [
+          "collaboration",
+          "vouched"
+        ],
+        [
+          "collaborator",
+          "<COLLAB_PUBKEY>"
+        ],
+        [
+          "health",
+          "10"
+        ],
+        [
+          "max-health",
+          "10"
+        ],
+        [
+          "on-player-health",
+          "down",
+          "0",
+          "consequence",
+          "30078:<PUBKEY>:the-lake:consequence:death"
+        ],
+        [
+          "theme",
+          "terminal-green"
+        ],
+        [
+          "font",
+          "ibm-plex-mono"
+        ],
+        [
+          "cursor",
+          "block"
+        ],
+        [
+          "bpm",
+          "72"
+        ],
+        [
+          "samples",
+          "dirt"
+        ],
+        [
+          "samples",
+          "classic"
+        ],
+        [
+          "content-type",
+          "text/plain"
+        ],
+        [
+          "media",
+          "text/plain",
+          "    ~  ~  ~\n  ~ THE  ~\n  ~ LAKE ~\n    ~  ~  ~"
+        ]
+      ],
+      "content": "An ancient lake, hidden underground. Something sleeps beneath it.\n\nThe world above has forgotten it exists. You haven't."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:place:clearing"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "A Sunlit Clearing"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-lake:feature:weathered-journal"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-lake:feature:standing-stone"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:forest-ambient",
+          "ambient",
+          "0.5"
+        ]
+      ],
+      "content": "You stand in a sun-dappled clearing. Tall oaks ring the space, their branches filtering the light into golden shafts. A worn path leads north toward darkness. To the west, crumbling stonework is visible through the trees. To the east, smoke rises from a chimney hidden among the oaks. To the south, the forest thickens into an impenetrable wall — but the undergrowth looks recently disturbed, as if someone has been trying to cut a path."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:place:hermit-cottage"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Hermit's Cottage"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-lake:feature:locked-chest"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:the-lake:npc:hermit"
+        ]
+      ],
+      "content": "A small stone cottage, low-ceilinged and cluttered. Dried herbs hang from the rafters. A workbench is covered in half-finished carvings. Bookshelves line the walls, stuffed with crumbling volumes. In the corner sits a heavy wooden chest. An old man sits by the fireplace, watching you."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:place:dark-cave"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Dark Cave"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "down"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:the-lake:item:iron-key"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:the-lake:item:brass-lantern"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:cave-drone",
+          "ambient",
+          "0.6"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:water-drip",
+          "layer",
+          "0.3"
+        ]
+      ],
+      "content": "The air is cool and damp. You stand in a natural cavern, its walls slick with moisture. Something glints on the ground nearby. An old brass lantern sits on a ledge. A rough-hewn stairway descends into darkness."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:place:ruined-chapel"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Ruined Chapel"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-lake:feature:crumbling-inscription"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-lake:feature:stained-glass"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-lake:feature:bronze-altar"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:chapel-ambient",
+          "ambient",
+          "0.5"
+        ]
+      ],
+      "content": "What remains of a chapel stands open to the sky. The roof collapsed long ago, and ivy crawls over the broken pews. A bronze altar squats before the east wall, green with age. At the far end, a stone wall bears a crumbling inscription, still partly legible."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:place:chapel-crypt"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Chapel Crypt"
+        ],
+        [
+          "exit",
+          "up"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-lake:feature:wall-carvings"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-lake:feature:stone-sarcophagus"
+        ]
+      ],
+      "content": "Stone steps descend into a vaulted crypt. The air is cold and dry, preserved for centuries. Carved pillars line the walls, and at the far end a stone sarcophagus rests on a raised dais. The walls are covered in intricate carvings."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:place:cave-network"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Cave Network"
+        ],
+        [
+          "exit",
+          "up"
+        ],
+        [
+          "exit",
+          "down"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:item:brass-lantern",
+          "",
+          "You need a light source."
+        ],
+        [
+          "requires-not",
+          "30078:<PUBKEY>:the-lake:item:brass-lantern",
+          "off",
+          "It is pitch black. You are likely to be eaten by a grue."
+        ],
+        [
+          "requires-not",
+          "30078:<PUBKEY>:the-lake:item:brass-lantern",
+          "dead",
+          "It is pitch black. You are likely to be eaten by a grue."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-lake:feature:cave-paintings"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:the-lake:npc:collector"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:deep-drone",
+          "ambient",
+          "0.7"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:water-echo",
+          "layer",
+          "0.4"
+        ]
+      ],
+      "content": "Your lantern light plays across a junction of tunnels. The walls are streaked with mineral deposits — red ochre, pale calcite, veins of something that glitters. Ancient paintings cover the wall to your left. The passage continues down into deeper darkness."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:place:underground-lake"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Underground Lake"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "exit",
+          "up"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-lake:feature:iron-gate"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:lake-ambient",
+          "ambient",
+          "0.8"
+        ]
+      ],
+      "content": "You emerge onto a narrow ledge above an underground lake. The water is **black and still**, reflecting nothing. The cavern stretches beyond sight.\n\nTo the north, a heavy iron gate bars a passage cut into the rock. The air is cold and tastes of **stone and deep water**.\n\n> *Something vast moves beneath the surface — a ripple, then stillness.*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:place:mechanism-chamber"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Mechanism Chamber"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "down"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-lake:feature:mechanism"
+        ],
+        [
+          "puzzle",
+          "30078:<PUBKEY>:the-lake:puzzle:mechanism-sequence"
+        ],
+        [
+          "media",
+          "text/plain",
+          "        _______________\n       /               \\\n      |   [O]     [|]   |\n      |                 |\n      |  ~~~~~~~~~~~   |\n      |  ~ CHANNELS ~  |\n      |  ~~~~~~~~~~~   |\n       \\_____________/"
+        ]
+      ],
+      "content": "A circular chamber carved from living rock. Orichalcum channels trace intricate patterns across the walls and floor, all converging on a complex device set into the north wall. The air hums with a low, expectant vibration. The passage south leads back to the underground lake."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:place:sanctum"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Sanctum"
+        ],
+        [
+          "state",
+          "sealed"
+        ],
+        [
+          "content-type",
+          "application/nip44"
+        ]
+      ],
+      "content": null
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:portal:clearing-to-cave"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:clearing",
+          "north",
+          "A dark cave entrance looms to the north."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:dark-cave",
+          "south",
+          "Pale daylight filters through the cave mouth to the south."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:portal:clearing-to-cottage"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:clearing",
+          "east",
+          "Smoke rises from a chimney through the trees to the east."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:hermit-cottage",
+          "west",
+          "A path leads west back to the clearing."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:portal:clearing-to-chapel"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:clearing",
+          "west",
+          "Crumbling stonework is visible through the trees."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:ruined-chapel",
+          "east",
+          "A sun-dappled clearing lies to the east."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:portal:chapel-to-crypt"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          "A section of the chapel floor grinds open, revealing stone steps descending into darkness."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:ruined-chapel",
+          "down",
+          "Stone steps descend into a crypt below the chapel."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:chapel-crypt",
+          "up",
+          "Stone steps lead back up to the chapel."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:portal:cave-to-lake"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:dark-cave",
+          "down",
+          "A rough-hewn stairway descends into darkness."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:cave-network",
+          "up",
+          "Worn steps lead back up to the cave."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:portal:network-to-lake"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:cave-network",
+          "down",
+          "The passage descends toward the sound of water."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:underground-lake",
+          "up",
+          "A narrow passage leads back up to the cave network."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:item:brass-lantern",
+          "",
+          "You need a light source."
+        ],
+        [
+          "requires-not",
+          "30078:<PUBKEY>:the-lake:item:brass-lantern",
+          "off",
+          "It is pitch black. You stumble and turn back."
+        ],
+        [
+          "requires-not",
+          "30078:<PUBKEY>:the-lake:item:brass-lantern",
+          "dead",
+          "It is pitch black. You stumble and turn back."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:portal:lake-to-mechanism"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:underground-lake",
+          "north",
+          "A heavy iron gate blocks the passage north."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:mechanism-chamber",
+          "south",
+          "The passage leads south to the underground lake."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:puzzle:chapel-riddle",
+          "solved",
+          "The gate holds fast. Something is missing."
+        ],
+        [
+          "state",
+          "visible"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:portal:mechanism-to-sanctum"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          "The floor splits open, revealing stone steps descending into warm golden light."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:mechanism-chamber",
+          "down",
+          "Stone steps descend into warm golden light."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:sanctum",
+          "up",
+          "Steps lead back up to the mechanism chamber."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:portal:lake-to-sanctum"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:item:iron-key"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "An Iron Key"
+        ],
+        [
+          "noun",
+          "key",
+          "iron key"
+        ]
+      ],
+      "content": "Heavy and cold. The bow is shaped like a serpent."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:item:brass-lantern"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "A Brass Lantern"
+        ],
+        [
+          "noun",
+          "lantern",
+          "brass lantern",
+          "lamp",
+          "light"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect"
+        ],
+        [
+          "verb",
+          "turn on",
+          "switch on",
+          "light"
+        ],
+        [
+          "verb",
+          "turn off",
+          "switch off",
+          "extinguish",
+          "douse"
+        ],
+        [
+          "state",
+          "off"
+        ],
+        [
+          "transition",
+          "off",
+          "on",
+          "The lantern flickers to life, casting warm light around you."
+        ],
+        [
+          "transition",
+          "on",
+          "flickering",
+          "The lantern flickers ominously."
+        ],
+        [
+          "transition",
+          "flickering",
+          "dead",
+          "The lantern dies. Darkness."
+        ],
+        [
+          "transition",
+          "on",
+          "off",
+          "You turn off the lantern. Darkness presses close."
+        ],
+        [
+          "transition",
+          "flickering",
+          "off",
+          "You turn off the flickering lantern."
+        ],
+        [
+          "transition",
+          "off",
+          "off",
+          "The lantern is already off."
+        ],
+        [
+          "transition",
+          "on",
+          "on",
+          "The lantern is already on."
+        ],
+        [
+          "transition",
+          "flickering",
+          "on",
+          "The lantern is already on — barely."
+        ],
+        [
+          "transition",
+          "dead",
+          "dead",
+          "The lantern is dead. Nothing happens."
+        ],
+        [
+          "counter",
+          "battery",
+          "50"
+        ],
+        [
+          "on-move",
+          "on",
+          "decrement",
+          "battery",
+          "1"
+        ],
+        [
+          "on-move",
+          "flickering",
+          "decrement",
+          "battery",
+          "1"
+        ],
+        [
+          "on-counter",
+          "down",
+          "battery",
+          "20",
+          "set-state",
+          "flickering"
+        ],
+        [
+          "on-counter",
+          "down",
+          "battery",
+          "0",
+          "set-state",
+          "dead"
+        ],
+        [
+          "on-counter",
+          "down",
+          "battery",
+          "0",
+          "consequence",
+          "30078:<PUBKEY>:the-lake:consequence:darkness"
+        ],
+        [
+          "on-interact",
+          "turn on",
+          "set-state",
+          "on"
+        ],
+        [
+          "on-interact",
+          "turn off",
+          "set-state",
+          "off"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:lantern-hum",
+          "layer",
+          "0.4",
+          "on"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:lantern-crackle",
+          "layer",
+          "0.3",
+          "on"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:lantern-hum",
+          "layer",
+          "0.3",
+          "flickering"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:lantern-crackle",
+          "layer",
+          "0.2",
+          "flickering"
+        ]
+      ],
+      "content": "A sturdy brass lantern, dented but functional. A small dial on the side reads the battery level."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:item:serpent-amulet"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Serpent Amulet"
+        ],
+        [
+          "noun",
+          "amulet",
+          "serpent amulet"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect"
+        ],
+        [
+          "verb",
+          "insert",
+          "place",
+          "put"
+        ],
+        [
+          "on-interact",
+          "insert",
+          "set-state",
+          "amulet-placed",
+          "30078:<PUBKEY>:the-lake:feature:mechanism"
+        ]
+      ],
+      "content": "An amulet of orichalcum, shaped like a coiled serpent. It is warm to the touch, as if alive."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:item:serpent-staff"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Serpent Staff"
+        ],
+        [
+          "noun",
+          "staff",
+          "serpent staff"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect"
+        ],
+        [
+          "verb",
+          "insert",
+          "place",
+          "put"
+        ],
+        [
+          "on-interact",
+          "insert",
+          "set-state",
+          "activated",
+          "30078:<PUBKEY>:the-lake:feature:mechanism"
+        ]
+      ],
+      "content": "A staff of dark wood, carved with serpent scales. The head is shaped like a coiled serpent, matching the amulet."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:feature:bronze-altar"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Bronze Altar"
+        ],
+        [
+          "noun",
+          "altar",
+          "bronze altar"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect"
+        ],
+        [
+          "verb",
+          "pray",
+          "kneel",
+          "worship"
+        ],
+        [
+          "state",
+          "cold"
+        ],
+        [
+          "transition",
+          "cold",
+          "examined",
+          "You run your fingers over the symbols. They pulse faintly beneath your touch, and the altar grows warm."
+        ],
+        [
+          "transition",
+          "examined",
+          "prayed",
+          "You kneel and press your palms to the warm bronze. The symbols blaze white. A deep grinding echoes from beneath the chapel floor."
+        ],
+        [
+          "transition",
+          "examined",
+          "examined",
+          "The altar is warm. The symbols have already revealed their secret."
+        ],
+        [
+          "transition",
+          "prayed",
+          "prayed",
+          "The altar is silent now. The way below is open."
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "examined"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:the-lake:clue:lake-remembers"
+        ],
+        [
+          "on-interact",
+          "pray",
+          "set-state",
+          "prayed"
+        ],
+        [
+          "on-interact",
+          "pray",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:the-lake:portal:chapel-to-crypt"
+        ]
+      ],
+      "content": "A squat bronze altar, green with verdigris. Strange symbols are etched into its surface."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:feature:crumbling-inscription"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Crumbling Inscription"
+        ],
+        [
+          "noun",
+          "inscription",
+          "writing",
+          "wall"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect",
+          "read"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:the-lake:puzzle:chapel-riddle"
+        ]
+      ],
+      "content": "Faded letters carved deep into stone. Most have been worn away by time."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:feature:weathered-journal"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Weathered Journal"
+        ],
+        [
+          "noun",
+          "journal",
+          "book",
+          "diary"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect",
+          "read"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:the-lake:clue:journal-entry"
+        ]
+      ],
+      "content": "A leather-bound journal, warped by rain. A few pages are still legible."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:feature:standing-stone"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Standing Stone"
+        ],
+        [
+          "noun",
+          "stone",
+          "standing stone",
+          "monolith"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect",
+          "read"
+        ],
+        [
+          "state",
+          "weathered"
+        ],
+        [
+          "transition",
+          "weathered",
+          "read",
+          "You brush away the lichen and trace the carved letters with your fingertips. An inscription emerges from the worn surface:\n\n\"The serpent guards something old. What sleeps beneath the water remembers what the world forgot.\""
+        ],
+        [
+          "transition",
+          "read",
+          "read",
+          "You have already read the inscription. The serpent guards something old."
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "read"
+        ]
+      ],
+      "content": "A tall stone, rough-hewn and ancient, stands at the edge of the clearing. Lichen covers most of its surface, but you can make out faint carved letters beneath."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:feature:stained-glass"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Stained Glass Window"
+        ],
+        [
+          "noun",
+          "window",
+          "glass",
+          "stained glass"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:the-lake:clue:serpent-staff"
+        ]
+      ],
+      "content": "Fragments of coloured glass still cling to the chapel window frame. The surviving panels depict a serpent coiled around a staff, held aloft before something vast and dark."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:feature:locked-chest"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Locked Chest"
+        ],
+        [
+          "noun",
+          "chest",
+          "locked chest"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect"
+        ],
+        [
+          "verb",
+          "open",
+          "unlock"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:item:iron-key",
+          "",
+          "The chest is bound with a heavy lock. You need a key."
+        ]
+      ],
+      "content": "A heavy wooden chest, bound with iron bands. You turn the iron key and the lock clicks open. Inside, a serpent amulet rests on faded cloth."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:feature:cave-paintings"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Cave Paintings"
+        ],
+        [
+          "noun",
+          "paintings",
+          "cave paintings",
+          "paint",
+          "art"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:the-lake:clue:lake-history"
+        ]
+      ],
+      "content": "Faded ochre figures dance across the cave wall. They depict people gathered around a body of water, arms raised. Something vast coils beneath the surface."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:feature:iron-gate"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Iron Gate"
+        ],
+        [
+          "noun",
+          "gate",
+          "door",
+          "iron gate"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect"
+        ],
+        [
+          "verb",
+          "open",
+          "push",
+          "pull"
+        ],
+        [
+          "state",
+          "locked"
+        ],
+        [
+          "transition",
+          "locked",
+          "open",
+          "With a groan of ancient hinges, the gate swings open."
+        ],
+        [
+          "transition",
+          "locked",
+          "locked",
+          "The gate holds fast."
+        ],
+        [
+          "transition",
+          "open",
+          "open",
+          "The gate is already open."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:puzzle:chapel-riddle",
+          "solved",
+          "The gate holds fast. Something is missing."
+        ],
+        [
+          "on-interact",
+          "open",
+          "set-state",
+          "open"
+        ]
+      ],
+      "content": "A heavy iron gate, cold to the touch. There is no visible lock."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:feature:wall-carvings"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Wall Carvings"
+        ],
+        [
+          "noun",
+          "carvings",
+          "wall carvings",
+          "walls"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect",
+          "read"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:the-lake:clue:crypt-carvings"
+        ]
+      ],
+      "content": "Intricate carvings cover the crypt walls. They depict a serpent coiled around a staff, descending into water. Beneath the images, text is carved in a steady hand."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:feature:stone-sarcophagus"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Stone Sarcophagus"
+        ],
+        [
+          "noun",
+          "sarcophagus",
+          "tomb",
+          "coffin"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect"
+        ],
+        [
+          "verb",
+          "open"
+        ],
+        [
+          "state",
+          "sealed"
+        ],
+        [
+          "transition",
+          "sealed",
+          "open",
+          "The heavy lid grinds aside. Inside, on a bed of crumbled velvet, lie a serpent amulet and a serpent staff, both of orichalcum."
+        ],
+        [
+          "transition",
+          "sealed",
+          "sealed",
+          "The sarcophagus is sealed shut. The lid is immensely heavy."
+        ],
+        [
+          "transition",
+          "open",
+          "open",
+          "The sarcophagus is already open. The velvet lining is crumbling to dust."
+        ],
+        [
+          "on-interact",
+          "open",
+          "set-state",
+          "open"
+        ],
+        [
+          "on-interact",
+          "open",
+          "give-item",
+          "30078:<PUBKEY>:the-lake:item:serpent-amulet"
+        ],
+        [
+          "on-interact",
+          "open",
+          "give-item",
+          "30078:<PUBKEY>:the-lake:item:serpent-staff"
+        ]
+      ],
+      "content": "A stone sarcophagus rests on a raised dais. The lid is carved with a serpent motif. It looks sealed but not locked — just very heavy."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:feature:mechanism"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Mechanism"
+        ],
+        [
+          "noun",
+          "mechanism",
+          "device",
+          "channels",
+          "orichalcum"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect"
+        ],
+        [
+          "state",
+          "dormant"
+        ],
+        [
+          "transition",
+          "dormant",
+          "dormant",
+          "The mechanism is cold and still. Two recesses are carved into its face — one round, one long and narrow."
+        ],
+        [
+          "transition",
+          "dormant",
+          "amulet-placed",
+          "You place the serpent amulet into the round recess. It clicks into place and begins to glow faintly. The orichalcum channels pulse with dim light. The narrow recess waits."
+        ],
+        [
+          "transition",
+          "amulet-placed",
+          "amulet-placed",
+          "The amulet glows in its recess. The narrow slot beside it is still empty."
+        ],
+        [
+          "transition",
+          "amulet-placed",
+          "activated",
+          "You slide the serpent staff into the narrow slot. The staff locks into place. The orichalcum channels blaze with golden light, racing across the walls and floor. The mechanism hums — a deep, resonant tone that shakes dust from the ceiling. The floor beneath the mechanism splits open, revealing stone steps descending into warm light."
+        ],
+        [
+          "transition",
+          "activated",
+          "activated",
+          "The mechanism hums steadily. Golden light pulses through the orichalcum channels. The way below is open."
+        ]
+      ],
+      "content": "A complex device of dark stone and orichalcum channels, set into the north wall. Two recesses are carved into its face — one round, one long and narrow. The orichalcum channels trace intricate patterns across the wall and floor, all converging on this point."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:clue:lake-remembers"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "The Lake Remembers"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The lake remembers what the cave forgets."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:clue:serpent-staff"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "The Serpent and the Staff"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The glass tells a story: a serpent wrapped around a staff, held aloft before a stone mechanism. The staff turns what hands cannot."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:clue:lake-history"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "The Ancient Lake"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The paintings tell of an age when the lake was known. People came to it, spoke to what lived beneath. Then they sealed it away. The mechanism was their lock."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:clue:journal-entry"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "A Faded Journal Entry"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "This world is made of places, connected by passages that anyone may build. Look carefully at what you find. Examine things. The answers are here if you know where to look."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:clue:crypt-carvings"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "The Serpent Descends"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The serpent descends with the staff into the deep water. What it guards is not treasure but memory. The mechanism remembers the sequence: amulet first, then staff, then the word spoken to the water."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:puzzle:chapel-riddle"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "puzzle-type",
+          "riddle"
+        ],
+        [
+          "answer-hash",
+          "cc421c90e82bd9b59dd998b616f8cb2f35270149388e2e042b9151d64a4e34b8"
+        ],
+        [
+          "salt",
+          "the-lake:puzzle:chapel-riddle:v1"
+        ],
+        [
+          "on-complete",
+          "",
+          "give-crypto-key",
+          "28fde9c3481ca232f431aac17b91ff3218efd419c2ce42a7940ddd16ae10b50f"
+        ]
+      ],
+      "content": "I have a neck but no head, a body but no soul. I guard what you seek but ask nothing in return. What am I?"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:puzzle:mechanism-sequence"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "puzzle-type",
+          "sequence"
+        ],
+        [
+          "ordered",
+          "true"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:feature:mechanism",
+          "activated",
+          "The mechanism is not yet complete."
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:the-lake:portal:mechanism-to-sanctum"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:npc:hermit"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "The Hermit"
+        ],
+        [
+          "noun",
+          "hermit",
+          "old man",
+          "man"
+        ],
+        [
+          "verb",
+          "talk",
+          "speak",
+          "chat",
+          "ask"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:the-lake:dialogue:hermit:greeting"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:the-lake:dialogue:hermit:after-cave",
+          "30078:<PUBKEY>:the-lake:clue:lake-history",
+          "seen"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:the-lake:dialogue:hermit:after-chapel",
+          "30078:<PUBKEY>:the-lake:clue:lake-remembers",
+          "seen"
+        ]
+      ],
+      "content": "A weathered old man sits by a dying fire. His eyes are sharp despite his age. He watches you with quiet curiosity."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:npc:collector"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "The Collector"
+        ],
+        [
+          "noun",
+          "collector",
+          "figure",
+          "presence"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect"
+        ],
+        [
+          "speed",
+          "3"
+        ],
+        [
+          "order",
+          "random"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:the-lake:place:cave-network"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:the-lake:place:flooded-passage"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:the-lake:place:echo-chamber"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:the-lake:place:underground-lake"
+        ],
+        [
+          "stash",
+          "30078:<PUBKEY>:the-lake:place:flooded-passage"
+        ],
+        [
+          "on-encounter",
+          "player",
+          "steals-item",
+          "30078:<PUBKEY>:the-lake:item:iron-key"
+        ],
+        [
+          "on-enter",
+          "30078:<PUBKEY>:the-lake:place:flooded-passage",
+          "deposits"
+        ]
+      ],
+      "content": "A tall, gaunt figure draped in shadow. It moves without sound, its long fingers curling and uncurling. It does not acknowledge you — it is interested only in what you carry."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:dialogue:hermit:greeting"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "Hm? A visitor. It's been... a while. What brings you to these woods?"
+        ],
+        [
+          "option",
+          "Ask about the cave",
+          "30078:<PUBKEY>:the-lake:dialogue:hermit:cave"
+        ],
+        [
+          "option",
+          "Ask about the chapel",
+          "30078:<PUBKEY>:the-lake:dialogue:hermit:chapel"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:dialogue:hermit:after-cave"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "Back again. The cave spoke to you, did it? Good. There's more to find."
+        ],
+        [
+          "option",
+          "Ask about the chapel",
+          "30078:<PUBKEY>:the-lake:dialogue:hermit:chapel"
+        ],
+        [
+          "option",
+          "Ask what's below the cave",
+          "30078:<PUBKEY>:the-lake:dialogue:hermit:below"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:dialogue:hermit:after-chapel"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "You found the chapel. I wondered if you would. The watchers left more than prayers there."
+        ],
+        [
+          "option",
+          "Ask about the lake",
+          "30078:<PUBKEY>:the-lake:dialogue:hermit:lake"
+        ],
+        [
+          "option",
+          "Ask about the serpent",
+          "30078:<PUBKEY>:the-lake:dialogue:hermit:serpent"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:dialogue:hermit:cave"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "North of the clearing, there's a cave. Old. Older than me. Take a light — the dark below doesn't forgive the careless. There are paintings on the walls, if you look."
+        ],
+        [
+          "option",
+          "Ask about the paintings",
+          "30078:<PUBKEY>:the-lake:dialogue:hermit:paintings"
+        ],
+        [
+          "option",
+          "Thank him and leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:dialogue:hermit:paintings"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "They painted what they saw. The lake, the serpent, the ones who came before. Don't dismiss the art of the ancients — it tells truth more honestly than words."
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:dialogue:hermit:chapel"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "The chapel was built by the first watchers. They knew about the serpent. Pray at the altar — if you've earned the right."
+        ],
+        [
+          "option",
+          "Ask about the watchers",
+          "30078:<PUBKEY>:the-lake:dialogue:hermit:watchers"
+        ],
+        [
+          "option",
+          "Thank him and leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:dialogue:hermit:watchers"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "They watched the lake. Tended the serpent. Kept the mechanism. That's all I know. Or all I'll say."
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:dialogue:hermit:below"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "Below the cave network there's water. A lake. Black and still. Something lives there — old, patient. Not unfriendly, but... discerning. It chooses who passes."
+        ],
+        [
+          "option",
+          "Ask about the serpent",
+          "30078:<PUBKEY>:the-lake:dialogue:hermit:serpent"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:dialogue:hermit:serpent"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "The serpent is a guardian. Not yours, not mine. It guards what's beneath. If you want to pass, you'll need its mark — an amulet of orichalcum. The crypt beneath the chapel holds answers."
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:dialogue:hermit:lake"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "The lake remembers what we forgot. That's not metaphor — what sleeps beneath those waters dreamed something vast. The mechanism was built to wake it, or to keep it sleeping. I was never sure which."
+        ],
+        [
+          "option",
+          "Ask about the mechanism",
+          "30078:<PUBKEY>:the-lake:dialogue:hermit:mechanism"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:dialogue:hermit:mechanism"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "North of the lake, through the serpent's passage. You'll need the staff and the amulet. Beyond that... I cannot help you. Some doors open only for those who earned the key."
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:npc:ferryman"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "The Ferryman"
+        ],
+        [
+          "noun",
+          "ferryman",
+          "ferryman",
+          "hooded figure",
+          "figure"
+        ],
+        [
+          "verb",
+          "talk",
+          "speak",
+          "ask"
+        ],
+        [
+          "verb",
+          "examine",
+          "x",
+          "look at",
+          "inspect"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:the-lake:dialogue:ferryman-greeting"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:the-lake:place:underground-lake"
+        ]
+      ],
+      "content": "A hooded figure stands motionless at the water's edge. Ancient. Patient. A long pole rests in one skeletal hand. A flat-bottomed boat is tethered to the jetty beside them."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:dialogue:ferryman-greeting"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "The figure extends an open palm. Ten sats. No more, no less."
+        ],
+        [
+          "option",
+          "Pay the toll",
+          "30078:<PUBKEY>:the-lake:payment:ferry-toll"
+        ],
+        [
+          "option",
+          "Walk away",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:payment:ferry-toll"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "payment"
+        ],
+        [
+          "amount",
+          "10"
+        ],
+        [
+          "unit",
+          "sats"
+        ],
+        [
+          "lnurl",
+          "limefox4616@breez.tips"
+        ],
+        [
+          "on-complete",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:the-lake:item:ferry-token"
+        ]
+      ],
+      "content": "Passage across the underground lake."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:item:ferry-token"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "A Ferry Token"
+        ],
+        [
+          "noun",
+          "token",
+          "ferry token"
+        ]
+      ],
+      "content": "A smooth black stone, warm to the touch. The Ferryman will honour it."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:portal:ferry-crossing"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:item:ferry-token",
+          "",
+          ""
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:underground-lake",
+          "across",
+          "The Ferryman's boat is tethered to the jetty."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:mechanism-chamber",
+          "across",
+          "The boat can carry you back across the lake."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:forest-ambient"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "e4 ~ g4 ~"
+        ],
+        [
+          "oscillator",
+          "triangle"
+        ],
+        [
+          "slow",
+          "3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:cave-drone"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c2 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "room",
+          "0.8"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:deep-drone"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "f1 ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "6"
+        ],
+        [
+          "room",
+          "0.9"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:lake-ambient"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c3 ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "ocarina"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "room",
+          "1.0"
+        ],
+        [
+          "delay",
+          "0.4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:water-drip"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "a5 ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "fast",
+          "2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:water-echo"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "e5 ~ a5 ~ ~ ~ g5 ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "fast",
+          "3"
+        ],
+        [
+          "room",
+          "0.6"
+        ],
+        [
+          "delay",
+          "0.3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:lantern-hum"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "g2"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "lpf",
+          "400"
+        ],
+        [
+          "sustain",
+          "2"
+        ],
+        [
+          "release",
+          "0.1"
+        ],
+        [
+          "slow",
+          "2"
+        ],
+        [
+          "gain",
+          "0.6"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:lantern-crackle"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise",
+          ""
+        ],
+        [
+          "lpf",
+          "500"
+        ],
+        [
+          "shape",
+          "0.4"
+        ],
+        [
+          "degrade-by",
+          "0.15"
+        ],
+        [
+          "rand",
+          "0.1",
+          "0.35"
+        ],
+        [
+          "fast",
+          "6"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:pickup"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c4 e4 g4"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "fast",
+          "4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:chapel-ambient"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "a3 ~ e3 ~"
+        ],
+        [
+          "oscillator",
+          "pipeorgan_quiet"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "room",
+          "0.8"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:consequence:death"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "consequence"
+        ],
+        [
+          "title",
+          "Death"
+        ],
+        [
+          "respawn",
+          "30078:<PUBKEY>:the-lake:place:clearing"
+        ],
+        [
+          "clears",
+          "inventory"
+        ],
+        [
+          "clears",
+          "states"
+        ],
+        [
+          "clears",
+          "counters"
+        ]
+      ],
+      "content": "Everything goes dark. The cold seeps in, then nothing.\n\n...\n\nYou wake in the clearing, the sky bright above you. Your belongings are gone — scattered somewhere behind you."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:consequence:darkness"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "consequence"
+        ],
+        [
+          "title",
+          "Consumed by Darkness"
+        ],
+        [
+          "respawn",
+          "30078:<PUBKEY>:the-lake:place:dark-cave"
+        ],
+        [
+          "clears",
+          "counters"
+        ]
+      ],
+      "content": "The last ember of light dies. Darkness swallows you whole.\n\nYou stumble, hands against cold stone, until — somehow — you find your way back to the cave mouth."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:quest:the-errand"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Errand"
+        ],
+        [
+          "quest-type",
+          "open"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:clue:journal-entry"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:place:hermit-cottage"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:clue:journal-entry",
+          "visible",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:place:hermit-cottage",
+          "visited",
+          ""
+        ]
+      ],
+      "content": "Read the journal and visit the hermit in his cottage."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:quest:the-forge"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Forge"
+        ],
+        [
+          "quest-type",
+          "hidden"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:puzzle:chapel-riddle"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:item:serpent-amulet"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:item:serpent-staff"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:feature:mechanism"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:puzzle:chapel-riddle",
+          "solved",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:item:serpent-amulet",
+          "",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:item:serpent-staff",
+          "",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:feature:mechanism",
+          "activated",
+          ""
+        ]
+      ],
+      "content": "The chapel holds secrets older than the lake. Find them all."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:quest:the-descent"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Descent"
+        ],
+        [
+          "quest-type",
+          "mystery"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:place:dark-cave"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:feature:cave-paintings"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:place:underground-lake"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:place:mechanism-chamber"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:place:mechanism-chamber",
+          "visited",
+          ""
+        ]
+      ],
+      "content": "Something waits in the deep."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:quest:the-path"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Path"
+        ],
+        [
+          "quest-type",
+          "sequential"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:clue:journal-entry"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:place:dark-cave"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:puzzle:chapel-riddle"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:item:serpent-staff"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:clue:journal-entry",
+          "visible",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:place:dark-cave",
+          "visited",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:puzzle:chapel-riddle",
+          "solved",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:item:serpent-staff",
+          "",
+          ""
+        ]
+      ],
+      "content": "Follow the trail. Each step reveals the next."
+    }
+  ]
+}

@@ -7,6 +7,12 @@
 
 ### Added
 
+**`quest-type` tag on quest events**
+Controls how the quest log reveals progress. Values: `open` (default — all steps visible), `hidden` (titles hidden until done), `mystery` (undone steps not shown, count unknown), `sequential` (only next step revealed).
+```json
+["quest-type", "mystery"]
+```
+
 **`puzzle` tag on NIP-44 sealed events**
 Declares which puzzle's answer is the decryption key. Used by the publishing tool to encrypt `content` before signing.
 ```json

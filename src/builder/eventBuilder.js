@@ -255,6 +255,7 @@ export function validateEvent(template) {
       { tag: 'cursor', field: 'value', label: 'Cursor style' },
       { tag: 'effects', field: 'value', label: 'Effect bundle' },
       { tag: 'flicker', field: 'value', label: 'Flicker' },
+      { tag: 'quest-type', field: 'type', label: 'Quest type' },
       { tag: 'colour', field: 'slot', label: 'Colour slot' },
     ];
     for (const check of selectChecks) {

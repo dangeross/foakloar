@@ -458,7 +458,8 @@ export const TAG_SCHEMAS = {
   'can-vouch':{ label: 'Can Vouch', desc: 'Whether the vouched person can vouch for others', fields: [{ name: 'value', type: 'select', required: true, options: ['true', 'false'] }] },
 
   // ── Quest ──────────────────────────────────────────────────────────────
-  involves:   { label: 'Involves', desc: 'Event that is part of this quest', repeatable: true, fields: [{ name: 'ref', type: 'event-ref', required: true }] },
+  involves:      { label: 'Involves', desc: 'Event that is part of this quest', repeatable: true, fields: [{ name: 'ref', type: 'event-ref', required: true }] },
+  'quest-type':  { label: 'Quest Type', desc: 'How quest progress is displayed — open (all visible), hidden (titles hidden), mystery (count hidden), sequential (one at a time)', fields: [{ name: 'type', type: 'select', options: ['open', 'hidden', 'mystery', 'sequential'], required: true }] },
 
   // ── World ────────────────────────────────────────────────────────────────
   author:        { label: 'Author', desc: 'Display name of the world author', fields: [{ name: 'value', type: 'text', required: false }] },
@@ -509,7 +510,7 @@ export const TAGS_BY_EVENT_TYPE = {
   sound:       ['note', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan', 'lpf', 'hpf', 'vowel', 'crush', 'shape', 'room', 'roomsize', 'delay', 'rev', 'palindrome', 'degrade-by', 'rand', 'jux', 'arp', 'sustain', 'attack', 'release', 'sample'],
   world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'bpm', 'samples', 'content-type', 'media', 'w'],
   vouch:       ['pubkey', 'scope', 'can-vouch'],
-  quest:       ['title', 'involves', 'requires', 'requires-not', 'on-complete', 'sound'],
+  quest:       ['title', 'quest-type', 'involves', 'requires', 'requires-not', 'on-complete', 'sound'],
 };
 
 /**

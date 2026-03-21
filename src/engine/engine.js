@@ -2379,19 +2379,41 @@ export class GameEngine {
       this._emit('Active quests:', 'narrative');
       for (const q of active) {
         this._emit(`  \u25cb ${q.title}`, 'puzzle');
-        // Show involves progress
-        for (const inv of getTags(q.event, 'involves')) {
+        // Build step completion list
+        const questType = getTag(q.event, 'quest-type') || 'open';
+        const steps = getTags(q.event, 'involves').map((inv) => {
           const invRef = inv[1];
           const invEvent = this.events.get(invRef);
-          if (!invEvent) continue;
+          if (!invEvent) return null;
           const invTitle = getTag(invEvent, 'title') || invRef.split(':').pop();
-          const invType = getTag(invEvent, 'type');
-          // Check if this involved event is "done" in some way
           const state = this.player.getState(invRef);
           const solved = this.player.isPuzzleSolved(invRef);
           const held = this.player.hasItem(invRef);
           const done = solved || held || (state && state !== getDefaultState(invEvent));
-          this._emit(`    ${done ? '\u2713' : '\u2717'} ${invTitle}`, done ? 'item' : 'dim');
+          return { invTitle, done };
+        }).filter(Boolean);
+        // Display steps according to quest-type
+        let foundNextUndone = false;
+        for (const step of steps) {
+          if (step.done) {
+            this._emit(`    \u2713 ${step.invTitle}`, 'item');
+          } else {
+            switch (questType) {
+              case 'hidden':
+                this._emit('    \u2717 ???', 'dim');
+                break;
+              case 'mystery':
+                break; // don't show undone steps
+              case 'sequential':
+                if (!foundNextUndone) {
+                  this._emit(`    \u2717 ${step.invTitle}`, 'dim');
+                  foundNextUndone = true;
+                }
+                break; // remaining undone steps hidden
+              default: // 'open'
+                this._emit(`    \u2717 ${step.invTitle}`, 'dim');
+            }
+          }
         }
       }
     }

@@ -243,6 +243,21 @@ export function makeConsequence(name, { respawn, clears = [], giveItems = [], co
   return makeEvent(dtag, tags, content);
 }
 
+/** Create a quest event. */
+export function makeQuest(name, { questType, involves = [], requires = [], onComplete = [], content = '', extraTags = [] } = {}) {
+  const dtag = `${WORLD}:quest:${name}`;
+  const tags = [
+    ['type', 'quest'],
+    ['title', name.charAt(0).toUpperCase() + name.slice(1)],
+    ...(questType ? [['quest-type', questType]] : []),
+    ...involves.map((i) => ['involves', ref(i)]),
+    ...requires.map((r) => ['requires', ...r]),
+    ...onComplete.map((oc) => ['on-complete', ...oc]),
+    ...extraTags,
+  ];
+  return makeEvent(dtag, tags, content);
+}
+
 // ── Multi-author helpers ──────────────────────────────────────────────
 
 /** Build an a-tag ref with a specific pubkey. */
