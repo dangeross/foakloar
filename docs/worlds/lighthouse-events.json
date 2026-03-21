@@ -326,7 +326,8 @@
         ],
         [
           "delay",
-          "0.4"
+          "0.4",
+          "0.3"
         ]
       ],
       "content": ""
@@ -668,13 +669,13 @@
           "30078:<PUBKEY>:lighthouse:feature:final-log"
         ],
         [
+          "puzzle",
+          "30078:<PUBKEY>:lighthouse:puzzle:signal-decode"
+        ],
+        [
           "content-type",
           "application/nip44",
           "text/markdown"
-        ],
-        [
-          "puzzle",
-          "lighthouse:puzzle:signal-decode"
         ],
         [
           "sound",
@@ -849,22 +850,20 @@
         ],
         [
           "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
           "use",
           "insert",
           "turn",
           "fit"
         ],
         [
-          "description",
-          "A heavy iron handle, hexagonal socket at one end. Made to fit something specific."
+          "on-interact",
+          "use",
+          "set-state",
+          "cranking",
+          "30078:<PUBKEY>:lighthouse:feature:mechanism"
         ]
       ],
-      "content": ""
+      "content": "A heavy iron handle, hexagonal socket at one end. Made to fit something specific."
     },
     {
       "kind": 30078,
@@ -910,29 +909,23 @@
         ],
         [
           "verb",
-          "examine",
-          "look",
           "search",
           "rummage"
         ],
         [
           "on-interact",
-          "examine",
+          "search",
           "set-state",
           "searched"
         ],
         [
           "on-interact",
-          "examine",
+          "search",
           "give-item",
           "30078:<PUBKEY>:lighthouse:item:crank-handle"
-        ],
-        [
-          "description",
-          "A line of seaweed and debris left by the last high tide."
         ]
       ],
-      "content": ""
+      "content": "A line of seaweed and debris left by the last high tide."
     },
     {
       "kind": 30078,
@@ -978,11 +971,6 @@
         ],
         [
           "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
           "use",
           "crank",
           "turn",
@@ -1022,10 +1010,6 @@
           "30078:<PUBKEY>:lighthouse:item:crank-handle"
         ],
         [
-          "description",
-          "The lamp drive. A crank socket gapes at its side."
-        ],
-        [
           "on-interact",
           "use",
           "sound",
@@ -1033,7 +1017,7 @@
           "0.9"
         ]
       ],
-      "content": ""
+      "content": "The lamp drive. A crank socket gapes at its side."
     },
     {
       "kind": 30078,
@@ -1077,20 +1061,11 @@
           "The lamp is running. Light floods the room and cuts out to sea. Something out there catches it."
         ],
         [
-          "verb",
-          "examine",
-          "look"
-        ],
-        [
           "on-interact",
           "examine",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:clue:lamp-dark"
-        ],
-        [
-          "description",
-          "The great lamp. Cold and dark."
         ],
         [
           "on-interact",
@@ -1107,7 +1082,7 @@
           "running"
         ]
       ],
-      "content": ""
+      "content": "The great lamp. Cold and dark."
     },
     {
       "kind": 30078,
@@ -1135,23 +1110,14 @@
           "glass"
         ],
         [
-          "verb",
-          "examine",
-          "look"
-        ],
-        [
           "on-interact",
           "examine",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:clue:lamp-dark"
-        ],
-        [
-          "description",
-          "A great Fresnel lens, intact and dust-filmed. If the lamp ran, this would be visible for twenty miles."
         ]
       ],
-      "content": ""
+      "content": "A great Fresnel lens, intact and dust-filmed. If the lamp ran, this would be visible for twenty miles."
     },
     {
       "kind": 30078,
@@ -1191,29 +1157,23 @@
         ],
         [
           "verb",
-          "examine",
-          "look",
           "read"
         ],
         [
           "on-interact",
-          "examine",
+          "read",
           "set-state",
           "read"
         ],
         [
           "on-interact",
-          "examine",
+          "read",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:clue:logbook-entry"
-        ],
-        [
-          "description",
-          "A shelf of logbooks. Thirty years of them. The last spine is blank."
         ]
       ],
-      "content": ""
+      "content": "A shelf of logbooks. Thirty years of them. The last spine is blank."
     },
     {
       "kind": 30078,
@@ -1252,30 +1212,24 @@
         ],
         [
           "verb",
-          "examine",
-          "look",
           "read",
           "search"
         ],
         [
           "on-interact",
-          "examine",
+          "read",
           "set-state",
           "read"
         ],
         [
           "on-interact",
-          "examine",
+          "read",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:clue:desk-letter"
-        ],
-        [
-          "description",
-          "A writing desk. Something was written here and left."
         ]
       ],
-      "content": ""
+      "content": "A writing desk. Something was written here and left."
     },
     {
       "kind": 30078,
@@ -1303,23 +1257,14 @@
           "fire"
         ],
         [
-          "verb",
-          "examine",
-          "look"
-        ],
-        [
           "on-interact",
           "examine",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:clue:hearth-ash"
-        ],
-        [
-          "description",
-          "A fireplace, cold for years. Ash in the grate."
         ]
       ],
-      "content": ""
+      "content": "A fireplace, cold for years. Ash in the grate."
     },
     {
       "kind": 30078,
@@ -1365,14 +1310,8 @@
         ],
         [
           "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
           "use",
           "decode",
-          "read",
           "tune"
         ],
         [
@@ -1389,18 +1328,14 @@
           "30078:<PUBKEY>:lighthouse:clue:signal-instructions"
         ],
         [
-          "description",
-          "A signal panel, hidden behind the sliding wall. Active."
-        ],
-        [
           "on-interact",
           "use",
           "set-state",
           "active",
           "30078:<PUBKEY>:lighthouse:puzzle:signal-decode"
-        ]
+        ],
       ],
-      "content": ""
+      "content": "A signal panel, hidden behind the sliding wall. Active."
     },
     {
       "kind": 30078,
@@ -1430,21 +1365,27 @@
         ],
         [
           "state",
-          "sealed"
+          "hidden"
         ],
         [
           "verb",
-          "examine",
-          "look",
           "read",
           "open"
         ],
         [
-          "description",
-          "The blank-spined logbook from the shelf \u2014 it was here all along. Sealed."
+          "transition",
+          "sealed",
+          "read",
+          "You break the seal. The keeper's final entry."
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "read"
         ]
       ],
-      "content": ""
+      "content": "The blank-spined logbook from the shelf \u2014 it was here all along. Sealed."
     },
     {
       "kind": 30078,
@@ -1644,6 +1585,12 @@
         [
           "on-complete",
           "",
+          "give-crypto-key",
+          ""
+        ],
+        [
+          "on-complete",
+          "",
           "set-state",
           "decoded",
           "30078:<PUBKEY>:lighthouse:feature:signal-panel"
@@ -1652,7 +1599,7 @@
           "on-complete",
           "",
           "set-state",
-          "visible",
+          "sealed",
           "30078:<PUBKEY>:lighthouse:feature:final-log"
         ]
       ],

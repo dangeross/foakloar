@@ -119,7 +119,8 @@ export function validateWorld(events, answers = {}) {
     }
 
     // ── 2. Place puzzle tag referencing non-sequence puzzle ─────────────────
-    if (eventType === 'place') {
+    // Skip if the place has NIP-44 content — puzzle tag is there for encryption key derivation, not auto-evaluation
+    if (eventType === 'place' && getTagValue(event, 'content-type') !== 'application/nip44') {
       for (const tag of getTags(event, 'puzzle')) {
         const puzzleDTag = extractDTagFromRef(tag[1]) || tag[1];
         const puzzleEvent = byDTag.get(puzzleDTag);
