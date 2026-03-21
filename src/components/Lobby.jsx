@@ -250,6 +250,7 @@ export default function Lobby({
             const validData = {
               events: importPreview.validation.valid,
               answers: importPreview.data.answers || {},
+              walkthrough: importPreview.data.walkthrough || undefined,
             };
             importEvents(slug, validData);
             setImportPreview(null);

@@ -123,6 +123,7 @@ export default function App() {
   const [showZap, setShowZap] = useState(false);
   const [vouchTarget, setVouchTarget] = useState(null); // pubkey to vouch for
   const [drafts, setDrafts] = useState(() => loadDrafts(worldTag || ''));
+  const draftAnswers = useMemo(() => loadAnswers(worldTag || ''), [worldTag, drafts]); // eslint-disable-line react-hooks/exhaustive-deps
   const engineRef = useRef(null);
   const inputRef = useRef(null);
   const logEndRef = useRef(null);
@@ -605,6 +606,7 @@ export default function App() {
           pubkey={identity.pubkey}
           trustSet={trustInfo?.trustSet}
           clientMode={trustInfo?.effectiveMode}
+          answers={draftAnswers}
           onEditEvent={(aTag) => {
             const event = mergedEvents.get(aTag);
             if (!event) return;

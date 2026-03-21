@@ -155,7 +155,7 @@ function shortPubkey(pk) {
 
 // ── Data conversion ─────────────────────────────────────────────────────
 
-function eventsToGraph(events, currentPlace, trustSet, clientMode) {
+function eventsToGraph(events, currentPlace, trustSet, clientMode, answers) {
   const nodes = [];
   const edges = [];
   const referencedRefs = new Set();
@@ -586,15 +586,15 @@ let savedViewport = null;
 
 export default function EventGraph({
   events, currentPlace, onEditEvent, onNewEvent, onNewPortal, onClose,
-  pubkey, trustSet, clientMode, onVouch, onOpenDrafts, draftsCount,
+  pubkey, trustSet, clientMode, onVouch, onOpenDrafts, draftsCount, answers,
 }) {
   const [showNewMenu, setShowNewMenu] = useState(false);
   const [selectedRef, setSelectedRef] = useState(null);
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
 
   const { nodes: initialNodes, edges: initialEdges, issuesByDTag } = useMemo(
-    () => eventsToGraph(events, currentPlace, trustSet, clientMode),
-    [events, currentPlace, trustSet, clientMode]
+    () => eventsToGraph(events, currentPlace, trustSet, clientMode, answers),
+    [events, currentPlace, trustSet, clientMode, answers]
   );
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
