@@ -1282,12 +1282,11 @@ Blank next = end of conversation.
     ["d",      "the-lake:dialogue:hermit:greeting"],
     ["t",      "the-lake"],
     ["type",   "dialogue"],
-    ["text",   "What do you want, wanderer?"],
     ["option", "Ask about the cave", "30078:<pubkey>:the-lake:dialogue:hermit:cave"],
     ["option", "Ask about the key",  "30078:<pubkey>:the-lake:dialogue:hermit:key"],
     ["option", "Leave",              ""]
   ],
-  "content": ""
+  "content": "What do you want, wanderer?"
 }
 ```
 
@@ -1302,11 +1301,10 @@ A gated node — only offered when the player holds the map fragment:
     ["t",       "the-lake"],
     ["type",    "dialogue"],
     ["requires", "30078:<pubkey>:the-lake:item:map-fragment", "", ""],
-    ["text",    "Ah, you found the map. The key you seek is hidden behind the serpent gate."],
     ["option",  "Ask what the gate looks like", "30078:<pubkey>:the-lake:dialogue:hermit:gate"],
     ["option",  "Thank him and leave",          ""]
   ],
-  "content": ""
+  "content": "Ah, you found the map. The key you seek is hidden behind the serpent gate."
 }
 ```
 
@@ -1320,12 +1318,11 @@ A node that gives an item on visit:
     ["d",           "the-lake:dialogue:hermit:cave"],
     ["t",           "the-lake"],
     ["type",        "dialogue"],
-    ["text",        "The cave is old. Older than me. Don't go north without the serpent's blessing."],
     ["on-enter",    "player", "give-item", "30078:<pubkey>:the-lake:item:map-fragment"],
     ["option",      "Ask what the blessing is", "30078:<pubkey>:the-lake:dialogue:hermit:blessing"],
     ["option",      "Thank him and leave",       ""]
   ],
-  "content": ""
+  "content": "The cave is old. Older than me. Don't go north without the serpent's blessing."
 }
 ```
 
@@ -2745,9 +2742,9 @@ NPCs are world actors defined by their author. They can be static (always say th
   "tags": [
     ["d",        "the-lake:dialogue:hermit:key"],
     ["requires", "30078:<pubkey>:the-lake:item:map-fragment", "", ""],
-    ["text",     "Ah, you found the map..."],
     ...
-  ]
+  ],
+  "content": "Ah, you found the map..."
 }
 ```
 

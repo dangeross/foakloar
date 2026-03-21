@@ -1903,7 +1903,7 @@ export class GameEngine {
     this.player.markDialogueVisited(nodeDtag);
     this.dialogueActive = { npcDtag, nodeDtag };
 
-    const text = getTag(node, 'text');
+    const text = node.content || getTag(node, 'text'); // prefer content, fall back to text tag
     if (text) this._emit(text, 'dialogue');
 
     // Fire on-enter actions

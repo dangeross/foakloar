@@ -134,13 +134,12 @@ export function makeDialogueNode(name, { text, options = [], onEnter = [], requi
   const dtag = `${WORLD}:dialogue:${name}`;
   const tags = [
     ['type', 'dialogue'],
-    ...(text ? [['text', text]] : []),
     ...options.map((o) => ['option', o[0], o[1] ? ref(o[1]) : '']),
     ...onEnter.map((oe) => ['on-enter', ...oe]),
     ...requires.map((r) => ['requires', ...r]),
     ...extraTags,
   ];
-  return makeEvent(dtag, tags, '');
+  return makeEvent(dtag, tags, text || '');
 }
 
 /** Build a Map<a-tag, event> from an array of events. */
