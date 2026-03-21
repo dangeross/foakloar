@@ -104,7 +104,7 @@ export default function DraftListPanel({
     const { walkthrough: wResult, smoke } = playtestResult;
     return (
       <DOSPanel title="PLAYTEST RESULTS" onClose={() => setPlaytestResult(null)} minWidth="30em" zIndex={zIndex}>
-        <div style={{ maxHeight: 'calc(80vh - 6em)', overflowY: 'auto', fontSize: '0.65rem' }}>
+        <div style={{ fontSize: '0.65rem' }}>
           {/* Smoke test results */}
           {smoke && (
             <div className="mb-3">
@@ -158,9 +158,6 @@ export default function DraftListPanel({
           {!wResult && (
             <div style={{ color: 'var(--colour-dim)' }}>No walkthrough in world data</div>
           )}
-        </div>
-        <div className="pt-2" style={{ borderTop: '1px solid var(--colour-dim)' }}>
-          <DOSButton onClick={() => setPlaytestResult(null)} colour="dim">Close</DOSButton>
         </div>
       </DOSPanel>
     );

@@ -2722,6 +2722,10 @@ export class GameEngine {
     const talkMatch = trimmed.match(/^(?:talk to|talk|speak with|speak to|speak)\s+(.+)$/);
     if (talkMatch) { this.handleInteraction('talk', talkMatch[1], null); return; }
 
+    // Built-in: examine / x / inspect / look at (works without a verb tag)
+    const examineMatch = trimmed.match(/^(?:examine|x|look at|inspect)\s+(.+)$/);
+    if (examineMatch) { this.handleExamine(examineMatch[1]); return; }
+
     // Data-driven verb/noun parser — include roaming NPCs as verb sources
     const roamingHere = findRoamingNpcsAtPlace(
       this.events, this.currentPlace, this.player.getMoveCount(),

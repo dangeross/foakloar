@@ -154,7 +154,7 @@ All previously tracked deviations have been fixed:
 - **One verb tag per canonical verb.** Don't combine multiple canonical verbs into one tag (e.g. `["verb", "examine", "pray"]` is wrong — use two separate verb tags).
 - **Article stripping.** The client strips leading articles (`the`, `a`, `an`) from noun input. Noun tags should never include articles: `["noun", "lantern", "brass lantern"]` matches `the brass lantern`.
 - **Two-noun commands.** `<verb> <noun> [preposition] <noun>` — `with` keeps order (target=noun1, instrument=noun2): `attack guard with sword`. Other prepositions swap (target=noun2, instrument=noun1): `use key on door`. Prepositions: `on`, `with`, `to`, `at`, `in`, `into`.
-- **Built-in commands** (not data-driven): `look`/`l`, `look <direction>`, `inventory`/`i`, `help`/`h`/`?`, `quests`/`q`, `pick up`/`take`/`get`/`grab`, `attack <npc> [with <weapon>]`, direction words, `yes`/`no` (confirmation).
+- **Built-in commands** (not data-driven): `look`/`l`, `look <direction>`, `examine`/`x`/`inspect`/`look at`, `inventory`/`i`, `help`/`h`/`?`, `quests`/`q`, `pick up`/`take`/`get`/`grab`, `attack <npc> [with <weapon>]`, `talk`/`speak`, direction words, `yes`/`no` (confirmation).
 
 ---
 
