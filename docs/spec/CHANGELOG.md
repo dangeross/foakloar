@@ -113,7 +113,7 @@ Portal always uses extended form. Portal wins if conflict. Hidden portals still 
 **`plaintext-type` tag proposed and removed before shipping** — replaced by three-element `content-type`.
 
 **Sample presets documented — `dirt` and `classic`**
-`reference/sample-presets.md` added. `dirt` preset: 217 Dirt-Samples banks (drums, synths, nature, voice, world instruments). `classic` preset: 53 VCSL acoustic/orchestral samples (recorder, ocarina, sax, harmonica, pipe organ, timpani, world percussion). Custom GitHub repos with `strudel.json` index supported. Spec and authoring guide updated with preset descriptions, world-type recommendations, and GitHub repo pattern.
+`spec/sample-presets.md` added. `dirt` preset: 217 Dirt-Samples banks (drums, synths, nature, voice, world instruments). `classic` preset: 53 VCSL acoustic/orchestral samples (recorder, ocarina, sax, harmonica, pipe organ, timpani, world percussion). Custom GitHub repos with `strudel.json` index supported. Spec and authoring guide updated with preset descriptions, world-type recommendations, and GitHub repo pattern.
 
 **Sound system — envelope, samples library, noise correction**
 `attack`, `sustain`, `release` tags added for envelope control. `sustain` is critical for state-gated layers — short sustain makes layers cut off cleanly when their state gate deactivates. `noise` corrected: it is a DSP oscillator generating `noise()`, not `s("noise")` (which would look for a sample). `samples` tag added to world event for loading sample libraries: `["samples", "dirt"]` loads Strudel Dirt-Samples; GitHub repos and direct URLs also supported. `type: sound` events do not carry the `w` discovery tag — they are referenced by `a`-tag, not relay-discovered.

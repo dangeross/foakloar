@@ -2,7 +2,7 @@
 
 ## Golden Rule
 
-**The design spec is the source of truth.** Every tag shape, trigger type, and action type must conform to `docs/spec/nostr-dungeon-design.md`. If a feature or tag doesn't exist in the spec, **discuss it with the user before implementing**. Never invent new tags, triggers, or action types.
+**The design spec is the source of truth.** Every tag shape, trigger type, and action type must conform to `docs/spec/foakloar-design.md`. If a feature or tag doesn't exist in the spec, **discuss it with the user before implementing**. Never invent new tags, triggers, or action types.
 
 ---
 
@@ -20,10 +20,10 @@ A decentralised text adventure built on NOSTR (kind 30078). The world is a graph
 |------|---------|
 | `docs/spec/foakloar-design.md` | **Canonical design spec** — all tag shapes defined here |
 | `docs/spec/CHANGELOG.md` | Schema changelog — all spec changes |
-| `docs/the-lake/HANDOFF.md` | Session handoff — current status, design decisions |
-| `docs/the-lake/the-lake-client-plan.md` | Phase 1–10 client implementation plan |
-| `docs/the-lake/the-lake-client-plan-2.md` | Phase 11–18 client implementation plan |
-| `docs/the-lake/the-lake-world.md` | Full world design (places, items, puzzles) |
+| `docs/spec/sample-presets.md` | Sound sample preset reference (dirt, classic) |
+| `docs/authoring/` | LLM world authoring guides and worked examples |
+| `docs/reference/` | Reference test worlds based on movies/games |
+| `docs/worlds/` | Complete importable world JSON files |
 | `src/components/App.jsx` | Main game component — rendering, theme, world bootstrap |
 | `src/components/Lobby.jsx` | Landing page — world slug input, identity, world creator |
 | `src/hooks/usePlayerState.js` | Player state hook with world-keyed localStorage persistence |
@@ -53,7 +53,7 @@ A decentralised text adventure built on NOSTR (kind 30078). The world is a graph
 | `src/builder/components/ui/InlineList.jsx` | Shared chip-tag input (aliases, tags, relays) |
 | `src/builder/components/ui/DOSSelect.jsx` | Themed dropdown select |
 | `src/builder/components/ui/DOSButton.jsx` | Themed button |
-| `docs/the-lake/the-lake-events.json` | Compiled Lake world events — importable via builder UI |
+| `.claude/proposals.md` | Feature proposals — tracked ideas and their status |
 
 ---
 
