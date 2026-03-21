@@ -1742,6 +1742,15 @@ export class GameEngine {
 
   async handlePuzzleAnswer(answer) {
     if (!this.puzzleActive) return;
+
+    // Allow the player to leave the puzzle
+    const trimmed = answer.trim().toLowerCase();
+    if (['back', 'leave', 'cancel', 'quit', 'exit'].includes(trimmed)) {
+      this.puzzleActive = null;
+      this._emit('You step away from the puzzle.', 'narrative');
+      return;
+    }
+
     const puzzleEvent = this.events.get(this.puzzleActive);
     if (!puzzleEvent) return;
 

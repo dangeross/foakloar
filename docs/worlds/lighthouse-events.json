@@ -40,6 +40,10 @@
         ],
         [
           "tag",
+          "test"
+        ],
+        [
+          "tag",
           "mystery"
         ],
         [
@@ -1333,7 +1337,7 @@
           "set-state",
           "active",
           "30078:<PUBKEY>:lighthouse:puzzle:signal-decode"
-        ],
+        ]
       ],
       "content": "A signal panel, hidden behind the sliding wall. Active."
     },

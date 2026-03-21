@@ -32,7 +32,7 @@ export function applyExternalSetState(targetRef, targetState, events, player, em
     } else {
       emit(`\nA riddle appears:`, 'puzzle-title');
       emit(targetEvent.content, 'puzzle');
-      emit('Type your answer...', 'hint');
+      emit('Type your answer (or "back" to leave)...', 'hint');
       return { acted: true, puzzleActivated: targetRef };
     }
     return { acted: true, puzzleActivated: null };
