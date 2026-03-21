@@ -2310,7 +2310,7 @@ Declared on the world event to load a sample library on startup. Without it, onl
 | `github:user/repo` | Any GitHub-hosted sample pack — must contain a `strudel.json` index at the repo root |
 | `https://...` | Direct URL to a Strudel-compatible sample index JSON |
 
-Full sample listings for both presets are in `reference/sample-presets.md`.
+Full sample listings for both presets are in `sample-presets.md`.
 
 Sample libraries load asynchronously on world start. Built-in oscillators and `noise` work instantly. Patterns using samples won't play until files are fetched — design accordingly.
 

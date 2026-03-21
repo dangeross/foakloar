@@ -1,0 +1,3876 @@
+{
+  "answers": {
+    "voidrun:puzzle:access-riddle": "covenant",
+    "voidrun:puzzle:recorder-cipher": "2291.047",
+    "voidrun:puzzle:class-riddle": "INDENTURED",
+    "voidrun:place:manifest-sealed": "GX-77142291.047INDENTURED",
+    "voidrun:puzzle:manifest-key": "GX-77142291.047INDENTURED"
+  },
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:world"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "theme",
+          "void-blue"
+        ],
+        [
+          "title",
+          "VOIDRUN"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:voidrun:place:theta-9"
+        ],
+        [
+          "collaboration",
+          "closed"
+        ],
+        [
+          "bpm",
+          "68"
+        ],
+        [
+          "health",
+          "8"
+        ],
+        [
+          "max-health",
+          "8"
+        ],
+        [
+          "samples",
+          "dirt"
+        ],
+        [
+          "w",
+          "foakloar"
+        ]
+      ],
+      "content": "A missing manifest. A client with no name. Thirty years of silence, preserved in the gap between two relay pings."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:place:theta-9"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Transit Node Theta-9"
+        ],
+        [
+          "exit",
+          "dock"
+        ],
+        [
+          "exit",
+          "corridor"
+        ],
+        [
+          "exit",
+          "market"
+        ],
+        [
+          "exit",
+          "maintenance"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:voidrun:feature:job-terminal"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:voidrun:npc:cassian"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:theta-ambient",
+          "ambient",
+          "0.5"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:static-crackle",
+          "layer",
+          "0.3"
+        ]
+      ],
+      "content": "Transit Node Theta-9. Three docking rings, one functioning. A vending unit with a cracked housing cycles through a menu for food that hasn't been stocked in eight years. The node smells of recycled atmosphere and old decisions. A job terminal blinks amber in the corner. Someone left a message."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:place:docking-ring-7"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Docking Ring 7"
+        ],
+        [
+          "exit",
+          "out"
+        ],
+        [
+          "exit",
+          "back"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:voidrun:feature:equipment-locker"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:voidrun:npc:mira"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:dock-hum",
+          "ambient",
+          "0.5"
+        ]
+      ],
+      "content": "Ring 7 is the only dock still pressurised. A hauler with no registry markings sits dark in the bay \u2014 nobody's asking, nobody's answering. The smell here is different: metal, cold, something oily underneath. Mira runs a table near the airlock. She deals in whatever the manifest doesn't mention."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:place:wreck-approach"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Wreck Field Approach"
+        ],
+        [
+          "exit",
+          "deeper"
+        ],
+        [
+          "exit",
+          "back"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:voidrun:feature:debris-field"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:voidrun:item:power-cell"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:void-wind",
+          "ambient",
+          "0.6"
+        ]
+      ],
+      "content": "The wreck field starts here, where navigation gets advisory. Chunks of hull plate and frozen atmosphere drift in loose formation. The oldest debris has been here long enough to collect a thin skin of microcrystals \u2014 it catches your suit lamp and scatters it. Somewhere deeper, a beacon still pings. It has been pinging, unacknowledged, for thirty years."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:place:wreck-exterior"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Wreck: Exterior"
+        ],
+        [
+          "exit",
+          "breach"
+        ],
+        [
+          "exit",
+          "back"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:voidrun:feature:hull-plate"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:voidrun:item:contraband-scanner"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:beacon-ping",
+          "ambient",
+          "0.4"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:hull-creak",
+          "layer",
+          "0.3"
+        ]
+      ],
+      "content": "The ship is a Gerrikson-class colony transport. Or was. The hull designation has been scored off with something hot \u2014 not corrosion, not collision. Done deliberately, done carefully. The breach on the starboard side is old enough that the edges have been rounded by microimpact erosion. Something is still running inside. The beacon. Whatever runs the beacon."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:place:wreck-interior"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Wreck: Interior"
+        ],
+        [
+          "exit",
+          "out"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:voidrun:feature:flight-recorder"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:voidrun:feature:passenger-bay"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:beacon-ping",
+          "ambient",
+          "0.5"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:life-support-ghost",
+          "layer",
+          "0.4"
+        ]
+      ],
+      "content": "The interior still has partial pressure \u2014 someone sealed it at some point, or it sealed itself. Emergency lighting only. The passenger bay is empty: berths made up, personal lockers open and cleared. Not abandoned in a hurry. Cleared. Methodically. The flight recorder housing is cracked but the unit is intact. A small steady light confirms it is still recording."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:place:port-authority-annex"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Port Authority Annex"
+        ],
+        [
+          "exit",
+          "restricted"
+        ],
+        [
+          "exit",
+          "back"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:voidrun:npc:sable"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:authority-hum",
+          "ambient",
+          "0.4"
+        ]
+      ],
+      "content": "The port authority stopped staffing this annex in 2278. What's here now is Sable: technically a contractor, technically licensed, technically not an obstacle. She sits behind the counter like she grew there. The door behind her is marked ARCHIVE \u2014 RESTRICTED ACCESS. The lock requires a maintenance code. She is the maintenance code."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:place:archive-terminal-room"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Archive Terminal Room"
+        ],
+        [
+          "exit",
+          "back"
+        ],
+        [
+          "exit",
+          "uplink"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:voidrun:feature:archive-terminal"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:access-card",
+          "",
+          "The door requires a maintenance access card."
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:terminal-hum",
+          "ambient",
+          "0.5"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:uplink-blinking"
+        ],
+        [
+          "exit",
+          "open"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:voidrun:feature:fragment-combiner"
+        ]
+      ],
+      "content": "A small room. One terminal, one chair, one overhead light that buzzes at 60Hz. The terminal is active. Records going back forty years, unfiled, unaudited. The uplink port in the corner has a cable run to somewhere \u2014 the cable disappears into the wall and the wall has no label. Somebody has been maintaining this room even though it officially doesn't exist."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:place:drift-market"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Drift Market"
+        ],
+        [
+          "exit",
+          "back"
+        ],
+        [
+          "exit",
+          "stall"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:voidrun:feature:market-noticeboard"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:market-noise",
+          "ambient",
+          "0.6"
+        ]
+      ],
+      "content": "The Drift Market operates in the node's former cargo bay. Stalls made from cargo containers, crates, and repurposed equipment housing. Barter mostly, some hard currency. The noise level says commerce; the eyes of the vendors say something else. Everybody here is waiting for something to stop happening."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:place:parts-dealer-stall"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Parts Dealer Stall"
+        ],
+        [
+          "exit",
+          "back"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:voidrun:npc:hektor"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:voidrun:item:relay-coil"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:market-noise",
+          "ambient",
+          "0.4"
+        ]
+      ],
+      "content": "Hektor's stall is three crates and a lamp. The inventory is spread on a piece of cargo sheeting: connectors, coils, signal components, one extremely old handheld unit whose function nobody has been able to determine in fifteen years. Hektor doesn't talk much. He is here because the other option is somewhere he can't go back to."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:place:maintenance-bay"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Maintenance Bay"
+        ],
+        [
+          "exit",
+          "back"
+        ],
+        [
+          "exit",
+          "hatch"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:voidrun:feature:workbench"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:machinery-idle",
+          "ambient",
+          "0.5"
+        ]
+      ],
+      "content": "The maintenance bay is the most honest place on the node. Everything here has a function, every function is legible, every part either works or it doesn't. A workbench runs the length of one wall. The hatch in the floor is labelled COLD STORAGE in stencil that's been partially painted over. The paint is newer than the stencil."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:place:cold-storage"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Cold Storage"
+        ],
+        [
+          "exit",
+          "up"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:voidrun:feature:storage-manifest"
+        ],
+        [
+          "clue",
+          "30078:<PUBKEY>:voidrun:clue:storage-log"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:voidrun:sound:cold-drone",
+          "ambient",
+          "0.5"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:storage-log"
+        ]
+      ],
+      "content": "Cold Storage. Temperature: 4 Celsius. The shelves are empty except for a laminated cargo manifest taped to the wall and a storage log clipped to a hook. Whatever was here has been moved. The hook for the log says CURRENT MANIFEST. The manifest on the wall is dated two months ago and shows the space as empty. The log says something different."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:portal:theta9-to-docking"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:theta-9",
+          "dock",
+          "The pressurised walkway to Docking Ring 7."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:docking-ring-7",
+          "back",
+          "Back to the transit node."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:portal:docking-to-approach"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:docking-ring-7",
+          "out",
+          "EVA lock. Suit up before exiting."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:wreck-approach",
+          "back",
+          "Back to the docking ring."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:portal:approach-to-exterior"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:wreck-approach",
+          "deeper",
+          "Into the wreck field."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:wreck-exterior",
+          "back",
+          "Back to the approach."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:portal:exterior-to-interior"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:wreck-exterior",
+          "breach",
+          "Through the hull breach."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:wreck-interior",
+          "out",
+          "Back out through the breach."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:portal:theta9-to-authority"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:theta-9",
+          "corridor",
+          "The corridor to the port authority annex."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:port-authority-annex",
+          "back",
+          "Back to the transit node."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:portal:authority-to-archive"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:access-card",
+          "",
+          "The lock panel blinks red. No access."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:port-authority-annex",
+          "restricted",
+          "The restricted archive door."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:archive-terminal-room",
+          "back",
+          "Back to the annex."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:portal:theta9-to-market"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:theta-9",
+          "market",
+          "The cargo bay. The Drift Market."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:drift-market",
+          "back",
+          "Back to the transit node."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:portal:market-to-stall"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:drift-market",
+          "stall",
+          "Hektor's stall, back corner."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:parts-dealer-stall",
+          "back",
+          "Back into the market."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:portal:theta9-to-maintenance"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:theta-9",
+          "maintenance",
+          "Maintenance bay."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:maintenance-bay",
+          "back",
+          "Back to the transit node."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:portal:maintenance-to-cold"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:maintenance-bay",
+          "hatch",
+          "Down the hatch."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:cold-storage",
+          "up",
+          "Up through the hatch."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:item:case-file"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Case File: MISSING MANIFEST"
+        ],
+        [
+          "noun",
+          "case file",
+          "file",
+          "manifest request",
+          "job"
+        ]
+      ],
+      "content": "An encrypted job ticket. Client: ANONYMOUS. Target: cargo manifest GX-7714, departure 2291, origin Theta-9. Fee: 4,000 sats on delivery. No questions. No contact. Payment routed through three dead relays."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:item:spectrograph"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Spectrograph Scanner"
+        ],
+        [
+          "noun",
+          "spectrograph",
+          "scanner",
+          "spec"
+        ]
+      ],
+      "content": "A handheld spectrograph. Reads material composition and \u2014 importantly \u2014 reveals heat-treated surfaces, including deliberately scored hull designations. Battery good. Calibration questionable."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:item:contraband-scanner"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Contraband Scanner (Mira's Model)"
+        ],
+        [
+          "noun",
+          "scanner",
+          "contraband scanner",
+          "mira scanner"
+        ]
+      ],
+      "content": "A compact contraband scanner with Mira's serial tag scratched off the casing. She wants this back. The kind of want that comes with an implication."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:item:relay-coil"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Signal Relay Coil"
+        ],
+        [
+          "noun",
+          "relay coil",
+          "coil"
+        ]
+      ],
+      "content": "High-tolerance signal relay coil. The kind used in deep-space boosters before the newer compression standard made them obsolete. Hektor has two. He sold you one."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:item:power-cell"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Emergency Power Cell"
+        ],
+        [
+          "noun",
+          "power cell",
+          "cell",
+          "battery"
+        ]
+      ],
+      "content": "Emergency power cell, still at 80% charge. Standard issue for Gerrikson colony transports. Thirty years old. Whoever designed it built it to last."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:item:signal-booster"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Assembled Signal Booster"
+        ],
+        [
+          "noun",
+          "signal booster",
+          "booster"
+        ]
+      ],
+      "content": "A field-assembled signal booster. Relay coil plus power cell, wired correctly. It will amplify a degraded signal enough to extract structured data from a cracked flight recorder housing. Good for one read."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:item:access-card"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Maintenance Access Card"
+        ],
+        [
+          "noun",
+          "access card",
+          "card",
+          "maintenance card"
+        ]
+      ],
+      "content": "A maintenance access card for Theta-9 Port Authority Archive systems. Sable's signature on the back. She didn't sign it willingly but she signed it."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:item:fragment-hull"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Fragment: Hull Registry \u2014 GX-7714"
+        ],
+        [
+          "noun",
+          "hull fragment",
+          "hull registry",
+          "fragment one",
+          "registry"
+        ]
+      ],
+      "content": "Hull registry designation recovered via spectrograph scan. The scoring was thorough but heat-treatment leaves a trace. GX-7714. Gerrikson series. Colony transport class."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:item:fragment-timestamp"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Fragment: Departure Timestamp \u2014 2291.047"
+        ],
+        [
+          "noun",
+          "timestamp fragment",
+          "departure time",
+          "fragment two",
+          "timestamp"
+        ]
+      ],
+      "content": "Departure timestamp extracted from flight recorder: 2291.047. Day 47 of the year 2291. The recorder shows a departure from Theta-9. The official Theta-9 departure log for 2291.047 shows no departures."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:item:fragment-class"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Fragment: Passenger Class \u2014 INDENTURED"
+        ],
+        [
+          "noun",
+          "class fragment",
+          "passenger class",
+          "fragment three",
+          "class"
+        ]
+      ],
+      "content": "Passenger class designation from the archived manifest record: INDENTURED. A labour contract classification. Standard for colony transit in the 2280s. Not standard: the contract terms appended to this record, which are not standard colony labour agreements. They are something else."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:feature:job-terminal"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Job Terminal"
+        ],
+        [
+          "noun",
+          "job terminal",
+          "terminal",
+          "message"
+        ],
+        [
+          "verb",
+          "read",
+          "check"
+        ],
+        [
+          "on-interact",
+          "read",
+          "give-item",
+          "30078:<PUBKEY>:voidrun:item:case-file"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:anonymous-client"
+        ]
+      ],
+      "content": "A standard job terminal. The amber light indicates unread message. The sender field is blank."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:feature:equipment-locker"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Equipment Locker"
+        ],
+        [
+          "noun",
+          "equipment locker",
+          "locker"
+        ],
+        [
+          "verb",
+          "open"
+        ],
+        [
+          "state",
+          "locked"
+        ],
+        [
+          "transition",
+          "locked",
+          "open",
+          "The locker opens. The spectrograph is inside."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:access-card",
+          "",
+          ""
+        ],
+        [
+          "on-interact",
+          "open",
+          "set-state",
+          "open"
+        ],
+        [
+          "on-interact",
+          "open",
+          "give-item",
+          "30078:<PUBKEY>:voidrun:item:spectrograph"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:locker-label"
+        ]
+      ],
+      "content": "A heavy equipment locker bolted to the dock wall. Mira's lock \u2014 her own hardware, not the node's."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:feature:debris-field"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Debris Field"
+        ],
+        [
+          "noun",
+          "debris",
+          "debris field",
+          "field",
+          "wreckage"
+        ],
+        [
+          "verb",
+          "scan"
+        ],
+        [
+          "on-interact",
+          "scan",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:beacon-age"
+        ]
+      ],
+      "content": "Fragments from multiple vessels \u2014 this isn't one wreck, it's an accumulation. The Gerrikson transport is the largest mass. Something smaller hit it, or was hit by it. The scar angles suggest impact from inside the larger hull."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:feature:hull-plate"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Hull Designation Plate"
+        ],
+        [
+          "noun",
+          "hull plate",
+          "hull",
+          "designation",
+          "hull designation"
+        ],
+        [
+          "verb",
+          "scan"
+        ],
+        [
+          "state",
+          "scored"
+        ],
+        [
+          "transition",
+          "scored",
+          "readable",
+          "The spectrograph resolves the heat trace. Letters emerge."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:spectrograph",
+          "",
+          "The designation has been physically scored off. You'd need a spectrograph to recover the heat trace."
+        ],
+        [
+          "on-interact",
+          "scan",
+          "set-state",
+          "readable"
+        ],
+        [
+          "on-interact",
+          "scan",
+          "give-item",
+          "30078:<PUBKEY>:voidrun:item:fragment-hull"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:hull-scored"
+        ]
+      ],
+      "content": "Where the hull designation plate should be, there is a rectangular scar. Done with something hot. Done on purpose."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:feature:flight-recorder"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Flight Recorder"
+        ],
+        [
+          "noun",
+          "flight recorder",
+          "recorder",
+          "black box"
+        ],
+        [
+          "verb",
+          "read",
+          "connect"
+        ],
+        [
+          "state",
+          "damaged"
+        ],
+        [
+          "transition",
+          "damaged",
+          "reading",
+          "The booster amplifies the signal. Data streams across your visor."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:signal-booster",
+          "",
+          "The recorder housing is cracked \u2014 the signal is too degraded to read without amplification."
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "reading"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:recorder-data"
+        ]
+      ],
+      "content": "The flight recorder housing is cracked along the seam. The status light is green \u2014 it's recording, it's intact \u2014 but the output signal is too degraded to read without amplification."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:feature:passenger-bay"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Passenger Bay"
+        ],
+        [
+          "noun",
+          "passenger bay",
+          "bay",
+          "berths",
+          "bunks"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:cleared-berths"
+        ]
+      ],
+      "content": "One hundred and forty berths. All made up. All emptied. Personal storage lockers open, drawers pulled, surfaces wiped. Not abandoned \u2014 cleared. There is a difference. Someone came after."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:feature:archive-terminal"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Archive Terminal"
+        ],
+        [
+          "noun",
+          "archive terminal",
+          "terminal",
+          "archive",
+          "records"
+        ],
+        [
+          "verb",
+          "search",
+          "query"
+        ],
+        [
+          "state",
+          "idle"
+        ],
+        [
+          "on-interact",
+          "query",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:terminal-index"
+        ],
+        [
+          "on-interact",
+          "search",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:terminal-index"
+        ]
+      ],
+      "content": "The archive terminal is active. It holds transit records for Theta-9, unindexed. The filing system is a cipher of its own \u2014 records organised not by date or vessel but by a classification code that doesn't match any standard the client gave you."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:feature:workbench"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Workbench"
+        ],
+        [
+          "noun",
+          "workbench",
+          "bench",
+          "table"
+        ],
+        [
+          "verb",
+          "assemble",
+          "use"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:relay-coil",
+          "",
+          "You need a relay coil."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:power-cell",
+          "",
+          "You need a power cell."
+        ],
+        [
+          "on-interact",
+          "assemble",
+          "give-item",
+          "30078:<PUBKEY>:voidrun:item:signal-booster"
+        ],
+        [
+          "on-interact",
+          "assemble",
+          "consume-item",
+          "30078:<PUBKEY>:voidrun:item:relay-coil"
+        ],
+        [
+          "on-interact",
+          "assemble",
+          "consume-item",
+          "30078:<PUBKEY>:voidrun:item:power-cell"
+        ]
+      ],
+      "content": "A proper workbench: vise, tool rack, adequate light. Someone maintains this. The surface is clean."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:feature:market-noticeboard"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Market Noticeboard"
+        ],
+        [
+          "noun",
+          "noticeboard",
+          "notice",
+          "board",
+          "notices"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:market-notices"
+        ]
+      ],
+      "content": "A board covered in hand-printed notices. Jobs, warnings, things for sale that aren't listed anywhere official."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:feature:storage-manifest"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Wall Manifest"
+        ],
+        [
+          "noun",
+          "wall manifest",
+          "manifest",
+          "paper"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:cold-manifest"
+        ]
+      ],
+      "content": "A laminated cargo manifest. Dated two months ago. Shows Cold Storage as empty. The lamination is new. The data beneath it is not."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:clue:anonymous-client"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Anonymous Client"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "The job was posted from a dead relay \u2014 a relay that went offline in 2293. Someone is routing messages through a node that officially doesn't exist anymore. That's not a technical error. That's intentional infrastructure."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:clue:locker-label"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Locker Label"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "The locker has a faded stencil under Mira's hardware: PORT AUTHORITY \u2014 TECHNICAL EQUIPMENT. This was official kit. She acquired it through a channel that isn't listed on her trader's licence."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:clue:hull-scored"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Scored Hull"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "The scoring is too deliberate for salvage. Salvagers remove what's valuable. Someone removed what was *identifying*. There's a difference between stripping a hull and erasing it."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:clue:beacon-age"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Beacon Age"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "The beacon signal is thirty-one years old by emission signature. It has been pinging on a distress frequency. Thirty-one years on a distress frequency means nobody who could respond chose to. Or the people who could respond were the people it was distressing about."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:clue:cleared-berths"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Cleared Berths"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "One hundred and forty berths, cleared after the ship stopped. Whatever happened to the passengers, it wasn't an accident. Accidents leave mess. Whoever did this had time and a reason to be thorough."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:clue:recorder-data"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Flight Recorder Data"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          "The data resolves. A departure timestamp. Navigation logs truncated after six hours. The destination field: REDACTED."
+        ]
+      ],
+      "content": "Flight recorder output. Departure: 2291.047. Origin: Theta-9. Navigation log active for six hours and fourteen minutes after departure, then truncated. Destination field overwritten. Whatever the ship was heading for, someone removed it from the record after the fact \u2014 from inside the recorder, after it was already in the wreck."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:clue:terminal-index"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Terminal Classification Index"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "The archive classifies records by passenger contract type. Standard designations: CITIZEN, CONTRACTED, BONDED. There is a fourth designation in the index that doesn't appear in any public registry standard: INDENTURED. It has more records than the other three combined. The records are locked behind a classification code. The code is described only as 'the word for what we don't call it.'"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:clue:uplink-blinking"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Active Uplink"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "The uplink cable is active \u2014 there's a handshake signal at 0.3 second intervals. Someone on the other end is polling this terminal. Not querying it. Just checking if it's still there."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:clue:market-notices"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Market Notices"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "Most notices are ordinary. One isn't: a hand-printed card that reads LOOKING FOR RECORDS \u2014 GERRIKSON GX SERIES \u2014 ANY CONDITION \u2014 SERIOUS BUYER. No name. A relay address. The card is not new."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:clue:cold-manifest"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Cold Storage Log"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "The storage log shows an entry from three weeks ago: 47 units, CLASSIFIED CARGO, outbound transfer to relay point 9-ECHO. Signed by a port authority contractor \u2014 the signature matches Sable's transit ID. The laminated manifest on the wall was put up after that entry. It shows the space as empty. It was put up to cover the log."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:clue:cassian-angle"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Cassian's Offer"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "Cassian offered to help you access the archive through 'official channels' \u2014 meaning he would route the request through a guild liaison and you would receive a sanitised record, cleared for public access. That is: you would get the version of the truth the guild wants you to have. He didn't lie. That's exactly what he was offering."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:puzzle:recorder-cipher"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "puzzle-type",
+          "riddle"
+        ],
+        [
+          "answer-hash",
+          "5ec6d189de8a11b72374bc774a129bb3b6b159702441cb86adca9ab6816f8844"
+        ],
+        [
+          "salt",
+          "voidrun:puzzle:recorder-cipher:v1"
+        ],
+        [
+          "on-complete",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:voidrun:item:fragment-timestamp"
+        ],
+        [
+          "on-complete",
+          "",
+          "consume-item",
+          "30078:<PUBKEY>:voidrun:item:signal-booster"
+        ]
+      ],
+      "content": "The flight recorder data streams, partially corrupted. A timestamp field repeats in the noise: DEPARTURE \u2014 [YEAR].[DAY]. The year resolves clearly: 2291. The day field is fragmented. You have the flight log \u2014 find the departure day. Enter the full timestamp in format YYYY.DDD."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:puzzle:access-riddle"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "puzzle-type",
+          "riddle"
+        ],
+        [
+          "answer-hash",
+          "f05c2d30504399888654b1b34f70a797a31cdf5b3ed650872fc9cb383e21ecba"
+        ],
+        [
+          "salt",
+          "voidrun:puzzle:access-riddle:v1"
+        ],
+        [
+          "on-complete",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:voidrun:item:access-card"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "solved"
+        ]
+      ],
+      "content": "Sable looks at you for a long time. 'Prove you're licensed. Not by the authority \u2014 they don't license what you're actually doing. Prove you understand what you're walking into.' She slides a card across the counter, face down. 'What do you call a promise that was never meant to be kept, made to people who had no choice but to believe it?'"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:puzzle:class-riddle"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "puzzle-type",
+          "riddle"
+        ],
+        [
+          "answer-hash",
+          "29d53a913fc03f25a7125a960f63f9b05762abcce8179ec2ee25ba7871e653c6"
+        ],
+        [
+          "salt",
+          "voidrun:puzzle:class-riddle:v1"
+        ],
+        [
+          "on-complete",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:voidrun:item:fragment-class"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "solved"
+        ]
+      ],
+      "content": "The archive terminal prompts for the classification code. The index says: 'the word for what we don't call it.' The INDENTURED records are locked behind this word. Enter the classification."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:puzzle:manifest-key"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "puzzle-type",
+          "sequence"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:fragment-hull",
+          "",
+          "You need the hull registry fragment."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:fragment-timestamp",
+          "",
+          "You need the departure timestamp fragment."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:fragment-class",
+          "",
+          "You need the passenger class fragment."
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:manifest-unlocked"
+        ],
+        [
+          "on-complete",
+          "",
+          "traverse",
+          "30078:<PUBKEY>:voidrun:portal:manifest-to-archive"
+        ],
+        [
+          "salt",
+          "voidrun:puzzle:manifest-key:v1"
+        ],
+        [
+          "answer-hash",
+          "1883aa17ebe815eed73d156232bc304998bc720c24169ea47b15ab218dad257d"
+        ],
+        [
+          "salt",
+          "voidrun:puzzle:manifest-key:v1"
+        ],
+        [
+          "answer-hash",
+          "1883aa17ebe815eed73d156232bc304998bc720c24169ea47b15ab218dad257d"
+        ]
+      ],
+      "content": "Three fragments. The manifest is sealed with a derived key: SHA256 of hull registry + departure timestamp + passenger class, concatenated in that order, no separators. Combine what you know."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:clue:manifest-unlocked"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Manifest Decrypted"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          "The key resolves. The manifest opens."
+        ]
+      ],
+      "content": "The manifest decrypts."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:place:manifest-sealed"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "GX-7714 \u2014 Passenger Manifest"
+        ],
+        [
+          "state",
+          "sealed"
+        ],
+        [
+          "content-type",
+          "application/nip44",
+          "text/plain"
+        ],
+        [
+          "exit",
+          "close"
+        ],
+        [
+          "puzzle",
+          "voidrun:puzzle:manifest-key"
+        ]
+      ],
+      "content": "CARGO MANIFEST \u2014 GX-7714\nDEPARTURE: 2291.047, THETA-9\nPASSENGER CLASS: INDENTURED\nCONTRACT TYPE: LABOUR CONVEYANCE \u2014 INDEFINITE TERM\nDESTINATION: REDACTED\n\nPASSENGER LIST \u2014 140 NAMES:\n\n1. ARVEN, TASSEL \u2014 F \u2014 CONTRACT REF: IX-0041\n2. BREK, OSUMO \u2014 M \u2014 CONTRACT REF: IX-0042\n3. CALLIS, PREEN \u2014 F \u2014 CONTRACT REF: IX-0043\n4. DOVAN, RIKE \u2014 M \u2014 CONTRACT REF: IX-0044\n[...137 further entries...]\n\n---\nNOTE (handwritten, different ink):\nIf you are reading this, the key survived.\nThat means the fragments survived.\nThat means the ship survived.\nFind them.\n\u2014 K."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:npc:cassian"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Cassian"
+        ],
+        [
+          "noun",
+          "cassian",
+          "man",
+          "agent"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:voidrun:dialogue:cassian:greeting"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:voidrun:dialogue:cassian:after-archive",
+          "30078:<PUBKEY>:voidrun:place:archive-terminal-room",
+          "visited"
+        ],
+        [
+          "on-encounter",
+          "player",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:voidrun:clue:cassian-angle"
+        ]
+      ],
+      "content": "A man in a clean suit who has no visible reason to be in a transit node this far out. He is not doing nothing \u2014 he is doing nothing in a way that takes effort."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:npc:mira"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Mira"
+        ],
+        [
+          "noun",
+          "mira",
+          "woman",
+          "fence",
+          "trader"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:voidrun:dialogue:mira:greeting"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:voidrun:dialogue:mira:after-scanner",
+          "30078:<PUBKEY>:voidrun:item:contraband-scanner",
+          ""
+        ]
+      ],
+      "content": "A compact woman with a trader's stillness. She watches the docking ring entrance more than she watches her merchandise."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:npc:sable"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Sable"
+        ],
+        [
+          "noun",
+          "sable",
+          "contractor",
+          "woman",
+          "officer"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:voidrun:dialogue:sable:greeting"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:voidrun:dialogue:sable:after-solve",
+          "30078:<PUBKEY>:voidrun:puzzle:access-riddle",
+          "solved"
+        ]
+      ],
+      "content": "A woman who has been behind that counter long enough that the counter seems to belong to her more than the port authority ever did."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:npc:hektor"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Hektor"
+        ],
+        [
+          "noun",
+          "hektor",
+          "dealer",
+          "man",
+          "trader"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:voidrun:dialogue:hektor:greeting"
+        ]
+      ],
+      "content": "A broad man who moves components with the careful attention of someone who understands what they're worth. He has a scar on his left hand shaped like a hull breach seal \u2014 the kind you get pressing your hand against a failing airlock."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:cassian:greeting"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "He notices you noticing him. 'Signal tracer?' A pause. 'I can see the kit. I can also help \u2014 the archive has an official request pathway. Slower, but cleaner. Guild-verified records. No liability on your end.'"
+        ],
+        [
+          "option",
+          "Ask what his interest is",
+          "30078:<PUBKEY>:voidrun:dialogue:cassian:interest"
+        ],
+        [
+          "option",
+          "Ask about the official pathway",
+          "30078:<PUBKEY>:voidrun:dialogue:cassian:pathway"
+        ],
+        [
+          "option",
+          "Walk away",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:cassian:interest"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'I represent clients who have an interest in accurate records. Historical records. The kind that sometimes get... misfiled.' He says this as if it explains something. It does, but not what he intends it to."
+        ],
+        [
+          "option",
+          "Ask who his clients are",
+          "30078:<PUBKEY>:voidrun:dialogue:cassian:clients"
+        ],
+        [
+          "option",
+          "End conversation",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:cassian:clients"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'The same people who built this node.' He lets that sit. 'They've been good to the node. They'd like to remain so.'"
+        ],
+        [
+          "option",
+          "End conversation",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:cassian:pathway"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'I file the request, you get the record in seventy-two hours. Certified copy. Legally clean.' He is telling the truth. That is the worst thing about him."
+        ],
+        [
+          "option",
+          "Decline",
+          ""
+        ],
+        [
+          "option",
+          "Accept the offer",
+          "30078:<PUBKEY>:voidrun:dialogue:cassian:accept"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:cassian:accept"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'Good.' He files something on his handheld. 'Seventy-two hours. I'll find you.' He doesn't say what the record will contain. He doesn't have to. You understand, a few hours later, what 'certified copy' means here."
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "wiped",
+          "30078:<PUBKEY>:voidrun:item:case-file"
+        ],
+        [
+          "option",
+          "End conversation",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:cassian:after-archive"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "He looks at you without expression. 'You went around me.' It isn't a question. It isn't an accusation either. It's the tone of someone noting a fact for the record. 'Careful what you do with what you found.'"
+        ],
+        [
+          "option",
+          "End conversation",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:mira:greeting"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'You're not here to buy.' She looks at the case file if you're holding it. 'Job terminal job. Those always end badly. What do you need?'"
+        ],
+        [
+          "option",
+          "Ask about the equipment locker",
+          "30078:<PUBKEY>:voidrun:dialogue:mira:locker"
+        ],
+        [
+          "option",
+          "Ask about the node",
+          "30078:<PUBKEY>:voidrun:dialogue:mira:node"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:mira:locker"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'Port authority kit. I acquired it.' She doesn't elaborate. 'I'll trade the access. I had a scanner go missing in the wreck field three months ago. Compact unit, serial scratched off. Find it, bring it back, the locker's open to you.'"
+        ],
+        [
+          "option",
+          "Agree to find the scanner",
+          "30078:<PUBKEY>:voidrun:dialogue:mira:deal"
+        ],
+        [
+          "option",
+          "Ask why she wants it back",
+          "30078:<PUBKEY>:voidrun:dialogue:mira:why"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:mira:why"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'Because it has a job log on it that I'd prefer not to have read by whoever finds it first.'"
+        ],
+        [
+          "option",
+          "Agree to find the scanner",
+          "30078:<PUBKEY>:voidrun:dialogue:mira:deal"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:mira:deal"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'Good. Don't read the job log.'"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:mira:node"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'Used to be a transit hub. Before the lanes shifted. Now it's whatever people need it to be.' A pause. 'The guild owns the infrastructure. That means they own what the infrastructure sees. Keep that in mind.'"
+        ],
+        [
+          "option",
+          "Ask about the guild",
+          "30078:<PUBKEY>:voidrun:dialogue:mira:guild"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:mira:guild"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'The Interstellar Shipping Guilds. They've been here since before the node had a number. They'll be here after.' She moves something on her table. 'The wreck out there \u2014 that's a guild ship. Or was. Before it stopped being one.'"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:mira:after-scanner"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:contraband-scanner",
+          ""
+        ],
+        [
+          "text",
+          "She sees the scanner before you offer it. 'You found it.' She takes it, doesn't check the log in front of you. Slides a key across the table. 'Locker's yours.'"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ],
+        [
+          "on-enter",
+          "player",
+          "consequence",
+          "30078:<PUBKEY>:voidrun:consequence:mira-trade"
+        ],
+        [
+          "on-enter",
+          "player",
+          "consequence",
+          "30078:<PUBKEY>:voidrun:consequence:mira-trade"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:sable:greeting"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'Archive access requires a maintenance licence.' She doesn't look up. 'You don't have one. I can tell.' A pause. 'I might be able to help. If you can tell me what you're actually looking for and why it matters.'"
+        ],
+        [
+          "option",
+          "Tell her about the case",
+          "30078:<PUBKEY>:voidrun:dialogue:sable:case"
+        ],
+        [
+          "option",
+          "Ask what she already knows",
+          "30078:<PUBKEY>:voidrun:dialogue:sable:knows"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:sable:case"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "She listens. When you finish she is quiet for a moment. 'GX-7714. I wondered when someone would come asking.' Another pause. 'I've been the reason nobody could come asking for fifteen years. That's on me.' She straightens. 'I'll give you the card. But first you answer something for me.'"
+        ],
+        [
+          "option",
+          "Accept her terms",
+          "30078:<PUBKEY>:voidrun:dialogue:sable:riddle"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:sable:knows"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'I know that whatever's in that archive has been there for thirty years and nobody with the clearance to read it has wanted to.' Her voice is level. 'I know that three contractors before me found out what it was and left the node. I stayed.' No explanation of why."
+        ],
+        [
+          "option",
+          "Ask her to help",
+          "30078:<PUBKEY>:voidrun:dialogue:sable:case"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:sable:riddle"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "She slides the puzzle card across the counter."
+        ],
+        [
+          "option",
+          "Attempt the riddle",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:sable:after-solve"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'You got in.' She doesn't ask what you found. 'Whatever you do with it \u2014 that's yours. I've been sitting on it long enough.' She goes back to her paperwork. You understand she is not going to leave. She has decided that this is where she stays, and why."
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:hektor:greeting"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "He looks up. Waits."
+        ],
+        [
+          "option",
+          "Ask about relay coils",
+          "30078:<PUBKEY>:voidrun:dialogue:hektor:coil"
+        ],
+        [
+          "option",
+          "Ask about the node",
+          "30078:<PUBKEY>:voidrun:dialogue:hektor:node"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:hektor:coil"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'Old standard. Still works better than the new compression coils in deep field.' He moves one from a pile. '300 sats.' He doesn't barter. The price is the price."
+        ],
+        [
+          "option",
+          "Buy the coil",
+          "30078:<PUBKEY>:voidrun:dialogue:hektor:buy"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:hektor:buy"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "He hands you the coil. Transaction complete."
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ],
+        [
+          "on-enter",
+          "player",
+          "give-item",
+          "30078:<PUBKEY>:voidrun:item:relay-coil"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:hektor:node"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "A long pause. 'I don't talk about the node.' Another pause. 'The wreck has been out there the whole time I've been here. Twelve years. Nobody goes near it. Officially.' He looks at your kit. 'Unofficially, you'll need a booster for that recorder.'"
+        ],
+        [
+          "option",
+          "Ask how he knows about the recorder",
+          "30078:<PUBKEY>:voidrun:dialogue:hektor:knows"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:dialogue:hektor:knows"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "text",
+          "'I've been in the wreck. Once. Eight years ago. I left what I found there and I haven't been back.' He goes back to sorting components. End of conversation."
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:consequence:case-wiped"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "consequence"
+        ],
+        [
+          "set-state",
+          "wiped",
+          "30078:<PUBKEY>:voidrun:item:case-file"
+        ]
+      ],
+      "content": "The certified copy arrives seventy-two hours later. It shows GX-7714 as a standard cargo run, manifest filed and closed, no passengers. The original record in your case file has been replaced. You need to find a backup terminal if the job still matters to you."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:clue:storage-log"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Storage Log"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "The storage log entry: three weeks ago, 47 units, CLASSIFIED CARGO, outbound to relay point 9-ECHO. Signed by a port authority contractor. The signature matches Sable's transit ID. Whatever was here, she moved it. And then covered the log with a new manifest."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:sound:theta-ambient"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c2 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "6"
+        ],
+        [
+          "lpf",
+          "400"
+        ],
+        [
+          "room",
+          "0.6"
+        ],
+        [
+          "roomsize",
+          "4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:sound:static-crackle"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise"
+        ],
+        [
+          "lpf",
+          "1200"
+        ],
+        [
+          "hpf",
+          "300"
+        ],
+        [
+          "crush",
+          "8"
+        ],
+        [
+          "rand",
+          "0.05",
+          "0.2"
+        ],
+        [
+          "gain",
+          "0.3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:sound:dock-hum"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "g1 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "square"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "lpf",
+          "250"
+        ],
+        [
+          "gain",
+          "0.4"
+        ],
+        [
+          "room",
+          "0.5"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:consequence:mira-trade"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "consequence"
+        ],
+        [
+          "consume-item",
+          "30078:<PUBKEY>:voidrun:item:contraband-scanner"
+        ],
+        [
+          "give-item",
+          "30078:<PUBKEY>:voidrun:item:access-card"
+        ]
+      ],
+      "content": "Mira takes the scanner without ceremony. The locker key slides across the table."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:feature:fragment-combiner"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Data Decoder"
+        ],
+        [
+          "noun",
+          "decoder",
+          "data decoder",
+          "combiner"
+        ],
+        [
+          "verb",
+          "combine",
+          "use",
+          "decode"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:fragment-hull",
+          "",
+          "You need all three manifest fragments."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:fragment-timestamp",
+          "",
+          "You need all three manifest fragments."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:voidrun:item:fragment-class",
+          "",
+          "You need all three manifest fragments."
+        ],
+        [
+          "on-interact",
+          "combine",
+          "set-state",
+          "active",
+          "30078:<PUBKEY>:voidrun:puzzle:manifest-key"
+        ]
+      ],
+      "content": "A compact data decoder terminal bolted to the archive wall. It accepts fragment inputs and derives composite keys. The kind of tool that only exists because someone needed it to exist."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:sound:void-wind"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise"
+        ],
+        [
+          "lpf",
+          "300"
+        ],
+        [
+          "rand",
+          "0.03",
+          "0.15"
+        ],
+        [
+          "slow",
+          "5"
+        ],
+        [
+          "gain",
+          "0.5"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:sound:beacon-ping"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "a4 ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "attack",
+          "0.01"
+        ],
+        [
+          "sustain",
+          "0.08"
+        ],
+        [
+          "release",
+          "0.4"
+        ],
+        [
+          "room",
+          "0.8"
+        ],
+        [
+          "roomsize",
+          "7"
+        ],
+        [
+          "gain",
+          "0.6"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:sound:hull-creak"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise"
+        ],
+        [
+          "lpf",
+          "600"
+        ],
+        [
+          "crush",
+          "5"
+        ],
+        [
+          "rand",
+          "0.1",
+          "0.5"
+        ],
+        [
+          "degrade-by",
+          "0.4"
+        ],
+        [
+          "slow",
+          "6"
+        ],
+        [
+          "gain",
+          "0.4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:sound:life-support-ghost"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "e2 ~ eb2 ~"
+        ],
+        [
+          "oscillator",
+          "triangle"
+        ],
+        [
+          "slow",
+          "5"
+        ],
+        [
+          "lpf",
+          "500"
+        ],
+        [
+          "room",
+          "0.9"
+        ],
+        [
+          "roomsize",
+          "8"
+        ],
+        [
+          "gain",
+          "0.35"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:sound:authority-hum"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "f2 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "square"
+        ],
+        [
+          "slow",
+          "7"
+        ],
+        [
+          "lpf",
+          "350"
+        ],
+        [
+          "gain",
+          "0.3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:sound:terminal-hum"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "b3 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "square"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "lpf",
+          "800"
+        ],
+        [
+          "hpf",
+          "200"
+        ],
+        [
+          "gain",
+          "0.25"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:sound:market-noise"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise"
+        ],
+        [
+          "lpf",
+          "900"
+        ],
+        [
+          "hpf",
+          "150"
+        ],
+        [
+          "rand",
+          "0.08",
+          "0.25"
+        ],
+        [
+          "gain",
+          "0.4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:sound:machinery-idle"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c3 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sawtooth"
+        ],
+        [
+          "slow",
+          "5"
+        ],
+        [
+          "lpf",
+          "600"
+        ],
+        [
+          "shape",
+          "0.3"
+        ],
+        [
+          "gain",
+          "0.35"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:sound:cold-drone"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "d2 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "lpf",
+          "200"
+        ],
+        [
+          "room",
+          "0.7"
+        ],
+        [
+          "gain",
+          "0.4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "voidrun:portal:manifest-to-archive"
+        ],
+        [
+          "t",
+          "voidrun"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:manifest-sealed",
+          "back",
+          "Back to the archive room."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:voidrun:place:archive-terminal-room",
+          "open",
+          "The manifest."
+        ]
+      ],
+      "content": ""
+    }
+  ]
+}

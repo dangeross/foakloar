@@ -833,6 +833,38 @@ The output JSON has two top-level keys — `answers` and `events`. The `answers`
 
 For worlds with no NIP-44 sealed events, `answers` can be an empty object `{}` or omitted.
 
+### Walkthrough
+
+Every world should include a `walkthrough` — a sequence of commands that completes the world from start to finish. The walkthrough proves the world is solvable and that verbs, nouns, and puzzle answers all work as intended. It is optional for import/export but strongly recommended — worlds without a walkthrough cannot be automatically playtested.
+
+```json
+{
+  "answers": { ... },
+  "walkthrough": [
+    { "input": "examine journal", "expect": ["legible", "journal"] },
+    { "input": "north", "expect": ["Dark Cave"] },
+    { "input": "take lantern", "expect": ["Taken"] },
+    { "input": "examine paintings", "expect": ["serpent", "staff"] },
+    { "input": "answer bottle", "expect": ["correct", "solved"] },
+    { "input": "quests", "expect": ["Quest complete"] }
+  ],
+  "events": [ ... ]
+}
+```
+
+**Rules:**
+
+- The walkthrough must reach every quest completion and the win state (if there is one).
+- Every `input` is a command the player would type. Use natural phrasing — if the walkthrough needs obscure syntax, the world has a discoverability problem.
+- `expect` is an array of substrings that must appear somewhere in the game output after that command. Use key words from place titles, item names, puzzle responses, or narrative text. Keep expectations loose — match on distinctive words, not full sentences.
+- Include movement commands (`north`, `east`, etc.) to show the critical path through the world.
+- Include at least one `examine` for every key entity the player needs to interact with — this validates that nouns resolve correctly.
+- Include every puzzle answer and every required verb interaction.
+- If a command should NOT produce certain output, use `reject` instead of `expect`: `{ "input": "south", "reject": ["can't go"] }`.
+- The walkthrough should read like a spoiler-free guide — someone should be able to follow it and complete the world.
+
+**Why this matters:** LLM-authored worlds frequently have mismatches between noun tags and prose, undiscoverable verbs, or puzzles whose answers don't match their clues. The walkthrough catches these at authoring time, not after publishing.
+
 The `pubkey`, `id`, `sig`, and `created_at` fields are added by the FOAKLOAR client when signing.
 
 **Publishing order matters.** Publish in authoring order:
