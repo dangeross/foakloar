@@ -45,14 +45,16 @@ const handleStyle = { background: 'color-mix(in srgb, var(--colour-bg) 90%, var(
 function IssueLabel({ issues }) {
   if (!issues || issues.length === 0) return null;
   const hasError = issues.some((i) => i.level === 'error');
-  const colour = hasError ? 'var(--colour-error)' : 'var(--colour-npc)';
+  const hasWarning = issues.some((i) => i.level === 'warning');
+  const colour = hasError ? 'var(--colour-error)' : hasWarning ? 'var(--colour-npc)' : 'var(--colour-muted, #888)';
+  const prefix = hasError || hasWarning ? '!' : '💡';
   // Show first issue message, truncated
   const first = issues[0].message;
   const label = first.length > 30 ? first.substring(0, 28) + '...' : first;
   const suffix = issues.length > 1 ? ` +${issues.length - 1}` : '';
   return (
     <div style={{ color: colour, fontSize: '0.4rem', marginTop: 2, lineHeight: 1.2 }}>
-      ! {label}{suffix}
+      {prefix} {label}{suffix}
     </div>
   );
 }
@@ -160,7 +162,7 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode) {
 
   // Run cross-event validation and build d-tag → issues map
   const eventsArray = Array.from(events.values());
-  const { errors, warnings } = validateWorld(eventsArray);
+  const { errors, warnings, hints } = validateWorld(eventsArray, answers);
   const issuesByDTag = new Map();
   for (const e of errors) {
     if (!issuesByDTag.has(e.dTag)) issuesByDTag.set(e.dTag, []);
@@ -169,6 +171,10 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode) {
   for (const w of warnings) {
     if (!issuesByDTag.has(w.dTag)) issuesByDTag.set(w.dTag, []);
     issuesByDTag.get(w.dTag).push({ level: 'warning', ...w });
+  }
+  for (const h of (hints || [])) {
+    if (!issuesByDTag.has(h.dTag)) issuesByDTag.set(h.dTag, []);
+    issuesByDTag.get(h.dTag).push({ level: 'hint', ...h });
   }
 
   // Helper: get issues for an event by its a-tag ref
@@ -482,12 +488,12 @@ function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, 
           <div style={{ marginTop: 4, marginBottom: 4 }}>
             {issues.map((issue, i) => (
               <div key={i} style={{
-                color: issue.level === 'error' ? 'var(--colour-error)' : 'var(--colour-npc)',
+                color: issue.level === 'error' ? 'var(--colour-error)' : issue.level === 'warning' ? 'var(--colour-npc)' : 'var(--colour-muted, #888)',
                 fontSize: '0.5rem',
                 lineHeight: 1.3,
                 marginBottom: 1,
               }}>
-                ! {issue.message}
+                {issue.level === 'hint' ? '💡' : '!'} {issue.message}
               </div>
             ))}
           </div>

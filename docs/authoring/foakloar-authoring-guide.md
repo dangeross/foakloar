@@ -756,7 +756,7 @@ curl -X POST https://foakloar.vercel.app/api/validate \
 {
   "valid": false,
   "eventCount": 12,
-  "summary": { "errors": 1, "warnings": 2 },
+  "summary": { "errors": 1, "warnings": 2, "hints": 3 },
   "issues": [
     {
       "level": "error",
@@ -778,7 +778,12 @@ curl -X POST https://foakloar.vercel.app/api/validate \
 4. Re-validate until `"valid": true`
 5. Publish
 
-`valid: true` means zero errors. Warnings should be resolved but do not block publishing.
+`valid: true` means zero errors. Warnings and hints do not block publishing but should be addressed.
+
+**Issue severity levels:**
+- **error** — Must fix before publishing. Broken references, invalid tag shapes, missing required tags, hash mismatches.
+- **warning** — Should fix. Structural issues that may cause gameplay problems: verb collisions, dangling refs, missing nouns.
+- **hint** — Optional improvement for player experience. Thin noun aliases (only long compound names, no short alias), undiscoverable verbs (on-interact verb not hinted in any visible text).
 
 **What the validator checks:**
 - Missing or empty required tags
@@ -787,6 +792,8 @@ curl -X POST https://foakloar.vercel.app/api/validate \
 - NIP-44 encryption requirements
 - Puzzle type mismatches
 - Verb alias collisions between co-located entities
+- Noun alias discoverability (hint: add short aliases)
+- Verb discoverability (hint: mention custom verbs in visible text)
 - `on-complete` blank trigger-target
 - `on-counter` direction argument
 - Inline `requires` on exit tags (must be on the portal, not the place exit)

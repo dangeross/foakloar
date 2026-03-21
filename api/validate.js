@@ -124,7 +124,7 @@ async function validate(data) {
   }
 
   // ── Cross-event validation ──────────────────────────────────────────────
-  const { errors: crossErrors, warnings: crossWarnings, puzzlesToVerify } = validateWorld(events, answers);
+  const { errors: crossErrors, warnings: crossWarnings, hints: crossHints, puzzlesToVerify } = validateWorld(events, answers);
 
   for (const issue of crossErrors) {
     // Skip errors for declared external refs
@@ -143,6 +143,15 @@ async function validate(data) {
     const event = eventByDTag.get(issue.dTag);
     issues.push({
       level: 'warning',
+      eventType: event ? getTagValue(event, 'type') : null,
+      ...issue,
+    });
+  }
+
+  for (const issue of (crossHints || [])) {
+    const event = eventByDTag.get(issue.dTag);
+    issues.push({
+      level: 'hint',
       eventType: event ? getTagValue(event, 'type') : null,
       ...issue,
     });
@@ -170,12 +179,13 @@ async function validate(data) {
 
   const errorCount = cleanIssues.filter((i) => i.level === 'error').length;
   const warnCount = cleanIssues.filter((i) => i.level === 'warning').length;
+  const hintCount = cleanIssues.filter((i) => i.level === 'hint').length;
 
   return {
     valid: errorCount === 0,
     eventCount: events.length,
     externalRefs: externalRefs.length > 0 ? externalRefs.length : undefined,
-    summary: { errors: errorCount, warnings: warnCount },
+    summary: { errors: errorCount, warnings: warnCount, hints: hintCount },
     issues: cleanIssues,
   };
 }

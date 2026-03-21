@@ -274,3 +274,77 @@ describe('verifyPuzzleHashes', () => {
     expect(errors[0].message).toContain('Answer hash mismatch');
   });
 });
+
+// ── Hints: discoverability ────────────────────────────────────────────────────
+
+describe('validateWorld — hints', () => {
+  it('flags thin noun aliases', () => {
+    const place = makeEvent('test:place:start', 'place', [
+      ['title', 'Start'],
+      ['feature', ref('test:feature:mech')],
+    ], 'A room.');
+    const feature = makeEvent('test:feature:mech', 'feature', [
+      ['title', 'Mechanism'],
+      ['noun', 'orichalcum-mechanism'],
+    ], 'A mechanism.');
+    const { hints } = validateWorld([place, feature]);
+    expect(hints.some((h) => h.category === 'thin-noun' && h.dTag === 'test:feature:mech')).toBe(true);
+  });
+
+  it('no thin-noun hint when short alias exists', () => {
+    const place = makeEvent('test:place:start', 'place', [
+      ['title', 'Start'],
+      ['feature', ref('test:feature:mech')],
+    ], 'A room.');
+    const feature = makeEvent('test:feature:mech', 'feature', [
+      ['title', 'Mechanism'],
+      ['noun', 'orichalcum-mechanism', 'mechanism'],
+    ], 'A mechanism.');
+    const { hints } = validateWorld([place, feature]);
+    expect(hints.some((h) => h.category === 'thin-noun')).toBe(false);
+  });
+
+  it('flags undiscoverable verbs', () => {
+    const place = makeEvent('test:place:start', 'place', [
+      ['title', 'Start'],
+      ['feature', ref('test:feature:lever')],
+    ], 'A bare room.');
+    const feature = makeEvent('test:feature:lever', 'feature', [
+      ['title', 'Lever'],
+      ['noun', 'lever'],
+      ['verb', 'pull'],
+      ['on-interact', 'pull', 'set-state', ''],
+    ], 'A rusty lever.');
+    const { hints } = validateWorld([place, feature]);
+    expect(hints.some((h) => h.category === 'undiscoverable-verb' && h.message.includes('pull'))).toBe(true);
+  });
+
+  it('no undiscoverable-verb hint when text hints at verb', () => {
+    const place = makeEvent('test:place:start', 'place', [
+      ['title', 'Start'],
+      ['feature', ref('test:feature:lever')],
+    ], 'A bare room.');
+    const feature = makeEvent('test:feature:lever', 'feature', [
+      ['title', 'Lever'],
+      ['noun', 'lever'],
+      ['verb', 'pull'],
+      ['on-interact', 'pull', 'set-state', ''],
+    ], 'A rusty lever. You could try to pull it.');
+    const { hints } = validateWorld([place, feature]);
+    expect(hints.some((h) => h.category === 'undiscoverable-verb')).toBe(false);
+  });
+
+  it('skips common verbs for discoverability check', () => {
+    const place = makeEvent('test:place:start', 'place', [
+      ['title', 'Start'],
+      ['feature', ref('test:feature:chest')],
+    ], 'A room.');
+    const feature = makeEvent('test:feature:chest', 'feature', [
+      ['title', 'Chest'],
+      ['noun', 'chest'],
+      ['on-interact', 'examine', 'set-state', ''],
+    ], 'A wooden chest.');
+    const { hints } = validateWorld([place, feature]);
+    expect(hints.some((h) => h.category === 'undiscoverable-verb')).toBe(false);
+  });
+});

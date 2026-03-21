@@ -91,6 +91,7 @@ function inferTypeFromDTag(dTagStr) {
 export function validateWorld(events, answers = {}) {
   const errors = [];
   const warnings = [];
+  const hints = [];
   const { dTags, byDTag } = buildEventIndex(events);
 
   for (const event of events) {
@@ -269,7 +270,78 @@ export function validateWorld(events, answers = {}) {
     }
   }
 
-  // ── 6. Answer hash mismatch (sync check — collect for async verify) ────
+  // ── 6. Discoverability: thin noun aliases ──────────────────────────────
+  // Flag entities whose only noun aliases are long compound words
+  for (const event of events) {
+    const eventType = getTagValue(event, 'type');
+    if (!['feature', 'item', 'npc'].includes(eventType)) continue;
+    const dTag = getTagValue(event, 'd') || '?';
+    const title = getTagValue(event, 'title') || dTag;
+    const nouns = getTags(event, 'noun');
+    if (nouns.length === 0) continue;
+    const allAliases = nouns.flatMap((t) => t.slice(1));
+    const hasShortAlias = allAliases.some((a) => !a.includes('-') && !a.includes(' ') && a.length <= 12);
+    if (!hasShortAlias && allAliases.length > 0) {
+      hints.push({
+        dTag,
+        category: 'thin-noun',
+        message: `${title} only has long noun aliases [${allAliases.join(', ')}] — add a short alias for easier player input`,
+        fix: `Add a shorter alias to the noun tag, e.g. ["noun", "${allAliases[0]}", "${allAliases[0].split(/[-\s]/).pop()}"].`,
+      });
+    }
+  }
+
+  // ── 7. Discoverability: undiscoverable verbs ──────────────────────────
+  // Flag on-interact verbs not hinted in visible text at the same place
+  const COMMON_VERBS = new Set(['examine', 'take', 'pick up', 'get', 'drop', 'talk', 'attack', 'look', 'open', 'close', 'read', 'use', 'give']);
+  for (const event of events) {
+    if (getTagValue(event, 'type') !== 'place') continue;
+    const placeDTag = getTagValue(event, 'd') || '?';
+    const placeTitle = getTagValue(event, 'title') || placeDTag;
+
+    // Collect all visible text in the place
+    let placeText = (event.content || '').toLowerCase();
+    const entityRefs = [];
+    for (const type of ['feature', 'item', 'npc']) {
+      for (const tag of getTags(event, type)) {
+        const refDTag = extractDTagFromRef(tag[1]);
+        if (refDTag) entityRefs.push(refDTag);
+      }
+    }
+    for (const refDTag of entityRefs) {
+      const ent = byDTag.get(refDTag);
+      if (!ent) continue;
+      placeText += ' ' + (ent.content || '').toLowerCase();
+      for (const tt of getTags(ent, 'transition')) {
+        placeText += ' ' + (tt[3] || '').toLowerCase();
+      }
+    }
+
+    // Check each entity's on-interact verbs
+    const seenVerbs = new Set();
+    for (const refDTag of entityRefs) {
+      const ent = byDTag.get(refDTag);
+      if (!ent) continue;
+      const entTitle = getTagValue(ent, 'title') || refDTag;
+      for (const oi of getTags(ent, 'on-interact')) {
+        const verb = oi[1];
+        if (!verb || COMMON_VERBS.has(verb)) continue;
+        const key = `${refDTag}:${verb}`;
+        if (seenVerbs.has(key)) continue;
+        seenVerbs.add(key);
+        if (!placeText.includes(verb.toLowerCase())) {
+          hints.push({
+            dTag: refDTag,
+            category: 'undiscoverable-verb',
+            message: `${entTitle} has on-interact "${verb}" but no visible text in ${placeTitle} hints at this action`,
+            fix: `Add a mention of "${verb}" in the place description, the entity's content, or a transition text so players know this action is available.`,
+          });
+        }
+      }
+    }
+  }
+
+  // ── 8. Answer hash mismatch (sync check — collect for async verify) ────
   const puzzlesToVerify = [];
   for (const event of events) {
     const eventType = getTagValue(event, 'type');
@@ -282,7 +354,7 @@ export function validateWorld(events, answers = {}) {
     }
   }
 
-  return { errors, warnings, puzzlesToVerify };
+  return { errors, warnings, hints, puzzlesToVerify };
 }
 
 /**

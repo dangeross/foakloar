@@ -71,6 +71,13 @@ export default function DraftListPanel({
         map[id].warnings.push(issue);
       }
     }
+    for (const issue of (worldResult.hints || [])) {
+      const id = dTagToId[issue.dTag];
+      if (id && map[id]) {
+        if (!map[id].hints) map[id].hints = [];
+        map[id].hints.push(issue);
+      }
+    }
     return { map, puzzlesToVerify: worldResult.puzzlesToVerify || [], dTagToId };
   }, [drafts, worldSlug]);
 
@@ -108,11 +115,17 @@ export default function DraftListPanel({
               {smoke.issues.length === 0 && (
                 <div style={{ color: 'var(--colour-highlight)' }}>No issues found</div>
               )}
-              {smoke.issues.map((issue, i) => (
-                <div key={i} style={{ color: issue.type === 'unreachable' ? 'var(--colour-error)' : 'var(--colour-dim)' }}>
-                  {issue.type === 'unreachable' ? '✗' : '⚠'} {issue.message}
-                </div>
-              ))}
+              {smoke.issues.map((issue, i) => {
+                const isError = issue.type === 'unreachable';
+                const isHint = issue.type === 'thin-noun' || issue.type === 'undiscoverable-verb';
+                const colour = isError ? 'var(--colour-error)' : isHint ? 'var(--colour-muted, #888)' : 'var(--colour-dim)';
+                const icon = isError ? '✗' : isHint ? '💡' : '⚠';
+                return (
+                  <div key={i} style={{ color: colour }}>
+                    {icon} {issue.message}
+                  </div>
+                );
+              })}
             </div>
           )}
 
@@ -251,6 +264,9 @@ export default function DraftListPanel({
                 {validation.warnings?.map((warn, i) => (
                   <div key={`w${i}`} style={{ color: 'var(--colour-dim)' }}>⚠ {warn.message}</div>
                 ))}
+                {validation.hints?.map((hint, i) => (
+                  <div key={`h${i}`} style={{ color: 'var(--colour-muted, #666)' }}>💡 {hint.message}</div>
+                ))}
                 {isValid && !hasWarnings && (
                   <div style={{ color: 'var(--colour-highlight)' }}>✓ Ready to publish</div>
                 )}
@@ -289,6 +305,11 @@ export default function DraftListPanel({
                   }
                   for (const issue of worldResult.errors) {
                     validation.warnings.push(`⚠ ${issue.dTag}: ${issue.message}`);
+                  }
+                  // Surface hints separately
+                  if (!validation.hints) validation.hints = [];
+                  for (const issue of (worldResult.hints || [])) {
+                    validation.hints.push(`💡 ${issue.dTag}: ${issue.message}`);
                   }
                   setImportPreview({ validation, data });
                 } catch {
