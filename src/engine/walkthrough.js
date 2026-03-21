@@ -322,6 +322,69 @@ export async function smokeTest(events, configOverride) {
     }
   }
 
+  // ── Discoverability: thin noun aliases ──────────────────────────────────
+  // Flag entities whose only noun aliases are long compound words with no short form
+  for (const [placeRef, entities] of entitiesByPlace) {
+    const placeTitle = getTag(allPlaces.get(placeRef), 'title') || placeRef;
+    for (const { ref, event, tagName } of entities) {
+      const nouns = getTags(event, 'noun');
+      if (nouns.length === 0) continue;
+      const allAliases = nouns.flatMap((t) => t.slice(1));
+      const hasShortAlias = allAliases.some((a) => !a.includes('-') && !a.includes(' ') && a.length <= 12);
+      if (!hasShortAlias && allAliases.length > 0) {
+        const title = getTag(event, 'title') || ref;
+        issues.push({
+          type: 'thin-noun',
+          entity: title,
+          entityRef: ref,
+          place: placeTitle,
+          message: `${title} (${tagName}) only has long noun aliases [${allAliases.join(', ')}] — add a short alias for easier player input`,
+        });
+      }
+    }
+  }
+
+  // ── Discoverability: undiscoverable verbs ──────────────────────────────
+  // Flag on-interact verbs that aren't hinted in any nearby examine/content text
+  const COMMON_VERBS = new Set(['examine', 'take', 'pick up', 'get', 'drop', 'talk', 'attack', 'look', 'open', 'close', 'read', 'use', 'give']);
+  for (const [placeRef, entities] of entitiesByPlace) {
+    const placeTitle = getTag(allPlaces.get(placeRef), 'title') || placeRef;
+    // Collect all text visible in the place (place content + entity contents + transitions)
+    const placeEvent = allPlaces.get(placeRef);
+    let placeText = (placeEvent?.content || '').toLowerCase();
+    for (const { event: ent } of entities) {
+      placeText += ' ' + (ent.content || '').toLowerCase();
+      // Include transition text
+      for (const tt of getTags(ent, 'transition')) {
+        placeText += ' ' + (tt[3] || '').toLowerCase();
+      }
+    }
+
+    const seenVerbsByEntity = new Set(); // dedup entity+verb combos
+    for (const { ref, event } of entities) {
+      const onInteracts = getTags(event, 'on-interact');
+      const title = getTag(event, 'title') || ref;
+      for (const oi of onInteracts) {
+        const verb = oi[1];
+        if (!verb || COMMON_VERBS.has(verb)) continue;
+        const key = `${ref}:${verb}`;
+        if (seenVerbsByEntity.has(key)) continue;
+        seenVerbsByEntity.add(key);
+        const verbLower = verb.toLowerCase();
+        if (!placeText.includes(verbLower)) {
+          issues.push({
+            type: 'undiscoverable-verb',
+            entity: title,
+            entityRef: ref,
+            place: placeTitle,
+            verb,
+            message: `${title} has on-interact "${verb}" but no visible text in ${placeTitle} hints at this action`,
+          });
+        }
+      }
+    }
+  }
+
   const coverage = {
     placesReachable: reachable.length,
     placesTotal: allPlaces.size,

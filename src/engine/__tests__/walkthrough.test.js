@@ -175,4 +175,70 @@ describe('smokeTest', () => {
     const result = await smokeTest(events);
     expect(result.issues[0].message).toContain('No world event');
   });
+
+  it('flags thin noun aliases (only long compound names)', async () => {
+    const world = makeWorld();
+    const longNoun = makeFeature('mechanism', {
+      nouns: [['orichalcum-mechanism']],
+      content: 'A strange mechanism.',
+    });
+    const start = makePlace('start', { features: [`${WORLD}:feature:mechanism`] });
+    const events = buildEvents(world, start, longNoun);
+    const result = await smokeTest(events);
+    expect(result.issues.some((i) => i.type === 'thin-noun' && i.entity === 'Mechanism')).toBe(true);
+  });
+
+  it('no thin-noun warning when short alias exists', async () => {
+    const world = makeWorld();
+    const goodNoun = makeFeature('mechanism', {
+      nouns: [['orichalcum-mechanism', 'mechanism']],
+      content: 'A strange mechanism.',
+    });
+    const start = makePlace('start', { features: [`${WORLD}:feature:mechanism`] });
+    const events = buildEvents(world, start, goodNoun);
+    const result = await smokeTest(events);
+    expect(result.issues.some((i) => i.type === 'thin-noun')).toBe(false);
+  });
+
+  it('flags undiscoverable verbs not hinted in visible text', async () => {
+    const world = makeWorld();
+    const lever = makeFeature('lever', {
+      nouns: [['lever']],
+      verbs: [['pull']],
+      onInteract: [['pull', 'set-state', '']],
+      content: 'A rusty lever.',  // no mention of "pull"
+    });
+    const start = makePlace('start', { features: [`${WORLD}:feature:lever`] });
+    start.content = 'A bare room.'; // no hint to pull
+    const events = buildEvents(world, start, lever);
+    const result = await smokeTest(events);
+    expect(result.issues.some((i) => i.type === 'undiscoverable-verb' && i.verb === 'pull')).toBe(true);
+  });
+
+  it('no undiscoverable-verb warning when text hints at the verb', async () => {
+    const world = makeWorld();
+    const lever = makeFeature('lever', {
+      nouns: [['lever']],
+      verbs: [['pull']],
+      onInteract: [['pull', 'set-state', '']],
+      content: 'A rusty lever. You could try to pull it.',
+    });
+    const start = makePlace('start', { features: [`${WORLD}:feature:lever`] });
+    const events = buildEvents(world, start, lever);
+    const result = await smokeTest(events);
+    expect(result.issues.some((i) => i.type === 'undiscoverable-verb')).toBe(false);
+  });
+
+  it('skips common verbs like examine and attack for discoverability', async () => {
+    const world = makeWorld();
+    const chest = makeFeature('chest', {
+      nouns: [['chest']],
+      onInteract: [['examine', 'set-state', '']],
+      content: 'A wooden chest.',
+    });
+    const start = makePlace('start', { features: [`${WORLD}:feature:chest`] });
+    const events = buildEvents(world, start, chest);
+    const result = await smokeTest(events);
+    expect(result.issues.some((i) => i.type === 'undiscoverable-verb')).toBe(false);
+  });
 });
