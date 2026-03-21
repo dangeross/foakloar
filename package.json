@@ -6,8 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "publish": "node tools/publish-world.mjs",
-    "verify": "node tools/publish-world.mjs --verify",
     "test": "vitest run",
     "test:watch": "vitest"
   },
