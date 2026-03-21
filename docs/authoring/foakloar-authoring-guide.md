@@ -852,6 +852,8 @@ Every world should include a `walkthrough` — a sequence of commands that compl
     { "input": "north", "expect": ["Dark Cave"] },
     { "input": "take lantern", "expect": ["Taken"] },
     { "input": "examine paintings", "expect": ["serpent", "staff"] },
+    { "input": "talk hermit", "expect": ["wanderer"] },
+    { "input": "1", "expect": ["cave", "blessing"] },
     { "input": "answer bottle", "expect": ["correct", "solved"] },
     { "input": "quests", "expect": ["Quest complete"] }
   ],
@@ -863,6 +865,7 @@ Every world should include a `walkthrough` — a sequence of commands that compl
 
 - The walkthrough must reach every quest completion and the win state (if there is one).
 - Every `input` is a command the player would type. Use natural phrasing — if the walkthrough needs obscure syntax, the world has a discoverability problem.
+- **Dialogue options are selected by number, not by text.** When an NPC presents options like `[1] Ask about the cave  [2] Leave`, the input is `"1"`, not `"Ask about the cave"`. Match the option index, not the option text.
 - `expect` is an array of substrings that must appear somewhere in the game output after that command. Use key words from place titles, item names, puzzle responses, or narrative text. Keep expectations loose — match on distinctive words, not full sentences.
 - Include movement commands (`north`, `east`, etc.) to show the critical path through the world.
 - Include at least one `examine` for every key entity the player needs to interact with — this validates that nouns resolve correctly.
