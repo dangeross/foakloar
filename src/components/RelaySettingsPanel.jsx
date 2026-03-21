@@ -17,7 +17,7 @@ export default function RelaySettingsPanel({
   nip65Read = [],     // from NIP-65
   nip65Write = [],    // from NIP-65
   onClose,
-  onCustomChange,     // called after adding/removing custom relay
+  onRelayChange,      // (action: 'add'|'remove', url: string) => void — live connect/disconnect
 }) {
   const [customRelays, setCustomRelays] = useState(() => getCustomRelays(worldSlug));
   const [newRelay, setNewRelay] = useState('');
@@ -93,14 +93,14 @@ export default function RelaySettingsPanel({
     setCustomRelays(updated);
     saveCustomRelays(worldSlug, updated);
     setNewRelay('');
-    onCustomChange?.();
+    onRelayChange?.('add', url);
   }
 
   function removeCustom(url) {
     const updated = customRelays.filter((r) => r !== url);
     setCustomRelays(updated);
     saveCustomRelays(worldSlug, updated);
-    onCustomChange?.();
+    onRelayChange?.('remove', url);
   }
 
   return (

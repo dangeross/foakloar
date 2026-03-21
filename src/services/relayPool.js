@@ -190,6 +190,16 @@ export class RelayPool {
     return this.#relays.size;
   }
 
+  /** Disconnect a single relay by URL. */
+  disconnect(url) {
+    const relay = this.#relays.get(url);
+    if (relay) {
+      try { relay.close(); } catch {}
+      this.#relays.delete(url);
+    }
+    this.#status.delete(url);
+  }
+
   /** Close all relay connections. */
   close() {
     for (const [url, relay] of this.#relays) {

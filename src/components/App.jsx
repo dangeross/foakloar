@@ -100,7 +100,7 @@ export default function App() {
   const worldTag = route.worldSlug;
 
   // ── Core hooks (worldTag-scoped) ─────────────────────────────────────────
-  const { events, status, pool, relayStatus, publishUrls } = useRelay(worldTag);
+  const { events, status, pool, relayStatus, publishUrls, updateRelays } = useRelay(worldTag);
   const player = usePlayerState(worldTag);
   const identity = useSigner();
   const nip65 = useNip65(identity?.pubkey, pool);
@@ -614,6 +614,7 @@ export default function App() {
           worldRelays={worldConfig?.worldEvent?.tags?.filter((t) => t[0] === 'relay').map((t) => t[1]) || []}
           nip65Read={nip65.readRelays}
           nip65Write={nip65.writeRelays}
+          onRelayChange={updateRelays}
           onClose={() => setShowRelaySettings(false)}
         />
       )}

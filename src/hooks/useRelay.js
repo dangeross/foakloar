@@ -153,5 +153,26 @@ export function useRelay(worldTag) {
     })();
   }, [events, status, worldTag, handleEvent]);
 
-  return { events, status, pool: poolRef, relayStatus, publishUrls };
+  // Add or remove a relay dynamically (called from RelaySettingsPanel)
+  const updateRelays = useCallback(async (action, url) => {
+    const pool = poolRef.current;
+    if (!pool) return;
+
+    if (action === 'add') {
+      await pool.connect([url]);
+      // Subscribe the new relay to the world filter
+      if (pool.connectionStatus.get(url) === 'connected') {
+        pool.subscribe(
+          [{ kinds: [30078], '#t': [worldTag] }],
+          { onevent: handleEvent },
+        );
+      }
+    } else if (action === 'remove') {
+      pool.disconnect(url);
+    }
+
+    setRelayStatus(new Map(pool.connectionStatus));
+  }, [worldTag, handleEvent]);
+
+  return { events, status, pool: poolRef, relayStatus, publishUrls, updateRelays };
 }
