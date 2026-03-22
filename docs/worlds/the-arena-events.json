@@ -17,7 +17,7 @@
         ["tag",           "traverse"],
         ["tag",           "counters"],
         ["start",         "30078:<PUBKEY>:arena:place:entrance"],
-        ["relay",         "wss://relay.damus.io"],
+        ["relay",         "wss://relay.primal.net"],
         ["collaboration", "closed"],
         ["theme",         "blood-red"],
         ["effects",       "crt"],

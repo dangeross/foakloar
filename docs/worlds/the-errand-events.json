@@ -15,7 +15,7 @@
         ["tag",           "test"],
         ["tag",           "quest"],
         ["start",         "30078:<PUBKEY>:errand:place:village-square"],
-        ["relay",         "wss://relay.damus.io"],
+        ["relay",         "wss://relay.primal.net"],
         ["collaboration", "closed"],
         ["theme",         "parchment"],
         ["effects",       "clean"],

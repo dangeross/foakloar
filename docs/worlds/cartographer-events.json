@@ -1,0 +1,7680 @@
+{
+  "answers": {
+    "cartographer:puzzle:first-record-complete": "RECORD",
+    "cartographer:puzzle:first-record-protect": "PROTECT",
+    "cartographer:puzzle:vael-cache": "AZIMUTH",
+    "cartographer:puzzle:cairn-sequence": "CONFLUENCE"
+  },
+  "events": [
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:world"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "The Place That Remembers"
+        ],
+        [
+          "author",
+          "FOAKLOAR"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "exploration"
+        ],
+        [
+          "tag",
+          "mystery"
+        ],
+        [
+          "tag",
+          "moral-choice"
+        ],
+        [
+          "tag",
+          "cartography"
+        ],
+        [
+          "cw",
+          "mild-peril"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:cartographer:place:valley-entrance"
+        ],
+        [
+          "relay",
+          "wss://relay.primal.net"
+        ],
+        [
+          "collaboration",
+          "closed"
+        ],
+        [
+          "theme",
+          "parchment"
+        ],
+        [
+          "colour",
+          "text",
+          "#2c1e0f"
+        ],
+        [
+          "colour",
+          "dim",
+          "#7a6048"
+        ],
+        [
+          "colour",
+          "title",
+          "#4a2c0a"
+        ],
+        [
+          "colour",
+          "clue",
+          "#1a3a2a"
+        ],
+        [
+          "colour",
+          "error",
+          "#8b1a1a"
+        ],
+        [
+          "colour",
+          "item",
+          "#3a2800"
+        ],
+        [
+          "colour",
+          "npc",
+          "#1a2e3a"
+        ],
+        [
+          "colour",
+          "puzzle",
+          "#2a1a3a"
+        ],
+        [
+          "font",
+          "serif"
+        ],
+        [
+          "cursor",
+          "underline"
+        ],
+        [
+          "effects",
+          "typewriter"
+        ],
+        [
+          "bpm",
+          "52"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:world-breath",
+          "ambient",
+          "0.3"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "The valley has no name on any map.\n\nThat is not an accident.\n\nYou are four days in. Your compass has been unreliable since day two. You have recorded this in your field notes as *observer error, possible heat exhaustion*, because the alternative is not something a working cartographer can afford to believe.\n\nSomething found you on the third morning and decided to trust you.\n\nYou are going to find out what that costs."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:valley-entrance"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Valley Entrance"
+        ],
+        [
+          "noun",
+          "entrance",
+          "valley mouth",
+          "threshold"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:expedition-camp",
+          "north",
+          "The camp is an hour north, where the tree line thickens."
+        ],
+        [
+          "exit",
+          "south",
+          "The way back. Two weeks of travel. You didn't come this far to turn around."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:survey-marker"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:old-warning"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:cartographer:item:survey-kit"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visited",
+          "30078:<PUBKEY>:cartographer:place:valley-entrance"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:threshold-drone",
+          "ambient",
+          "0.5"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "The valley announces itself as a wall of green so dense it reads as solid. There is a gap — barely — where a previous survey party cut through and didn't bother to mark properly. You found it because you were looking for exactly this kind of carelessness. Someone else's failure to be thorough.\n\nYour survey kit is where you left it, beside the marker stone. The work starts here."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:expedition-camp"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Expedition Camp"
+        ],
+        [
+          "noun",
+          "camp",
+          "tent",
+          "base"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:valley-entrance",
+          "south",
+          "Back to the valley entrance."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:river-crossing",
+          "north",
+          "The river crossing is visible through the trees."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:vaels-cache",
+          "east",
+          "Something catches your eye — a line too straight to be natural."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:field-notes"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:damaged-compass"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:cartographer:npc:asha"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:camp-stillness",
+          "ambient",
+          "0.4"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "A clearing barely large enough to call one. Your tent, your equipment cases, the cold remains of last night's fire. The kind of camp you make when you're planning to be somewhere else soon.\n\nAsha is here. She arrived before you woke, as she has every morning since the third day. She doesn't explain how. She sits with the patience of someone who has been waiting for much longer than this particular morning."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:vaels-cache"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Vael's Cache"
+        ],
+        [
+          "noun",
+          "cache",
+          "crate",
+          "supplies",
+          "vael"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:expedition-camp",
+          "west",
+          "Back to camp."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:supply-crate"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:vaels-notes"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:vael-is-close"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:camp-stillness",
+          "ambient",
+          "0.3"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "Hidden badly — the kind of badly that suggests Vael didn't expect anyone competent to be looking. Three supply crates stacked against a tree that has a blaze mark cut into it at eye height. The blaze faces west. He's oriented toward the interior.\n\nHe's closer than you thought."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:river-crossing"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "River Crossing"
+        ],
+        [
+          "noun",
+          "river",
+          "crossing",
+          "ford",
+          "water"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:expedition-camp",
+          "south",
+          "Back to camp."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:canopy-floor",
+          "north",
+          "The canopy closes in beyond the river."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:river-cairn"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:current-gauge"
+        ],
+        [
+          "on-enter",
+          "player",
+          "deal-damage",
+          "3"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:river-rush",
+          "ambient",
+          "0.6"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "The river is fast and cold and about chest-deep at the safest point. You crossed it three days ago going in and it cost you. The cold gets into you before you're halfway and doesn't leave for hours.\n\nThere is a cairn on the near bank that you didn't build. It's old. Someone marked this crossing deliberately.\n\n*The crossing damages you each time. Plan accordingly.*"
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:canopy-floor"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Canopy Floor"
+        ],
+        [
+          "noun",
+          "canopy",
+          "floor",
+          "jungle",
+          "interior"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:river-crossing",
+          "south",
+          "Back to the river."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:cairn-field",
+          "north",
+          "The terrain opens slightly — a clearing of some kind ahead."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:the-ridge",
+          "east",
+          "The ground rises sharply to the east."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:compass-anomaly"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:root-system"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:cartographer:npc:vael"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:canopy-drone",
+          "ambient",
+          "0.6"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:valley-pulse",
+          "layer",
+          "0.2"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "The sky disappears here. The canopy closes thirty metres up and the light that reaches the floor is green and diffuse and sourceless — it could be any time of day. Your compass needle moves without provocation. You've stopped trusting it and started trusting the moss, the slope of the ground, the way sound behaves differently to the north.\n\nYou are not alone here. The valley has a quality of attention that you have no clinical term for and have stopped trying to find one."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:cairn-field"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Cairn Field"
+        ],
+        [
+          "noun",
+          "cairn",
+          "field",
+          "stones",
+          "markers"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:canopy-floor",
+          "south",
+          "Back into the canopy."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:ashas-place",
+          "west",
+          "A path worn by regular use leads west."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:central-cairn"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:outer-cairns"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:survey-platform"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:cartographer:item:plumb-line"
+        ],
+        [
+          "puzzle",
+          "30078:<PUBKEY>:cartographer:puzzle:cairn-sequence"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:canopy-drone",
+          "ambient",
+          "0.5"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:first-record-theme",
+          "layer",
+          "0.3"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "Forty-three cairns in a pattern that is not random and is not decorative and is not any surveying convention you were taught. They range from knee-height to twice your height. Some are old enough that trees have grown around them. Some look recent.\n\nYour instruments want to tell you things about this place and you are not sure you're reading them correctly. The central cairn is different from the others. Everything in this field points at it."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:ashas-place"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Asha's Place"
+        ],
+        [
+          "noun",
+          "asha",
+          "shelter",
+          "kael-sura",
+          "home"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:cairn-field",
+          "east",
+          "Back to the cairn field."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:kael-sura-map"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:memory-stones"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:cartographer:npc:asha"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:trust-warmth",
+          "ambient",
+          "0.4"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "A structure that has grown rather than been built — woven into the living canopy over decades, additions accreted as need required. It is the most comfortable place you have found in four days and you do not say this out loud because comfort feels like the wrong thing to acknowledge here.\n\nThe walls hold things: tools, dried plants, and a cartographic record unlike anything in any archive you have studied. The Kael-Sura have been mapping this valley for longer than your discipline has existed."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:the-ridge"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Ridge"
+        ],
+        [
+          "noun",
+          "ridge",
+          "high ground",
+          "viewpoint"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:canopy-floor",
+          "west",
+          "Back down into the canopy."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:drowned-survey",
+          "north",
+          "The ground descends steeply on the far side — and then drops further."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:ridge-survey"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:bearing-stones"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:ridge-wind",
+          "ambient",
+          "0.5"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:valley-pulse",
+          "layer",
+          "0.25"
+        ],
+        [
+          "bpm",
+          "46"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "The canopy breaks here and for the first time in days you can see sky. The valley spreads below you — much larger than your current map suggests, and differently shaped. What you thought was the valley floor is a shelf. The real interior is lower, older, darker.\n\nThere are bearing stones along the ridge crest. Cut, positioned, deliberate. They are oriented toward something specific in the interior that you cannot yet see from here.\n\nYour compass works on the ridge. You have written this down twice."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:drowned-survey"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Drowned Survey"
+        ],
+        [
+          "noun",
+          "drowned survey",
+          "ruins",
+          "previous expedition",
+          "wreckage"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:the-ridge",
+          "south",
+          "Back up to the ridge."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:upper-caves",
+          "north",
+          "A low entrance in the rock face, mostly hidden by growth."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:expedition-remains"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:lost-survey"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:vael-evidence"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visited",
+          "30078:<PUBKEY>:cartographer:place:drowned-survey"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:dread-low",
+          "ambient",
+          "0.6"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:first-record-theme",
+          "layer",
+          "0.2"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "Someone came here before you. They came prepared, they came professional, and they did not come back out.\n\nThe equipment is expensive and rotting — two seasons in this humidity. The field notes are partially legible. They got further than you would have expected given what they apparently understood about where they were going, which was: almost nothing.\n\nVael has been here. Recently. He took some of the notes."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:upper-caves"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Upper Caves"
+        ],
+        [
+          "noun",
+          "caves",
+          "upper caves",
+          "dark",
+          "rock"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:drowned-survey",
+          "south",
+          "Back to the drowned survey site."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:stone-gallery",
+          "down",
+          "The cave descends. The air changes."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:npc:asha",
+          "trusting",
+          "You stand at the cave entrance. Something stops you — not fear, something more considered. You have the feeling that going in alone would be the wrong kind of wrong. Asha would know the way through."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:cave-markings"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:acoustic-chamber"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:cave-deep",
+          "ambient",
+          "0.7"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:first-record-theme",
+          "layer",
+          "0.35"
+        ],
+        [
+          "bpm",
+          "40"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "The cave entrance is almost invisible — growth has reclaimed it to within a body-width of passable. Inside: darkness that adjusts slowly, and markings on every surface. Not pictographs. Not decoration. Survey notation in a system you have never seen, so dense and precise it stops your breath.\n\nThe Kael-Sura have been mapping the interior of this cave for as long as they have been mapping the valley above it. The map goes down."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:stone-gallery"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Stone Gallery"
+        ],
+        [
+          "noun",
+          "gallery",
+          "stone gallery",
+          "chamber",
+          "record"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:upper-caves",
+          "up",
+          "Back to the upper caves."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:river-source",
+          "north",
+          "The gallery narrows and the air becomes wet."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:gallery-walls"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:central-pillar"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:gallery-resonance",
+          "ambient",
+          "0.7"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:first-record-full",
+          "layer",
+          "0.5"
+        ],
+        [
+          "bpm",
+          "38"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "The gallery is vast enough that your lamp doesn't reach the ceiling. The walls are continuous survey notation — the same system as above, but here complete, coherent, layered over centuries of addition. Your hands move to your instruments before your mind has caught up.\n\nThis is the First Record. Not a metaphor, not an archive. A living survey of a living place, updated by generation after generation of Kael-Sura cartographers who understood that the most durable document is one that never stops being written.\n\nYou are the first outsider to read it. You can feel the weight of that."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:river-source"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The River Source"
+        ],
+        [
+          "noun",
+          "source",
+          "spring",
+          "origin",
+          "water"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:stone-gallery",
+          "south",
+          "Back to the stone gallery."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:auric-chamber",
+          "north",
+          "The passage widens into something larger."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:spring-basin"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:source-inscription"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:cartographer:item:water-sample"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:gallery-resonance",
+          "ambient",
+          "0.6"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:spring-drops",
+          "layer",
+          "0.4"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "The river begins here. Not from rainfall, not from snowmelt — from the rock itself, from a fissure that has been producing the same flow for longer than the valley has had people in it. The Kael-Sura know this. It is the first sentence of the First Record.\n\nThe inscription around the basin is not notation. It is the only part of the First Record written in language rather than survey marks. You can read fragments of it. The fragments are enough to understand what the Auric Stones actually are.\n\nYou sit with this for a moment."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:auric-chamber"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Auric Chamber"
+        ],
+        [
+          "noun",
+          "auric chamber",
+          "chamber",
+          "stones",
+          "auric"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:river-source",
+          "south",
+          "Back to the river source."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:sealed-record",
+          "west",
+          "A passage to the west, sealed with something that isn't stone."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:sealed-silence",
+          "east",
+          "A passage to the east, sealed with something that isn't stone."
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:auric-stones"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographer:feature:choice-inscription"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:cartographer:npc:vael-final"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:auric-weight",
+          "ambient",
+          "0.8"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:first-record-full",
+          "layer",
+          "0.6"
+        ],
+        [
+          "bpm",
+          "34"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "The Auric Stones are not golden. They are amber — geological amber, older than anything with eyes — and they are arranged in a configuration that completes the First Record the way a full stop completes a sentence. Remove them and the sentence becomes a question with no answer. Remove them and the river source loses the only index that tells the valley where it is in relation to itself.\n\nVael is here. He has been here long enough to understand most of this. He is looking at the stones with an expression you have only seen on people who have just understood that they want something they cannot have without becoming someone they hadn't planned to be.\n\nHe looks at you. You both know what the other knows. The valley is quiet in a way that feels like listening."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:sealed-record"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Map That Was Made"
+        ],
+        [
+          "noun",
+          "record",
+          "map",
+          "document"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:auric-chamber",
+          "east",
+          "Back to the chamber."
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:record-resolution",
+          "ambient",
+          "0.7"
+        ],
+        [
+          "content-type",
+          "application/nip44",
+          "text/markdown"
+        ]
+      ],
+      "content": "# The Map That Was Made\n\nYou published it.\n\nThe First Record is now in the cartographic literature — translated, annotated, cross-referenced. The valley has coordinates. The Auric Stones are in a secure collection. The Kael-Sura have been contacted by three university departments and a heritage foundation and they are navigating this with the careful exhaustion of people who expected it and had hoped to be wrong.\n\nYour map is accurate. It is the best work of your career. It will be cited for decades.\n\nAsha has not responded to your letters. You did not expect her to. You write them anyway, because you are not sure what else to do with the knowledge that you made the right professional decision and the wrong human one, and that these are sometimes the same decision and this was one of those times.\n\nThe valley is on the map now. You put it there. You were the best person who could have done it, which means you were also the person who should have known not to.\n\nYou are already looking at the next survey. The work doesn't stop. You have learned to be grateful for that.\n\n*You made the map. The valley is known. You will wonder, for the rest of your career, whether known was what it needed to be.*"
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:place:sealed-silence"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Map That Was Not Made"
+        ],
+        [
+          "noun",
+          "silence",
+          "decision",
+          "unmade"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:auric-chamber",
+          "west",
+          "Back to the chamber."
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:protect-stillness",
+          "ambient",
+          "0.5"
+        ],
+        [
+          "content-type",
+          "application/nip44",
+          "text/markdown"
+        ]
+      ],
+      "content": "# The Map That Was Not Made\n\nYou walked out with nothing written down.\n\nYour field notes from the interior describe rock formations, moisture levels, unreliable instrument readings. Nothing that would tell anyone where to go or what they would find. You cited equipment failure, difficult terrain, inconclusive results. Your professional reputation absorbed it. People who know your work raised an eyebrow. You let them.\n\nVael filed a competing expedition report six months later. It was credible and almost entirely wrong — he understood what the Stones were worth but not what they were for, and his navigation notes had enough errors that no one who followed them would find the chamber. You read it carefully and did not correct it.\n\nAsha sent you something. Not a letter — a small stone, smoothed by the river, with a single mark on it that you recognise from the First Record. You looked it up. It means, approximately: *the water remembers the path even when the path is not visible.*\n\nYou keep it on your desk. You do not explain it to anyone.\n\nYou still do cartography. You are still good at it. You have simply become the kind of cartographer who knows that some places are described most accurately by the decision not to describe them.\n\nThe valley has no name on any map.\n\n*That is not an accident. You made sure of it.*"
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:entrance-to-camp"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:expedition-camp",
+          "south",
+          "Back to the valley entrance."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:valley-entrance",
+          "north",
+          "The camp is an hour north."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:camp-to-cache"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:vaels-cache",
+          "west",
+          "Back to camp."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:expedition-camp",
+          "east",
+          "Something too straight to be natural."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:camp-to-river"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:river-crossing",
+          "south",
+          "Back to camp."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:expedition-camp",
+          "north",
+          "The river crossing through the trees."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:river-to-canopy"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:canopy-floor",
+          "south",
+          "Back to the river."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:river-crossing",
+          "north",
+          "Into the canopy."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:canopy-to-cairns"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:cairn-field",
+          "south",
+          "Back into the canopy."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:canopy-floor",
+          "north",
+          "A clearing ahead."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:canopy-to-ridge"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:the-ridge",
+          "west",
+          "Back into the canopy."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:canopy-floor",
+          "east",
+          "The ground rises to the east."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:cairns-to-asha"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:ashas-place",
+          "east",
+          "Back to the cairn field."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:cairn-field",
+          "west",
+          "A path worn by regular use."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:ridge-to-drowned"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:drowned-survey",
+          "south",
+          "Back up to the ridge."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:the-ridge",
+          "north",
+          "The ground drops on the far side."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:drowned-to-caves"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:upper-caves",
+          "south",
+          "Back to the drowned survey site."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:drowned-survey",
+          "north",
+          "A low entrance, mostly hidden."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:place:drowned-survey",
+          "visited",
+          "You haven't been to the drowned survey site yet. There's nothing to tell you the caves exist."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:caves-to-gallery"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:stone-gallery",
+          "up",
+          "Back to the upper caves."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:upper-caves",
+          "down",
+          "The cave descends."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:survey-kit",
+          "",
+          "You need your survey kit to navigate the cave system accurately. Going in without it would be foolish."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:gallery-to-source"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:river-source",
+          "south",
+          "Back to the stone gallery."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:stone-gallery",
+          "north",
+          "The passage narrows and the air becomes wet."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:source-to-auric"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:auric-chamber",
+          "south",
+          "Back to the river source."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:river-source",
+          "north",
+          "The passage widens."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:puzzle:cairn-sequence",
+          "solved",
+          "Something stops you — not physical, not fear. The sense that you are not ready. That you are missing something the cairn field was trying to tell you."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:auric-to-sealed-record"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:auric-chamber",
+          "west",
+          "Back to the chamber."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:sealed-record",
+          "east",
+          "The west passage."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:puzzle:first-record-complete",
+          "solved",
+          "The passage west will not open for you yet."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:portal:auric-to-sealed-silence"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:auric-chamber",
+          "east",
+          "Back to the chamber."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographer:place:sealed-silence",
+          "west",
+          "The east passage."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:puzzle:first-record-protect",
+          "solved",
+          "The passage east will not open for you yet."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:item:survey-kit"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Survey Kit"
+        ],
+        [
+          "noun",
+          "survey kit",
+          "kit",
+          "instruments",
+          "equipment"
+        ],
+        [
+          "verb",
+          "survey",
+          "measure",
+          "use"
+        ],
+        [
+          "on-interact",
+          "survey",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:survey-active"
+        ]
+      ],
+      "content": "A leather case containing a theodolite, a brass clinometer, a hand level, and a field notebook with forty pages of your own notation. The theodolite has a crack in the eyepiece housing that you've been meaning to repair for three years. It still works. Most things do if you know how to handle them."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:item:plumb-line"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Plumb Line"
+        ],
+        [
+          "noun",
+          "plumb line",
+          "plumb",
+          "line",
+          "weight"
+        ],
+        [
+          "verb",
+          "measure"
+        ]
+      ],
+      "content": "A simple tool: a brass weight on a length of waxed cord. Finds true vertical with more reliability than any instrument you own. You found it in the cairn field beside the survey platform, which means the Kael-Sura use the same basic principle. There is something reassuring about this."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:item:water-sample"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "River Source Sample"
+        ],
+        [
+          "noun",
+          "sample",
+          "water",
+          "vial"
+        ],
+        [
+          "verb",
+          "analyse"
+        ]
+      ],
+      "content": "A sealed vial of water from the spring basin at the river source. It is the same temperature as the rock it emerges from — cold enough that it shouldn't be liquid, which is a geological observation you have written down and underlined twice."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:item:field-notebook"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Field Notebook"
+        ],
+        [
+          "noun",
+          "notebook",
+          "notes",
+          "field notes",
+          "journal"
+        ],
+        [
+          "verb",
+          "read",
+          "write"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:notebook-entry"
+        ]
+      ],
+      "content": "Your working document. Forty pages of bearing readings, elevation estimates, feature descriptions, and observations you have marked with a question mark because you don't yet have a professional framework for them. The question marks are accumulating."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:item:first-record-entry-1"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "First Record: Cairn Field"
+        ],
+        [
+          "noun",
+          "first record",
+          "entry",
+          "cairn record",
+          "translation"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:first-record-1"
+        ]
+      ],
+      "content": "Your transcription and partial translation of the cairn field notation. The cairns are not monuments. They are survey stations — a network of fixed reference points that make the valley's shifting terrain navigable because they record not where things are but *how they move*. The First Record is a dynamic map. You have never seen one before."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:item:first-record-entry-2"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "First Record: The Ridge"
+        ],
+        [
+          "noun",
+          "record",
+          "first record",
+          "ridge record",
+          "bearing record"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:first-record-2"
+        ]
+      ],
+      "content": "The bearing stones on the ridge are fixed orientation markers — but what they orient toward changes with the season. At dawn in the wet season they point to the river source. At dusk in the dry they point to the Auric Chamber. The ridge is a calendar as much as a viewpoint. The Kael-Sura read time from the valley the way you read coordinates from a map."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:item:first-record-entry-3"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "First Record: The Drowned Survey"
+        ],
+        [
+          "noun",
+          "record",
+          "first record",
+          "drowned record",
+          "previous expedition"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:first-record-3"
+        ]
+      ],
+      "content": "The previous expedition's notes, partially recovered and partially translated. They understood the cairn field as landmarks rather than stations — they were using it as a navigation aid rather than reading it. They got further than they should have without understanding. The valley let them in and then stopped letting them in. Their last entry describes sounds in the cave system that they could not locate or explain. There is no entry after that."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:item:first-record-entry-4"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "First Record: Upper Caves"
+        ],
+        [
+          "noun",
+          "record",
+          "first record",
+          "cave record",
+          "kael-sura notation"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:first-record-4"
+        ]
+      ],
+      "content": "Asha's translation of the cave markings — given to you without you asking, which means she decided you were ready. The cave system is a three-dimensional extension of the surface map. The Kael-Sura have been charting its relationship to the water table for six generations. The acoustic chamber is not a natural feature. It was shaped, over decades, to amplify the sound of the river source so that you can hear it from anywhere in the system. The valley listens to itself."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:item:first-record-entry-5"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "First Record: The Source Inscription"
+        ],
+        [
+          "noun",
+          "record",
+          "first record",
+          "source inscription",
+          "final entry"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:first-record-5"
+        ]
+      ],
+      "content": "The inscription around the spring basin, fully translated. It is the founding document of the First Record — the statement of purpose written by the Kael-Sura who began the project.\n\n*We map this place so that the place does not have to map itself. Every mark we make is a mark the valley does not have to make. The record is our gift to a place that does not need us, offered in gratitude for being allowed to stay.*\n\nThe Auric Stones are the final punctuation of that document. They are not treasure. They are a full stop. Remove them and every sentence in the First Record becomes a fragment."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:item:vaels-ledger"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Vael's Ledger"
+        ],
+        [
+          "noun",
+          "ledger",
+          "vael ledger",
+          "accounts"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:vael-buyers"
+        ]
+      ],
+      "content": "A financial ledger, found in Vael's cache. Three buyers, none named. Payment structures contingent on delivery of geological amber specimens of pre-colonial provenance. The amounts are significant. The buyers are the kind of careful that suggests they've done this before.\n\nVael isn't a treasure hunter. He's a procurement agent."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:survey-marker"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Survey Marker"
+        ],
+        [
+          "noun",
+          "marker",
+          "survey marker",
+          "stone"
+        ],
+        [
+          "verb",
+          "survey"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:marker-history"
+        ]
+      ],
+      "content": "A cairn of five stones with a metal stake driven through the centre — not Kael-Sura work, not old enough. Someone planted this marker within the last decade. The survey notation scratched into the stake is in a shorthand you recognise from academic cartography. Whoever was here before you was trained."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:old-warning"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Old Marking"
+        ],
+        [
+          "noun",
+          "marking",
+          "warning",
+          "carving",
+          "tree"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:old-marking"
+        ]
+      ],
+      "content": "Cut into a tree old enough to have half-absorbed it: a single mark in Kael-Sura notation. Not aggressive. Not a barrier. The kind of mark that means *pay attention here*. You would have missed it if Asha hadn't been in your peripheral vision when you passed it."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:field-notes"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Your Field Notes"
+        ],
+        [
+          "noun",
+          "field notes",
+          "notes",
+          "notebook"
+        ],
+        [
+          "verb",
+          "read",
+          "review"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:current-map-state"
+        ]
+      ],
+      "content": "Your working notes, spread across the camp table. Bearings, elevations, feature descriptions, the accumulating question marks. Looking at them now, you can see where the map you expected and the map you're actually making have started to diverge."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:damaged-compass"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Damaged Compass"
+        ],
+        [
+          "noun",
+          "compass",
+          "damaged compass",
+          "needle"
+        ],
+        [
+          "verb",
+          "check"
+        ],
+        [
+          "state",
+          "unreliable"
+        ],
+        [
+          "transition",
+          "unreliable",
+          "calibrated",
+          "The needle steadies. Briefly, but enough."
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:compass-behaviour"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:compass-tick",
+          "layer",
+          "0.2",
+          "unreliable"
+        ]
+      ],
+      "content": "Your primary compass. The needle moves without input — not randomly, but rhythmically, as if responding to something that isn't magnetic north. You have written this down. You have not written down what it might mean."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:supply-crate"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Vael's Supply Crates"
+        ],
+        [
+          "noun",
+          "crates",
+          "supplies",
+          "boxes"
+        ],
+        [
+          "verb",
+          "search"
+        ],
+        [
+          "on-interact",
+          "search",
+          "give-item",
+          "30078:<PUBKEY>:cartographer:item:vaels-ledger"
+        ],
+        [
+          "on-interact",
+          "search",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:vael-equipment"
+        ]
+      ],
+      "content": "Three crates, professionally packed. The equipment inside is better than yours — newer instruments, more supplies, a radio transceiver that you cannot use because you don't have the frequency. And tucked into the packing material, a ledger he should have kept closer. Search them."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:vaels-notes"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Vael's Survey Notes"
+        ],
+        [
+          "noun",
+          "vael notes",
+          "notes",
+          "survey"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:vael-knowledge"
+        ]
+      ],
+      "content": "Pinned to the inside of a crate lid: a partial copy of the pre-colonial survey fragment from the auction. Vael got more of it than you did. He has the entrance coordinates and something you don't — a partial key to the cairn field's notation, enough to navigate but not enough to understand. He will find the chamber eventually. The question is when."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:river-cairn"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "River Cairn"
+        ],
+        [
+          "noun",
+          "cairn",
+          "river cairn",
+          "marker"
+        ],
+        [
+          "verb",
+          "survey"
+        ],
+        [
+          "on-interact",
+          "survey",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:river-cairn-meaning"
+        ],
+        [
+          "on-interact",
+          "survey",
+          "give-item",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-1"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:survey-kit",
+          "",
+          "You'd need your survey kit to read this properly."
+        ]
+      ],
+      "content": "Built into the bank at the ford's safest crossing point. Unlike the cairns you'll find later, this one is a single purpose: mark the crossing. But the way it's marked — the orientation, the material — tells you this is part of a larger system you don't yet understand. File it and cross the river. Survey it with your instruments."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:current-gauge"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Current Gauge"
+        ],
+        [
+          "noun",
+          "gauge",
+          "current",
+          "water level",
+          "stick"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:water-level"
+        ]
+      ],
+      "content": "A notched stake driven into the bank, with current water level marked by a strip of bark tied at the high-water line. Someone checks this regularly. The current level is well below the high-water mark — the valley is drier than usual, which may explain why the cave entrance is accessible. In a wet season it might not be."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:compass-anomaly"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Compass Anomaly Zone"
+        ],
+        [
+          "noun",
+          "anomaly",
+          "magnetic",
+          "disturbance",
+          "compass zone"
+        ],
+        [
+          "verb",
+          "survey",
+          "measure"
+        ],
+        [
+          "on-interact",
+          "survey",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:magnetic-anomaly"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:survey-kit",
+          "",
+          "You need your survey kit to measure this properly."
+        ]
+      ],
+      "content": "The canopy floor has a quality of wrongness that your instruments confirm and your training cannot explain. Magnetic declination is off by a consistent eleven degrees — consistent enough that it's a feature, not interference. You are in the middle of a magnetic anomaly large enough to have a shape. You do not yet know what that shape is. Survey it carefully."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:root-system"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Root System"
+        ],
+        [
+          "noun",
+          "roots",
+          "root system",
+          "trees",
+          "canopy"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:root-observation"
+        ]
+      ],
+      "content": "The trees here share a root system that makes the ground unreliable underfoot — spongy in places, solid unexpectedly in others. More interesting: the roots are oriented. Not randomly, not following water. Following something else. Consistently, across a large area, the root systems angle toward the interior. You write this down and then stare at what you've written for longer than you intended."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:central-cairn"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Central Cairn"
+        ],
+        [
+          "noun",
+          "cairn",
+          "central cairn",
+          "tall cairn",
+          "main cairn"
+        ],
+        [
+          "verb",
+          "survey",
+          "measure"
+        ],
+        [
+          "state",
+          "unread"
+        ],
+        [
+          "transition",
+          "unread",
+          "read",
+          "The notation resolves. It takes twenty minutes and your best light and all of your concentration. When you have it, you sit down."
+        ],
+        [
+          "on-interact",
+          "survey",
+          "set-state",
+          "read"
+        ],
+        [
+          "on-interact",
+          "survey",
+          "give-item",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-1"
+        ],
+        [
+          "on-interact",
+          "survey",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:central-cairn-decoded"
+        ],
+        [
+          "on-interact",
+          "survey",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:first-record-reveal",
+          "0.8"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:survey-kit",
+          "",
+          "You need your survey kit to decode this properly."
+        ]
+      ],
+      "content": "The central cairn is taller than the others and covered in notation so dense it took you an hour to recognise it as notation rather than weathering. You need to survey it properly — this is the index entry for everything else in the field."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:outer-cairns"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Outer Cairns"
+        ],
+        [
+          "noun",
+          "cairns",
+          "outer cairns",
+          "small cairns",
+          "ring cairns"
+        ],
+        [
+          "verb",
+          "count",
+          "survey"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:outer-cairn-pattern"
+        ]
+      ],
+      "content": "Forty-two cairns arranged in a pattern that isn't concentric — it's something more complex, a relationship between the cairns and the terrain features rather than a geometric form imposed on them. They fit the landscape rather than sitting on it. This took a long time to build and a longer time to understand."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:survey-platform"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Survey Platform"
+        ],
+        [
+          "noun",
+          "platform",
+          "survey platform",
+          "stone platform"
+        ],
+        [
+          "verb",
+          "stand",
+          "survey"
+        ],
+        [
+          "state",
+          "unused"
+        ],
+        [
+          "transition",
+          "unused",
+          "active",
+          "The plumb line catches a sub-surface resonance. The needle on your clinometer moves to a bearing you haven't seen before and holds there."
+        ],
+        [
+          "on-interact",
+          "survey",
+          "set-state",
+          "active"
+        ],
+        [
+          "on-interact",
+          "survey",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:first-record-reveal",
+          "0.6"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:plumb-line",
+          "",
+          "The platform needs a plumb reading to activate. You need your plumb line."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:feature:central-cairn",
+          "read",
+          "The central cairn indexes this platform. Read it first."
+        ]
+      ],
+      "content": "A flat stone platform, low to the ground, positioned at the geometric centre of the cairn field. It's a survey station — built to take readings from. The notation on the edge tells you what instrument is needed."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:kael-sura-map"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Kael-Sura Map"
+        ],
+        [
+          "noun",
+          "map",
+          "kael-sura map",
+          "their map",
+          "wall map"
+        ],
+        [
+          "verb",
+          "study"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:kael-sura-cartography"
+        ],
+        [
+          "on-interact",
+          "study",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:kael-sura-cartography"
+        ]
+      ],
+      "content": "The wall holds a cartographic record that makes your field notes look like a sketch on a napkin. Generations of additions in different hands, all working within a consistent notation system. The map is alive in the sense that living things are alive — it is still being updated. There are marks here that are less than a year old. Study it."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:memory-stones"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Memory Stones"
+        ],
+        [
+          "noun",
+          "memory stones",
+          "stones",
+          "collection",
+          "shelf"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:memory-stones-meaning"
+        ]
+      ],
+      "content": "A shelf of river stones, each marked with a single symbol. Not the complex notation of the maps — something simpler, personal. Asha picks one up when she talks about the valley. She puts it back precisely where it was. You understand without asking that each stone is a record of a decision."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:ridge-survey"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Ridge Survey Point"
+        ],
+        [
+          "noun",
+          "survey point",
+          "ridge survey",
+          "viewpoint"
+        ],
+        [
+          "verb",
+          "survey"
+        ],
+        [
+          "state",
+          "unmeasured"
+        ],
+        [
+          "transition",
+          "unmeasured",
+          "measured",
+          "The bearing resolves. You write it down and underline it. The valley is larger than you mapped it. Much larger."
+        ],
+        [
+          "on-interact",
+          "survey",
+          "set-state",
+          "measured"
+        ],
+        [
+          "on-interact",
+          "survey",
+          "give-item",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-2"
+        ],
+        [
+          "on-interact",
+          "survey",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:first-record-reveal",
+          "0.7"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:survey-kit",
+          "",
+          "You need your survey kit for this."
+        ]
+      ],
+      "content": "The ridge gives you the first real sightline you've had since entering the valley. Your instruments can work here. The question is whether what they measure will match what you thought you were measuring. Survey the view from here."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:bearing-stones"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Bearing Stones"
+        ],
+        [
+          "noun",
+          "bearing stones",
+          "stones",
+          "orientation markers"
+        ],
+        [
+          "verb",
+          "align"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:bearing-stone-system"
+        ]
+      ],
+      "content": "Seven stones along the ridge crest, each placed with deliberate orientation. They are sighting stones — you look along them as you would look along a transit. Each points somewhere specific in the interior. At the current time of day, two are pointing at nothing visible. One is pointing at something you haven't reached yet."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:expedition-remains"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Previous Expedition"
+        ],
+        [
+          "noun",
+          "remains",
+          "expedition",
+          "equipment",
+          "wreckage"
+        ],
+        [
+          "verb",
+          "search"
+        ],
+        [
+          "on-interact",
+          "search",
+          "give-item",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-3"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:previous-team"
+        ]
+      ],
+      "content": "Two seasons of humidity have done significant work. The equipment is identifiable — good quality, academic provenance — but not functional. The shelter structure has collapsed into the canopy. Someone got this far on professional competence and not enough understanding of where they were. Search the wreckage."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:lost-survey"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Lost Survey Notes"
+        ],
+        [
+          "noun",
+          "lost notes",
+          "survey notes",
+          "documents"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:lost-survey-content"
+        ]
+      ],
+      "content": "A waterproof case, still sealed. Inside: field notes from the previous expedition, partially legible. They got further into the cairn field than their notes suggest they understood. The last entries are shorter and more urgent. The final entry is a single sentence that you read three times before you accept what it says."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:vael-evidence"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Vael's Trail"
+        ],
+        [
+          "noun",
+          "trail",
+          "footprints",
+          "marks",
+          "evidence"
+        ],
+        [
+          "verb",
+          "track"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:vael-was-here"
+        ]
+      ],
+      "content": "Boot prints in the soft ground near the expedition remains. Recent — two days, maybe three. He came, he looked at what was here, he took some of the notes. The prints lead north. He knows about the caves."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:cave-markings"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Cave Markings"
+        ],
+        [
+          "noun",
+          "markings",
+          "cave markings",
+          "notation",
+          "walls"
+        ],
+        [
+          "verb",
+          "study",
+          "survey"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:cave-notation"
+        ],
+        [
+          "on-interact",
+          "study",
+          "give-item",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-4"
+        ],
+        [
+          "on-interact",
+          "study",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:first-record-reveal",
+          "0.75"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:npc:asha",
+          "trusting",
+          "The notation here is in a variant you haven't seen before. You need Asha to translate it."
+        ]
+      ],
+      "content": "Every surface of the cave entrance corridor is covered in notation. Not graffiti — systematic, layered, a continuous record extending back as far as your lamp will illuminate and, presumably, further. The density increases as you go deeper. Someone has been doing this for a very long time. Study them carefully."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:acoustic-chamber"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Acoustic Chamber"
+        ],
+        [
+          "noun",
+          "acoustic chamber",
+          "chamber",
+          "resonance",
+          "sound"
+        ],
+        [
+          "verb",
+          "listen"
+        ],
+        [
+          "on-interact",
+          "listen",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:acoustic-resonance"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:cave-resonance",
+          "layer",
+          "0.5"
+        ]
+      ],
+      "content": "A widening in the upper cave that is not natural — the walls have been worked, over a very long period, to produce a specific acoustic property. Standing here you can hear the river source, clearly, from somewhere far below. The valley is listening to itself. You are inside its ear."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:gallery-walls"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Gallery Walls"
+        ],
+        [
+          "noun",
+          "walls",
+          "gallery walls",
+          "record walls",
+          "notation"
+        ],
+        [
+          "verb",
+          "study",
+          "survey"
+        ],
+        [
+          "on-interact",
+          "study",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:gallery-scope"
+        ],
+        [
+          "on-interact",
+          "study",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:first-record-reveal",
+          "0.85"
+        ]
+      ],
+      "content": "The gallery walls are the First Record in its primary form — everything above, the cairn field, the ridge, the caves, encoded here at a scale and completeness that makes your own map feel like a rumour of a map. You could spend months here. You do not have months. You take what you can understand and mark the rest for what it is: beyond current comprehension, which is different from beyond comprehension entirely. Study them. Take your time."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:central-pillar"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Central Pillar"
+        ],
+        [
+          "noun",
+          "pillar",
+          "central pillar",
+          "column"
+        ],
+        [
+          "verb",
+          "survey"
+        ],
+        [
+          "state",
+          "unread"
+        ],
+        [
+          "transition",
+          "unread",
+          "read",
+          "The pillar's notation resolves into a sequence. You understand what it's asking you to do in the cairn field. The puzzle had an answer and the answer is what you needed to get here."
+        ],
+        [
+          "on-interact",
+          "survey",
+          "set-state",
+          "read"
+        ],
+        [
+          "on-interact",
+          "survey",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:pillar-key"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:survey-kit",
+          "",
+          "You need your survey kit to survey the pillar properly."
+        ]
+      ],
+      "content": "A natural limestone pillar that reaches the ceiling, covered from base to capital in notation that is denser and more complex than anything on the walls. This is the index to the gallery. And it contains, you realise, the key to the cairn field sequence that you needed to get here — which means the valley has been teaching you to read it in the right order."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:spring-basin"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Spring Basin"
+        ],
+        [
+          "noun",
+          "spring",
+          "basin",
+          "source",
+          "water"
+        ],
+        [
+          "verb",
+          "sample",
+          "measure"
+        ],
+        [
+          "on-interact",
+          "sample",
+          "give-item",
+          "30078:<PUBKEY>:cartographer:item:water-sample"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:spring-geology"
+        ]
+      ],
+      "content": "The spring emerges from the rock face into a basin that the Kael-Sura have shaped over generations to distribute the flow evenly. The water is clear enough to see the bottom at three metres. The temperature is consistent regardless of season — you know this because the inscription says so, in the fragments you can already read. The inscription says quite a lot more besides. Sample the water."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:source-inscription"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Source Inscription"
+        ],
+        [
+          "noun",
+          "inscription",
+          "source inscription",
+          "founding text",
+          "writing"
+        ],
+        [
+          "verb",
+          "translate"
+        ],
+        [
+          "state",
+          "partial"
+        ],
+        [
+          "transition",
+          "partial",
+          "translated",
+          "The inscription resolves. You read it twice. Then you sit down beside the spring and do not speak for a long time."
+        ],
+        [
+          "on-interact",
+          "translate",
+          "set-state",
+          "translated"
+        ],
+        [
+          "on-interact",
+          "translate",
+          "give-item",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-5"
+        ],
+        [
+          "on-interact",
+          "translate",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:first-record-reveal",
+          "1.0"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:npc:asha",
+          "trusting",
+          "You can read fragments. The rest requires Asha's translation — a dialect of the notation system you haven't encountered yet."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-4",
+          "",
+          "You need entry four of the First Record first. The cave notation established the variant used here."
+        ]
+      ],
+      "content": "The founding inscription of the First Record, carved into the basin rim by the Kael-Sura who began the project. You can read enough to know this is important. You cannot read enough to know what it says. Not yet. Translate it if you can."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:auric-stones"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Auric Stones"
+        ],
+        [
+          "noun",
+          "auric stones",
+          "stones",
+          "amber",
+          "artefacts"
+        ],
+        [
+          "verb",
+          "touch"
+        ],
+        [
+          "state",
+          "in-place"
+        ],
+        [
+          "transition",
+          "in-place",
+          "disturbed",
+          "You touch one. It is warm — not from ambient temperature, from something else. The resonance you've been hearing in the cave system changes pitch. You put it down immediately."
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:stones-nature"
+        ],
+        [
+          "on-interact",
+          "take",
+          "set-state",
+          "disturbed"
+        ],
+        [
+          "on-interact",
+          "touch",
+          "set-state",
+          "disturbed"
+        ],
+        [
+          "on-interact",
+          "take",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:resonance-shift",
+          "0.9"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "puzzle",
+          "30078:<PUBKEY>:cartographer:puzzle:first-record-complete"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "puzzle",
+          "30078:<PUBKEY>:cartographer:puzzle:first-record-protect"
+        ]
+      ],
+      "content": "Seven stones of geological amber, each the size of a fist, arranged in a configuration that matches the final notation in the gallery — the closing punctuation of the First Record. They are not beautiful in the way treasure is beautiful. They are beautiful in the way a correctly resolved bearing is beautiful: they are *right*, and their rightness is structural, and removing them would make the whole edifice wrong."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:feature:choice-inscription"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Final Inscription"
+        ],
+        [
+          "noun",
+          "inscription",
+          "final inscription",
+          "choice",
+          "writing"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:final-inscription"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:final-inscription"
+        ]
+      ],
+      "content": "Cut into the chamber wall at eye height, in a script that combines Kael-Sura notation with something older that you cannot identify. Asha translates it quietly, standing beside you.\n\nShe does not tell you what to do. She does not need to."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:puzzle:cairn-sequence"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "puzzle-type",
+          "sequence"
+        ],
+        [
+          "answer-hash",
+          "87887c3577e76399957a753314ac2f70d0872b6c71c1210bad41a83ecbf48680"
+        ],
+        [
+          "salt",
+          "cartographer:puzzle:cairn-sequence:v1"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:feature:central-cairn",
+          "read",
+          "The central cairn hasn't been decoded yet. It indexes the sequence."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:feature:survey-platform",
+          "active",
+          "The survey platform needs to be active — plumb reading taken."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:feature:ridge-survey",
+          "measured",
+          "The ridge survey gives the bearing that completes the sequence."
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "solved"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:sequence-solved"
+        ],
+        [
+          "on-complete",
+          "",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:sequence-complete",
+          "0.9"
+        ]
+      ],
+      "content": "The cairn field, the survey platform, the ridge — three elements of a sequence that the central cairn indexes. When all three are read in the correct order with the correct instruments, they produce a bearing. The bearing points to the river source. The river source is the first word of the First Record.\n\nThe word the bearing spells, in the Kael-Sura notation, is the answer."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:puzzle:vael-cache"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "puzzle-type",
+          "riddle"
+        ],
+        [
+          "answer-hash",
+          "1689b12dfbb5f296ae5f6fbc306a32f878b8d43c28017fd5e198409cdedbb8cc"
+        ],
+        [
+          "salt",
+          "cartographer:puzzle:vael-cache:v1"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:vaels-ledger",
+          "",
+          "You need Vael's ledger to understand what he's looking for."
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "solved"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:vael-intent-clear"
+        ],
+        [
+          "on-fail",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:vael-cipher-hint"
+        ]
+      ],
+      "content": "Vael's ledger uses a simple substitution cipher for the buyer names and target locations. The key is a surveying term — specifically, the bearing measurement tool that every cartographer carries and that Vael conspicuously doesn't. What is the tool used to measure the angle between two points on a horizontal plane?\n\nEnter the answer in capitals."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:puzzle:first-record-complete"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "puzzle-type",
+          "cipher"
+        ],
+        [
+          "answer-hash",
+          "8528b3b6fd6cdd72dee9afc3dbe7261fd2e260752128d2451b38bf42ea13d6a8"
+        ],
+        [
+          "salt",
+          "cartographer:puzzle:first-record-complete:v1"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-1",
+          "",
+          "The First Record is incomplete."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-2",
+          "",
+          "The First Record is incomplete."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-3",
+          "",
+          "The First Record is incomplete."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-4",
+          "",
+          "The First Record is incomplete."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-5",
+          "",
+          "The First Record is incomplete."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:npc:vael-final",
+          "negotiated",
+          "Vael is still a problem. Resolve him first."
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "solved"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:place:sealed-record"
+        ],
+        [
+          "on-complete",
+          "",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:record-resolution",
+          "1.0"
+        ],
+        [
+          "on-fail",
+          "",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:compass-tick",
+          "0.4"
+        ]
+      ],
+      "content": "You have assembled the complete First Record. You understand what it is, what it protects, and what it would mean for it to exist in the outside world's cartographic literature.\n\nThe west passage will open for one answer only. The action it represents is irreversible.\n\nTo publish the First Record and make the valley known: enter RECORD."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:puzzle:first-record-protect"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "puzzle-type",
+          "cipher"
+        ],
+        [
+          "answer-hash",
+          "c8dc87e135f3dd71ea83bccabb76a16df518d8f5db840edd2fa43d92b603e92c"
+        ],
+        [
+          "salt",
+          "cartographer:puzzle:first-record-protect:v1"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-1",
+          "",
+          "The First Record is incomplete."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-2",
+          "",
+          "The First Record is incomplete."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-3",
+          "",
+          "The First Record is incomplete."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-4",
+          "",
+          "The First Record is incomplete."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-5",
+          "",
+          "The First Record is incomplete."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:npc:vael-final",
+          "negotiated",
+          "Vael is still a problem. Resolve him first."
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "solved"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:place:sealed-silence"
+        ],
+        [
+          "on-complete",
+          "",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:protect-stillness",
+          "1.0"
+        ],
+        [
+          "on-fail",
+          "",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:compass-tick",
+          "0.4"
+        ]
+      ],
+      "content": "You have assembled the complete First Record. You understand what it is, what it protects, and what it would mean for it to exist in the outside world's cartographic literature.\n\nThe east passage will open for one answer only. The action it represents is irreversible.\n\nTo protect the First Record and leave the valley unknown: enter PROTECT."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:npc:asha"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Asha"
+        ],
+        [
+          "noun",
+          "asha",
+          "woman",
+          "guide",
+          "kael-sura"
+        ],
+        [
+          "health",
+          "0"
+        ],
+        [
+          "state",
+          "watchful"
+        ],
+        [
+          "transition",
+          "watchful",
+          "cautious",
+          "Asha considers this. She looks at your instruments, then at your hands, then at your face. She makes a decision you are not sure you deserve yet."
+        ],
+        [
+          "transition",
+          "cautious",
+          "trusting",
+          "Asha stands. She goes to the map on the wall and touches three points on it in sequence. She says: these are the places that matter most. I will show you."
+        ],
+        [
+          "on-interact",
+          "talk",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:asha-observation"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:greeting"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:after-cairns",
+          "30078:<PUBKEY>:cartographer:feature:central-cairn",
+          "read"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:after-drowned",
+          "30078:<PUBKEY>:cartographer:place:drowned-survey",
+          "visited"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:trusting",
+          "30078:<PUBKEY>:cartographer:npc:asha",
+          "trusting"
+        ]
+      ],
+      "content": "She is patient in the way that people are patient when they have been waiting for something for a long time and have made peace with not knowing whether it will arrive. She watches you work without commenting on your methods. She corrects you, when she does, without making it feel like correction."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:npc:vael"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Marcus Vael"
+        ],
+        [
+          "noun",
+          "vael",
+          "marcus",
+          "rival",
+          "man"
+        ],
+        [
+          "health",
+          "0"
+        ],
+        [
+          "state",
+          "searching"
+        ],
+        [
+          "speed",
+          "4"
+        ],
+        [
+          "order",
+          "sequential"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:cartographer:place:canopy-floor"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:cartographer:place:cairn-field"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:cartographer:place:the-ridge"
+        ],
+        [
+          "on-encounter",
+          "player",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:vael-encounter"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:cartographer:dialogue:vael:greeting"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:cartographer:dialogue:vael:after-ledger",
+          "30078:<PUBKEY>:cartographer:item:vaels-ledger",
+          ""
+        ]
+      ],
+      "content": "Vael moves through the valley with the efficiency of someone who has done fieldwork before and the confidence of someone who has never had a fieldwork situation he couldn't buy his way out of. He is not incompetent. He is simply optimising for the wrong thing."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:npc:vael-final"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Marcus Vael"
+        ],
+        [
+          "noun",
+          "vael",
+          "marcus",
+          "rival"
+        ],
+        [
+          "health",
+          "0"
+        ],
+        [
+          "state",
+          "calculating"
+        ],
+        [
+          "transition",
+          "calculating",
+          "negotiated",
+          "Vael is quiet for a long moment. He looks at the stones. He looks at you. He makes a calculation you can see him making. He says: *fine*. Just that. Fine. And he sits down against the wall and stops moving toward the stones."
+        ],
+        [
+          "on-encounter",
+          "player",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:vael-final-state"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:cartographer:dialogue:vael-final:greeting"
+        ]
+      ],
+      "content": "This version of Vael has had time to understand what he's looking at. The confidence is still there but it has a different quality — the confidence of someone who has revised their position and is deciding whether to admit it."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:greeting"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "That's correct.",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:correct"
+        ],
+        [
+          "option",
+          "I measure them to make them useful to others.",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:useful"
+        ],
+        [
+          "option",
+          "I measure them because it's my job.",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:job"
+        ]
+      ],
+      "content": "You measure things to understand them. Not to own them."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:correct"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "cautious",
+          "30078:<PUBKEY>:cartographer:npc:asha"
+        ],
+        [
+          "option",
+          "Ask about the valley.",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:valley"
+        ],
+        [
+          "option",
+          "Ask about the cairn field.",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:cairns"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "Yes. *She is quiet for a moment.* The other one measures to take. You can tell the difference by what they do after they have measured."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:useful"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "People who need to navigate it safely.",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:correct"
+        ],
+        [
+          "option",
+          "I don't know yet.",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:honest"
+        ]
+      ],
+      "content": "*She considers this.* Useful to whom determines whether useful is good. Who will use what you make here?"
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:honest"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "cautious",
+          "30078:<PUBKEY>:cartographer:npc:asha"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "That is more honest than most people who come here. *She stands.* Come back when you have read the cairn field. We will talk then."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:job"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "*Long pause.* Come back when you know why you're actually here. The job is not a reason."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:valley"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Ask about the other expedition.",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:other"
+        ],
+        [
+          "option",
+          "Ask about Marcus Vael.",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:vael"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "The valley remembers everything that has happened in it. The cairns are how we help it remember more accurately. You will understand this better when you have read them."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:other"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "What happened to them?",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:other-fate"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "They were careful people who did not understand what they were being careful inside of. The valley is not dangerous. It is precise. Imprecision has consequences here that it does not have in other places."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:other-fate"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "They left. *Pause.* Not all of them. Not the way they arrived."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:vael"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "I'll deal with him.",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:deal"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "He wants what he can sell. I have seen this before. The difference between him and the people who came before is that he knows what he is doing. That makes him more dangerous, not less."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:deal"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "*She looks at you for a moment.* Yes. I think you will."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:cairns"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "Read the central cairn first. Use your instruments. The outer cairns will follow."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:after-cairns"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:feature:central-cairn",
+          "read",
+          ""
+        ],
+        [
+          "option",
+          "What's below the caves?",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:below"
+        ],
+        [
+          "option",
+          "Tell me about the First Record.",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:first-record"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "You read it. *Not a question.* Good. The ridge next. The bearing stones at dawn. You won't need me for that."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:below"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "Everything. The Record began below. We extended it upward as we came to understand what we were mapping. The valley is the document. We are the footnotes."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:first-record"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "What does it protect?",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:protects"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "It is what your discipline would call a continuous survey. We call it the memory of the place, written down so that the place does not have to hold it alone. Every generation adds to it. None have removed anything."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:protects"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "The valley. By knowing it completely, we make it unnecessary for others to know it. The Record holds the knowledge so the place does not have to be visited to be used. You will understand this more precisely when you reach the source."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:after-drowned"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:place:drowned-survey",
+          "visited",
+          ""
+        ],
+        [
+          "option",
+          "Will the same happen to me?",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:consequences"
+        ],
+        [
+          "option",
+          "What about Vael?",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:vael-drowned"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "You found the other expedition. *She pauses.* They were the third. Each time someone comes who does not understand, the valley responds. Not with violence. With consequences."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:consequences"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "trusting",
+          "30078:<PUBKEY>:cartographer:npc:asha"
+        ],
+        [
+          "option",
+          "Thank her.",
+          ""
+        ]
+      ],
+      "content": "You are different. You are here. *She touches her own chest briefly.* Understanding is the protection. The caves are open to you. I will come with you."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:vael-drowned"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "He has been to the site. He took what he could use and left the rest. He is moving faster now. You will meet him in the chamber. How that meeting goes depends on what you bring to it."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:trusting"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:npc:asha",
+          "trusting",
+          ""
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "What would you do?",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:what-she-would-do"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "You know enough now. What you do with it is the question that matters. I will not answer it for you. *Pause.* I will say this: the valley has had many people who understood it. You are the first from outside who has understood it and not already decided what to do with that understanding. That is unusual. It is why I am here."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:what-she-would-do"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "I have already done it. Every day for forty years. *She picks up one of the memory stones.* The question is what you would do. That is the only question that matters now."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:vael:greeting"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "What are you looking for?",
+          "30078:<PUBKEY>:cartographer:dialogue:vael:looking"
+        ],
+        [
+          "option",
+          "You need to leave.",
+          "30078:<PUBKEY>:cartographer:dialogue:vael:leave"
+        ],
+        [
+          "option",
+          "Walk away.",
+          ""
+        ]
+      ],
+      "content": "Voss. *He doesn't look surprised.* I wondered if you'd made it this far. Your reputation suggested you might."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:vael:looking"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "You know what they are.",
+          "30078:<PUBKEY>:cartographer:dialogue:vael:knows"
+        ],
+        [
+          "option",
+          "Walk away.",
+          ""
+        ]
+      ],
+      "content": "Pre-colonial amber specimens. Geological, significant provenance. There are buyers. The logistics are straightforward once you locate the source. *He says this the way people say things they've said many times before.*"
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:vael:knows"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Walk away.",
+          ""
+        ]
+      ],
+      "content": "*A pause.* I know what the auction material suggested they might be. I know the buyers want them regardless. The rest is your problem, Voss, not mine. You're the one making a map of something someone's been hiding for two hundred years."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:vael:leave"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Walk away.",
+          ""
+        ]
+      ],
+      "content": "I'm not going to do that. *Pleasantly, professionally.* We both know you can't make me. Let's not pretend otherwise and waste each other's time."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:vael:after-ledger"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:vaels-ledger",
+          "",
+          ""
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Then we have a problem.",
+          "30078:<PUBKEY>:cartographer:dialogue:vael:problem"
+        ],
+        [
+          "option",
+          "Walk away.",
+          ""
+        ]
+      ],
+      "content": "You have my ledger. *He's calm about it.* Then you know the buyers are serious. And you know I'm not going to stop because you found a notebook."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:vael:problem"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Walk away.",
+          ""
+        ]
+      ],
+      "content": "We have competing interests. That's different from a problem. Problems have solutions. Competing interests have outcomes. I intend to have a better outcome than you. *He smiles briefly.* So do you, presumably."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:vael-final:greeting"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "They're the final entry in a two-hundred-year document.",
+          "30078:<PUBKEY>:cartographer:dialogue:vael-final:document"
+        ],
+        [
+          "option",
+          "They're not what your buyers think they are.",
+          "30078:<PUBKEY>:cartographer:dialogue:vael-final:buyers"
+        ],
+        [
+          "option",
+          "They stay here.",
+          "30078:<PUBKEY>:cartographer:dialogue:vael-final:stay"
+        ]
+      ],
+      "content": "So. *He looks at the stones, then at you.* You understand what they are now."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:vael-final:document"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "You know it matters.",
+          "30078:<PUBKEY>:cartographer:dialogue:vael-final:matters"
+        ],
+        [
+          "option",
+          "Then you understand why they stay.",
+          "30078:<PUBKEY>:cartographer:dialogue:vael-final:stay"
+        ]
+      ],
+      "content": "*Long silence.* I know. I've been here long enough to read the gallery. *He looks at the stones again.* The buyers don't know that. They don't need to know that."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:vael-final:matters"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "negotiated",
+          "30078:<PUBKEY>:cartographer:npc:vael-final"
+        ],
+        [
+          "option",
+          "Thank him.",
+          ""
+        ]
+      ],
+      "content": "*Very quietly.* Yes. I know it matters. *Longer pause.* I've been doing this for fifteen years, Voss. I know when something matters and I take it anyway. That's the job. *He sounds tired.* Go finish your survey. I'll be out by morning."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:vael-final:buyers"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "You know it matters.",
+          "30078:<PUBKEY>:cartographer:dialogue:vael-final:matters"
+        ],
+        [
+          "option",
+          "Then you understand why they stay.",
+          "30078:<PUBKEY>:cartographer:dialogue:vael-final:stay"
+        ]
+      ],
+      "content": "My buyers want geological amber with pre-colonial provenance. These qualify. What they *are* beyond that specification is not part of the transaction. *He says this like it costs him something.* Which you already knew about me. That's why you're here arguing instead of doing what you came to do."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:vael-final:stay"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "negotiated",
+          "30078:<PUBKEY>:cartographer:npc:vael-final"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "*He looks at you for a long time.* You're going to make this very difficult. *Not a complaint. An observation.* Fine. *He sits down against the wall.* I'll wait. But Voss — whatever you decide in there, make sure it's actually your decision. Not hers. Not the valley's. Yours."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:marker-history"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Survey Marker History"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Academic survey notation — post-colonial, trained, careful. The stake is from a manufacturer that went out of business seven years ago. The previous expedition planted this marker, which means they were here before they were at the drowned survey site. They started here and went in. You are following their path."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:old-marking"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Old Kael-Sura Marking"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "A single Kael-Sura mark: *attention here, not warning*. The difference matters. A warning says turn back. This says: look at what you would otherwise walk past. Someone wanted the entrance found, by the right kind of person, at the right kind of speed."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:current-map-state"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Current Map"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Your current map covers the entrance, the camp, and partial readings from the river crossing. It is accurate as far as it goes. The problem is that it contradicts itself in three places where your compass gave you readings that your pace count says cannot be right. The valley is larger inside than outside. You have written this and underlined it."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:compass-behaviour"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Compass Behaviour"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The compass needle moves rhythmically — not randomly. Eleven-degree deviation, consistent, patterned. You've been treating it as interference. It is not interference. It is a signal. Something below the valley floor is producing a magnetic field with a frequency, and the frequency is not geological."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:vael-is-close"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Vael Is Close"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The blaze is fresh — sap still wet. He cut this marker yesterday at the earliest. He is not three days behind you. He is one day behind you. Possibly less."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:vael-equipment"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Vael's Equipment"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Better instruments than yours, more supplies, a radio transceiver. He came prepared for a longer expedition than you did — which means either he knows something you don't, or he plans to be here until he finds what he's looking for regardless of how long it takes. Both possibilities are concerning for different reasons."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:vael-knowledge"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Vael's Knowledge"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "He has a partial key to the cairn field notation. Enough to navigate the field as a set of landmarks. Not enough to read it. He knows where the stones are without knowing what they are. This is more dangerous than not knowing where they are at all — he will reach the chamber without the context that might make him hesitate."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:vael-buyers"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Vael's Buyers"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Three buyers. The payment structures are contingent on delivery of amber specimens with specific dimensional requirements — dimensions that match the Auric Stones precisely, which means Vael has seen a description of them, which means someone who has been in the chamber has already talked to Vael's buyers. There is a leak in the Kael-Sura's protection of this place. You do not know from which direction."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:river-cairn-meaning"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "River Cairn"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The river cairn is oriented true north — not magnetic north, true north, corrected for the local anomaly. Whoever built it knew about the magnetic deviation and accounted for it. The Kael-Sura survey system works from true north, not magnetic. Every bearing in the First Record is corrected. Your compass is wrong; their cairns are right."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:water-level"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Water Level"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The water is lower than it has been in several years. The cave entrance that the previous expedition couldn't access — possibly because of seasonal flooding — is accessible now. The valley is letting you in during a specific window. Whether that is coincidence is not a question you can answer with a clinometer."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:magnetic-anomaly"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Magnetic Anomaly"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The anomaly has a shape: an ellipse, roughly two hundred metres by three hundred, centred on the cairn field. The deviation is consistent at eleven degrees. At the boundary of the ellipse the deviation drops to zero over a distance of approximately five metres — a hard edge, which is not how geological magnetic anomalies behave. This one is structural. Something below the cairn field is producing it deliberately."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:root-observation"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Root Orientation"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The root systems orient toward the interior consistently enough that you could use them as a compass. You test this: they are as reliable as any bearing you've taken in the last two days. The trees know where the centre is. You note this under *observations requiring further investigation* rather than the category you actually want to use, which has no professional name."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:central-cairn-decoded"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Central Cairn Decoded"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The central cairn is the index to the First Record's surface layer: it contains the survey parameters, the correction factor for the magnetic anomaly, and the sequence for reading the outer cairns. Reading it correctly took twenty minutes, your best lamp, and the full concentration you would normally reserve for a triangulation survey in difficult terrain. You have never applied this much focus to a single stone before. The stone deserved it."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:outer-cairn-pattern"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Outer Cairn Pattern"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The outer cairns are not arranged geometrically — they are arranged relationally. Each cairn's position records its relationship to the terrain features around it: the slope, the drainage, the tree density, the soil type. Together they form a profile of the valley floor that is more complete than any map you could produce with your instruments. You are looking at two hundred years of accumulated observation rendered in stone."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:kael-sura-cartography"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Kael-Sura Cartography"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The Kael-Sura cartographic tradition is older than yours by at least three centuries and more sophisticated in one specific way: it records change over time rather than state at a moment. Your maps are snapshots. The First Record is a time-lapse. It shows not just where things are but how they have moved, how they have changed, how they have responded to each other over generations. You have never seen anything like it. You may never see anything like it again."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:memory-stones-meaning"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Memory Stones"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Each stone records a decision: a moment when a Kael-Sura cartographer had to choose between accuracy and protection, between recording something and leaving it unrecorded. The marks are not explanations — they are acknowledgements. *I was here. I chose. The choice was this.* There are forty-seven stones on the shelf. Asha is not the first person to face what you are about to face."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:bearing-stone-system"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Bearing Stone System"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The bearing stones are a calendar and a compass simultaneously. At different times of day and different seasons they align with different features of the interior. You can only see two targets currently. A third stone is oriented toward something below the current sightline — something underground that the stone has been pointing at for as long as it has been standing here."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:previous-team"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Previous Expedition"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Two people, by the equipment. Academic cartographers — the instruments are university specification. They were thorough and they were not arrogant, which makes what happened to them more sobering rather than less. Carefulness was not enough. They needed something more than carefulness, and they didn't have it, and the valley responded accordingly."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:lost-survey-content"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Lost Survey Notes"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The final entry reads: *The valley is not terrain. We have been mapping the wrong category of thing. If anyone finds this: do not use our coordinates. Start again. Understand what you are inside before you try to describe its outside.*\n\nThey got there. Just not in time."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:vael-was-here"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Vael's Trail"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The prints confirm it and so does the disturbed equipment — someone went through the notes systematically, taking specific pages and leaving others. Vael knows how to read a partial survey. He took the sections that described the cave entrance and left the sections that described the acoustic chamber, which means he doesn't know the acoustic chamber exists yet. You have a small advantage. It is temporary."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:cave-notation"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Cave Notation"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The cave notation is the same system as the cairn field but three-dimensional — it accounts for depth, acoustic properties, and hydrological relationships in a way the surface notation cannot. You can read the basic structure but the variant used here has conventions you haven't encountered. Asha's translation opens the rest. Without it you would have accurate data and no framework to put it in."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:acoustic-resonance"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Acoustic Chamber"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "You can hear the river source from here. Clearly, through three hundred metres of rock, at a frequency and volume that should not be possible. The chamber was shaped to produce this. Somewhere below you, the first word of the First Record is speaking, continuously, to anyone who knows how to listen. The valley is always in conversation with itself. You have been inside the conversation for four days without knowing it."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:gallery-scope"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Gallery Scope"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The gallery represents, at minimum, two hundred and forty years of continuous survey work by multiple Kael-Sura cartographers working in a consistent notation system across generations. The most recent addition is less than six months old. Asha's handwriting, you think, though you cannot be certain — she has not confirmed it and you have not asked."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:pillar-key"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Pillar Key"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The pillar's notation contains, embedded in its index function, the solution to the cairn field sequence: the correct order is determined by the magnetic anomaly's orientation at true north, which gives a bearing of confluence — the point where the river source's underground path meets the spring basin's overflow. The answer is a word in the Kael-Sura notation system. In English it translates as: *confluence*."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:spring-geology"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Spring Geology"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The spring should not exist at this elevation with this flow rate — the hydrology is wrong by every model you were taught. The water comes from below the limestone bedrock, from a source that predates the valley's current topography. Whatever produces it has been producing it for longer than the Kael-Sura have been mapping it, and possibly longer than the valley has had its current shape. The First Record is a document sitting on top of something much older."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:stones-nature"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Nature of the Stones"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The stones are geological amber — pre-Holocene, inclusions consistent with a forest ecosystem that no longer exists anywhere in this region. They are scientifically extraordinary. They are also, you understand from the gallery notation, the resonance anchors for the acoustic chamber — their molecular structure produces the frequency that carries the river source's sound through three hundred metres of rock. Remove them and the chamber goes silent. The valley stops listening to itself."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:final-inscription"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Final Inscription"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Asha translates it quietly, standing beside you, without inflection:\n\n*To the cartographer who reads this: you have understood the Record. You know what it is. You know what it protects. You know what publishing it would begin.\n\nWe do not ask you to choose our preference. We ask only that you choose with full knowledge.\n\nThe valley will remain what it is regardless of what you record. It has survived being misunderstood. It can survive being known. The question is not what the valley needs. The question is what you can live with.*\n\nShe says nothing else. She steps back. She waits."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:vael-encounter"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Vael Sighting"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "He sees you. He doesn't stop moving. He's covering ground efficiently — he knows where he's going. He's been here long enough to have a route."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:vael-intent-clear"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Vael's Intent"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The cipher resolves to three buyer names and a delivery location. The buyers are private collectors — the kind whose collections are never publicly catalogued. The delivery location is an intermediary storage facility in a country with no cultural heritage protection laws. Vael is not a treasure hunter. He is a dismantler. What he delivers is never seen again."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:vael-cipher-hint"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Cipher Hint"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The cipher key is a tool. Vael doesn't carry one — he hires people who do. The tool measures horizontal angles between two points. Think about what you carry that he doesn't."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:sequence-solved"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Sequence Solved"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "The sequence resolves. The bearing is true. The cairn field, the platform, the ridge — three points producing a single direction, consistent across all three instruments, pointing to something below the valley floor that every element of the First Record has been orienting toward. You know where to go. You have always known where to go. The valley has been telling you since you arrived."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:vael-final-state"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Vael's Decision"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "He has been in the chamber long enough to read the stones' position in the gallery notation. He understands structurally what removing them would do. He is weighing this against the contract value. You can see him weighing it. You don't know yet which way the scale is going."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:notebook-entry"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Notebook Entry"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Day 4, final entry before the interior: *The valley is not terrain. I am beginning to understand this. The previous expedition's note said the same thing, too late. I am writing it now, early, so that I remember to keep revising what I think I'm mapping.*"
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:first-record-1"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "First Record: Cairn Field"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Entry one confirmed: the cairn field is a dynamic survey network. Each cairn records not just its own position but the historical range of movement of every terrain feature within its sightline. The valley shifts. The cairns track the shifting. The First Record is not a static document. It is updated every season by someone who knows how."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:first-record-2"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "First Record: The Ridge"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Entry two confirmed: the ridge bearing stones function as a seasonal calendar. You now know what time of year it is relative to the valley's internal rhythm — and it is not the same season the outside world thinks it is. The valley runs on its own calendar. The stones have been tracking it for longer than anyone remembers setting them."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:first-record-3"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "First Record: Drowned Survey"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Entry three recovered from the drowned survey site: the previous expedition's partial translation, enough to understand that the First Record predates the Kael-Sura's current notation system. Someone was recording this valley before the Kael-Sura, in a notation that the Kael-Sura later incorporated and extended. The First Record has more than one author tradition. You are inside a palimpsest."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:first-record-4"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "First Record: Upper Caves"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Entry four: the cave system is a three-dimensional extension of the surface record, mapping the valley's hydrological and acoustic relationships across six generations of Kael-Sura observation. The acoustic chamber was engineered. The engineering is the most sophisticated thing you have ever seen done with sound and stone. You are not qualified to fully understand it. You are qualified enough to know you are not qualified."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:first-record-5"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "First Record: The Source"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Entry five, the founding inscription, fully translated:\n\n*We map this place so that the place does not have to map itself. Every mark we make is a mark the valley does not have to make. The record is our gift to a place that does not need us, offered in gratitude for being allowed to stay.*\n\nThe Auric Stones are the full stop at the end of this sentence. You understand this completely now. The question is what you do with the understanding."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:asha-observation"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Asha's Observation"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "She watches you work the way you watch terrain — carefully, without intervening, noting what you notice and what you don't. You have the feeling that she has been waiting for someone like you for a long time, and that *like you* is a very specific category that very few people fit."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:clue:survey-active"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Survey Kit Ready"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "Your instruments are calibrated and ready. The survey kit works in the valley's conditions better than you expected — the theodolite handles the diffuse light, the clinometer gives reliable readings despite the terrain. You are equipped for this. You have always been equipped for this."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:consequence:death"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "consequence"
+        ],
+        [
+          "respawn",
+          "30078:<PUBKEY>:cartographer:place:expedition-camp"
+        ],
+        [
+          "clears",
+          "inventory"
+        ]
+      ],
+      "content": "The valley is precise. Imprecision has consequences here that it does not have in other places.\n\nYou are back at camp. Start again. More carefully this time."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:recipe:survey-reading"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "recipe"
+        ],
+        [
+          "title",
+          "Ridge Survey"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:survey-kit",
+          "",
+          "You need your survey kit."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:field-notebook",
+          "",
+          "You need your field notebook to record the reading."
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "measured",
+          "30078:<PUBKEY>:cartographer:feature:ridge-survey"
+        ],
+        [
+          "on-complete",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-2"
+        ],
+        [
+          "ordered",
+          "false"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:recipe:source-translation"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "recipe"
+        ],
+        [
+          "title",
+          "Source Translation"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-4",
+          "",
+          "You need entry four to understand the notation variant used at the source."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:item:water-sample",
+          "",
+          "The sample gives you the hydrological context needed to complete the translation."
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "translated",
+          "30078:<PUBKEY>:cartographer:feature:source-inscription"
+        ],
+        [
+          "on-complete",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:cartographer:item:first-record-entry-5"
+        ],
+        [
+          "ordered",
+          "true"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:world-breath"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise",
+          ""
+        ],
+        [
+          "lpf",
+          "200"
+        ],
+        [
+          "hpf",
+          "40"
+        ],
+        [
+          "rand",
+          "0.02",
+          "0.08"
+        ],
+        [
+          "slow",
+          "12"
+        ],
+        [
+          "gain",
+          "0.25"
+        ],
+        [
+          "attack",
+          "4"
+        ],
+        [
+          "release",
+          "4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:threshold-drone"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "g2 ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "lpf",
+          "280"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "room",
+          "0.4"
+        ],
+        [
+          "gain",
+          "0.35"
+        ],
+        [
+          "attack",
+          "2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:camp-stillness"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "d3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "lpf",
+          "240"
+        ],
+        [
+          "slow",
+          "16"
+        ],
+        [
+          "room",
+          "0.3"
+        ],
+        [
+          "gain",
+          "0.2"
+        ],
+        [
+          "attack",
+          "3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:river-rush"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise",
+          ""
+        ],
+        [
+          "lpf",
+          "700"
+        ],
+        [
+          "hpf",
+          "100"
+        ],
+        [
+          "rand",
+          "0.1",
+          "0.3"
+        ],
+        [
+          "slow",
+          "3"
+        ],
+        [
+          "gain",
+          "0.45"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:canopy-drone"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c2 ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "lpf",
+          "260"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "room",
+          "0.5"
+        ],
+        [
+          "roomsize",
+          "6"
+        ],
+        [
+          "gain",
+          "0.4"
+        ],
+        [
+          "attack",
+          "2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:valley-pulse"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c2 ~ ~ ~ g2 ~ ~ ~ ~ ~ ~ ~ c2 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "triangle"
+        ],
+        [
+          "lpf",
+          "300"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "room",
+          "0.6"
+        ],
+        [
+          "gain",
+          "0.2"
+        ],
+        [
+          "attack",
+          "1.5"
+        ],
+        [
+          "degrade-by",
+          "0.15"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:ridge-wind"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise",
+          ""
+        ],
+        [
+          "lpf",
+          "500"
+        ],
+        [
+          "hpf",
+          "80"
+        ],
+        [
+          "rand",
+          "0.05",
+          "0.25"
+        ],
+        [
+          "slow",
+          "5"
+        ],
+        [
+          "gain",
+          "0.35"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:dread-low"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "b1 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "lpf",
+          "220"
+        ],
+        [
+          "slow",
+          "16"
+        ],
+        [
+          "room",
+          "0.7"
+        ],
+        [
+          "roomsize",
+          "8"
+        ],
+        [
+          "gain",
+          "0.45"
+        ],
+        [
+          "attack",
+          "4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:first-record-theme"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c3 ~ eb3 ~ ~ ~ g3 ~ ~ ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "room",
+          "0.5"
+        ],
+        [
+          "gain",
+          "0.25"
+        ],
+        [
+          "attack",
+          "1.5"
+        ],
+        [
+          "delay",
+          "0.4",
+          "0.2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:trust-warmth"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "f3 ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "triangle"
+        ],
+        [
+          "lpf",
+          "400"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "room",
+          "0.3"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "attack",
+          "2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:cave-deep"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "a1 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "lpf",
+          "200"
+        ],
+        [
+          "slow",
+          "16"
+        ],
+        [
+          "room",
+          "0.8"
+        ],
+        [
+          "roomsize",
+          "9"
+        ],
+        [
+          "gain",
+          "0.5"
+        ],
+        [
+          "attack",
+          "5"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:cave-resonance"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "hpf",
+          "300"
+        ],
+        [
+          "slow",
+          "16"
+        ],
+        [
+          "room",
+          "0.9"
+        ],
+        [
+          "roomsize",
+          "10"
+        ],
+        [
+          "gain",
+          "0.2"
+        ],
+        [
+          "attack",
+          "3"
+        ],
+        [
+          "jux",
+          "rev"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:gallery-resonance"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c2 ~ ~ ~ eb2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "lpf",
+          "300"
+        ],
+        [
+          "slow",
+          "16"
+        ],
+        [
+          "room",
+          "0.85"
+        ],
+        [
+          "roomsize",
+          "9"
+        ],
+        [
+          "gain",
+          "0.5"
+        ],
+        [
+          "attack",
+          "4"
+        ],
+        [
+          "jux",
+          "rev"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:spring-drops"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "e5 ~ ~ g5 ~ ~ ~ b5 ~ ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "fast",
+          "1.5"
+        ],
+        [
+          "room",
+          "0.7"
+        ],
+        [
+          "delay",
+          "0.3",
+          "0.15"
+        ],
+        [
+          "degrade-by",
+          "0.4"
+        ],
+        [
+          "gain",
+          "0.25"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:first-record-full"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c3 eb3 g3 ~ c4 ~ ~ ~ eb4 ~ ~ ~ g4 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "room",
+          "0.8"
+        ],
+        [
+          "roomsize",
+          "8"
+        ],
+        [
+          "gain",
+          "0.4"
+        ],
+        [
+          "attack",
+          "2"
+        ],
+        [
+          "delay",
+          "0.5",
+          "0.3"
+        ],
+        [
+          "jux",
+          "rev"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:auric-weight"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c1 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "lpf",
+          "160"
+        ],
+        [
+          "slow",
+          "32"
+        ],
+        [
+          "room",
+          "0.9"
+        ],
+        [
+          "roomsize",
+          "10"
+        ],
+        [
+          "gain",
+          "0.55"
+        ],
+        [
+          "attack",
+          "6"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:resonance-shift"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c1 b0 bb0 ab0"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "2"
+        ],
+        [
+          "room",
+          "0.9"
+        ],
+        [
+          "roomsize",
+          "10"
+        ],
+        [
+          "gain",
+          "0.7"
+        ],
+        [
+          "release",
+          "3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:first-record-reveal"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c4 e4 g4 c5"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "3"
+        ],
+        [
+          "room",
+          "0.6"
+        ],
+        [
+          "gain",
+          "0.5"
+        ],
+        [
+          "attack",
+          "0.5"
+        ],
+        [
+          "release",
+          "1.5"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:sequence-complete"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c3 e3 g3 c4 e4 g4"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "2"
+        ],
+        [
+          "room",
+          "0.7"
+        ],
+        [
+          "roomsize",
+          "7"
+        ],
+        [
+          "gain",
+          "0.6"
+        ],
+        [
+          "attack",
+          "0.3"
+        ],
+        [
+          "release",
+          "2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:record-resolution"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c4 e4 g4 c5 ~ ~ ~ ~ e5 ~ ~ ~ g5 ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "room",
+          "0.8"
+        ],
+        [
+          "roomsize",
+          "8"
+        ],
+        [
+          "gain",
+          "0.6"
+        ],
+        [
+          "attack",
+          "1"
+        ],
+        [
+          "release",
+          "3"
+        ],
+        [
+          "jux",
+          "rev"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:protect-stillness"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "lpf",
+          "220"
+        ],
+        [
+          "slow",
+          "32"
+        ],
+        [
+          "room",
+          "0.7"
+        ],
+        [
+          "roomsize",
+          "8"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "attack",
+          "6"
+        ],
+        [
+          "release",
+          "8"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:compass-tick"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c5 ~ ~ ~ ~ ~ ~ ~"
+        ],
+        [
+          "oscillator",
+          "square"
+        ],
+        [
+          "fast",
+          "2"
+        ],
+        [
+          "crush",
+          "8"
+        ],
+        [
+          "gain",
+          "0.15"
+        ],
+        [
+          "degrade-by",
+          "0.3"
+        ]
+      ],
+      "content": ""
+    }
+  ],
+  "walkthrough": [
+    {
+      "input": "examine survey marker",
+      "expect": [
+        "notation",
+        "trained"
+      ]
+    },
+    {
+      "input": "examine old marking",
+      "expect": [
+        "attention",
+        "Kael-Sura"
+      ]
+    },
+    {
+      "input": "take survey kit",
+      "expect": [
+        "survey kit"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Expedition Camp",
+        "Asha"
+      ]
+    },
+    {
+      "input": "examine damaged compass",
+      "expect": [
+        "needle",
+        "eleven"
+      ]
+    },
+    {
+      "input": "examine field notes",
+      "expect": [
+        "contradicts",
+        "question"
+      ]
+    },
+    {
+      "input": "talk asha",
+      "expect": [
+        "measure",
+        "understand"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "other one"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "remembers",
+        "cairns"
+      ]
+    },
+    {
+      "input": "3",
+      "expect": []
+    },
+    {
+      "input": "east",
+      "expect": [
+        "Cache",
+        "crates"
+      ]
+    },
+    {
+      "input": "search supply crate",
+      "expect": [
+        "ledger"
+      ]
+    },
+    {
+      "input": "examine vael notes",
+      "expect": [
+        "partial",
+        "cairn"
+      ]
+    },
+    {
+      "input": "west",
+      "expect": [
+        "Expedition Camp"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "River Crossing",
+        "cairn"
+      ]
+    },
+    {
+      "input": "survey river cairn",
+      "expect": [
+        "true north",
+        "correction"
+      ]
+    },
+    {
+      "input": "examine current gauge",
+      "expect": [
+        "water",
+        "cave"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Canopy Floor"
+      ]
+    },
+    {
+      "input": "survey compass anomaly",
+      "expect": [
+        "eleven",
+        "structural"
+      ]
+    },
+    {
+      "input": "examine root system",
+      "expect": [
+        "oriented",
+        "interior"
+      ]
+    },
+    {
+      "input": "east",
+      "expect": [
+        "Ridge",
+        "bearing stones"
+      ]
+    },
+    {
+      "input": "survey ridge survey",
+      "expect": [
+        "bearing",
+        "larger"
+      ]
+    },
+    {
+      "input": "examine bearing stones",
+      "expect": [
+        "calendar",
+        "sighting"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Drowned Survey",
+        "rotting"
+      ]
+    },
+    {
+      "input": "search expedition remains",
+      "expect": [
+        "record",
+        "previous"
+      ]
+    },
+    {
+      "input": "read lost survey",
+      "expect": [
+        "not terrain",
+        "start again"
+      ]
+    },
+    {
+      "input": "examine vael trail",
+      "expect": [
+        "boot prints",
+        "caves"
+      ]
+    },
+    {
+      "input": "south",
+      "expect": [
+        "Ridge"
+      ]
+    },
+    {
+      "input": "west",
+      "expect": [
+        "Canopy Floor"
+      ]
+    },
+    {
+      "input": "south",
+      "expect": [
+        "River Crossing"
+      ]
+    },
+    {
+      "input": "south",
+      "expect": [
+        "Expedition Camp"
+      ]
+    },
+    {
+      "input": "talk asha",
+      "expect": [
+        "precise",
+        "consequences"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "understanding",
+        "caves"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "trusting"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "River Crossing"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Canopy Floor"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Cairn Field",
+        "central"
+      ]
+    },
+    {
+      "input": "examine outer cairns",
+      "expect": [
+        "relational"
+      ]
+    },
+    {
+      "input": "survey central cairn",
+      "expect": [
+        "decoded",
+        "First Record"
+      ]
+    },
+    {
+      "input": "take plumb line",
+      "expect": [
+        "plumb line"
+      ]
+    },
+    {
+      "input": "survey survey platform",
+      "expect": [
+        "resonance",
+        "bearing"
+      ]
+    },
+    {
+      "input": "west",
+      "expect": [
+        "Asha's Place",
+        "map"
+      ]
+    },
+    {
+      "input": "study kael-sura map",
+      "expect": [
+        "generations",
+        "alive"
+      ]
+    },
+    {
+      "input": "examine memory stones",
+      "expect": [
+        "decision",
+        "choice"
+      ]
+    },
+    {
+      "input": "talk asha",
+      "expect": [
+        "ridge",
+        "bearing stones"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "began below",
+        "footnotes"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": []
+    },
+    {
+      "input": "east",
+      "expect": [
+        "Cairn Field"
+      ]
+    },
+    {
+      "input": "south",
+      "expect": [
+        "Canopy Floor"
+      ]
+    },
+    {
+      "input": "east",
+      "expect": [
+        "Ridge"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Drowned Survey"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Upper Caves",
+        "notation"
+      ]
+    },
+    {
+      "input": "study cave markings",
+      "expect": [
+        "hydrological",
+        "acoustic"
+      ]
+    },
+    {
+      "input": "listen acoustic chamber",
+      "expect": [
+        "river source",
+        "conversation"
+      ]
+    },
+    {
+      "input": "down",
+      "expect": [
+        "Stone Gallery",
+        "First Record"
+      ]
+    },
+    {
+      "input": "study gallery walls",
+      "expect": [
+        "continuous",
+        "240"
+      ]
+    },
+    {
+      "input": "survey central pillar",
+      "expect": [
+        "sequence",
+        "confluence"
+      ]
+    },
+    {
+      "input": "answer CONFLUENCE",
+      "expect": [
+        "bearing",
+        "solved"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "River Source",
+        "spring"
+      ]
+    },
+    {
+      "input": "sample spring basin",
+      "expect": [
+        "water sample"
+      ]
+    },
+    {
+      "input": "translate source inscription",
+      "expect": [
+        "gift",
+        "full stop"
+      ]
+    },
+    {
+      "input": "read vael ledger",
+      "expect": [
+        "buyers"
+      ]
+    },
+    {
+      "input": "answer AZIMUTH",
+      "expect": [
+        "dismantler",
+        "collectors"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Auric Chamber",
+        "amber",
+        "Vael"
+      ]
+    },
+    {
+      "input": "examine auric stones",
+      "expect": [
+        "amber",
+        "resonance",
+        "punctuation"
+      ]
+    },
+    {
+      "input": "read choice inscription",
+      "expect": [
+        "full knowledge"
+      ]
+    },
+    {
+      "input": "talk vael",
+      "expect": [
+        "understand",
+        "what they are"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "gallery",
+        "buyers don't know"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "fine",
+        "morning"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": []
+    },
+    {
+      "input": "answer PROTECT",
+      "expect": [
+        "solved",
+        "east passage"
+      ]
+    },
+    {
+      "input": "east",
+      "expect": [
+        "Map That Was Not Made",
+        "nothing written"
+      ]
+    }
+  ]
+}

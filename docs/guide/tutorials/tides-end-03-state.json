@@ -65,7 +65,7 @@
         ["tag", "coastal"],
         ["tag", "intermediate"],
         ["start", "30078:<PUBKEY>:tides-end-03-state:place:the-dock"],
-        ["relay", "wss://relay.damus.io"],
+        ["relay", "wss://relay.primal.net"],
         ["collaboration", "open"],
         ["colour", "bg", "#1a1a2e"],
         ["colour", "text", "#c8c8a9"],
