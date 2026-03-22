@@ -116,8 +116,8 @@
         ["d", "tides-end-09-recipes:portal:dock-to-beach"],
         ["t", "tides-end-09-recipes"],
         ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:the-beach", "east", "The shoreline curves east past the rocks toward a sandy beach."],
-        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:the-dock", "west", "A rocky path follows the waterline back to the dock."]
+        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:the-dock", "east", "The shoreline curves east past the rocks toward a sandy beach."],
+        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:the-beach", "west", "A rocky path follows the waterline back to the dock."]
       ],
       "content": ""
     },
@@ -127,8 +127,8 @@
         ["d", "tides-end-09-recipes:portal:beach-to-square"],
         ["t", "tides-end-09-recipes"],
         ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:village-square", "east", "A path leads through the dunes to the village square."],
-        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:the-beach", "west", "A sandy track winds through the dunes toward the shore."]
+        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:the-beach", "east", "A path leads through the dunes to the village square."],
+        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:village-square", "west", "A sandy track winds through the dunes toward the shore."]
       ],
       "content": ""
     },
@@ -138,8 +138,8 @@
         ["d", "tides-end-09-recipes:portal:dock-to-square"],
         ["t", "tides-end-09-recipes"],
         ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:village-square", "north", "A cobbled road climbs toward the village square."],
-        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:the-dock", "south", "The road slopes down to the old dock."]
+        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:the-dock", "north", "A cobbled road climbs toward the village square."],
+        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:village-square", "south", "The road slopes down to the old dock."]
       ],
       "content": ""
     },

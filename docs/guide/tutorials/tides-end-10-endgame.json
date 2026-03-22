@@ -307,13 +307,13 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-10-endgame:place:village-square",
+          "30078:<PUBKEY>:tides-end-10-endgame:place:the-dock",
           "north",
           "A cobbled road climbs toward the village square."
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-10-endgame:place:the-dock",
+          "30078:<PUBKEY>:tides-end-10-endgame:place:village-square",
           "south",
           "The road slopes down to the old dock."
         ]
@@ -337,13 +337,13 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-10-endgame:place:the-tavern",
+          "30078:<PUBKEY>:tides-end-10-endgame:place:village-square",
           "east",
           "A battered sign reads 'The Anchor' above a low doorway."
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-10-endgame:place:village-square",
+          "30078:<PUBKEY>:tides-end-10-endgame:place:the-tavern",
           "west",
           "The square is visible through the open door."
         ]
@@ -371,13 +371,13 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-10-endgame:place:departure-pier",
+          "30078:<PUBKEY>:tides-end-10-endgame:place:village-square",
           "west",
           "A narrow path leads west toward a stone pier."
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-10-endgame:place:village-square",
+          "30078:<PUBKEY>:tides-end-10-endgame:place:departure-pier",
           "east",
           "The village square is back the way you came."
         ],

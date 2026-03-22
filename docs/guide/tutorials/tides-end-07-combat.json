@@ -485,13 +485,13 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-07-combat:place:cellar-steps",
+          "30078:<PUBKEY>:tides-end-07-combat:place:the-tavern",
           "down",
           "A trapdoor in the floor opens onto stone steps descending into darkness."
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-07-combat:place:the-tavern",
+          "30078:<PUBKEY>:tides-end-07-combat:place:cellar-steps",
           "up",
           "Stone steps lead back up to the tavern."
         ],
@@ -521,13 +521,13 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-07-combat:place:the-cellar",
+          "30078:<PUBKEY>:tides-end-07-combat:place:cellar-steps",
           "down",
           "The steps continue down into the cellar proper."
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-07-combat:place:cellar-steps",
+          "30078:<PUBKEY>:tides-end-07-combat:place:the-cellar",
           "up",
           "Steps lead back up."
         ]

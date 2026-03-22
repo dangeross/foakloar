@@ -358,13 +358,13 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-06-quests:place:village-square",
+          "30078:<PUBKEY>:tides-end-06-quests:place:the-dock",
           "north",
           "A cobbled road climbs toward the village square."
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-06-quests:place:the-dock",
+          "30078:<PUBKEY>:tides-end-06-quests:place:village-square",
           "south",
           "The road slopes down to the old dock."
         ]
@@ -388,13 +388,13 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-06-quests:place:the-tavern",
+          "30078:<PUBKEY>:tides-end-06-quests:place:village-square",
           "east",
           "A battered sign reads 'The Anchor' above a low doorway."
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-06-quests:place:village-square",
+          "30078:<PUBKEY>:tides-end-06-quests:place:the-tavern",
           "west",
           "The square is visible through the open door."
         ]
@@ -418,13 +418,13 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-06-quests:place:the-beach",
+          "30078:<PUBKEY>:tides-end-06-quests:place:village-square",
           "west",
           "A sandy track winds through the dunes toward the shore."
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-06-quests:place:village-square",
+          "30078:<PUBKEY>:tides-end-06-quests:place:the-beach",
           "east",
           "A path leads back through the dunes to the village."
         ]
@@ -448,13 +448,13 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-06-quests:place:the-beach",
+          "30078:<PUBKEY>:tides-end-06-quests:place:the-dock",
           "east",
           "The shoreline curves east past the rocks toward a sandy beach."
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-06-quests:place:the-dock",
+          "30078:<PUBKEY>:tides-end-06-quests:place:the-beach",
           "west",
           "A rocky path follows the waterline back to the dock."
         ]

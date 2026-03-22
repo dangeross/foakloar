@@ -155,8 +155,8 @@
         ["d", "tides-end-02-things:portal:dock-to-square"],
         ["t", "tides-end-02-things"],
         ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:village-square", "north", "A cobbled road climbs toward the village square."],
-        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:the-dock", "south", "The road slopes down to the old dock."]
+        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:the-dock", "north", "A cobbled road climbs toward the village square."],
+        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:village-square", "south", "The road slopes down to the old dock."]
       ],
       "content": ""
     },
@@ -167,8 +167,8 @@
         ["d", "tides-end-02-things:portal:square-to-tavern"],
         ["t", "tides-end-02-things"],
         ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:the-tavern", "east", "A battered sign reads 'The Anchor' above a low doorway."],
-        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:village-square", "west", "The square is visible through the open door."]
+        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:village-square", "east", "A battered sign reads 'The Anchor' above a low doorway."],
+        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:the-tavern", "west", "The square is visible through the open door."]
       ],
       "content": ""
     },
@@ -179,8 +179,8 @@
         ["d", "tides-end-02-things:portal:square-to-beach"],
         ["t", "tides-end-02-things"],
         ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:the-beach", "west", "A sandy track winds through the dunes toward the shore."],
-        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:village-square", "east", "A path leads back through the dunes to the village."]
+        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:village-square", "west", "A sandy track winds through the dunes toward the shore."],
+        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:the-beach", "east", "A path leads back through the dunes to the village."]
       ],
       "content": ""
     },
@@ -191,8 +191,8 @@
         ["d", "tides-end-02-things:portal:dock-to-beach"],
         ["t", "tides-end-02-things"],
         ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:the-beach", "east", "The shoreline curves east past the rocks toward a sandy beach."],
-        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:the-dock", "west", "A rocky path follows the waterline back to the dock."]
+        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:the-dock", "east", "The shoreline curves east past the rocks toward a sandy beach."],
+        ["exit", "30078:<PUBKEY>:tides-end-02-things:place:the-beach", "west", "A rocky path follows the waterline back to the dock."]
       ],
       "content": ""
     },

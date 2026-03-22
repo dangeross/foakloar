@@ -20,6 +20,7 @@ Machine-readable reference for LLM world authoring. All events are `kind: 30078`
 | `["on-counter", "battery", "0", "set-state", "dead"]` | Missing direction: `["on-counter", "down", "battery", "0", "set-state", "dead"]` |
 | `["exit", "north"]` on a portal | Portal exits need a place ref: `["exit", "30078:<pk>:<d-tag>", "north", "label"]` |
 | `["exit", "30078:<pk>:<d-tag>", "north", "label"]` on a place | Place exits are slot-only: `["exit", "north"]` |
+| Portal exit place-ref is the DESTINATION | Place-ref is the SOURCE — `["exit", "<where-player-is>", "<direction>", "<label>"]` |
 | Putting `noun` or `verb` tags on a portal | Portals have no nouns or verbs |
 | Numeric values as words (`"ten"`, `"high"`) | Always use numeric strings: `"10"`, `"3"` |
 | Adding `title` tag to portal, puzzle, dialogue, or sound | These types have no `title` tag (portal/dialogue/puzzle/sound) |
@@ -197,7 +198,7 @@ D-tag: `<slug>:world`
 
 | Tag | Shape | Req? | Desc |
 |-----|-------|------|------|
-| `exit` | `["exit", "<place-ref>", "<slot>", "<label>"]` (repeatable) | yes (at least 1) | — |
+| `exit` | `["exit", "<source-place-ref>", "<slot>", "<label>"]` (repeatable) | yes (at least 1) | place-ref is SOURCE, slot is direction FROM source |
 | `state` | `["state", "<initial>"]` | opt | — |
 | `transition` | `["transition", "<from>", "<to>", "<text?>"]` (repeatable) | opt | — |
 | `requires` | `["requires", "<ref>", "<state>", "<desc>"]` (repeatable) | opt | — |
@@ -217,8 +218,8 @@ One-way portal (1 exit tag) or two-way (2 exit tags):
   "kind": 30078,
   "tags": [
     ["d", "my-world:portal:clearing-to-cave"], ["t", "my-world"], ["type", "portal"],
-    ["exit", "30078:<pk>:my-world:place:cave", "north", "A dark cave looms."],
-    ["exit", "30078:<pk>:my-world:place:clearing", "south", "Daylight to the south."]
+    ["exit", "30078:<pk>:my-world:place:clearing", "north", "A dark cave looms."],
+    ["exit", "30078:<pk>:my-world:place:cave", "south", "Daylight to the south."]
   ],
   "content": ""
 }
