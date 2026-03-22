@@ -250,69 +250,137 @@ export function evaluateSoundTags(events, currentPlace, playerState, npcStates =
 }
 
 /**
- * Play a one-shot sound via superdough (Strudel's low-level synth trigger).
- * Does not interfere with ambient Strudel patterns — fires individual notes
- * directly without going through the pattern evaluator.
+ * Parse sound event tags into a params object for playback.
+ */
+function parseSoundEventParams(soundEvent, volume) {
+  const tags = soundEvent.tags || [];
+  const get = (name) => tags.find((t) => t[0] === name)?.[1] ?? null;
+
+  const notePattern = get('note');
+  const sample = get('sample');
+  const noise = tags.some((t) => t[0] === 'noise');
+  if (!notePattern && !sample && !noise) return null;
+
+  const params = {};
+  if (get('oscillator')) params.s = get('oscillator');
+  if (get('gain')) params.gain = parseFloat(get('gain')) * volume;
+  else params.gain = 0.5 * volume;
+  if (get('sustain')) params.sustain = parseFloat(get('sustain'));
+  if (get('release')) params.release = parseFloat(get('release'));
+  if (get('attack')) params.attack = parseFloat(get('attack'));
+  if (get('lpf')) params.lpf = parseFloat(get('lpf'));
+  if (get('hpf')) params.hpf = parseFloat(get('hpf'));
+  if (get('room')) params.room = parseFloat(get('room'));
+  if (get('roomsize')) params.roomsize = parseFloat(get('roomsize'));
+  if (get('crush')) params.crush = parseFloat(get('crush'));
+  if (get('pan')) params.pan = parseFloat(get('pan'));
+  if (get('vowel')) params.vowel = get('vowel');
+  if (get('shape')) params.shape = parseFloat(get('shape'));
+
+  return { params, notePattern, sample, noise };
+}
+
+/**
+ * Play a one-shot sound via superdough, with Web Audio fallback.
+ * superdough fires individual notes/samples without interfering with ambient.
+ * Falls back to raw Web Audio API if superdough is unavailable.
  */
 export async function playOneShotRef(soundRef, volume = 1.0) {
   if (!audioReady || muted || !soundRef) return;
+
+  if (!eventsMap) return;
+  const soundEvent = eventsMap.get(soundRef);
+  if (!soundEvent) return;
+
+  const parsed = parseSoundEventParams(soundEvent, volume);
+  if (!parsed) return;
+  const { params, notePattern, sample, noise } = parsed;
+  const duration = (params.sustain || 0.3) + (params.release || 0.2);
+
+  // Try superdough first (full Strudel engine — samples, effects, filters)
+  const superdough = window.strudelScope?.superdough;
+  const getCtx = strudelModule?.getAudioContext || window.strudelScope?.getAudioContext;
+  const ctx = getCtx?.();
+
+  if (superdough && ctx) {
+    try {
+      if (ctx.state === 'suspended') await ctx.resume();
+      const now = ctx.currentTime;
+      if (sample) {
+        await superdough({ ...params, s: sample }, now, duration);
+      } else if (noise) {
+        await superdough({ ...params, s: 'white' }, now, duration);
+      } else {
+        const notes = notePattern.trim().split(/\s+/).filter((n) => n !== '~');
+        const spacing = duration + 0.05;
+        for (let i = 0; i < notes.length; i++) {
+          await superdough({ ...params, note: notes[i] }, now + i * spacing, duration);
+        }
+      }
+      return; // superdough succeeded
+    } catch (e) {
+      // Fall through to Web Audio
+    }
+  }
+
+  // Fallback: raw Web Audio API (oscillator notes only, no samples)
   try {
-    const ctx = strudelModule?.getAudioContext?.();
-    if (!ctx) return;
-    if (ctx.state === 'suspended') await ctx.resume();
-    await strudelReady;
+    const fallbackCtx = ctx || new AudioContext();
+    if (fallbackCtx.state === 'suspended') await fallbackCtx.resume();
+    const now = fallbackCtx.currentTime;
 
-    if (!eventsMap) return;
-    const soundEvent = eventsMap.get(soundRef);
-    if (!soundEvent) return;
-
-    const superdough = window.strudelScope?.superdough;
-    if (!superdough) return;
-
-    // Build value object from sound event tags
-    const tags = soundEvent.tags || [];
-    const get = (name) => tags.find((t) => t[0] === name)?.[1] ?? null;
-
-    const notePattern = get('note');
-    const sample = get('sample');
-    const noise = tags.some((t) => t[0] === 'noise');
-    if (!notePattern && !sample && !noise) return;
-
-    // Base params from tags
-    const params = {};
-    if (get('oscillator')) params.s = get('oscillator');
-    if (get('gain')) params.gain = parseFloat(get('gain')) * volume;
-    else params.gain = 0.5 * volume;
-    if (get('sustain')) params.sustain = parseFloat(get('sustain'));
-    if (get('release')) params.release = parseFloat(get('release'));
-    if (get('attack')) params.attack = parseFloat(get('attack'));
-    if (get('lpf')) params.lpf = parseFloat(get('lpf'));
-    if (get('hpf')) params.hpf = parseFloat(get('hpf'));
-    if (get('room')) params.room = parseFloat(get('room'));
-    if (get('roomsize')) params.roomsize = parseFloat(get('roomsize'));
-    if (get('crush')) params.crush = parseFloat(get('crush'));
-    if (get('pan')) params.pan = parseFloat(get('pan'));
-    if (get('vowel')) params.vowel = get('vowel');
-    if (get('shape')) params.shape = parseFloat(get('shape'));
-
-    const duration = (params.sustain || 0.3) + (params.release || 0.2);
-    const now = ctx.currentTime;
-
-    if (sample) {
-      // Sample-based one-shot
-      await superdough({ ...params, s: sample }, now, duration);
-    } else if (noise) {
-      await superdough({ ...params, s: 'white' }, now, duration);
-    } else {
-      // Note-based — play each note in sequence
+    if (noise) {
+      // Noise burst
+      const bufLen = fallbackCtx.sampleRate * duration;
+      const buf = fallbackCtx.createBuffer(1, bufLen, fallbackCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let j = 0; j < bufLen; j++) {
+        const pos = j / bufLen;
+        const cluster = Math.sin(j * 0.02) > 0 ? 1 : 0.2;
+        const env = pos < 0.15 ? Math.pow(pos / 0.15, 2) : Math.exp(-(pos - 0.15) * 4);
+        data[j] = (Math.random() * 2 - 1) * cluster * env;
+      }
+      const src = fallbackCtx.createBufferSource();
+      src.buffer = buf;
+      const gainNode = fallbackCtx.createGain();
+      gainNode.gain.value = params.gain || 0.1;
+      const lo = fallbackCtx.createBiquadFilter();
+      lo.type = 'lowpass';
+      lo.frequency.value = params.lpf || 1000;
+      const hi = fallbackCtx.createBiquadFilter();
+      hi.type = 'highpass';
+      hi.frequency.value = params.hpf || 100;
+      src.connect(hi); hi.connect(lo); lo.connect(gainNode); gainNode.connect(fallbackCtx.destination);
+      src.start(now); src.stop(now + duration + 0.05);
+    } else if (notePattern) {
+      // Oscillator notes
+      const oscType = params.s || 'sine';
+      const noteToFreq = (name) => {
+        const match = name.match(/^([a-g]#?)(\d)$/i);
+        if (!match) return 440;
+        const semitones = { c: -9, d: -7, e: -5, f: -4, g: -2, a: 0, b: 2,
+          'c#': -8, 'd#': -6, 'f#': -3, 'g#': -1, 'a#': 1 };
+        const semi = semitones[match[1].toLowerCase()] ?? 0;
+        const octave = parseInt(match[2], 10);
+        return 440 * Math.pow(2, (semi + (octave - 4) * 12) / 12);
+      };
       const notes = notePattern.trim().split(/\s+/).filter((n) => n !== '~');
       const spacing = duration + 0.05;
       for (let i = 0; i < notes.length; i++) {
-        await superdough({ ...params, note: notes[i] }, now + i * spacing, duration);
+        const freq = noteToFreq(notes[i]);
+        const t = now + i * spacing;
+        const osc = fallbackCtx.createOscillator();
+        const gainNode = fallbackCtx.createGain();
+        osc.type = oscType;
+        osc.frequency.value = freq;
+        gainNode.gain.setValueAtTime(params.gain || 0.3, t);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, t + duration);
+        osc.connect(gainNode); gainNode.connect(fallbackCtx.destination);
+        osc.start(t); osc.stop(t + duration + 0.05);
       }
     }
   } catch (e) {
-    console.warn('Sound one-shot error:', e.message || e);
+    console.warn('Sound one-shot fallback error:', e.message || e);
   }
 }
 
@@ -373,13 +441,13 @@ function buildStrudelCodeFromRef(soundRef, volume) {
  * Tags are processed in declaration order to build the Strudel chain.
  */
 function buildStrudelCodeFromEvent(soundEvent, mixVolume) {
-  // Tags that take a single value
   // Helper: if value contains spaces or mini-notation, quote it; otherwise use raw number
   const num = (v) => isNaN(Number(v)) ? `"${v}"` : parseFloat(v);
-  const SINGLE_TAG_MAP = {
-    note:         (v) => `note("${v}")`,
+
+  const CHAIN_TAG_MAP = {
+    note:         (v) => `.note("${v}")`,
     oscillator:   (v) => `.s("${v}")`,
-    noise:        ()  => `noise()`,
+    noise:        (v) => `.s("${v || 'white'}")`,
     slow:         (v) => `.slow(${num(v)})`,
     fast:         (v) => `.fast(${num(v)})`,
     room:         (v) => `.room(${num(v)})`,
@@ -400,12 +468,25 @@ function buildStrudelCodeFromEvent(soundEvent, mixVolume) {
     'degrade-by': (v) => `.degradeBy(${num(v)})`,
   };
 
+  const tags = soundEvent.tags || [];
+
+  // Find the starter tag (first note, noise, or oscillator) regardless of position
+  const STARTER_NAMES = new Set(['note', 'noise', 'oscillator']);
+  const starterTag = tags.find((t) => STARTER_NAMES.has(t[0]));
+  if (!starterTag) return null; // no valid starter
+
   let code = '';
+  if (starterTag[0] === 'note') code = `note("${starterTag[1]}")`;
+  else if (starterTag[0] === 'oscillator') code = `s("${starterTag[1]}")`;
+  else if (starterTag[0] === 'noise') code = starterTag[1] ? `s("${starterTag[1]}")` : `s("white")`;
+
   let baseGain = null;
   let bpmPrefix = '';
-  for (const tag of soundEvent.tags || []) {
+  for (const tag of tags) {
     const name = tag[0];
     const val = tag[1];
+    // Skip the starter tag (already processed) and identity tags
+    if (tag === starterTag) continue;
 
     // BPM sets global tempo, prepended before the pattern
     if (name === 'bpm') {
@@ -430,7 +511,7 @@ function buildStrudelCodeFromEvent(soundEvent, mixVolume) {
       continue;  // Applied at the end with mixVolume
     }
 
-    const fn = SINGLE_TAG_MAP[name];
+    const fn = CHAIN_TAG_MAP[name];
     if (fn) {
       code += fn(val || '');
     }
