@@ -696,10 +696,6 @@
           "puzzle"
         ],
         [
-          "title",
-          "Encoded Message"
-        ],
-        [
           "puzzle-type",
           "riddle"
         ],
@@ -931,10 +927,6 @@
         [
           "type",
           "puzzle"
-        ],
-        [
-          "title",
-          "Combination Lock"
         ],
         [
           "puzzle-type",

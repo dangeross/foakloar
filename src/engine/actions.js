@@ -168,9 +168,20 @@ export function evalSequencePuzzles(place, events, player, emit, emitSound) {
             if (transition?.text) emit(transition.text, 'narrative');
           }
         }
+      } else if (action === 'give-item' && value) {
+        const itemEvent = events.get(value);
+        if (itemEvent && !player.hasItem(value)) {
+          giveItem(value, events, player, emit);
+        }
+      } else if (action === 'consume-item' && value) {
+        if (player.hasItem(value)) {
+          player.removeItem(value);
+          const consumeEvent = events.get(value);
+          const consumeTitle = consumeEvent ? getTag(consumeEvent, 'title') : value;
+          emit(`${consumeTitle} is consumed.`, 'item');
+        }
       } else if (action === 'give-crypto-key') {
         player.addCryptoKey(value);
-        emit('You feel a key take shape in your mind.', 'narrative');
       } else if (action === 'sound' && value) {
         if (emitSound) emitSound(value);
       }
