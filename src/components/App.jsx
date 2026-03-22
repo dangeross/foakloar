@@ -511,7 +511,7 @@ export default function App() {
             onSelectMode={(mode) => { setClientMode(mode); try { localStorage.setItem(`foakloar:mode:${worldTag}`, mode); } catch {} }}
             buildMode={buildMode}
             onToggleBuild={() => setBuildMode(!buildMode)}
-            showBuildOption={identity.isProperIdentity}
+            showBuildOption={identity.isProperIdentity || drafts.length > 0}
             draftsCount={drafts.length}
             onOpenDrafts={() => setShowDrafts(true)}
             relayStatus={relayStatus}
