@@ -914,6 +914,32 @@ export class GameEngine {
           }
           acted = true;
         }
+      } else if (action === 'give-item' && targetState) {
+        if (!this.player.hasItem(targetState)) {
+          giveItem(targetState, this.events, this.player, (t, ty) => this._emit(t, ty));
+        }
+        acted = true;
+      } else if (action === 'sound') {
+        this._emitSound(targetState, targetRef);
+        acted = true;
+      } else if (action === 'deal-damage') {
+        const amount = parseInt(targetState, 10) || 1;
+        this._dealDamageToPlayer(amount, null, null);
+        acted = true;
+      } else if (action === 'heal') {
+        const amount = parseInt(targetState, 10) || 1;
+        this._healPlayer(amount);
+        acted = true;
+      } else if (action === 'consequence') {
+        const cRef = targetState || targetRef;
+        if (cRef) this._executeConsequence(cRef);
+        acted = true;
+      } else if (action === 'decrement' || action === 'increment') {
+        this._applyCounterAction(action, dtag, targetState, targetRef, event);
+        acted = true;
+      } else if (action === 'set-counter') {
+        this._applyCounterAction('set-counter', dtag, targetState, targetRef, event, tag[5]);
+        acted = true;
       } else if (action === 'consume-item') {
         // consume-item target is an item a-tag (usually self)
         const consumeDtag = targetState || dtag;
