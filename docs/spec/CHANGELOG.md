@@ -7,12 +7,6 @@
 
 ### Added
 
-**`quest-type` tag on quest events**
-Controls how the quest log reveals progress. Values: `open` (default — all steps visible), `hidden` (titles hidden until done), `mystery` (undone steps not shown, count unknown), `sequential` (only next step revealed).
-```json
-["quest-type", "mystery"]
-```
-
 **`puzzle` tag on NIP-44 sealed events**
 Declares which puzzle's answer is the decryption key. Used by the publishing tool to encrypt `content` before signing.
 ```json
@@ -113,7 +107,7 @@ Portal always uses extended form. Portal wins if conflict. Hidden portals still 
 **`plaintext-type` tag proposed and removed before shipping** — replaced by three-element `content-type`.
 
 **Sample presets documented — `dirt` and `classic`**
-`spec/sample-presets.md` added. `dirt` preset: 217 Dirt-Samples banks (drums, synths, nature, voice, world instruments). `classic` preset: 53 VCSL acoustic/orchestral samples (recorder, ocarina, sax, harmonica, pipe organ, timpani, world percussion). Custom GitHub repos with `strudel.json` index supported. Spec and authoring guide updated with preset descriptions, world-type recommendations, and GitHub repo pattern.
+`reference/sample-presets.md` added. `dirt` preset: 217 Dirt-Samples banks (drums, synths, nature, voice, world instruments). `classic` preset: 53 VCSL acoustic/orchestral samples (recorder, ocarina, sax, harmonica, pipe organ, timpani, world percussion). Custom GitHub repos with `strudel.json` index supported. Spec and authoring guide updated with preset descriptions, world-type recommendations, and GitHub repo pattern.
 
 **Sound system — envelope, samples library, noise correction**
 `attack`, `sustain`, `release` tags added for envelope control. `sustain` is critical for state-gated layers — short sustain makes layers cut off cleanly when their state gate deactivates. `noise` corrected: it is a DSP oscillator generating `noise()`, not `s("noise")` (which would look for a sample). `samples` tag added to world event for loading sample libraries: `["samples", "dirt"]` loads Strudel Dirt-Samples; GitHub repos and direct URLs also supported. `type: sound` events do not carry the `w` discovery tag — they are referenced by `a`-tag, not relay-discovered.
@@ -174,6 +168,12 @@ Two-noun commands with `with` keep noun order: `attack guard with sword` → tar
 
 **`requires` supports NPC and portal state checks**
 `["requires", "<npc-ref>", "fled", "..."]` checks NPC state. NPC state changes sync to `player.states` so `checkRequires` can evaluate them. Portal state also supported.
+
+**Quest endgame and chaining specced**
+`quest-type: endgame` added — hard end (win screen, no more commands) or soft end (`["quest-type", "endgame", "open"]` — world stays open). Endgame quests are always hidden from quest log, evaluated continuously on every state change. Multiple endgame quests = multiple possible endings. Quest chaining via `requires` on quest events — client auto-sets state to `complete` on completion (not `solved` — that is for puzzles). Cascade evaluation: completing one quest immediately re-evaluates all others. Restart behaviour documented.
+
+**`quest-type` tag added to quest events**
+Controls how the quest log reveals progress. `open` (default) — shows all steps. `hidden` — shows `✗ ???` for incomplete steps, scope visible. `mystery` — incomplete steps not shown at all. `sequential` — only the next undone step is named, rest hidden. Backwards compatible — `open` is assumed when tag is absent.
 
 **Matrix: `on-attacked` now allows `increment`/`decrement`/`set-counter`**
 Counting hits taken, tracking shield durability, attack-count puzzles. Consistent with `on-encounter` and `on-move` which already allow counter actions.

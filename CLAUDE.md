@@ -145,6 +145,14 @@ All previously tracked deviations have been fixed:
 | Drop command | Done |
 | Vouch UI (contextual vouching) | Done |
 | Place on-enter dispatch | Done |
+| Endgame quests (hard/soft, restart, cascading eval) | Done |
+| Quest on-complete dispatch | Done |
+| Smoke tester + walkthrough runner | Done |
+| Discoverability checks (hint level) | Done |
+| Examine as built-in command | Done |
+| Dialogue text → content field | Done |
+| Puzzle exit (back/leave/cancel) | Done |
+| Multi-relay support | In progress (feature/multi-relay) |
 
 ---
 
