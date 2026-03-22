@@ -57,6 +57,9 @@ const TYPE_COLOUR = {
   'media-ascii':    'text',
   death:            'error',
   'death-separator':'dim',
+  endgame:          'highlight',
+  'endgame-separator':'dim',
+  'endgame-prompt': 'dim',
 };
 
 /** Map entry types to extra CSS classes (layout, weight, etc.) */
@@ -85,6 +88,9 @@ const TYPE_CLASS = {
   'media-image':    'mt-2',
   death:            'font-bold text-center mt-4 mb-2 whitespace-pre-wrap',
   'death-separator':'text-center mt-1 mb-3 text-sm',
+  endgame:          'text-center mt-4 mb-2 whitespace-pre-wrap italic',
+  'endgame-separator':'text-center mt-1 mb-1 text-sm',
+  'endgame-prompt': 'text-center mt-2 text-sm',
 };
 
 export default function App() {
@@ -283,12 +289,22 @@ export default function App() {
     const entries = engine.flush();
     // Process sound entries — play one-shots, don't add to log
     const logEntries = [];
+    let shouldRestart = false;
     for (const entry of entries) {
       if (entry.type === 'sound' && entry.sound) {
         playOneShotRef(entry.sound, entry.volume);
+      } else if (entry.type === 'restart') {
+        shouldRestart = true;
       } else {
         logEntries.push(entry);
       }
+    }
+    if (shouldRestart) {
+      // Clear player state and reload — cleanest way to restart
+      player.reset();
+      setLog([]);
+      window.location.reload();
+      return;
     }
     if (logEntries.length > 0) {
       setLog((prev) => [...prev, ...logEntries]);

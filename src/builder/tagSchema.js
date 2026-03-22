@@ -459,7 +459,7 @@ export const TAG_SCHEMAS = {
 
   // ── Quest ──────────────────────────────────────────────────────────────
   involves:      { label: 'Involves', desc: 'Event that is part of this quest', repeatable: true, fields: [{ name: 'ref', type: 'event-ref', required: true }] },
-  'quest-type':  { label: 'Quest Type', desc: 'How quest progress is displayed — open (all visible), hidden (titles hidden), mystery (count hidden), sequential (one at a time)', fields: [{ name: 'type', type: 'select', options: ['open', 'hidden', 'mystery', 'sequential'], required: true }] },
+  'quest-type':  { label: 'Quest Type', desc: 'How quest progress is displayed — open (all visible), hidden (titles hidden), mystery (count hidden), sequential (one at a time), endgame (win-state detector)', fields: [{ name: 'type', type: 'select', options: ['open', 'hidden', 'mystery', 'sequential', 'endgame'], required: true }, { name: 'mode', type: 'select', options: ['', 'open'], required: false, placeholder: 'hard end (default)' }] },
 
   // ── World ────────────────────────────────────────────────────────────────
   author:        { label: 'Author', desc: 'Display name of the world author', fields: [{ name: 'value', type: 'text', required: false }] },

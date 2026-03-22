@@ -303,6 +303,25 @@ export function validateEvent(template) {
       }
     }
 
+    // ── quest-type endgame mode validation ──────────────────────────────────
+    for (const tag of template.tags) {
+      if (tag[0] === 'quest-type' && tag[1] === 'endgame' && tag[2] && tag[2] !== 'open') {
+        errors.push(err(
+          'invalid-enum',
+          `Endgame mode "${tag[2]}" is not valid — allowed values: "open" (soft end) or omit for hard end`,
+          `Change ["quest-type", "endgame", "${tag[2]}"] to ["quest-type", "endgame"] (hard end) or ["quest-type", "endgame", "open"] (soft end).`,
+          tag.join(', '),
+        ));
+      }
+      if (tag[0] === 'quest-type' && tag[1] !== 'endgame' && tag[2]) {
+        warnings.push(warn(
+          'extra-fields',
+          `quest-type "${tag[1]}" has an unexpected third element "${tag[2]}" — only "endgame" supports a mode`,
+          `Remove the third element from ["quest-type", "${tag[1]}", "${tag[2]}"].`,
+        ));
+      }
+    }
+
     // ── Numeric field validation ─────────────────────────────────────────────
     // Validate that fields declared as type 'number' in the schema are parseable.
     // Catches LLMs writing "ten" instead of "10", "high" instead of "3", etc.

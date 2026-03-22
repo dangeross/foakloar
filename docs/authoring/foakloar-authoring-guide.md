@@ -322,6 +322,186 @@ Riddle and cipher puzzles can declare `on-fail` tags that fire on each wrong ans
 
 ---
 
+
+
+### Portal events — `type: portal`
+
+A portal stitches two place exit slots together. It is its own event — not part of either place. It declares both directions.
+
+```json
+{
+  "kind": 30078, "tags": [
+    ["d",    "the-lake:portal:clearing-to-cave"],
+    ["t",    "the-lake"],
+    ["type", "portal"],
+    ["exit", "30078:<PUBKEY>:the-lake:place:clearing", "north", "A dark cave entrance looms ahead."],
+    ["exit", "30078:<PUBKEY>:the-lake:place:cave",     "south", "Back to the clearing."]
+  ],
+  "content": ""
+}
+```
+
+**Rules:**
+- Always two `exit` tags — one per direction. Never one.
+- `requires` gates the portal. Put it on the portal event, not on the place exit tag.
+- The place exit tag declares the slot exists. The portal fills it. They are separate events.
+- One portal per connection. Don't create two portals for the same pair.
+
+```json
+// Locked portal — requires on the portal, not the place
+["requires", "30078:<PUBKEY>:the-lake:item:iron-key", "", "The gate is locked."]
+```
+
+**Common mistake:** putting `requires` as extra elements on the place `exit` tag. That is not valid — `requires` belongs on the portal event.
+
+---
+
+### NPC events — `type: npc`
+
+An NPC is a stateful entity in a place. It can roam, trade, fight, and speak.
+
+```json
+{
+  "kind": 30078, "tags": [
+    ["d",          "the-lake:npc:hermit"],
+    ["t",          "the-lake"],
+    ["type",       "npc"],
+    ["title",      "The Hermit"],
+    ["noun",       "hermit", "old man", "man"],
+    ["verb",       "talk",   "ask", "speak"],
+    ["state",      "wary"],
+    ["transition", "wary",    "friendly", "He relaxes slightly."],
+    ["health",     "5"],
+    ["dialogue",   "30078:<PUBKEY>:the-lake:dialogue:hermit:greeting"],
+    ["dialogue",   "30078:<PUBKEY>:the-lake:dialogue:hermit:after-cave",
+                   "30078:<PUBKEY>:the-lake:place:cave", "visited"],
+    ["on-encounter", "", "set-state", "wary"],
+    ["on-health",  "down", "0", "consequence", "30078:<PUBKEY>:the-lake:consequence:hermit-death"]
+  ],
+  "content": "A gaunt figure sits against the cave wall. He watches you without moving."
+}
+```
+
+**Key patterns:**
+- `dialogue` tags are entry points into the conversation tree — evaluated in order, last passing `requires` wins. Declare multiple for state-aware conversation.
+- `roams-when` with a state value makes the NPC move between places when in that state. Pair with `on-encounter` to react to the player finding them.
+- `on-health down 0` is the death trigger. Always route to a consequence.
+- `inventory` tags declare what the NPC carries — can be stolen, dropped on death.
+- Verbs on the NPC (`talk`, `ask`) work alongside verbs on any co-located feature or item — check for collisions.
+
+---
+
+### Consequence events — `type: consequence`
+
+A consequence is a reusable outcome — multiple triggers can fire the same one. Use when several things should produce the same result (death from combat, death from a hazard, death from a puzzle failure).
+
+```json
+{
+  "kind": 30078, "tags": [
+    ["d",       "the-lake:consequence:death"],
+    ["t",       "the-lake"],
+    ["type",    "consequence"],
+    ["respawn", "30078:<PUBKEY>:the-lake:place:west-of-house"],
+    ["clears",  "inventory"],
+    ["sound",   "30078:<PUBKEY>:the-lake:sound:death-tone", "effect", "1.0"]
+  ],
+  "content": "Everything goes dark. You wake up somewhere familiar."
+}
+```
+
+Execution order within a consequence: `give-item` → `consume-item` → `deal-damage` → `set-state` → drop inventory → `clears inventory` → `clears states` → `clears counters` → `respawn`.
+
+**Use consequence when:** multiple triggers share the same outcome, or the outcome has more than one action. Use inline actions when it's a single trigger with one or two simple effects.
+
+---
+
+### Recipe events — `type: recipe`
+
+A recipe defines a crafting result — combine items to produce a new one.
+
+```json
+{
+  "kind": 30078, "tags": [
+    ["d",            "the-lake:recipe:serpent-staff"],
+    ["t",            "the-lake"],
+    ["type",         "recipe"],
+    ["title",        "Serpent's Staff"],
+    ["requires",     "30078:<PUBKEY>:the-lake:item:carved-rod",    "", "You need the carved rod."],
+    ["requires",     "30078:<PUBKEY>:the-lake:item:serpent-stone", "", "You need the serpent stone."],
+    ["consume-item", "30078:<PUBKEY>:the-lake:item:carved-rod"],
+    ["consume-item", "30078:<PUBKEY>:the-lake:item:serpent-stone"],
+    ["give-item",    "30078:<PUBKEY>:the-lake:item:serpent-staff"],
+    ["on-complete",  "", "set-state", "crafted", "30078:<PUBKEY>:the-lake:item:serpent-staff"]
+  ],
+  "content": "You bind the stone to the rod. The wood shifts slightly, as if alive."
+}
+```
+
+**Rules:**
+- `requires` gates the recipe — player must hold these items. Does not consume them.
+- `consume-item` removes items on completion. Declare separately from `requires`.
+- `give-item` delivers the result.
+- The player triggers crafting with `craft` or `make` verbs — the client matches against available recipes given current inventory.
+
+---
+
+### Quest events — `type: quest`
+
+Quest events group a chain of objectives and define completion. They are optional — a quest can exist purely as world graph without a `type: quest` event. Add one when you want a named, trackable entry in the player's quest log.
+
+```json
+{
+  "kind": 30078, "tags": [
+    ["d",          "the-lake:quest:serpents-staff"],
+    ["t",          "the-lake"],
+    ["type",       "quest"],
+    ["title",      "The Serpent's Staff"],
+    ["quest-type", "hidden"],
+    ["involves",   "30078:<PUBKEY>:the-lake:puzzle:chapel-riddle"],
+    ["involves",   "30078:<PUBKEY>:the-lake:recipe:serpent-staff"],
+    ["requires",   "30078:<PUBKEY>:the-lake:item:serpent-staff",        "", ""],
+    ["requires",   "30078:<PUBKEY>:the-lake:puzzle:chapel-riddle", "solved", ""],
+    ["on-complete","", "give-item", "30078:<PUBKEY>:the-lake:item:hermit-token"]
+  ],
+  "content": "Somewhere in the cave system lies the legendary Serpent's Staff."
+}
+```
+
+**`quest-type`** controls how the quest log reveals progress:
+
+| Type | Completed | Uncompleted | Count visible? |
+|------|-----------|-------------|----------------|
+| `open` (default) | ✓ Title | ✗ Title | Yes |
+| `hidden` | ✓ Title | ✗ ??? | Yes |
+| `mystery` | ✓ Title | not shown | No |
+| `sequential` | ✓ Title | next: ✗ Title, rest hidden | No |
+| `endgame` | win screen, world closes | never shown | — |
+| `endgame` + `"open"` | acknowledged, world stays open | never shown | — |
+
+Use `hidden` when you want players to know how many steps remain but not what they are. Use `mystery` for quests that reveal themselves only on completion. Use `sequential` for breadcrumb chains — one objective at a time.
+
+**Endgame quests** define when the world is won. Always hidden from the quest log:
+
+```json
+["quest-type", "endgame"]          // hard end — win screen, world closes
+["quest-type", "endgame", "open"]  // soft end — acknowledged, world stays open
+```
+
+The event's `content` is the closing prose shown to the player. Multiple endgame quests = multiple possible endings — the first whose `requires` all pass fires.
+
+**Quest chaining** — quests can depend on other quests. The client automatically sets a quest's state to `complete` on completion (do not set this manually). Subsequent quests can require it:
+
+```json
+["requires", "30078:<PUBKEY>:the-lake:quest:find-the-hermit", "complete", ""]
+```
+
+The client cascades evaluation — completing one quest immediately re-evaluates all others, so chains resolve in a single pass. Chain quests to build multi-act structures. Put an endgame quest at the end of the chain.
+
+`involves` tags hint to the quest log which events belong to the chain without affecting completion logic. `requires` defines completion. `on-complete` fires rewards.
+
+**Restart** — both hard and soft endgame modes offer a `restart` command that clears all player state and returns to the start. Note: puzzle state uses `solved`, quest state uses `complete` — these are different states for different event types.
+
+---
 ## Common Mistakes
 
 ### `requires` with blank state — checking presence only

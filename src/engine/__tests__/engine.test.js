@@ -700,4 +700,109 @@ describe('quest display types', () => {
     expect(lines.some((l) => l.includes('Gem'))).toBe(false);
     expect(lines.some((l) => l.includes('Altar'))).toBe(false);
   });
+
+  it('endgame hard — renders content, blocks commands', async () => {
+    const events = makeQuestWorld('endgame');
+    // Add closing prose to quest content
+    const questRef = ref(`${WORLD}:quest:test-quest`);
+    const questEvent = events.get(questRef);
+    questEvent.content = 'The end. You won.';
+    const player = makeMutator();
+    // Satisfy all requires
+    player.markPuzzleSolved(ref(`${WORLD}:puzzle:p1`));
+    player.state.inventory.push(ref(`${WORLD}:item:gem`));
+    player.setState(ref(`${WORLD}:feature:altar`), 'active');
+    const engine = new GameEngine({ events, player, config: CONFIG });
+    engine.enterRoom(ref(`${WORLD}:place:start`));
+    engine.flush();
+
+    // Quest should auto-complete via _evalQuests (called from enterRoom state changes)
+    engine._evalQuests();
+    const output = engine.flush();
+    const text = output.map((e) => e.text).join(' ');
+    expect(text).toContain('The end. You won.');
+    expect(engine.gameOver).toBe('hard');
+
+    // Should show restart prompt
+    expect(output.some((e) => e.text?.includes('restart'))).toBe(true);
+
+    // Commands should be blocked
+    await engine.handleCommand('look');
+    const blocked = engine.flush();
+    expect(blocked.some((e) => e.text?.includes('story is over'))).toBe(true);
+  });
+
+  it('endgame soft — renders content, commands still work', async () => {
+    // Build with endgame open mode
+    const quest = makeQuest('test-quest', {
+      questType: 'endgame',
+      requires: [[ref(`${WORLD}:puzzle:p1`), 'solved', '']],
+      extraTags: [['quest-type', 'endgame', 'open']],  // override to add mode
+    });
+    // Remove the duplicate quest-type tag (makeQuest adds one, extraTags adds another)
+    quest.tags = quest.tags.filter((t, i) => !(t[0] === 'quest-type' && t.length === 2 && i < quest.tags.length - 1));
+    const puzzle = {
+      kind: 30078, pubkey: PUBKEY, created_at: 1,
+      tags: [['d', `${WORLD}:puzzle:p1`], ['type', 'puzzle'], ['title', 'Riddle']],
+      content: 'Solve.',
+    };
+    const place = makePlace('start', { puzzles: [`${WORLD}:puzzle:p1`] });
+    quest.content = 'You did it. Explore freely.';
+    const events = buildEvents(place, puzzle, quest);
+    const player = makeMutator();
+    player.markPuzzleSolved(ref(`${WORLD}:puzzle:p1`));
+    const engine = new GameEngine({ events, player, config: CONFIG });
+    engine.enterRoom(ref(`${WORLD}:place:start`));
+    engine.flush();
+
+    engine._evalQuests();
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Explore freely'))).toBe(true);
+    expect(output.some((e) => e.text?.includes('keep exploring'))).toBe(true);
+    expect(engine.gameOver).toBe('soft');
+
+    // Commands should still work
+    await engine.handleCommand('look');
+    const look = engine.flush();
+    expect(look.some((e) => e.text?.includes('Start'))).toBe(true);
+  });
+
+  it('endgame excluded from quest log', () => {
+    const events = makeQuestWorld('endgame');
+    const player = makeMutator();
+    const engine = new GameEngine({ events, player, config: CONFIG });
+    engine.enterRoom(ref(`${WORLD}:place:start`));
+    engine.flush();
+
+    const lines = getQuestOutput(engine);
+    // Endgame quest should not appear in the log at all
+    expect(lines.some((l) => l.includes('Test-quest'))).toBe(false);
+    // With only endgame quests, should show "No quests"
+    expect(lines.some((l) => l.includes('No quests') || l.includes('No quest'))).toBe(true);
+  });
+
+  it('quest on-complete fires give-item', () => {
+    const reward = makeItem('reward', { nouns: [['reward']], content: 'A reward.' });
+    const quest = makeQuest('reward-quest', {
+      requires: [[ref(`${WORLD}:feature:altar`), 'active', '']],
+      onComplete: [['', 'give-item', ref(`${WORLD}:item:reward`)]],
+    });
+    const feature = {
+      kind: 30078, pubkey: PUBKEY, created_at: 1,
+      tags: [['d', `${WORLD}:feature:altar`], ['type', 'feature'], ['title', 'Altar'], ['state', 'inactive']],
+      content: 'An altar.',
+    };
+    const place = makePlace('start', { features: [`${WORLD}:feature:altar`] });
+    const events = buildEvents(place, feature, reward, quest);
+    const player = makeMutator();
+    player.setState(ref(`${WORLD}:feature:altar`), 'active');
+    const engine = new GameEngine({ events, player, config: CONFIG });
+    engine.enterRoom(ref(`${WORLD}:place:start`));
+    engine.flush();
+
+    engine._evalQuests();
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Quest complete'))).toBe(true);
+    expect(player.hasItem(ref(`${WORLD}:item:reward`))).toBe(true);
+  });
 });

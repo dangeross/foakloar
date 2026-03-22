@@ -39,6 +39,7 @@ export class GameEngine {
     this.pendingChoice = null;  // { direction, exits } — disambiguation list awaiting numeric input
     this.craftingActive = null; // { recipeDtag, step, itemRequires } — ordered crafting mode
     this.combatTarget = null;  // NPC dtag during a combat round
+    this.gameOver = null;      // null | 'hard' | 'soft' — endgame quest state
 
     // Initialize player health from world event if not already set
     if (player.getHealth() == null) {
@@ -2352,21 +2353,78 @@ export class GameEngine {
   }
 
   /** Evaluate all quests and mark newly completed ones. */
-  _evalQuests() {
+  _evalQuests(depth = 0) {
+    let anyCompleted = false;
     for (const { event, dtag } of this._findQuests()) {
-      if (this.player.isPuzzleSolved(dtag)) continue;
+      if (this.player.getState(dtag) === 'complete') continue;
       const req = checkRequires(event, this.player.state, this.events);
-      if (req.allowed) {
-        this.player.markPuzzleSolved(dtag);
+      if (!req.allowed) continue;
+
+      this.player.setState(dtag, 'complete');
+      anyCompleted = true;
+
+      const questType = getTag(event, 'quest-type') || 'open';
+      const isEndgame = questType === 'endgame';
+
+      if (isEndgame) {
+        // Endgame quest — render closing prose with distinct styling
+        this._emit('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'endgame-separator');
+        if (event.content) {
+          this._emit(event.content, 'endgame');
+        }
+        this._emit('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'endgame-separator');
+        // Check mode: ["quest-type", "endgame", "open"] = soft end
+        const modeTag = event.tags.find((t) => t[0] === 'quest-type');
+        const mode = modeTag?.[2] === 'open' ? 'soft' : 'hard';
+        this.gameOver = mode;
+        if (mode === 'hard') {
+          this._emit('Type "restart" to play again.', 'endgame-prompt');
+        } else {
+          this._emit('The story continues. You may keep exploring, or type "restart" to play again.', 'endgame-prompt');
+        }
+      } else {
         const title = getTag(event, 'title') || 'Quest';
         this._emit(`Quest complete: ${title}`, 'success');
       }
+
+      // Fire on-complete actions (set-state, give-item, consequence, sound)
+      for (const tag of getTags(event, 'on-complete')) {
+        const action = tag[2];
+        const value = tag[3];
+        const extRef = tag[4];
+
+        if (action === 'set-state' && extRef) {
+          const targetEvent = this.events.get(extRef);
+          if (!targetEvent) continue;
+          const targetType = getTag(targetEvent, 'type');
+          if (targetType === 'portal' || targetType === 'feature') {
+            const currentState = this.player.getState(extRef) ?? getDefaultState(targetEvent);
+            if (currentState !== value) {
+              this.player.setState(extRef, value);
+              const transition = findTransition(targetEvent, currentState, value);
+              if (transition?.text) this._emit(transition.text, 'narrative');
+            }
+          }
+        } else if (action === 'give-item' && (value || extRef)) {
+          giveItem(extRef || value, this.events, this.player, (t, ty) => this._emit(t, ty));
+        } else if (action === 'consequence' && (value || extRef)) {
+          this._executeConsequence(extRef || value);
+        } else if (action === 'sound') {
+          this._emitSound(value, extRef);
+        }
+      }
+    }
+
+    // Cascade: quest completion may satisfy other quests' requires
+    if (anyCompleted && depth < 10) {
+      this._evalQuests(depth + 1);
     }
   }
 
   /** Show quest log — active and completed quests. */
   _showQuestLog() {
-    const quests = this._findQuests();
+    // Filter out endgame quests — they're internal win-state detectors
+    const quests = this._findQuests().filter(({ event }) => getTag(event, 'quest-type') !== 'endgame');
     if (quests.length === 0) {
       this._emit('No quests.', 'narrative');
       return;
@@ -2376,7 +2434,7 @@ export class GameEngine {
     const completed = [];
     for (const { event, dtag } of quests) {
       const title = getTag(event, 'title') || dtag;
-      if (this.player.isPuzzleSolved(dtag)) {
+      if (this.player.getState(dtag) === 'complete') {
         completed.push({ title, event, dtag });
       } else {
         active.push({ title, event, dtag });
@@ -2583,6 +2641,17 @@ export class GameEngine {
     const trimmed = input.trim().toLowerCase();
     if (!trimmed) return;
     this._emit(`> ${input}`, 'command');
+
+    // Hard endgame — only "restart" accepted
+    if (this.gameOver === 'hard') {
+      if (trimmed === 'restart') {
+        this._emit('Restarting...', 'narrative');
+        this._emit('', 'restart'); // signal to App to clear state
+        return;
+      }
+      this._emit('The story is over. Type "restart" to play again.', 'endgame-prompt');
+      return;
+    }
 
     // Confirmation mode — unverified portal entry
     if (this.pendingConfirm) {

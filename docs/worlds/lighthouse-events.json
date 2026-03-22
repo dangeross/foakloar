@@ -1098,13 +1098,6 @@
           "extinguished"
         ],
         [
-          "on-interact",
-          "extinguish",
-          "set-state",
-          "complete",
-          "30078:<PUBKEY>:lighthouse:quest:keepers-watch"
-        ],
-        [
           "sound",
           "30078:<PUBKEY>:lighthouse:sound:lamp-hum",
           "layer",
@@ -1717,7 +1710,8 @@
         ],
         [
           "quest-type",
-          "hidden"
+          "endgame",
+          "open"
         ],
         [
           "involves",
@@ -1730,9 +1724,15 @@
         [
           "involves",
           "30078:<PUBKEY>:lighthouse:feature:final-log"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:lighthouse:feature:final-log",
+          "read",
+          ""
         ]
       ],
-      "content": "Light the lamp. Find the signal. Read what the keeper left behind."
+      "content": "The keeper's watch is over. Whatever answer you chose — the bearing, the dark, or the road — you carry it now. The lighthouse stands. The sea remembers."
     },
     {
       "kind": 30078,
@@ -1858,13 +1858,6 @@
         [
           "state",
           "hidden"
-        ],
-        [
-          "on-enter",
-          "player",
-          "set-state",
-          "complete",
-          "30078:<PUBKEY>:lighthouse:quest:keepers-watch"
         ]
       ],
       "content": "You walk south along the coast road. The lighthouse shrinks behind you — a dark finger against the sky, the lamp still burning.\n\nYou don't look back. You know the light will find someone else.\n\nIt always does."

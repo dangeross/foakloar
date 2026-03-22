@@ -2839,6 +2839,19 @@ For named, trackable quests, an optional quest event groups the chain and define
 
 `open` is the default when no `quest-type` tag is present — backwards compatible. `hidden` shows the scope of the quest without spoiling details. `mystery` reveals nothing about remaining steps. `sequential` is a breadcrumb trail — only the next undone step is named.
 
+**Endgame quests** use `quest-type: endgame` with an optional third element controlling whether the world closes or stays open:
+
+```json
+["quest-type", "endgame"]          // hard end — win screen, no more commands
+["quest-type", "endgame", "open"]  // soft end — acknowledged, world stays open
+```
+
+Endgame quests are always hidden from the quest log — they are the game's internal win-state detector, not player-facing objectives. The event's `content` field is the closing prose rendered to the player on completion.
+
+The client evaluates all `quest-type: endgame` quests continuously on every state change — same as sequence puzzle auto-evaluation. The first one whose `requires` all pass fires. Multiple endgame quests = multiple possible endings.
+
+`endgame` (hard) renders the win screen and stops accepting commands, offering restart or share. `endgame` with `open` acknowledges the culmination but keeps the world open for further exploration — good for sandbox worlds or worlds with multiple endings to discover.
+
 **Quest rewards via `on-complete`:** when all `requires` conditions pass, the quest fires its `on-complete` tags — same dispatcher as puzzles and recipes. Use this to give reward items, open portals, change world state:
 
 ```json
@@ -2847,7 +2860,18 @@ For named, trackable quests, an optional quest event groups the chain and define
 ["on-complete", "", "set-state",  "open", "30078:<pubkey>:the-lake:portal:hermit-shortcut"]
 ```
 
-Without `on-complete` tags, quest completion is recorded in player state and the quest log is updated — that's the minimum behaviour.
+Without `on-complete` tags, quest completion is recorded in player state and the quest log is updated — that's the minimum behaviour. The client automatically sets the quest event's state to `complete` on completion. Authors do not need to manually set this state — it happens automatically when all `requires` pass.
+
+**Quest chaining:** quests can depend on other quests via `requires`. When Quest 1 completes, its state becomes `complete` — Quest 2 can require that state before it activates. The client cascades evaluation: completing one quest immediately re-evaluates all others, so chains resolve in a single pass.
+
+```json
+// Quest 2 — only activates after Quest 1 is complete
+["requires", "30078:<PUBKEY>:the-lake:quest:find-the-hermit", "complete", ""]
+```
+
+This enables quest chains of arbitrary depth. Each quest in the chain has its own objectives, display type, and rewards. The endgame quest sits at the end of the chain — when its `requires` pass, the game is won.
+
+**Restart:** both hard and soft endgame modes offer a `restart` command. Restart clears all player state (inventory, visited places, quest progress, counters, crypto keys) and returns to the start room. Items return to their original locations.
 
 **Score** — numeric scoring (e.g. points per treasure deposited) is client-side presentation, not schema. The client can derive a score from whatever rule fits the game. No schema tag needed.
 
