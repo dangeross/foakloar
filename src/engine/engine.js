@@ -2833,6 +2833,12 @@ export class GameEngine {
     const examineMatch = trimmed.match(/^(?:examine|x|look at|inspect)\s+(.+)$/);
     if (examineMatch) { this.handleExamine(examineMatch[1]); return; }
 
+    // Built-in: attack <npc> [with <weapon>]
+    const attackWithMatch = trimmed.match(/^attack\s+(.+?)\s+with\s+(.+)$/);
+    if (attackWithMatch) { this.handleInteraction('attack', attackWithMatch[1], attackWithMatch[2]); return; }
+    const attackMatch = trimmed.match(/^attack\s+(.+)$/);
+    if (attackMatch) { this.handleInteraction('attack', attackMatch[1], null); return; }
+
     // Data-driven verb/noun parser — include roaming NPCs as verb sources
     const roamingHere = findRoamingNpcsAtPlace(
       this.events, this.currentPlace, this.player.getMoveCount(),

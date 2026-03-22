@@ -1632,7 +1632,6 @@ The consequence also becomes reusable — a silver room, a silver trap, and a si
     ["title",       "Elvish Sword"],
     ["damage",      "4"],
     ["hit-chance",  "0.8"],
-    ["verb", "attack"],
     ["on-interact", "attack", "deal-damage-npc", ""]
   ],
   "content": "A blade of elvish steel, glowing faintly blue."
