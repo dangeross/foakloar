@@ -25,6 +25,8 @@ let firstEval = true;
 let lastLayers = [];
 // Reference to events map (set on each evaluateSoundTags call)
 let eventsMap = null;
+// Preview mode — when true, evaluateSoundTags skips ambient playback
+let previewActive = false;
 
 const MUTE_KEY = 'foakloar:sound-muted';
 
@@ -114,11 +116,8 @@ export function toggleMute() {
  * Stop all sound and suspend audio (for mute).
  */
 export function hush() {
+  previewActive = false;
   _stopPatterns();
-  try {
-    const ctx = strudelModule?.getAudioContext?.();
-    if (ctx?.state === 'running') ctx.suspend();
-  } catch { /* ignore */ }
 }
 
 /**
@@ -137,6 +136,8 @@ function _stopPatterns() {
 export function evaluateSoundTags(events, currentPlace, playerState, npcStates = {}) {
   if (!audioReady || muted) return;
   eventsMap = events;
+  // Don't re-evaluate ambient while previewing a sound in the editor
+  if (previewActive) return;
 
   // Ensure AudioContext is running
   try {
@@ -447,7 +448,6 @@ function buildStrudelCodeFromEvent(soundEvent, mixVolume) {
   const CHAIN_TAG_MAP = {
     note:         (v) => `.note("${v}")`,
     oscillator:   (v) => `.s("${v}")`,
-    noise:        (v) => `.s("${v || 'white'}")`,
     slow:         (v) => `.slow(${num(v)})`,
     fast:         (v) => `.fast(${num(v)})`,
     room:         (v) => `.room(${num(v)})`,
@@ -478,7 +478,7 @@ function buildStrudelCodeFromEvent(soundEvent, mixVolume) {
   let code = '';
   if (starterTag[0] === 'note') code = `note("${starterTag[1]}")`;
   else if (starterTag[0] === 'oscillator') code = `s("${starterTag[1]}")`;
-  else if (starterTag[0] === 'noise') code = starterTag[1] ? `s("${starterTag[1]}")` : `s("white")`;
+  else if (starterTag[0] === 'noise') code = `noise()`;
 
   let baseGain = null;
   let bpmPrefix = '';
@@ -559,6 +559,9 @@ export async function previewSound(tags, rawCode = null) {
     await strudelReady;
     const code = rawCode || (tags ? buildStrudelCodeFromTags(tags) : null);
     if (!code) return false;
+    // Stop ambient and prevent re-evaluation during preview
+    previewActive = true;
+    _stopPatterns();
     await strudelModule.evaluate(code);
     return true;
   } catch (e) {
@@ -568,9 +571,10 @@ export async function previewSound(tags, rawCode = null) {
 }
 
 /**
- * Stop sound preview.
+ * Stop sound preview and restore ambient.
  */
 export function stopPreview() {
+  previewActive = false;
   _stopPatterns();
   // Restore ambient layers if any were playing
   if (lastLayers.length > 0) {

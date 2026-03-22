@@ -28,7 +28,7 @@ import { validateWorld, verifyPuzzleHashes } from '../builder/validateWorld.js';
 import RelaySettingsPanel from './RelaySettingsPanel.jsx';
 import PublishProgressPanel from '../builder/components/PublishProgressPanel.jsx';
 import SoundToggle from './SoundToggle.jsx';
-import { evaluateSoundTags, isAudioReady, playOneShotRef, loadSamples } from '../services/sound.js';
+import { evaluateSoundTags, isAudioReady, playOneShotRef, loadSamples, hush as hushSound } from '../services/sound.js';
 
 /** Map entry types to colour slots */
 const TYPE_COLOUR = {
@@ -363,12 +363,12 @@ export default function App() {
 
       engine.enterRoom(engine.currentPlace);
       commitEngine(engine);
-      // Start sound on initial room entry
-      if (isAudioReady()) {
+      // Start sound on initial room entry (not in build mode)
+      if (isAudioReady() && !buildMode) {
         evaluateSoundTags(mergedEvents, engine.currentPlace, engine.player.state, engine.player.npcStates);
       }
     }
-  }, [status, generation, mergedEvents]);
+  }, [status, generation, mergedEvents, buildMode]);
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -387,8 +387,8 @@ export default function App() {
     draftRef.current = '';
     await engine.handleCommand(val);
     commitEngine(engine);
-    // Update sound layers after state changes
-    if (isAudioReady()) {
+    // Update sound layers after state changes (not in build mode)
+    if (isAudioReady() && !buildMode) {
       evaluateSoundTags(mergedEvents, engine.currentPlace, engine.player.state, engine.player.npcStates);
     }
   }
@@ -510,7 +510,22 @@ export default function App() {
             effectiveMode={effectiveMode}
             onSelectMode={(mode) => { setClientMode(mode); try { localStorage.setItem(`foakloar:mode:${worldTag}`, mode); } catch {} }}
             buildMode={buildMode}
-            onToggleBuild={() => setBuildMode(!buildMode)}
+            onToggleBuild={() => {
+              const next = !buildMode;
+              setBuildMode(next);
+              if (next) {
+                // Stop ambient sounds when entering build mode
+                if (isAudioReady()) hushSound();
+              } else {
+                // Restore ambient sounds when exiting build mode
+                if (isAudioReady() && engineRef.current) {
+                  evaluateSoundTags(
+                    mergedEvents, engineRef.current.currentPlace,
+                    engineRef.current.player.state, engineRef.current.player.npcStates,
+                  );
+                }
+              }
+            }}
             showBuildOption={identity.isProperIdentity || drafts.length > 0}
             draftsCount={drafts.length}
             onOpenDrafts={() => setShowDrafts(true)}
@@ -520,10 +535,12 @@ export default function App() {
           <SoundToggle onAudioReady={async () => {
             if (engineRef.current) {
               await loadSamples(mergedEvents);
-              evaluateSoundTags(
-                mergedEvents, engineRef.current.currentPlace,
-                engineRef.current.player.state, engineRef.current.player.npcStates,
-              );
+              if (!buildMode) {
+                evaluateSoundTags(
+                  mergedEvents, engineRef.current.currentPlace,
+                  engineRef.current.player.state, engineRef.current.player.npcStates,
+                );
+              }
             }
           }} />
           <IdentityButton identity={identity} onClick={() => setShowLogin(!showLogin)} />

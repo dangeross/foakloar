@@ -193,21 +193,21 @@
         ],
         [
           "sound",
-          "30078:<PUBKEY>:tides-end-08-sound:sound:dock-gulls",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:foghorn",
           "layer",
-          "0.5"
+          "0.8"
         ],
         [
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:dock-ropes",
           "layer",
-          "0.3"
+          "0.6"
         ],
         [
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:beach-waves",
           "layer",
-          "0.2"
+          "0.5"
         ]
       ],
       "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air.\n\nGulls cry overhead, and ropes creak against the pilings.\n\nA cobbled road leads **north** toward the village, and a sandy path follows the shoreline **east**."
@@ -247,13 +247,13 @@
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:square-wind",
           "ambient",
-          "0.5"
+          "1.0"
         ],
         [
           "sound",
-          "30078:<PUBKEY>:tides-end-08-sound:sound:square-birds",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:foghorn",
           "layer",
-          "0.4"
+          "0.7"
         ]
       ],
       "content": "A modest square of packed earth ringed by low stone buildings with slate roofs. A dry fountain stands in the centre, its basin cracked and filled with windblown leaves. Smoke drifts from a chimney to the east where a tavern sign swings on rusted chains. To the west, a gap between the houses opens onto dunes and the sound of surf."
@@ -289,13 +289,13 @@
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:tavern-fire",
           "ambient",
-          "0.6"
+          "0.9"
         ],
         [
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:tavern-murmur",
           "layer",
-          "0.4"
+          "0.7"
         ]
       ],
       "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale. A fire crackles in a stone hearth, and the murmur of conversation drifts from somewhere unseen.\n\nThe only way out is **west**, back to the square."
@@ -339,13 +339,13 @@
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:beach-texture",
           "layer",
-          "0.4"
+          "0.7"
         ],
         [
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:beach-waves",
           "ambient",
-          "0.7"
+          "1.0"
         ]
       ],
       "content": "Coarse sand stretches in a long curve between dark rocks and the restless sea. Kelp and driftwood lie in tangled lines where the last high tide left them. Gulls wheel overhead, their cries thin against the wind.\n\nThe village lies **east** through a gap in the dunes, and a rocky coastal path leads **west** toward the dock."
@@ -519,7 +519,7 @@
         ],
         [
           "gain",
-          "0.5"
+          "0.65"
         ],
         [
           "sustain",
@@ -599,7 +599,7 @@
         ],
         [
           "gain",
-          "0.12"
+          "0.27"
         ],
         [
           "room",
@@ -621,7 +621,7 @@
       "tags": [
         [
           "d",
-          "tides-end-08-sound:sound:dock-gulls"
+          "tides-end-08-sound:sound:foghorn"
         ],
         [
           "t",
@@ -633,7 +633,7 @@
         ],
         [
           "note",
-          "a5 ~ b5 ~ g5 ~"
+          "c3 ~ ~ ~"
         ],
         [
           "oscillator",
@@ -641,27 +641,31 @@
         ],
         [
           "gain",
-          "0.15"
+          "0.21"
         ],
         [
           "sustain",
-          "0.2"
+          "1.5"
         ],
         [
           "release",
-          "0.5"
+          "1"
+        ],
+        [
+          "lpf",
+          "400"
         ],
         [
           "room",
-          "0.6"
+          "0.8"
         ],
         [
           "slow",
-          "4"
+          "6"
         ],
         [
           "degrade-by",
-          "0.5"
+          "0.6"
         ]
       ],
       "content": ""
@@ -691,7 +695,7 @@
         ],
         [
           "gain",
-          "0.06"
+          "0.21"
         ],
         [
           "lpf",
@@ -732,24 +736,24 @@
           "sound"
         ],
         [
-          "note",
-          "fire*4"
+          "oscillator",
+          "fire*4 fire*2 fire*6"
         ],
         [
           "lpf",
-          "800"
+          "3000"
         ],
         [
           "gain",
-          "0.4"
+          "0.45"
         ],
         [
           "room",
-          "0.3"
+          "0.25"
         ],
         [
           "slow",
-          "2"
+          "5"
         ],
         [
           "degrade-by",
@@ -774,12 +778,12 @@
           "sound"
         ],
         [
-          "noise",
+          "oscillator",
           "white"
         ],
         [
           "lpf",
-          "800"
+          "500"
         ],
         [
           "hpf",
@@ -787,7 +791,7 @@
         ],
         [
           "gain",
-          "0.1"
+          "0.08"
         ],
         [
           "sustain",
@@ -795,15 +799,19 @@
         ],
         [
           "release",
-          "1"
+          "2"
         ],
         [
           "attack",
-          "0.5"
+          "1"
         ],
         [
           "slow",
           "4"
+        ],
+        [
+          "room",
+          "0.2"
         ]
       ],
       "content": ""
@@ -824,7 +832,7 @@
           "sound"
         ],
         [
-          "noise",
+          "oscillator",
           "white"
         ],
         [
@@ -833,7 +841,7 @@
         ],
         [
           "gain",
-          "0.08"
+          "0.40"
         ],
         [
           "room",
@@ -854,44 +862,6 @@
         [
           "slow",
           "4"
-        ]
-      ],
-      "content": ""
-    },
-    {
-      "kind": 30078,
-      "tags": [
-        [
-          "d",
-          "tides-end-08-sound:sound:square-birds"
-        ],
-        [
-          "t",
-          "tides-end-08-sound"
-        ],
-        [
-          "type",
-          "sound"
-        ],
-        [
-          "note",
-          "birds ~ birds3 ~"
-        ],
-        [
-          "gain",
-          "0.2"
-        ],
-        [
-          "room",
-          "0.5"
-        ],
-        [
-          "slow",
-          "4"
-        ],
-        [
-          "degrade-by",
-          "0.4"
         ]
       ],
       "content": ""
@@ -925,7 +895,7 @@
         ],
         [
           "gain",
-          "0.3"
+          "0.45"
         ],
         [
           "sustain",
@@ -963,7 +933,7 @@
         ],
         [
           "gain",
-          "0.15"
+          "0.30"
         ],
         [
           "lpf",
@@ -996,7 +966,7 @@
           "sound"
         ],
         [
-          "noise",
+          "oscillator",
           "white white"
         ],
         [
@@ -1005,7 +975,7 @@
         ],
         [
           "gain",
-          "0.5 0.25"
+          "0.65 0.40"
         ],
         [
           "room",
@@ -1051,7 +1021,7 @@
         ],
         [
           "gain",
-          "0.1"
+          "0.25"
         ],
         [
           "lpf",
@@ -1088,12 +1058,12 @@
           "sound"
         ],
         [
-          "noise",
+          "oscillator",
           "white"
         ],
         [
           "gain",
-          "0.12"
+          "0.27"
         ],
         [
           "lpf",

@@ -440,7 +440,7 @@ function SoundPreview({ tags, onTagsChange }) {
     setEditMode(false);
   };
 
-  const hasSource = tags.some((t) => t[0] === 'note' || t[0] === 'noise');
+  const hasSource = tags.some((t) => t[0] === 'note' || t[0] === 'noise' || t[0] === 'oscillator');
 
   return (
     <div className="mb-3">

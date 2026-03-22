@@ -415,34 +415,34 @@ export const TAG_SCHEMAS = {
   // Source
   note:         { label: 'Note', desc: 'Mini-notation note pattern. First in the Strudel chain. Examples: c3 e3 g3, c2*4, c3 ~ ~ ~', fields: [{ name: 'pattern', type: 'text', required: true, placeholder: 'c3 e3 g3' }] },
   oscillator:   { label: 'Oscillator', desc: 'Sound source. Built-in: sine, triangle, sawtooth, square. With samples loaded: piano, bass, bd, sd, hh, etc.', fields: [{ name: 'type', type: 'text', required: true, placeholder: 'sine' }] },
-  // Volume & timing
-  gain:         { label: 'Gain', desc: 'Base volume baked into the sound definition (0.0–1.0). Multiplied with the play tag volume at point of use.', fields: [{ name: 'value', type: 'number', required: true, placeholder: '0.5' }] },
-  slow:         { label: 'Slow', desc: 'Stretch time relative to global tempo. 2 = half speed, 4 = quarter speed.', fields: [{ name: 'factor', type: 'number', required: true, placeholder: '2' }] },
-  fast:         { label: 'Fast', desc: 'Compress time relative to global tempo. 2 = double speed, 4 = quadruple speed.', fields: [{ name: 'factor', type: 'number', required: true, placeholder: '2' }] },
-  pan:          { label: 'Pan', desc: 'Stereo position. -1 = left, 0 = centre, 1 = right.', fields: [{ name: 'position', type: 'number', required: true, placeholder: '0' }] },
+  // Volume & timing (text type to allow Strudel mini-notation e.g. "0.5 0.25")
+  gain:         { label: 'Gain', desc: 'Volume (0.0–1.0). Supports mini-notation: "0.5 0.25" alternates.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
+  slow:         { label: 'Slow', desc: 'Stretch time. 2 = half speed, 4 = quarter speed.', fields: [{ name: 'factor', type: 'text', required: true, placeholder: '2' }] },
+  fast:         { label: 'Fast', desc: 'Compress time. 2 = double speed, 4 = quadruple speed.', fields: [{ name: 'factor', type: 'text', required: true, placeholder: '2' }] },
+  pan:          { label: 'Pan', desc: 'Stereo position. -1 = left, 0 = centre, 1 = right.', fields: [{ name: 'position', type: 'text', required: true, placeholder: '0' }] },
   // Filters
-  lpf:          { label: 'Low-pass Filter', desc: 'Removes frequencies above cutoff (Hz). Lower = warmer/muffled. Good for drones, underwater.', fields: [{ name: 'freq', type: 'number', required: true, placeholder: '400' }] },
-  hpf:          { label: 'High-pass Filter', desc: 'Removes frequencies below cutoff (Hz). Higher = thinner/airy. Good for shimmer, radio.', fields: [{ name: 'freq', type: 'number', required: true, placeholder: '1000' }] },
+  lpf:          { label: 'Low-pass Filter', desc: 'Cutoff frequency (Hz). Supports mini-notation: "600 250".', fields: [{ name: 'freq', type: 'text', required: true, placeholder: '400' }] },
+  hpf:          { label: 'High-pass Filter', desc: 'Cutoff frequency (Hz). Supports mini-notation.', fields: [{ name: 'freq', type: 'text', required: true, placeholder: '1000' }] },
   vowel:        { label: 'Vowel', desc: 'Formant filter — shapes sound to vocal vowels. Single or pattern: a e i o u', fields: [{ name: 'pattern', type: 'text', required: true, placeholder: 'a e i o' }] },
   // Distortion
-  crush:        { label: 'Crush', desc: 'Bit crush for lo-fi texture. 1 = most crushed, 16 = least.', fields: [{ name: 'bits', type: 'number', required: true, placeholder: '8' }] },
-  shape:        { label: 'Shape', desc: 'Soft distortion/saturation. 0 = clean, 1 = aggressive. Adds warmth.', fields: [{ name: 'amount', type: 'number', required: true, placeholder: '0.5' }] },
+  crush:        { label: 'Crush', desc: 'Bit crush for lo-fi texture. 1 = most crushed, 16 = least.', fields: [{ name: 'bits', type: 'text', required: true, placeholder: '8' }] },
+  shape:        { label: 'Shape', desc: 'Soft distortion/saturation. 0 = clean, 1 = aggressive.', fields: [{ name: 'amount', type: 'text', required: true, placeholder: '0.5' }] },
   // Effects
-  room:         { label: 'Room', desc: 'Reverb wet/dry. 0 = dry, 1 = fully wet. Adds space and depth.', fields: [{ name: 'amount', type: 'number', required: true, placeholder: '0.5' }] },
-  roomsize:     { label: 'Room Size', desc: 'Reverb room size (1–10). Only meaningful with room > 0.', fields: [{ name: 'size', type: 'number', required: true, placeholder: '4' }] },
-  delay:        { label: 'Delay', desc: 'Echo effect. Time = spacing (0–1), feedback = repeats (0–1).', fields: [{ name: 'time', type: 'number', required: true, placeholder: '0.5' }, { name: 'feedback', type: 'number', required: true, placeholder: '0.3' }] },
+  room:         { label: 'Room', desc: 'Reverb wet/dry (0–1). Supports mini-notation: "0.7 0.5".', fields: [{ name: 'amount', type: 'text', required: true, placeholder: '0.5' }] },
+  roomsize:     { label: 'Room Size', desc: 'Reverb room size (1–10). Only meaningful with room > 0.', fields: [{ name: 'size', type: 'text', required: true, placeholder: '4' }] },
+  delay:        { label: 'Delay', desc: 'Echo effect. Time = spacing (0–1), feedback = repeats (0–1).', fields: [{ name: 'time', type: 'text', required: true, placeholder: '0.5' }, { name: 'feedback', type: 'text', required: true, placeholder: '0.3' }] },
   rev:          { label: 'Reverse', desc: 'Reverse the pattern order within each cycle. No value needed.', fields: [] },
   palindrome:   { label: 'Palindrome', desc: 'Play pattern forward then backward — mirrored loop. No value needed.', fields: [] },
   // Texture & randomness
-  'degrade-by': { label: 'Degrade By', desc: 'Randomly drop events each cycle (0.0–1.0). 0.3 = ~30% dropped. Creates organic texture.', fields: [{ name: 'amount', type: 'number', required: true, placeholder: '0.3' }] },
-  rand:         { label: 'Random Gain', desc: 'Random volume per event — crackle, shimmer, breathing. Two values: min, max.', fields: [{ name: 'min', type: 'number', required: true, placeholder: '0.1' }, { name: 'max', type: 'number', required: true, placeholder: '0.4' }] },
+  'degrade-by': { label: 'Degrade By', desc: 'Randomly drop events each cycle (0.0–1.0). 0.3 = ~30% dropped.', fields: [{ name: 'amount', type: 'text', required: true, placeholder: '0.3' }] },
+  rand:         { label: 'Random Gain', desc: 'Random volume per event. Two values: min, max.', fields: [{ name: 'min', type: 'text', required: true, placeholder: '0.1' }, { name: 'max', type: 'text', required: true, placeholder: '0.4' }] },
   // Stereo & layering
-  jux:          { label: 'Jux', desc: 'Stereo width — normal in left, reversed in right. Creates spatial movement.', fields: [{ name: 'fn', type: 'select', required: true, options: ['rev'] }] },
-  arp:          { label: 'Arpeggio', desc: 'Arpeggiate chords — play notes in sequence. up = low-high, down = high-low.', fields: [{ name: 'direction', type: 'select', required: true, options: ['up', 'down', 'updown'] }] },
+  jux:          { label: 'Jux', desc: 'Stereo width — normal in left, reversed in right.', fields: [{ name: 'fn', type: 'select', required: true, options: ['rev'] }] },
+  arp:          { label: 'Arpeggio', desc: 'Arpeggiate chords. up = low-high, down = high-low.', fields: [{ name: 'direction', type: 'select', required: true, options: ['up', 'down', 'updown'] }] },
   // Envelope
-  sustain:      { label: 'Sustain', desc: 'Note duration in seconds. Shorter = responsive to state changes. Longer = droning.', fields: [{ name: 'value', type: 'number', required: true, placeholder: '2' }] },
-  attack:       { label: 'Attack', desc: 'Fade-in time in seconds. 0 = instant, higher = gradual swell.', fields: [{ name: 'value', type: 'number', required: true, placeholder: '0.1' }] },
-  release:      { label: 'Release', desc: 'Fade-out time after note ends. 0 = hard cut, higher = natural decay.', fields: [{ name: 'value', type: 'number', required: true, placeholder: '0.1' }] },
+  sustain:      { label: 'Sustain', desc: 'Note duration in seconds. Supports mini-notation: "0.6 1.0".', fields: [{ name: 'value', type: 'text', required: true, placeholder: '2' }] },
+  attack:       { label: 'Attack', desc: 'Fade-in time in seconds. Supports mini-notation: "0.4 0.1".', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
+  release:      { label: 'Release', desc: 'Fade-out time in seconds. Supports mini-notation: "1.2 1.5".', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
   // Sample
   sample:       { label: 'Sample', desc: 'Register external audio file by name. Use the name in note patterns.', repeatable: true, fields: [{ name: 'name', type: 'text', required: true, placeholder: 'kick' }, { name: 'url', type: 'text', required: true, placeholder: 'https://...' }] },
 

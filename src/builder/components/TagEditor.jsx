@@ -183,6 +183,7 @@ function DOSSelect({ value, onChange, options, placeholder }) {
         <div
           ref={dropdownRef}
           className="font-mono text-xs"
+          onMouseDown={(e) => e.stopPropagation()}
           style={{
             position: 'fixed',
             left: pos.left,
@@ -328,6 +329,7 @@ function EventRefSelect({ value, onChange, events, eventTypeFilter, placeholder:
         <div
           ref={dropdownRef}
           className="font-mono text-xs"
+          onMouseDown={(e) => e.stopPropagation()}
           style={{
             position: 'fixed',
             left: pos.left,
@@ -632,6 +634,7 @@ function AddTagDropdown({ options, onSelect }) {
           border: '1px solid var(--colour-dim)',
           color: 'var(--colour-dim)',
         }}
+        onMouseDown={(e) => e.stopPropagation()}
         onClick={() => setOpen(!open)}
       >
         <span className="flex-1 text-xs">+ Add tag...</span>
@@ -642,6 +645,7 @@ function AddTagDropdown({ options, onSelect }) {
         <div
           ref={dropdownRef}
           className="font-mono text-xs"
+          onMouseDown={(e) => e.stopPropagation()}
           style={{
             position: 'fixed',
             left: pos.left,
@@ -666,6 +670,7 @@ function AddTagDropdown({ options, onSelect }) {
                   color: 'var(--colour-text)',
                   backgroundColor: 'transparent',
                 }}
+                onMouseDown={(e) => e.stopPropagation()}
                 onClick={() => { onSelect(name); setOpen(false); }}
                 title={desc}
               >
