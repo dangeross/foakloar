@@ -205,10 +205,6 @@
           "30078:<PUBKEY>:tides-end-06-quests:feature:fishing-nets"
         ],
         [
-          "item",
-          "30078:<PUBKEY>:tides-end-06-quests:item:strange-note"
-        ],
-        [
           "on-enter",
           "player",
           "set-state",
@@ -218,6 +214,10 @@
         [
           "content-type",
           "text/markdown"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-06-quests:item:strange-note"
         ]
       ],
       "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air.\n\nTangled **fishing nets** hang from a post, drying in the salt breeze. Something might be caught in them.\n\nA cobbled road leads north toward the village, and a sandy path follows the shoreline east."
@@ -576,7 +576,7 @@
         ],
         [
           "title",
-          "Fishing Nets"
+          "Fishing Net"
         ],
         [
           "noun",
@@ -638,12 +638,6 @@
           "found"
         ],
         [
-          "requires",
-          "30078:<PUBKEY>:tides-end-06-quests:feature:fishing-nets",
-          "searched",
-          "You don't see any note here."
-        ],
-        [
           "verb",
           "read",
           "unfold"
@@ -665,6 +659,12 @@
           "read",
           "read",
           "The note reads: *'Meet at the old well when the tide turns. Tell no one. — S.'*"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:fishing-nets",
+          "searched",
+          "You don't see any note here."
         ]
       ],
       "content": "A small piece of paper, folded twice and slightly damp. The handwriting is hurried and the ink has run in places. Unfold it to read the full message."

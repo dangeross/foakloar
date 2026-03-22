@@ -152,11 +152,14 @@ export class GameEngine {
     // Seed place items on first visit (from room's item tags)
     this._seedPlaceItems(dtag, room);
 
-    // Items — show what's on the ground at this place
+    // Items — show what's on the ground at this place (skip if requires not met)
     const placeItems = this.player.getPlaceItems(dtag) || [];
     for (const itemDtag of placeItems) {
       const item = this.events.get(itemDtag);
-      if (item) this._emit(`You see: ${getTag(item, 'title')}`, 'item');
+      if (!item) continue;
+      const itemReq = checkRequires(item, this.player.state, this.events);
+      if (!itemReq.allowed) continue;
+      this._emit(`You see: ${getTag(item, 'title')}`, 'item');
     }
 
     // Features (skip hidden)
@@ -422,12 +425,14 @@ export class GameEngine {
     this.player.seedPlaceItems(placeDtag, onGround);
   }
 
-  /** Find an item on the ground at the current place by noun. */
+  /** Find an item on the ground at the current place by noun (respects requires). */
   _findPlaceItem(noun) {
     const placeItems = this.player.getPlaceItems(this.currentPlace) || [];
     for (const itemDtag of placeItems) {
       const item = this.events.get(itemDtag);
       if (!item) continue;
+      const itemReq = checkRequires(item, this.player.state, this.events);
+      if (!itemReq.allowed) continue;
       const title = getTag(item, 'title')?.toLowerCase() || '';
       if (title.includes(noun)) return { event: item, dtag: itemDtag, type: 'item' };
       for (const nt of getTags(item, 'noun')) {
@@ -814,6 +819,9 @@ export class GameEngine {
 
     if (!match) { this._emit("You don't see that here.", 'error'); return; }
     if (match.type !== 'item') { this._emit("You can't pick that up.", 'error'); return; }
+    // Check requires on the item
+    const pickupReq = checkRequires(match.event, this.player.state, this.events);
+    if (!pickupReq.allowed) { this._emit(pickupReq.reason || "You don't see that here.", 'error'); return; }
     if (this.player.hasItem(match.dtag)) { this._emit('You already have that.', 'error'); return; }
 
     this.player.pickUp(match.dtag);
