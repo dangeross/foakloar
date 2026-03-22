@@ -634,6 +634,17 @@ export class GameEngine {
 
   processFeatureInteract(event, dtag, verb, currentState) {
     let acted = false;
+    // Snapshot visible items before interaction (for revealing newly-visible items after)
+    const visibleBefore = new Set();
+    if (this.currentPlace) {
+      const placeItems = this.player.getPlaceItems(this.currentPlace) || [];
+      for (const itemDtag of placeItems) {
+        const item = this.events.get(itemDtag);
+        if (item && checkRequires(item, this.player.state, this.events).allowed) {
+          visibleBefore.add(itemDtag);
+        }
+      }
+    }
     for (const tag of getTags(event, 'on-interact')) {
       if (tag[1] !== verb) continue;
       const action = tag[2];
@@ -705,6 +716,17 @@ export class GameEngine {
       }
     }
     if (acted) {
+      // Show newly revealed items after state changes
+      if (this.currentPlace) {
+        const placeItems = this.player.getPlaceItems(this.currentPlace) || [];
+        for (const itemDtag of placeItems) {
+          if (visibleBefore.has(itemDtag)) continue;
+          const item = this.events.get(itemDtag);
+          if (item && checkRequires(item, this.player.state, this.events).allowed) {
+            this._emit(`You see: ${getTag(item, 'title')}`, 'item');
+          }
+        }
+      }
       evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty), (p, v) => this._emitSound(p, v));
       this._evalQuests();
     }
