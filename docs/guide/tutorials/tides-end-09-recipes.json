@@ -45,166 +45,495 @@
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-09-recipes:world"],
-        ["t", "tides-end-09-recipes"],
-        ["w", "foakloar"],
-        ["type", "world"],
-        ["title", "Tide's End: Recipes"],
-        ["author", "foakloar"],
-        ["version", "1.0.0"],
-        ["lang", "en"],
-        ["tag", "tutorial"],
-        ["tag", "coastal"],
-        ["tag", "intermediate"],
-        ["start", "30078:<PUBKEY>:tides-end-09-recipes:place:the-dock"],
-        ["relay", "wss://relay.damus.io"],
-        ["collaboration", "open"],
-        ["colour", "bg", "#1a1a2e"],
-        ["colour", "text", "#c8c8a9"],
-        ["colour", "title", "#d4a574"],
-        ["colour", "dim", "#5e8b7e"],
-        ["colour", "highlight", "#d4a574"],
-        ["colour", "exits", "#5e8b7e"],
-        ["font", "ibm-plex-mono"],
-        ["cursor", "beam"],
-        ["content-type", "text/markdown"]
+        [
+          "d",
+          "tides-end-09-recipes:world"
+        ],
+        [
+          "t",
+          "tides-end-09-recipes"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "Tide's End: Recipes"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "tutorial"
+        ],
+        [
+          "tag",
+          "coastal"
+        ],
+        [
+          "tag",
+          "intermediate"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:tides-end-09-recipes:place:the-dock"
+        ],
+        [
+          "relay",
+          "wss://relay.damus.io"
+        ],
+        [
+          "collaboration",
+          "open"
+        ],
+        [
+          "colour",
+          "bg",
+          "#1a1a2e"
+        ],
+        [
+          "colour",
+          "text",
+          "#c8c8a9"
+        ],
+        [
+          "colour",
+          "title",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "dim",
+          "#5e8b7e"
+        ],
+        [
+          "colour",
+          "highlight",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "exits",
+          "#5e8b7e"
+        ],
+        [
+          "font",
+          "ibm-plex-mono"
+        ],
+        [
+          "cursor",
+          "beam"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
       ],
       "content": "A small coastal village where the river meets the sea.\n\nThis tutorial teaches **recipes and crafting** — combining items to create new ones. Find the right ingredients and craft a fishing rod to catch your dinner.\n\nType `inventory` to check what you're carrying."
     },
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-09-recipes:place:the-dock"],
-        ["t", "tides-end-09-recipes"],
-        ["type", "place"],
-        ["title", "The Dock"],
-        ["exit", "east"],
-        ["exit", "north"],
-        ["item", "30078:<PUBKEY>:tides-end-09-recipes:item:rope"]
+        [
+          "d",
+          "tides-end-09-recipes:place:the-dock"
+        ],
+        [
+          "t",
+          "tides-end-09-recipes"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Dock"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-09-recipes:item:rope"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
       ],
       "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air.\n\nA coil of **rope** lies near a bollard, forgotten by some fisherman.\n\nA sandy path follows the shoreline east toward the beach, and a cobbled road leads north to the village square."
     },
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-09-recipes:place:the-beach"],
-        ["t", "tides-end-09-recipes"],
-        ["type", "place"],
-        ["title", "The Beach"],
-        ["exit", "west"],
-        ["exit", "east"],
-        ["item", "30078:<PUBKEY>:tides-end-09-recipes:item:hook"],
-        ["item", "30078:<PUBKEY>:tides-end-09-recipes:item:raw-fish"]
+        [
+          "d",
+          "tides-end-09-recipes:place:the-beach"
+        ],
+        [
+          "t",
+          "tides-end-09-recipes"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Beach"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-09-recipes:item:hook"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-09-recipes:item:raw-fish"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
       ],
       "content": "Coarse sand stretches in a long curve between dark rocks and the restless sea. Kelp and driftwood lie in tangled lines where the last high tide left them. Gulls wheel overhead, their cries thin against the wind.\n\nAn **iron hook** glints among the pebbles, half-buried in the wet sand.\n\nThe dock lies west along a rocky path, and the village is east through the dunes."
     },
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-09-recipes:place:village-square"],
-        ["t", "tides-end-09-recipes"],
-        ["type", "place"],
-        ["title", "Village Square"],
-        ["exit", "south"],
-        ["exit", "west"]
+        [
+          "d",
+          "tides-end-09-recipes:place:village-square"
+        ],
+        [
+          "t",
+          "tides-end-09-recipes"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Village Square"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "west"
+        ]
       ],
       "content": "A modest square of packed earth ringed by low stone buildings with slate roofs. A dry fountain stands in the centre, its basin cracked and filled with windblown leaves.\n\nThe cobbled road slopes south toward the dock. To the west, a gap between the houses opens onto dunes and the sound of surf."
     },
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-09-recipes:portal:dock-to-beach"],
-        ["t", "tides-end-09-recipes"],
-        ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:the-dock", "east", "The shoreline curves east past the rocks toward a sandy beach."],
-        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:the-beach", "west", "A rocky path follows the waterline back to the dock."]
+        [
+          "d",
+          "tides-end-09-recipes:portal:dock-to-beach"
+        ],
+        [
+          "t",
+          "tides-end-09-recipes"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-09-recipes:place:the-dock",
+          "east",
+          "The shoreline curves east past the rocks toward a sandy beach."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-09-recipes:place:the-beach",
+          "west",
+          "A rocky path follows the waterline back to the dock."
+        ]
       ],
       "content": ""
     },
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-09-recipes:portal:beach-to-square"],
-        ["t", "tides-end-09-recipes"],
-        ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:the-beach", "east", "A path leads through the dunes to the village square."],
-        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:village-square", "west", "A sandy track winds through the dunes toward the shore."]
+        [
+          "d",
+          "tides-end-09-recipes:portal:beach-to-square"
+        ],
+        [
+          "t",
+          "tides-end-09-recipes"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-09-recipes:place:the-beach",
+          "east",
+          "A path leads through the dunes to the village square."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-09-recipes:place:village-square",
+          "west",
+          "A sandy track winds through the dunes toward the shore."
+        ]
       ],
       "content": ""
     },
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-09-recipes:portal:dock-to-square"],
-        ["t", "tides-end-09-recipes"],
-        ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:the-dock", "north", "A cobbled road climbs toward the village square."],
-        ["exit", "30078:<PUBKEY>:tides-end-09-recipes:place:village-square", "south", "The road slopes down to the old dock."]
+        [
+          "d",
+          "tides-end-09-recipes:portal:dock-to-square"
+        ],
+        [
+          "t",
+          "tides-end-09-recipes"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-09-recipes:place:the-dock",
+          "north",
+          "A cobbled road climbs toward the village square."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-09-recipes:place:village-square",
+          "south",
+          "The road slopes down to the old dock."
+        ]
       ],
       "content": ""
     },
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-09-recipes:item:rope"],
-        ["t", "tides-end-09-recipes"],
-        ["type", "item"],
-        ["title", "Rope"],
-        ["noun", "rope", "coil"]
+        [
+          "d",
+          "tides-end-09-recipes:item:rope"
+        ],
+        [
+          "t",
+          "tides-end-09-recipes"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Rope"
+        ],
+        [
+          "noun",
+          "rope",
+          "coil"
+        ]
       ],
       "content": "A sturdy coil of hemp rope, salt-stiffened but still strong. The kind used to moor small boats or lash cargo. It could be useful for making something."
     },
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-09-recipes:item:hook"],
-        ["t", "tides-end-09-recipes"],
-        ["type", "item"],
-        ["title", "Iron Hook"],
-        ["noun", "hook", "iron hook"]
+        [
+          "d",
+          "tides-end-09-recipes:item:hook"
+        ],
+        [
+          "t",
+          "tides-end-09-recipes"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Iron Hook"
+        ],
+        [
+          "noun",
+          "hook",
+          "iron hook"
+        ]
       ],
       "content": "A curved iron hook, pitted with rust but still sharp. It was probably part of a fishing rig before the sea claimed it. With the right materials, it could be put to use again."
     },
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-09-recipes:item:fishing-rod"],
-        ["t", "tides-end-09-recipes"],
-        ["type", "item"],
-        ["title", "Fishing Rod"],
-        ["noun", "rod", "fishing rod"]
+        [
+          "d",
+          "tides-end-09-recipes:item:fishing-rod"
+        ],
+        [
+          "t",
+          "tides-end-09-recipes"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Fishing Rod"
+        ],
+        [
+          "noun",
+          "rod",
+          "fishing rod"
+        ]
       ],
       "content": "A makeshift fishing rod — a length of rope tied to a sturdy hook, lashed to a piece of driftwood. Simple, but it should work well enough to catch something from the shallows."
     },
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-09-recipes:item:raw-fish"],
-        ["t", "tides-end-09-recipes"],
-        ["type", "item"],
-        ["title", "Raw Fish"],
-        ["noun", "fish", "raw fish"],
-        ["requires", "30078:<PUBKEY>:tides-end-09-recipes:item:fishing-rod", "", "You'd need something to catch fish with."]
+        [
+          "d",
+          "tides-end-09-recipes:item:raw-fish"
+        ],
+        [
+          "t",
+          "tides-end-09-recipes"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Raw Fish"
+        ],
+        [
+          "noun",
+          "fish",
+          "raw fish"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-09-recipes:item:fishing-rod",
+          "",
+          "You'd need something to catch fish with."
+        ]
       ],
       "content": "A silvery fish, freshly caught from the shallows. Its scales flash in the light as it flaps weakly. Not much on its own, but it would make a decent meal."
     },
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-09-recipes:recipe:fishing-rod"],
-        ["t", "tides-end-09-recipes"],
-        ["type", "recipe"],
-        ["title", "Fishing Rod"],
-        ["noun", "rod", "fishing rod"],
-        ["state", "unknown"],
-        ["transition", "unknown", "known", "You lash the iron hook to the end of the rope and bind it all to a sturdy piece of driftwood. A rough fishing rod, but it will serve."],
-        ["verb", "craft", "combine", "make"],
-        ["requires", "30078:<PUBKEY>:tides-end-09-recipes:item:rope", "", "You need some rope."],
-        ["requires", "30078:<PUBKEY>:tides-end-09-recipes:item:hook", "", "You need a hook."],
-        ["on-complete", "", "give-item", "30078:<PUBKEY>:tides-end-09-recipes:item:fishing-rod"],
-        ["on-complete", "", "consume-item", "30078:<PUBKEY>:tides-end-09-recipes:item:rope"],
-        ["on-complete", "", "consume-item", "30078:<PUBKEY>:tides-end-09-recipes:item:hook"],
-        ["ordered", "false"]
+        [
+          "d",
+          "tides-end-09-recipes:recipe:fishing-rod"
+        ],
+        [
+          "t",
+          "tides-end-09-recipes"
+        ],
+        [
+          "type",
+          "recipe"
+        ],
+        [
+          "title",
+          "Fishing Rod"
+        ],
+        [
+          "noun",
+          "rod",
+          "fishing rod"
+        ],
+        [
+          "state",
+          "unknown"
+        ],
+        [
+          "transition",
+          "unknown",
+          "known",
+          "You lash the iron hook to the end of the rope and bind it all to a sturdy piece of driftwood. A rough fishing rod, but it will serve."
+        ],
+        [
+          "verb",
+          "craft",
+          "combine",
+          "make"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-09-recipes:item:rope",
+          "",
+          "You need some rope."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-09-recipes:item:hook",
+          "",
+          "You need a hook."
+        ],
+        [
+          "on-complete",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:tides-end-09-recipes:item:fishing-rod"
+        ],
+        [
+          "on-complete",
+          "",
+          "consume-item",
+          "30078:<PUBKEY>:tides-end-09-recipes:item:rope"
+        ],
+        [
+          "on-complete",
+          "",
+          "consume-item",
+          "30078:<PUBKEY>:tides-end-09-recipes:item:hook"
+        ],
+        [
+          "ordered",
+          "false"
+        ]
       ],
       "content": "A fishing rod can be fashioned from rope and a hook. The dock fishermen make them all the time — nothing fancy, just something strong enough to haul in a catch from the shallows."
     }

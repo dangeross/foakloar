@@ -255,6 +255,10 @@
         [
           "feature",
           "30078:<PUBKEY>:tides-end-05-puzzles:feature:notice-board"
+        ],
+        [
+          "content-type",
+          "text/markdown"
         ]
       ],
       "content": "A modest square of packed earth ringed by low stone buildings with slate roofs. A dry fountain stands in the centre, its basin cracked and filled with windblown leaves.\n\nA weathered **notice board** leans against the fountain, covered in faded papers. One notice near the centre is covered in strange symbols.\n\nSmoke drifts from a chimney to the east where a tavern sign swings on rusted chains. To the west, a gap between the houses opens onto dunes and the sound of surf."
@@ -285,6 +289,10 @@
         [
           "clue",
           "30078:<PUBKEY>:tides-end-05-puzzles:clue:scrap-of-paper"
+        ],
+        [
+          "content-type",
+          "text/markdown"
         ]
       ],
       "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale.\n\nA **scrap of paper** is pinned to the wall behind the bar, its edges yellowed and curling.\n\nThe only way out is west, back to the square."
@@ -319,6 +327,10 @@
         [
           "clue",
           "30078:<PUBKEY>:tides-end-05-puzzles:clue:old-chart"
+        ],
+        [
+          "content-type",
+          "text/markdown"
         ]
       ],
       "content": "Coarse sand stretches in a long curve between dark rocks and the restless sea. Kelp and driftwood lie in tangled lines where the last high tide left them. Gulls wheel overhead, their cries thin against the wind.\n\nAn **old chart** is wedged between two rocks near the tide line, its ink smeared but still legible.\n\nThe village lies east through a gap in the dunes, and a rocky coastal path leads west toward the dock."
@@ -365,6 +377,10 @@
         [
           "puzzle",
           "30078:<PUBKEY>:tides-end-05-puzzles:puzzle:chest-lock"
+        ],
+        [
+          "content-type",
+          "text/markdown"
         ]
       ],
       "content": "A cramped room smelling of rope and lamp oil. Charts and tide tables paper every wall, their edges curling in the damp air. A heavy oak desk takes up most of the space, its surface buried under logbooks and brass instruments.\n\nIn the corner sits a heavy **chest** bound with iron straps. A combination lock with three brass dials holds it shut — a **rope dial**, a **wheel dial**, and a **sail dial**.\n\nThe door leads west back to the dock."

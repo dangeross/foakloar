@@ -181,6 +181,10 @@
         [
           "item",
           "30078:<PUBKEY>:tides-end-10-endgame:item:fish"
+        ],
+        [
+          "content-type",
+          "text/markdown"
         ]
       ],
       "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air.\n\nA **fresh fish** flaps weakly in a shallow tidal pool, stranded by the retreating tide.\n\nA cobbled road leads north toward the village."
@@ -219,6 +223,10 @@
         [
           "item",
           "30078:<PUBKEY>:tides-end-10-endgame:item:herbs"
+        ],
+        [
+          "content-type",
+          "text/markdown"
         ]
       ],
       "content": "A modest square of packed earth ringed by low stone buildings with slate roofs. A dry fountain stands in the centre, its basin cracked and filled with windblown leaves.\n\nClumps of **wild herbs** grow stubbornly from cracks in the stone around the fountain.\n\nSmoke drifts from a chimney to the east where a tavern sign swings on rusted chains. The road slopes south toward the dock."
@@ -253,6 +261,10 @@
         [
           "npc",
           "30078:<PUBKEY>:tides-end-10-endgame:npc:tavern-keeper"
+        ],
+        [
+          "content-type",
+          "text/markdown"
         ]
       ],
       "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale.\n\nThe **tavern keeper** stands behind the bar, polishing a glass with a grey rag. A **flour sack** leans against the bar, half-open.\n\nThe only way out is west, back to the square."

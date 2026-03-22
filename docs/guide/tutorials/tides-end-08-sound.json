@@ -192,6 +192,10 @@
           "30078:<PUBKEY>:tides-end-08-sound:sound:dock-gulls",
           "layer",
           "0.5"
+        ],
+        [
+          "content-type",
+          "text/markdown"
         ]
       ],
       "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air.\n\nGulls cry overhead, and ropes creak against the pilings.\n\nA cobbled road leads **north** toward the village, and a sandy path follows the shoreline **east**."
@@ -258,6 +262,10 @@
           "30078:<PUBKEY>:tides-end-08-sound:sound:tavern-fire",
           "ambient",
           "0.6"
+        ],
+        [
+          "content-type",
+          "text/markdown"
         ]
       ],
       "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale. A fire crackles in a stone hearth, and the murmur of conversation drifts from somewhere unseen.\n\nThe only way out is **west**, back to the square."
@@ -298,6 +306,10 @@
         [
           "item",
           "30078:<PUBKEY>:tides-end-08-sound:item:sand-coin"
+        ],
+        [
+          "content-type",
+          "text/markdown"
         ]
       ],
       "content": "Coarse sand stretches in a long curve between dark rocks and the restless sea. Kelp and driftwood lie in tangled lines where the last high tide left them. Gulls wheel overhead, their cries thin against the wind.\n\nThe village lies **east** through a gap in the dunes, and a rocky coastal path leads **west** toward the dock."
