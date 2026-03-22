@@ -1,0 +1,969 @@
+{
+  "walkthrough": [
+    "# Tide's End 06: Quests — Walkthrough",
+    "# This world teaches quest tracking with open, hidden, and mystery quest types.",
+    "# Start at The Dock.",
+    "",
+    "> look",
+    "# You see The Dock. Fishing nets hang from a post. Exits: north, east.",
+    "",
+    "> quests",
+    "# Active quests:",
+    "#   The Keeper's Stew (open — shows all 3 steps: ✗ Fresh Fish, ✗ Wild Herbs, ✗ Flour Sack)",
+    "#   Village Explorer (hidden — shows ✗ ??? ✗ ??? ✗ ??? ✗ ???)",
+    "#   The Strange Note (mystery — nothing shown, no undone steps visible)",
+    "",
+    "# === MYSTERY QUEST: The Strange Note ===",
+    "# Step 1: Find the note hidden in the nets",
+    "",
+    "> examine nets",
+    "# Transition: 'You pull the nets aside... A folded piece of paper falls from between the knots.'",
+    "# Nets state changes from 'tangled' to 'searched'.",
+    "",
+    "> take note",
+    "# You pick up the strange note. (requires nets in state 'searched')",
+    "",
+    "# Step 2: Read the note",
+    "",
+    "> read note",
+    "# Transition: 'You unfold the damp paper... Meet at the old well when the tide turns. Tell no one. — S.'",
+    "# Note state changes from 'found' to 'read'.",
+    "",
+    "> quests",
+    "# Quest complete: The Strange Note!",
+    "# (Mystery quest — steps were never visible until completed)",
+    "",
+    "# === OPEN QUEST: The Keeper's Stew ===",
+    "# Collect fish, herbs, and flour.",
+    "",
+    "> east",
+    "# Arrive at The Beach. You notice fresh fish in a tidal pool.",
+    "",
+    "> take fish",
+    "# You pick up the fresh fish.",
+    "",
+    "> east",
+    "# Arrive at Village Square. You notice wild herbs by the fountain.",
+    "",
+    "> take herbs",
+    "# You pick up the wild herbs.",
+    "",
+    "> quests",
+    "# The Keeper's Stew: ✓ Fresh Fish, ✓ Wild Herbs, ✗ Flour Sack",
+    "# Village Explorer (hidden): ✓ The Dock, ✓ The Beach, ✓ Village Square, ✗ ???",
+    "",
+    "> east",
+    "# Arrive at The Tavern. You notice a flour sack behind the bar.",
+    "",
+    "> take flour",
+    "# You pick up the flour sack.",
+    "# Quest complete: The Keeper's Stew!",
+    "# on-complete fires: give-item stew. 'You receive: Bowl of Stew'",
+    "",
+    "# === HIDDEN QUEST: Village Explorer ===",
+    "# All 4 places now visited (dock, beach, square, tavern).",
+    "# Quest complete: Village Explorer!",
+    "",
+    "> quests",
+    "# All 3 quests completed.",
+    "# Completed: ✓ The Keeper's Stew, ✓ Village Explorer, ✓ The Strange Note"
+  ],
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:world"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "Tide's End: Quests"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "tutorial"
+        ],
+        [
+          "tag",
+          "coastal"
+        ],
+        [
+          "tag",
+          "intermediate"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:tides-end-06-quests:place:the-dock"
+        ],
+        [
+          "relay",
+          "wss://relay.damus.io"
+        ],
+        [
+          "collaboration",
+          "open"
+        ],
+        [
+          "colour",
+          "bg",
+          "#1a1a2e"
+        ],
+        [
+          "colour",
+          "text",
+          "#c8c8a9"
+        ],
+        [
+          "colour",
+          "title",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "dim",
+          "#5e8b7e"
+        ],
+        [
+          "colour",
+          "highlight",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "exits",
+          "#5e8b7e"
+        ],
+        [
+          "font",
+          "ibm-plex-mono"
+        ],
+        [
+          "cursor",
+          "beam"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "A small coastal village where the river meets the sea.\n\nThis tutorial teaches **quest tracking** — open, hidden, and mystery quest types. Complete all three quests to master the quest system.\n\nType `quests` at any time to check your progress."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:place:the-dock"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Dock"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:fishing-nets"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-06-quests:item:strange-note"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visited",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-dock"
+        ]
+      ],
+      "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air.\n\nTangled **fishing nets** hang from a post, drying in the salt breeze. Something might be caught in them.\n\nA cobbled road leads north toward the village, and a sandy path follows the shoreline east."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:place:village-square"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Village Square"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-06-quests:item:herbs"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visited",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-square"
+        ]
+      ],
+      "content": "A modest square of packed earth ringed by low stone buildings with slate roofs. A dry fountain stands in the centre, its basin cracked and filled with windblown leaves.\n\nClumps of **wild herbs** grow stubbornly from cracks in the stone around the fountain.\n\nSmoke drifts from a chimney to the east where a tavern sign swings on rusted chains. To the west, a gap between the houses opens onto dunes and the sound of surf."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:place:the-tavern"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Tavern"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-06-quests:item:flour"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visited",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-tavern"
+        ]
+      ],
+      "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale.\n\nA **flour sack** leans against the bar, half-open.\n\nThe only way out is west, back to the square."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:place:the-beach"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Beach"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-06-quests:item:fish"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visited",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-beach"
+        ]
+      ],
+      "content": "Coarse sand stretches in a long curve between dark rocks and the restless sea. Kelp and driftwood lie in tangled lines where the last high tide left them. Gulls wheel overhead, their cries thin against the wind.\n\nA **fresh fish** flaps weakly in a shallow tidal pool, stranded by the retreating tide.\n\nThe village lies east through a gap in the dunes, and a rocky coastal path leads west toward the dock."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:portal:dock-to-square"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-06-quests:place:village-square",
+          "north",
+          "A cobbled road climbs toward the village square."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-06-quests:place:the-dock",
+          "south",
+          "The road slopes down to the old dock."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:portal:square-to-tavern"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-06-quests:place:the-tavern",
+          "east",
+          "A battered sign reads 'The Anchor' above a low doorway."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-06-quests:place:village-square",
+          "west",
+          "The square is visible through the open door."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:portal:square-to-beach"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-06-quests:place:the-beach",
+          "west",
+          "A sandy track winds through the dunes toward the shore."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-06-quests:place:village-square",
+          "east",
+          "A path leads back through the dunes to the village."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:portal:dock-to-beach"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-06-quests:place:the-beach",
+          "east",
+          "The shoreline curves east past the rocks toward a sandy beach."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-06-quests:place:the-dock",
+          "west",
+          "A rocky path follows the waterline back to the dock."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:item:fish"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Fresh Fish"
+        ],
+        [
+          "noun",
+          "fish",
+          "fresh fish"
+        ]
+      ],
+      "content": "A silvery fish, still wet and glistening. It was stranded in a tidal pool when the water retreated. The tavern keeper could make something good with this."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:item:herbs"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Wild Herbs"
+        ],
+        [
+          "noun",
+          "herbs",
+          "wild herbs"
+        ]
+      ],
+      "content": "A fragrant bundle of wild thyme, rosemary, and sea lavender. They grow in the cracks around the old fountain, fed by whatever moisture the stone holds."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:item:flour"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Flour Sack"
+        ],
+        [
+          "noun",
+          "flour",
+          "sack",
+          "flour sack"
+        ]
+      ],
+      "content": "A canvas sack of coarse-ground flour, still sealed with a wax stamp. The tavern keeper must have more than enough to spare one."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:feature:fishing-nets"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Fishing Nets"
+        ],
+        [
+          "noun",
+          "nets",
+          "fishing nets"
+        ],
+        [
+          "state",
+          "tangled"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "searched"
+        ],
+        [
+          "transition",
+          "tangled",
+          "searched",
+          "You pull the nets aside, shaking out sand and dried kelp. A folded piece of paper falls from between the knots — a note, hidden deliberately."
+        ],
+        [
+          "transition",
+          "searched",
+          "searched",
+          "The nets have already been searched. Nothing else is hidden here."
+        ]
+      ],
+      "content": "Heavy rope nets strung between posts, drying in the salt air. Small shells and strands of kelp are tangled in the mesh. Something seems to be caught deeper in the netting."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:item:strange-note"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Strange Note"
+        ],
+        [
+          "noun",
+          "note",
+          "strange note",
+          "paper"
+        ],
+        [
+          "state",
+          "found"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:fishing-nets",
+          "searched",
+          "You don't see any note here."
+        ],
+        [
+          "verb",
+          "read",
+          "unfold"
+        ],
+        [
+          "on-interact",
+          "read",
+          "set-state",
+          "read"
+        ],
+        [
+          "transition",
+          "found",
+          "read",
+          "You unfold the damp paper carefully. The hurried handwriting becomes legible: *'Meet at the old well when the tide turns. Tell no one. — S.'*"
+        ],
+        [
+          "transition",
+          "read",
+          "read",
+          "The note reads: *'Meet at the old well when the tide turns. Tell no one. — S.'*"
+        ]
+      ],
+      "content": "A small piece of paper, folded twice and slightly damp. The handwriting is hurried and the ink has run in places. Unfold it to read the full message."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:feature:landmark-dock"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Dock"
+        ],
+        [
+          "state",
+          "unvisited"
+        ],
+        [
+          "noun",
+          "landmark"
+        ]
+      ],
+      "content": "A familiar landmark."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:feature:landmark-square"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Village Square"
+        ],
+        [
+          "state",
+          "unvisited"
+        ],
+        [
+          "noun",
+          "landmark"
+        ]
+      ],
+      "content": "A familiar landmark."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:feature:landmark-tavern"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Tavern"
+        ],
+        [
+          "state",
+          "unvisited"
+        ],
+        [
+          "noun",
+          "landmark"
+        ]
+      ],
+      "content": "A familiar landmark."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:feature:landmark-beach"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Beach"
+        ],
+        [
+          "state",
+          "unvisited"
+        ],
+        [
+          "noun",
+          "landmark"
+        ]
+      ],
+      "content": "A familiar landmark."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:item:stew"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Bowl of Stew"
+        ],
+        [
+          "noun",
+          "stew",
+          "bowl",
+          "bowl of stew"
+        ]
+      ],
+      "content": "A steaming bowl of thick fish stew, rich with herbs and thickened with flour. The keeper's recipe — simple ingredients transformed by a steady hand."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:quest:keepers-stew"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Keeper's Stew"
+        ],
+        [
+          "quest-type",
+          "open"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:tides-end-06-quests:item:fish"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:tides-end-06-quests:item:herbs"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:tides-end-06-quests:item:flour"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-06-quests:item:fish",
+          "",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-06-quests:item:herbs",
+          "",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-06-quests:item:flour",
+          "",
+          ""
+        ],
+        [
+          "on-complete",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:tides-end-06-quests:item:stew"
+        ]
+      ],
+      "content": "The tavern keeper needs fresh ingredients for her famous stew. She needs fish from the shore, herbs from the square, and flour from the tavern stores. Gather all three."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:quest:village-explorer"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "Village Explorer"
+        ],
+        [
+          "quest-type",
+          "hidden"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-dock"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-square"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-tavern"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-beach"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-dock",
+          "visited",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-square",
+          "visited",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-tavern",
+          "visited",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-beach",
+          "visited",
+          ""
+        ]
+      ],
+      "content": "Explore every corner of the village. Visit all four locations to prove you know these streets."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-06-quests:quest:strange-note"
+        ],
+        [
+          "t",
+          "tides-end-06-quests"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Strange Note"
+        ],
+        [
+          "quest-type",
+          "mystery"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:tides-end-06-quests:item:strange-note"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-06-quests:item:strange-note",
+          "read",
+          ""
+        ]
+      ],
+      "content": "A mysterious note was hidden in the fishing nets. Who left it there, and what does it mean?"
+    }
+  ]
+}

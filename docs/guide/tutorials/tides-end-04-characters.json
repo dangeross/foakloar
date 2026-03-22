@@ -1,0 +1,797 @@
+{
+  "walkthrough": [
+    "# Tide's End 04: Characters — Walkthrough",
+    "# This world teaches NPCs and Dialogue.",
+    "# Start at The Dock. Talk to both NPCs and explore all dialogue branches.",
+    "",
+    "> look",
+    "# You see The Dock description and exits: north, east",
+    "",
+    "> north",
+    "# Arrive at Village Square. Exits: south, east, west",
+    "",
+    "> east",
+    "# Arrive at The Tavern. You see the Tavern Keeper.",
+    "",
+    "> talk to keeper",
+    "# Tavern Keeper says greeting. Options: 1) Ask about the village, 2) Ask about work, 3) Leave",
+    "",
+    "> 1",
+    "# Keeper talks about the village and mentions the notice board.",
+    "# Options: 1) Thank her and leave",
+    "",
+    "> 1",
+    "# Conversation ends.",
+    "",
+    "> talk to keeper",
+    "# Greeting again. Options: 1) Ask about the village, 2) Ask about work, 3) Leave",
+    "",
+    "> 2",
+    "# Keeper mentions needing ingredients. Hints at a future quest.",
+    "# Options: 1) Ask what ingredients, 2) Maybe later",
+    "",
+    "> 1",
+    "# Keeper lists what she needs — driftwood kindling and sea salt.",
+    "# Options: 1) I'll keep an eye out",
+    "",
+    "> 1",
+    "# Conversation ends.",
+    "",
+    "> west",
+    "# Back at Village Square",
+    "",
+    "> south",
+    "# Back at The Dock",
+    "",
+    "# The Old Fisherman roams between the dock and the beach (speed 3).",
+    "# He may or may not be here depending on move count.",
+    "# If not here, go to the beach to find him.",
+    "",
+    "> east",
+    "# Arrive at The Beach. The Old Fisherman may be here.",
+    "",
+    "# Once you find the fisherman (dock or beach):",
+    "",
+    "> talk to fisherman",
+    "# Fisherman says greeting. Options: 1) Ask about the sea, 2) Ask about fishing, 3) Leave",
+    "",
+    "> 1",
+    "# Fisherman talks about the sea and the tides.",
+    "# Options: 1) Sounds peaceful, 2) Any dangers?",
+    "",
+    "> 1",
+    "# He reflects on the sea. Conversation ends.",
+    "",
+    "> talk to fisherman",
+    "# Greeting again.",
+    "",
+    "> 2",
+    "# Fisherman talks about fishing and hints about making a rod.",
+    "# Options: 1) How would I make one?, 2) Maybe another time",
+    "",
+    "> 1",
+    "# He describes needing a branch and some twine. Sets up recipe tutorial.",
+    "# Options: 1) I'll remember that",
+    "",
+    "> 1",
+    "# Conversation ends. All dialogue branches explored."
+  ],
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:world"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "Tide's End: Characters"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "tutorial"
+        ],
+        [
+          "tag",
+          "coastal"
+        ],
+        [
+          "tag",
+          "beginner"
+        ],
+        [
+          "tag",
+          "npc"
+        ],
+        [
+          "tag",
+          "dialogue"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:tides-end-04-characters:place:the-dock"
+        ],
+        [
+          "relay",
+          "wss://relay.damus.io"
+        ],
+        [
+          "collaboration",
+          "open"
+        ],
+        [
+          "colour",
+          "bg",
+          "#1a1a2e"
+        ],
+        [
+          "colour",
+          "text",
+          "#c8c8a9"
+        ],
+        [
+          "colour",
+          "title",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "dim",
+          "#5e8b7e"
+        ],
+        [
+          "colour",
+          "highlight",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "exits",
+          "#5e8b7e"
+        ],
+        [
+          "font",
+          "ibm-plex-mono"
+        ],
+        [
+          "cursor",
+          "beam"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "A small coastal village where the river meets the sea.\n\nMeet the people of Tide's End. Talk to the tavern keeper and the old fisherman to learn about life in the village."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:place:the-dock"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Dock"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:tides-end-04-characters:npc:old-fisherman"
+        ]
+      ],
+      "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air. A cobbled road leads north toward the village, and a sandy path follows the shoreline east."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:place:village-square"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Village Square"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ]
+      ],
+      "content": "A modest square of packed earth ringed by low stone buildings with slate roofs. A dry fountain stands in the centre, its basin cracked and filled with windblown leaves. Smoke drifts from a chimney to the east where a tavern sign swings on rusted chains. To the west, a gap between the houses opens onto dunes and the sound of surf."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:place:the-tavern"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Tavern"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:tides-end-04-characters:npc:tavern-keeper"
+        ]
+      ],
+      "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale. A sturdy woman in a flour-dusted apron stands behind the bar, polishing a glass. The only way out is west, back to the square."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:place:the-beach"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Beach"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ]
+      ],
+      "content": "Coarse sand stretches in a long curve between dark rocks and the restless sea. Kelp and driftwood lie in tangled lines where the last high tide left them. Gulls wheel overhead, their cries thin against the wind. The village lies east through a gap in the dunes, and a rocky coastal path leads west toward the dock."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:portal:dock-to-square"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-04-characters:place:village-square",
+          "north",
+          "A cobbled road climbs toward the village square."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-04-characters:place:the-dock",
+          "south",
+          "The road slopes down to the old dock."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:portal:square-to-tavern"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-04-characters:place:the-tavern",
+          "east",
+          "A battered sign reads 'The Anchor' above a low doorway."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-04-characters:place:village-square",
+          "west",
+          "The square is visible through the open door."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:portal:square-to-beach"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-04-characters:place:the-beach",
+          "west",
+          "A sandy track winds through the dunes toward the shore."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-04-characters:place:village-square",
+          "east",
+          "A path leads back through the dunes to the village."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:portal:dock-to-beach"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-04-characters:place:the-beach",
+          "east",
+          "The shoreline curves east past the rocks toward a sandy beach."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-04-characters:place:the-dock",
+          "west",
+          "A rocky path follows the waterline back to the dock."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:npc:tavern-keeper"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Tavern Keeper"
+        ],
+        [
+          "noun",
+          "keeper",
+          "innkeeper",
+          "barkeep"
+        ],
+        [
+          "on-interact",
+          "talk",
+          "traverse",
+          ""
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:tides-end-04-characters:dialogue:keeper:greeting"
+        ]
+      ],
+      "content": "A sturdy woman with sun-weathered hands and a no-nonsense manner stands behind the bar, wiping down the counter with a rag that has seen better days."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:npc:old-fisherman"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Old Fisherman"
+        ],
+        [
+          "noun",
+          "fisherman",
+          "old man"
+        ],
+        [
+          "on-interact",
+          "talk",
+          "traverse",
+          ""
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:tides-end-04-characters:dialogue:fisherman:greeting"
+        ],
+        [
+          "speed",
+          "3"
+        ],
+        [
+          "order",
+          "sequential"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:tides-end-04-characters:place:the-dock"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:tides-end-04-characters:place:the-beach"
+        ]
+      ],
+      "content": "An old man with a deeply lined face sits mending a net, his fingers moving with the ease of decades of practice. He squints at the horizon as if reading something written in the clouds."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:dialogue:keeper:greeting"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Ask about the village",
+          "30078:<PUBKEY>:tides-end-04-characters:dialogue:keeper:village"
+        ],
+        [
+          "option",
+          "Ask about work",
+          "30078:<PUBKEY>:tides-end-04-characters:dialogue:keeper:work"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": "She looks up from her polishing and gives you a measured nod. \"Don't get many new faces round here. Welcome to The Anchor. What can I do for you?\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:dialogue:keeper:village"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Thank her and leave",
+          ""
+        ]
+      ],
+      "content": "She leans against the bar. \"Tide's End. Been here longer than anyone remembers. Fishing village, mostly — though the fish aren't what they used to be.\" She gestures vaguely east. \"There's a notice board in the square if you're looking for things to do. Folk post odd jobs there from time to time.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:dialogue:keeper:work"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Ask what ingredients",
+          "30078:<PUBKEY>:tides-end-04-characters:dialogue:keeper:ingredients"
+        ],
+        [
+          "option",
+          "Maybe later",
+          ""
+        ]
+      ],
+      "content": "She pauses, studying you for a moment. \"As it happens, I could use a hand. I'm running low on a few things for the kitchen, and the usual suppliers haven't been through in weeks. Ingredients don't gather themselves.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:dialogue:keeper:ingredients"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "I'll keep an eye out",
+          ""
+        ]
+      ],
+      "content": "She counts off on her fingers. \"Driftwood kindling — the dry kind you find up past the tideline. And sea salt crystals from the rock pools on the far end of the beach. Bring me both and I'll make it worth your while.\" She taps the bar twice. \"Good honest trade.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:dialogue:fisherman:greeting"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Ask about the sea",
+          "30078:<PUBKEY>:tides-end-04-characters:dialogue:fisherman:sea"
+        ],
+        [
+          "option",
+          "Ask about fishing",
+          "30078:<PUBKEY>:tides-end-04-characters:dialogue:fisherman:fishing"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ]
+      ],
+      "content": "The old man glances up from his net, one eye narrowed against the light. \"Eh? Oh, a visitor.\" He shifts on his crate to make room, though there is no room to make. \"Sit if you like. Or stand. Makes no difference to the fish.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:dialogue:fisherman:sea"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Sounds peaceful",
+          "30078:<PUBKEY>:tides-end-04-characters:dialogue:fisherman:peaceful"
+        ],
+        [
+          "option",
+          "Any dangers?",
+          "30078:<PUBKEY>:tides-end-04-characters:dialogue:fisherman:dangers"
+        ]
+      ],
+      "content": "He sets down the net and looks out at the water. \"The sea's the only honest thing left. Doesn't pretend to be anything it isn't. Calm one hour, furious the next.\" He sniffs the air. \"Tide's turning soon. You can smell it.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:dialogue:fisherman:peaceful"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Thanks, old man",
+          ""
+        ]
+      ],
+      "content": "He nods slowly. \"Peaceful enough, if you respect it. I've spent forty years listening to these waves. Never once heard the same thing twice.\" He picks his net back up. \"Now let me work.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:dialogue:fisherman:dangers"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "I'll be careful",
+          ""
+        ]
+      ],
+      "content": "His expression darkens. \"There's rocks under the surface at the south end. And rip tides when the wind comes from the east. Lost a boat to them once.\" He pauses. \"There's stories about things further out too. Lights under the water on moonless nights. Probably nothing. Probably.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:dialogue:fisherman:fishing"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "How would I make one?",
+          "30078:<PUBKEY>:tides-end-04-characters:dialogue:fisherman:makerod"
+        ],
+        [
+          "option",
+          "Maybe another time",
+          ""
+        ]
+      ],
+      "content": "He brightens a little. \"Now you're talking sense. Best way to learn a place is through its fish.\" He holds up his own rod — a simple thing, a bent branch with twine. \"You'd need a rod of your own, of course. Can't lend you mine. A fisherman's rod is like his right hand.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-04-characters:dialogue:fisherman:makerod"
+        ],
+        [
+          "t",
+          "tides-end-04-characters"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "I'll remember that",
+          ""
+        ]
+      ],
+      "content": "He holds up his rod for you to see. \"Nothing fancy. Find yourself a good straight branch — driftwood's no good, too brittle. Need a green one from the bushes up past the square. And some twine. I've seen scraps of it tangled in the nets down here, or washed up on the beach.\" He shrugs. \"Put them together and you've got a fishing rod. Simple as that.\""
+    }
+  ]
+}

@@ -1,0 +1,651 @@
+{
+  "walkthrough": [
+    "# Tide's End 10: Endgame — Walkthrough",
+    "# This world teaches endgame quests, quest chaining, and the restart command.",
+    "# Start at The Dock.",
+    "",
+    "> look",
+    "# You see The Dock. A fresh fish flaps in a tidal pool. Exits: north.",
+    "",
+    "> take fish",
+    "# You pick up the fresh fish.",
+    "",
+    "> north",
+    "# Arrive at Village Square. Wild herbs grow near the fountain. Exits: south, east, west.",
+    "# West exit is not visible yet — requires quest 'keepers-errand' in state 'complete'.",
+    "",
+    "> take herbs",
+    "# You pick up the wild herbs.",
+    "",
+    "> east",
+    "# Arrive at The Tavern. A flour sack leans against the bar. The tavern keeper watches you.",
+    "",
+    "> take flour",
+    "# You pick up the flour sack.",
+    "",
+    "> talk keeper",
+    "# The keeper speaks: 'Ah, you've found everything I need! Fish, herbs, flour — perfect.'",
+    "# (Talk triggers dialogue; quest completion is automatic when items are held.)",
+    "",
+    "# Quest complete: The Keeper's Errand!",
+    "# on-complete fires: set-state 'open' on the departure portal.",
+    "",
+    "> west",
+    "# Return to Village Square. A new path has opened to the west.",
+    "",
+    "> west",
+    "# Arrive at Departure Pier.",
+    "# on-enter sets the departure landmark to 'visited'.",
+    "",
+    "# === ENDGAME TRIGGERS ===",
+    "# The endgame quest 'Departure' requires:",
+    "#   1. Quest 'keepers-errand' in state 'complete'",
+    "#   2. Landmark 'departure-pier' in state 'visited'",
+    "# Both conditions now met — endgame fires!",
+    "",
+    "# Soft endgame screen appears with closing prose from the quest content field.",
+    "# The world stays open — player can continue exploring.",
+    "",
+    "> restart",
+    "# All player state is cleared. Inventory, visited places, quest progress — all reset.",
+    "# You return to The Dock to begin again."
+  ],
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:world"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "Tide's End: Endgame"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "tutorial"
+        ],
+        [
+          "tag",
+          "coastal"
+        ],
+        [
+          "tag",
+          "intermediate"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:tides-end-10-endgame:place:the-dock"
+        ],
+        [
+          "relay",
+          "wss://relay.damus.io"
+        ],
+        [
+          "collaboration",
+          "open"
+        ],
+        [
+          "colour",
+          "bg",
+          "#1a1a2e"
+        ],
+        [
+          "colour",
+          "text",
+          "#c8c8a9"
+        ],
+        [
+          "colour",
+          "title",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "dim",
+          "#5e8b7e"
+        ],
+        [
+          "colour",
+          "highlight",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "exits",
+          "#5e8b7e"
+        ],
+        [
+          "font",
+          "ibm-plex-mono"
+        ],
+        [
+          "cursor",
+          "beam"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "A small coastal village where the river meets the sea.\n\nThis tutorial teaches **endgame quests** — the game's win condition. Complete the keeper's errand, reach the departure pier, and see how a world ends.\n\nType `quests` to check your progress."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:place:the-dock"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Dock"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-10-endgame:item:fish"
+        ]
+      ],
+      "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air.\n\nA **fresh fish** flaps weakly in a shallow tidal pool, stranded by the retreating tide.\n\nA cobbled road leads north toward the village."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:place:village-square"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Village Square"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-10-endgame:item:herbs"
+        ]
+      ],
+      "content": "A modest square of packed earth ringed by low stone buildings with slate roofs. A dry fountain stands in the centre, its basin cracked and filled with windblown leaves.\n\nClumps of **wild herbs** grow stubbornly from cracks in the stone around the fountain.\n\nSmoke drifts from a chimney to the east where a tavern sign swings on rusted chains. The road slopes south toward the dock."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:place:the-tavern"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Tavern"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-10-endgame:item:flour"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:tides-end-10-endgame:npc:tavern-keeper"
+        ]
+      ],
+      "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale.\n\nThe **tavern keeper** stands behind the bar, polishing a glass with a grey rag. A **flour sack** leans against the bar, half-open.\n\nThe only way out is west, back to the square."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:place:departure-pier"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Departure Pier"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visited",
+          "30078:<PUBKEY>:tides-end-10-endgame:feature:landmark-departure"
+        ]
+      ],
+      "content": "A narrow stone pier stretches out into open water, far from the sheltered harbour. A single boat is moored at the end, its sail furled and waiting. The village is a cluster of grey roofs behind you, small against the sky.\n\nThis is where journeys begin — and where they end.\n\nThe village square lies east."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:portal:dock-to-square"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-10-endgame:place:village-square",
+          "north",
+          "A cobbled road climbs toward the village square."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-10-endgame:place:the-dock",
+          "south",
+          "The road slopes down to the old dock."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:portal:square-to-tavern"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-10-endgame:place:the-tavern",
+          "east",
+          "A battered sign reads 'The Anchor' above a low doorway."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-10-endgame:place:village-square",
+          "west",
+          "The square is visible through the open door."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:portal:square-to-pier"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "state",
+          "closed"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-10-endgame:place:departure-pier",
+          "west",
+          "A narrow path leads west toward a stone pier."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-10-endgame:place:village-square",
+          "east",
+          "The village square is back the way you came."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-10-endgame:quest:keepers-errand",
+          "complete",
+          "The path west is overgrown and impassable."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:item:fish"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Fresh Fish"
+        ],
+        [
+          "noun",
+          "fish",
+          "fresh fish"
+        ]
+      ],
+      "content": "A silvery fish, still wet and glistening. It was stranded in a tidal pool when the water retreated. The tavern keeper could make something good with this."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:item:herbs"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Wild Herbs"
+        ],
+        [
+          "noun",
+          "herbs",
+          "wild herbs"
+        ]
+      ],
+      "content": "A fragrant bundle of wild thyme, rosemary, and sea lavender. They grow in the cracks around the old fountain, fed by whatever moisture the stone holds."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:item:flour"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Flour Sack"
+        ],
+        [
+          "noun",
+          "flour",
+          "sack",
+          "flour sack"
+        ]
+      ],
+      "content": "A canvas sack of coarse-ground flour, still sealed with a wax stamp. The tavern keeper must have more than enough to spare one."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:npc:tavern-keeper"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Tavern Keeper"
+        ],
+        [
+          "noun",
+          "keeper",
+          "tavern keeper",
+          "barkeep"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:tides-end-10-endgame:dialogue:keeper-talk"
+        ]
+      ],
+      "content": "A broad-shouldered woman with sun-weathered skin and sharp eyes. She runs The Anchor with quiet efficiency, and knows everything that happens in the village."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:dialogue:keeper-talk"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:feature:landmark-departure"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Departure Pier"
+        ],
+        [
+          "state",
+          "unvisited"
+        ],
+        [
+          "noun",
+          "landmark"
+        ]
+      ],
+      "content": "A familiar landmark."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:quest:keepers-errand"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Keeper's Errand"
+        ],
+        [
+          "quest-type",
+          "open"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:tides-end-10-endgame:item:fish"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:tides-end-10-endgame:item:herbs"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:tides-end-10-endgame:item:flour"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-10-endgame:item:fish",
+          "",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-10-endgame:item:herbs",
+          "",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-10-endgame:item:flour",
+          "",
+          ""
+        ]
+      ],
+      "content": "The tavern keeper needs fresh ingredients — fish from the dock, herbs from the square, and flour from the tavern stores. Gather all three to earn her gratitude and clear the way to the pier."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-endgame:quest:departure"
+        ],
+        [
+          "t",
+          "tides-end-10-endgame"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "Departure"
+        ],
+        [
+          "quest-type",
+          "endgame",
+          "open"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-10-endgame:quest:keepers-errand",
+          "complete",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-10-endgame:feature:landmark-departure",
+          "visited",
+          ""
+        ]
+      ],
+      "content": "You stand at the end of the pier, the village at your back. The wind catches the furled sail and it snaps once, sharp as a gunshot, before settling.\n\nThe keeper's stew will be ready by nightfall, but you won't be here to taste it. The boat rocks gently, patient as the tide. You've done what was asked. The rest is the sea's business.\n\nSomewhere beyond the horizon, another shore waits. You step aboard.\n\n*The village of Tide's End grows small behind you, until it is nothing but a smudge of grey against the green hills. The gulls stop following. The water deepens. And for the first time in a long while, you feel the weight of the land lift from your shoulders.*"
+    }
+  ]
+}

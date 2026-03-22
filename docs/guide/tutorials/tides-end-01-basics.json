@@ -1,0 +1,157 @@
+{
+  "walkthrough": [
+    "# Tide's End 01: Basics — Walkthrough",
+    "# This world teaches Places and Portals only.",
+    "# Start at The Dock. Navigate all four places.",
+    "",
+    "> look",
+    "# You see The Dock description and exits: north, east",
+    "",
+    "> north",
+    "# Arrive at Village Square. Exits: south, east, west",
+    "",
+    "> east",
+    "# Arrive at The Tavern. Exit: west",
+    "",
+    "> west",
+    "# Back at Village Square",
+    "",
+    "> west",
+    "# Arrive at The Beach. Exits: east, west (coastal path back to dock)",
+    "",
+    "> west",
+    "# Back at The Dock via coastal path",
+    "",
+    "> east",
+    "# Back at The Beach via coastal path",
+    "",
+    "> east",
+    "# Back at Village Square",
+    "",
+    "> south",
+    "# Back at The Dock. All four places visited."
+  ],
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "tides-end-01-basics:world"],
+        ["t", "tides-end-01-basics"],
+        ["w", "foakloar"],
+        ["type", "world"],
+        ["title", "Tide's End: Getting Started"],
+        ["author", "foakloar"],
+        ["version", "1.0.0"],
+        ["lang", "en"],
+        ["tag", "tutorial"],
+        ["tag", "coastal"],
+        ["tag", "beginner"],
+        ["start", "30078:<PUBKEY>:tides-end-01-basics:place:the-dock"],
+        ["relay", "wss://relay.damus.io"],
+        ["collaboration", "open"],
+        ["colour", "bg", "#1a1a2e"],
+        ["colour", "text", "#c8c8a9"],
+        ["colour", "title", "#d4a574"],
+        ["colour", "dim", "#5e8b7e"],
+        ["colour", "highlight", "#d4a574"],
+        ["colour", "exits", "#5e8b7e"],
+        ["font", "ibm-plex-mono"],
+        ["cursor", "beam"],
+        ["content-type", "text/markdown"]
+      ],
+      "content": "A small coastal village where the river meets the sea.\n\nThe tide is turning. Start at the dock."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "tides-end-01-basics:place:the-dock"],
+        ["t", "tides-end-01-basics"],
+        ["type", "place"],
+        ["title", "The Dock"],
+        ["exit", "north"],
+        ["exit", "east"]
+      ],
+      "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air. A cobbled road leads north toward the village, and a sandy path follows the shoreline east."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "tides-end-01-basics:place:village-square"],
+        ["t", "tides-end-01-basics"],
+        ["type", "place"],
+        ["title", "Village Square"],
+        ["exit", "south"],
+        ["exit", "east"],
+        ["exit", "west"]
+      ],
+      "content": "A modest square of packed earth ringed by low stone buildings with slate roofs. A dry fountain stands in the centre, its basin cracked and filled with windblown leaves. Smoke drifts from a chimney to the east where a tavern sign swings on rusted chains. To the west, a gap between the houses opens onto dunes and the sound of surf."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "tides-end-01-basics:place:the-tavern"],
+        ["t", "tides-end-01-basics"],
+        ["type", "place"],
+        ["title", "The Tavern"],
+        ["exit", "west"]
+      ],
+      "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale. Empty stools line the bar and a few rough tables fill the room. The only way out is west, back to the square."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "tides-end-01-basics:place:the-beach"],
+        ["t", "tides-end-01-basics"],
+        ["type", "place"],
+        ["title", "The Beach"],
+        ["exit", "east"],
+        ["exit", "west"]
+      ],
+      "content": "Coarse sand stretches in a long curve between dark rocks and the restless sea. Kelp and driftwood lie in tangled lines where the last high tide left them. Gulls wheel overhead, their cries thin against the wind. The village lies east through a gap in the dunes, and a rocky coastal path leads west toward the dock."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "tides-end-01-basics:portal:dock-to-square"],
+        ["t", "tides-end-01-basics"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:tides-end-01-basics:place:village-square", "north", "A cobbled road climbs toward the village square."],
+        ["exit", "30078:<PUBKEY>:tides-end-01-basics:place:the-dock", "south", "The road slopes down to the old dock."]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "tides-end-01-basics:portal:square-to-tavern"],
+        ["t", "tides-end-01-basics"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:tides-end-01-basics:place:the-tavern", "east", "A battered sign reads 'The Anchor' above a low doorway."],
+        ["exit", "30078:<PUBKEY>:tides-end-01-basics:place:village-square", "west", "The square is visible through the open door."]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "tides-end-01-basics:portal:square-to-beach"],
+        ["t", "tides-end-01-basics"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:tides-end-01-basics:place:the-beach", "west", "A sandy track winds through the dunes toward the shore."],
+        ["exit", "30078:<PUBKEY>:tides-end-01-basics:place:village-square", "east", "A path leads back through the dunes to the village."]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "tides-end-01-basics:portal:dock-to-beach"],
+        ["t", "tides-end-01-basics"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:tides-end-01-basics:place:the-beach", "east", "The shoreline curves east past the rocks toward a sandy beach."],
+        ["exit", "30078:<PUBKEY>:tides-end-01-basics:place:the-dock", "west", "A rocky path follows the waterline back to the dock."]
+      ],
+      "content": ""
+    }
+  ]
+}

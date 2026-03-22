@@ -1,0 +1,993 @@
+{
+  "answers": {
+    "tides-end-05-puzzles:puzzle:notice-riddle": "compass"
+  },
+  "walkthrough": [
+    "# Tide's End 05: Puzzles & Secrets — Walkthrough",
+    "# This world teaches Puzzles, Clues, and Sealed Content.",
+    "# Same four places as tutorial #1, plus the Harbour Master's Office.",
+    "# Two puzzles: a riddle (notice board) and a sequence (combination lock).",
+    "# Two clues: scrap of paper (tavern) and old chart (beach).",
+    "",
+    "> look",
+    "# You see The Dock. Exits: north, east, southeast.",
+    "",
+    "# --- Step 1: Find the clue on the beach ---",
+    "> east",
+    "# Arrive at The Beach. The old chart clue is ambient — discovered on entry.",
+    "# Transition text: 'You carefully unfold the salt-stained chart...'",
+    "# Clue content is shown: the old mechanism follows a sailor's ritual — pull, turn, push.",
+    "",
+    "> examine chart",
+    "# Re-reading the chart. Shows: 'You have already studied the chart.'",
+    "",
+    "> east",
+    "# Back at Village Square.",
+    "",
+    "# --- Step 2: Find the clue in the tavern ---",
+    "> east",
+    "# Arrive at The Tavern. The scrap of paper clue is ambient — discovered on entry.",
+    "# Transition text: 'You lean closer and read the faded handwriting...'",
+    "# Clue content is shown: a riddle about something that points the way.",
+    "",
+    "> examine paper",
+    "# Re-reading the paper. Shows: 'You have already read the scrap of paper.'",
+    "",
+    "> west",
+    "# Back at Village Square.",
+    "",
+    "# --- Step 3: Solve the riddle puzzle at the notice board ---",
+    "> examine board",
+    "# You see the notice board with its encoded message.",
+    "",
+    "> decode board",
+    "# The puzzle activates. You are prompted for an answer.",
+    "",
+    "> compass",
+    "# Correct! The notice board transitions to 'decoded'. Transition text reveals a hidden message about a treasure in the harbour master's office.",
+    "",
+    "# --- Step 4: Go to the Harbour Master's Office ---",
+    "> south",
+    "# Back at The Dock.",
+    "",
+    "> southeast",
+    "# Arrive at Harbour Master's Office. You see a heavy chest with three brass dials.",
+    "",
+    "# --- Step 5: Solve the sequence puzzle (combination lock) ---",
+    "> examine chest",
+    "# You see the chest description — three dials: rope dial, wheel dial, sail dial.",
+    "",
+    "> pull rope dial",
+    "# The rope dial clicks into place. State changes to 'pulled'.",
+    "",
+    "> turn wheel dial",
+    "# The wheel dial clicks into place. State changes to 'turned'.",
+    "",
+    "> push sail dial",
+    "# The sail dial clicks — sequence puzzle auto-completes! The chest springs open. You receive a Brass Telescope.",
+    "",
+    "> inventory",
+    "# You are carrying: A Brass Telescope",
+    "",
+    "# --- Optional: Try puzzle exit ---",
+    "# If you activated the riddle puzzle and wanted to leave without answering:",
+    "# > back",
+    "# or > leave",
+    "# or > cancel",
+    "# These exit the puzzle prompt without answering.",
+    "",
+    "# All puzzles solved, clues found, telescope obtained. Tutorial complete."
+  ],
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:world"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "Tide's End: Puzzles & Secrets"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "tutorial"
+        ],
+        [
+          "tag",
+          "coastal"
+        ],
+        [
+          "tag",
+          "beginner"
+        ],
+        [
+          "tag",
+          "puzzles"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:tides-end-05-puzzles:place:the-dock"
+        ],
+        [
+          "relay",
+          "wss://relay.damus.io"
+        ],
+        [
+          "collaboration",
+          "open"
+        ],
+        [
+          "colour",
+          "bg",
+          "#1a1a2e"
+        ],
+        [
+          "colour",
+          "text",
+          "#c8c8a9"
+        ],
+        [
+          "colour",
+          "title",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "dim",
+          "#5e8b7e"
+        ],
+        [
+          "colour",
+          "highlight",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "exits",
+          "#5e8b7e"
+        ],
+        [
+          "font",
+          "ibm-plex-mono"
+        ],
+        [
+          "cursor",
+          "beam"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "A small coastal village where the river meets the sea.\n\nSecrets are hidden in plain sight. Decode messages, find clues, and unlock what others have sealed away."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:place:the-dock"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Dock"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "southeast"
+        ]
+      ],
+      "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air.\n\nA cobbled road leads north toward the village. A sandy path follows the shoreline east. A narrow boardwalk leads southeast to the harbour master's office."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:place:village-square"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Village Square"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:tides-end-05-puzzles:feature:notice-board"
+        ]
+      ],
+      "content": "A modest square of packed earth ringed by low stone buildings with slate roofs. A dry fountain stands in the centre, its basin cracked and filled with windblown leaves.\n\nA weathered **notice board** leans against the fountain, covered in faded papers. One notice near the centre is covered in strange symbols.\n\nSmoke drifts from a chimney to the east where a tavern sign swings on rusted chains. To the west, a gap between the houses opens onto dunes and the sound of surf."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:place:the-tavern"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Tavern"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "clue",
+          "30078:<PUBKEY>:tides-end-05-puzzles:clue:scrap-of-paper"
+        ]
+      ],
+      "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale.\n\nA **scrap of paper** is pinned to the wall behind the bar, its edges yellowed and curling.\n\nThe only way out is west, back to the square."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:place:the-beach"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Beach"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "clue",
+          "30078:<PUBKEY>:tides-end-05-puzzles:clue:old-chart"
+        ]
+      ],
+      "content": "Coarse sand stretches in a long curve between dark rocks and the restless sea. Kelp and driftwood lie in tangled lines where the last high tide left them. Gulls wheel overhead, their cries thin against the wind.\n\nAn **old chart** is wedged between two rocks near the tide line, its ink smeared but still legible.\n\nThe village lies east through a gap in the dunes, and a rocky coastal path leads west toward the dock."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:place:harbour-office"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Harbour Master's Office"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:tides-end-05-puzzles:feature:chest"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:tides-end-05-puzzles:feature:rope-dial"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:tides-end-05-puzzles:feature:wheel-dial"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:tides-end-05-puzzles:feature:sail-dial"
+        ],
+        [
+          "puzzle",
+          "30078:<PUBKEY>:tides-end-05-puzzles:puzzle:chest-lock"
+        ]
+      ],
+      "content": "A cramped room smelling of rope and lamp oil. Charts and tide tables paper every wall, their edges curling in the damp air. A heavy oak desk takes up most of the space, its surface buried under logbooks and brass instruments.\n\nIn the corner sits a heavy **chest** bound with iron straps. A combination lock with three brass dials holds it shut — a **rope dial**, a **wheel dial**, and a **sail dial**.\n\nThe door leads west back to the dock."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:portal:dock-to-square"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-05-puzzles:place:village-square",
+          "north",
+          "A cobbled road climbs toward the village square."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-05-puzzles:place:the-dock",
+          "south",
+          "The road slopes down to the old dock."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:portal:square-to-tavern"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-05-puzzles:place:the-tavern",
+          "east",
+          "A battered sign reads 'The Anchor' above a low doorway."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-05-puzzles:place:village-square",
+          "west",
+          "The square is visible through the open door."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:portal:square-to-beach"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-05-puzzles:place:the-beach",
+          "west",
+          "A sandy track winds through the dunes toward the shore."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-05-puzzles:place:village-square",
+          "east",
+          "A path leads back through the dunes to the village."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:portal:dock-to-beach"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-05-puzzles:place:the-beach",
+          "east",
+          "The shoreline curves east past the rocks toward a sandy beach."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-05-puzzles:place:the-dock",
+          "west",
+          "A rocky path follows the waterline back to the dock."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:portal:dock-to-office"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-05-puzzles:place:harbour-office",
+          "southeast",
+          "A narrow boardwalk leads to the harbour master's office."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-05-puzzles:place:the-dock",
+          "west",
+          "The boardwalk leads back to the dock."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:clue:scrap-of-paper"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Scrap of Paper"
+        ],
+        [
+          "noun",
+          "paper",
+          "scrap",
+          "scrap of paper",
+          "note"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          "You lean closer and read the faded handwriting on the scrap of paper."
+        ],
+        [
+          "transition",
+          "visible",
+          "visible",
+          "You have already read the scrap of paper."
+        ]
+      ],
+      "content": "Written in a shaky hand: *'What points the way but never walks? Every captain needs one, but it has no voice.'*\n\nSomeone has scrawled underneath: *'The answer unlocks what's hidden on the board.'*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:clue:old-chart"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Old Chart"
+        ],
+        [
+          "noun",
+          "chart",
+          "old chart"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          "You carefully unfold the salt-stained chart and study its markings."
+        ],
+        [
+          "transition",
+          "visible",
+          "visible",
+          "You have already studied the chart."
+        ]
+      ],
+      "content": "A faded navigation chart with a handwritten note in the margin:\n\n*'The old mechanism responds to a sailor's ritual — pull the line, turn the capstan, push the boom. Always in that order.'*\n\nBelow, someone has drawn three dials with arrows showing the sequence."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:feature:notice-board"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Notice Board"
+        ],
+        [
+          "noun",
+          "notice board",
+          "board",
+          "notice"
+        ],
+        [
+          "verb",
+          "decode",
+          "decipher",
+          "solve"
+        ],
+        [
+          "state",
+          "encoded"
+        ],
+        [
+          "transition",
+          "encoded",
+          "decoded",
+          "The symbols rearrange in your mind. The message reads:\n\n*'To whoever finds this — there is a chest in the harbour master's office. The lock follows the old sailor's ritual. The chart on the beach will show you the way.'*"
+        ],
+        [
+          "transition",
+          "decoded",
+          "decoded",
+          "You have already decoded the message. It mentions a chest in the harbour master's office."
+        ],
+        [
+          "on-interact",
+          "decode",
+          "set-state",
+          "active",
+          "30078:<PUBKEY>:tides-end-05-puzzles:puzzle:notice-riddle"
+        ]
+      ],
+      "content": "A weathered plank nailed to a post beside the fountain. Among the faded tide warnings and missing-cat notices, one sheet stands out — covered in strange symbols that look like a substitution cipher. At the bottom, a single line reads: *'Speak the answer to reveal what is hidden.'*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:puzzle:notice-riddle"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "title",
+          "Encoded Message"
+        ],
+        [
+          "puzzle-type",
+          "riddle"
+        ],
+        [
+          "answer-hash",
+          "ef6d48e1922fd1451f83ab31be1ed23f985820cf341faa4ed5e08060cf282670"
+        ],
+        [
+          "salt",
+          "tides-end-05-puzzles:puzzle:notice-riddle:v1"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "decoded",
+          "30078:<PUBKEY>:tides-end-05-puzzles:feature:notice-board"
+        ]
+      ],
+      "content": "The symbols on the notice board swim before your eyes. Something about directions... navigation... What points the way?"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:feature:chest"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Iron-Bound Chest"
+        ],
+        [
+          "noun",
+          "chest",
+          "trunk",
+          "box"
+        ]
+      ],
+      "content": "A heavy chest bound with iron straps, tucked into the corner of the office. Three brass dials are set into the front of a combination lock — each engraved with a different nautical symbol. A rope coil on the left dial, a ship's wheel on the middle, and a billowing sail on the right."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:feature:rope-dial"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Rope Dial"
+        ],
+        [
+          "noun",
+          "rope dial",
+          "rope",
+          "left dial"
+        ],
+        [
+          "verb",
+          "pull",
+          "yank",
+          "tug"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "transition",
+          "default",
+          "pulled",
+          "You grip the rope dial and pull. It clicks into place with a satisfying clunk."
+        ],
+        [
+          "transition",
+          "pulled",
+          "pulled",
+          "The rope dial is already set."
+        ],
+        [
+          "on-interact",
+          "pull",
+          "set-state",
+          "pulled"
+        ]
+      ],
+      "content": "The left dial on the chest's lock, engraved with a coiled rope. It looks like it needs to be pulled."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:feature:wheel-dial"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Wheel Dial"
+        ],
+        [
+          "noun",
+          "wheel dial",
+          "wheel",
+          "middle dial"
+        ],
+        [
+          "verb",
+          "turn",
+          "rotate",
+          "spin"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "transition",
+          "default",
+          "turned",
+          "You grip the wheel dial and turn. Another click echoes in the small room."
+        ],
+        [
+          "transition",
+          "turned",
+          "turned",
+          "The wheel dial is already set."
+        ],
+        [
+          "on-interact",
+          "turn",
+          "set-state",
+          "turned"
+        ]
+      ],
+      "content": "The middle dial on the chest's lock, engraved with a ship's wheel. It looks like it needs to be turned."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:feature:sail-dial"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Sail Dial"
+        ],
+        [
+          "noun",
+          "sail dial",
+          "sail",
+          "right dial"
+        ],
+        [
+          "verb",
+          "push",
+          "press",
+          "shove"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "transition",
+          "default",
+          "pushed",
+          "You push the sail dial firmly. It locks into position with a heavy thud."
+        ],
+        [
+          "transition",
+          "pushed",
+          "pushed",
+          "The sail dial is already set."
+        ],
+        [
+          "on-interact",
+          "push",
+          "set-state",
+          "pushed"
+        ]
+      ],
+      "content": "The right dial on the chest's lock, engraved with a billowing sail. It looks like it needs to be pushed."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:puzzle:chest-lock"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "title",
+          "Combination Lock"
+        ],
+        [
+          "puzzle-type",
+          "sequence"
+        ],
+        [
+          "ordered",
+          "true"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-05-puzzles:feature:rope-dial",
+          "pulled",
+          "Pull the rope dial first."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-05-puzzles:feature:wheel-dial",
+          "turned",
+          "Turn the wheel dial next."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-05-puzzles:feature:sail-dial",
+          "pushed",
+          "Push the sail dial last."
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "solved"
+        ],
+        [
+          "on-complete",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:tides-end-05-puzzles:item:telescope"
+        ]
+      ],
+      "content": "Three dials on the chest's combination lock. Each must be set in the correct order to open the chest."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-05-puzzles:item:telescope"
+        ],
+        [
+          "t",
+          "tides-end-05-puzzles"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "A Brass Telescope"
+        ],
+        [
+          "noun",
+          "telescope",
+          "brass telescope",
+          "spyglass"
+        ]
+      ],
+      "content": "A fine brass telescope, its lenses still clear despite years in the chest. The barrel is engraved with the harbour master's initials and a tiny compass rose. When you hold it to your eye, the far shore comes into sharp focus."
+    }
+  ]
+}

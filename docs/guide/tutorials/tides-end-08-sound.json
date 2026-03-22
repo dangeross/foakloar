@@ -1,0 +1,640 @@
+{
+  "walkthrough": [
+    "# Tide's End 08: Sound — Walkthrough",
+    "# This world teaches Sound events: ambient, layer, effect, and sound as an action.",
+    "# Uses the 'dirt' sample preset for Strudel patterns.",
+    "# Start at The Dock.",
+    "",
+    "> look",
+    "# You see The Dock. Exits: north, east.",
+    "# A seagull layer sound is playing (gulls and rope creaking).",
+    "",
+    "> north",
+    "# Arrive at Village Square. Exits: south, east, west.",
+    "# No sound defined here — the dock layer fades out.",
+    "",
+    "> east",
+    "# Arrive at The Tavern. Exit: west.",
+    "# The tavern ambient sound plays (crackling fire and soft murmur).",
+    "",
+    "> west",
+    "# Back at Village Square. Tavern ambient fades out.",
+    "",
+    "> west",
+    "# Arrive at The Beach. Exits: east, west.",
+    "# The beach ambient plays (waves and surf).",
+    "# The dock seagull layer does NOT play here — layers are place-scoped.",
+    "# You notice a sand coin.",
+    "",
+    "> flip coin",
+    "# A short pickup chime effect plays (sound as action via on-interact).",
+    "# The coin flashes in the light.",
+    "",
+    "> take coin",
+    "# Taken: Sand Coin.",
+    "",
+    "> west",
+    "# Back at The Dock via coastal path.",
+    "# The seagull layer resumes.",
+    "",
+    "> east",
+    "# Back at The Beach. Ambient waves resume.",
+    "",
+    "> east",
+    "# Back at Village Square.",
+    "",
+    "> south",
+    "# Back at The Dock. Seagull layer plays again.",
+    "# All sound types demonstrated: ambient, layer, effect, and sound action."
+  ],
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:world"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "Tide's End: Sound"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "tutorial"
+        ],
+        [
+          "tag",
+          "coastal"
+        ],
+        [
+          "tag",
+          "sound"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:tides-end-08-sound:place:the-dock"
+        ],
+        [
+          "relay",
+          "wss://relay.damus.io"
+        ],
+        [
+          "collaboration",
+          "open"
+        ],
+        [
+          "colour",
+          "bg",
+          "#1a1a2e"
+        ],
+        [
+          "colour",
+          "text",
+          "#c8c8a9"
+        ],
+        [
+          "colour",
+          "title",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "dim",
+          "#5e8b7e"
+        ],
+        [
+          "colour",
+          "highlight",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "exits",
+          "#5e8b7e"
+        ],
+        [
+          "font",
+          "ibm-plex-mono"
+        ],
+        [
+          "cursor",
+          "beam"
+        ],
+        [
+          "samples",
+          "dirt"
+        ],
+        [
+          "bpm",
+          "90"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "A small coastal village where the river meets the sea.\n\nListen to the world around you. Each place has its own soundscape."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:place:the-dock"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Dock"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:dock-gulls",
+          "layer",
+          "0.5"
+        ]
+      ],
+      "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air.\n\nGulls cry overhead, and ropes creak against the pilings.\n\nA cobbled road leads **north** toward the village, and a sandy path follows the shoreline **east**."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:place:village-square"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Village Square"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ]
+      ],
+      "content": "A modest square of packed earth ringed by low stone buildings with slate roofs. A dry fountain stands in the centre, its basin cracked and filled with windblown leaves. Smoke drifts from a chimney to the east where a tavern sign swings on rusted chains. To the west, a gap between the houses opens onto dunes and the sound of surf."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:place:the-tavern"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Tavern"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:tavern-fire",
+          "ambient",
+          "0.6"
+        ]
+      ],
+      "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale. A fire crackles in a stone hearth, and the murmur of conversation drifts from somewhere unseen.\n\nThe only way out is **west**, back to the square."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:place:the-beach"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Beach"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:beach-waves",
+          "ambient",
+          "0.7"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-08-sound:item:sand-coin"
+        ]
+      ],
+      "content": "Coarse sand stretches in a long curve between dark rocks and the restless sea. Kelp and driftwood lie in tangled lines where the last high tide left them. Gulls wheel overhead, their cries thin against the wind.\n\nThe village lies **east** through a gap in the dunes, and a rocky coastal path leads **west** toward the dock."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:portal:dock-to-square"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-08-sound:place:village-square",
+          "north",
+          "A cobbled road climbs toward the village square."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-08-sound:place:the-dock",
+          "south",
+          "The road slopes down to the old dock."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:portal:square-to-tavern"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-08-sound:place:the-tavern",
+          "east",
+          "A battered sign reads 'The Anchor' above a low doorway."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-08-sound:place:village-square",
+          "west",
+          "The square is visible through the open door."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:portal:square-to-beach"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-08-sound:place:the-beach",
+          "west",
+          "A sandy track winds through the dunes toward the shore."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-08-sound:place:village-square",
+          "east",
+          "A path leads back through the dunes to the village."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:portal:dock-to-beach"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-08-sound:place:the-beach",
+          "east",
+          "The shoreline curves east past the rocks toward a sandy beach."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-08-sound:place:the-dock",
+          "west",
+          "A rocky path follows the waterline back to the dock."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:beach-waves"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise",
+          ""
+        ],
+        [
+          "lpf",
+          "400"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "room",
+          "0.6"
+        ],
+        [
+          "roomsize",
+          "4"
+        ],
+        [
+          "slow",
+          "2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:dock-gulls"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "birds3*2 ~ birds3 ~"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "room",
+          "0.4"
+        ],
+        [
+          "roomsize",
+          "3"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "degrade-by",
+          "0.4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:tavern-fire"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "fire*4"
+        ],
+        [
+          "lpf",
+          "600"
+        ],
+        [
+          "gain",
+          "0.35"
+        ],
+        [
+          "room",
+          "0.3"
+        ],
+        [
+          "roomsize",
+          "2"
+        ],
+        [
+          "slow",
+          "2"
+        ],
+        [
+          "degrade-by",
+          "0.3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:pickup-chime"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c5 e5 g5"
+        ],
+        [
+          "oscillator",
+          "triangle"
+        ],
+        [
+          "gain",
+          "0.5"
+        ],
+        [
+          "sustain",
+          "0.2"
+        ],
+        [
+          "release",
+          "0.3"
+        ],
+        [
+          "room",
+          "0.3"
+        ],
+        [
+          "fast",
+          "2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:item:sand-coin"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Sand Coin"
+        ],
+        [
+          "noun",
+          "coin",
+          "sand coin"
+        ],
+        [
+          "verb",
+          "flip",
+          "toss"
+        ],
+        [
+          "on-interact",
+          "flip",
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:pickup-chime"
+        ]
+      ],
+      "content": "A tarnished copper coin, half-buried in the sand. Its face is worn smooth by the sea, but you can just make out a ship's wheel on one side."
+    }
+  ]
+}

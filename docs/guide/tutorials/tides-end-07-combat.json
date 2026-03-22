@@ -1,0 +1,538 @@
+{
+  "walkthrough": [
+    "# Tide's End 07: Combat — Walkthrough",
+    "# This world teaches combat mechanics: weapons, NPCs with health, and player death.",
+    "# Start at The Tavern.",
+    "",
+    "> look",
+    "# You see The Tavern. A dusty lantern sits on the bar. Exits: down.",
+    "",
+    "> take lantern",
+    "# You pick up the lantern. It is unlit.",
+    "",
+    "> light lantern",
+    "# Transition: 'You strike a match and the lantern flares to life, casting warm light.'",
+    "# Lantern state changes from 'unlit' to 'lit'.",
+    "",
+    "> down",
+    "# You descend. Arrive at Cellar Steps. (Portal requires lantern in state 'lit'.)",
+    "# You notice a rusty sword leaning against the wall.",
+    "",
+    "> take sword",
+    "# You pick up the rusty sword.",
+    "",
+    "> down",
+    "# You descend into The Cellar. A giant rat hisses at you from the shadows.",
+    "",
+    "> attack rat",
+    "# You attack the Giant Rat with the Rusty Sword.",
+    "# You deal 3 damage. Giant Rat health: 5/8.",
+    "# The Giant Rat bites back! You take 2 damage. Health: 8/10.",
+    "",
+    "> attack rat",
+    "# You deal 3 damage. Giant Rat health: 2/8.",
+    "# The Giant Rat bites back! You take 2 damage. Health: 6/10.",
+    "",
+    "> attack rat",
+    "# You deal 3 damage. Giant Rat health: 0/8.",
+    "# The Giant Rat squeals and collapses. It won't be bothering anyone again.",
+    "# Giant Rat state changes to 'dead'.",
+    "# on-health fires: give-item cellar-key. 'You find a rusty key on the ground.'",
+    "",
+    "> inventory",
+    "# You are carrying: Lantern (lit), Rusty Sword, Cellar Key.",
+    "",
+    "# === PLAYER DEATH (alternate path) ===",
+    "# If the player runs out of health before killing the rat:",
+    "# on-player-health-zero fires consequence: death.",
+    "# 'The rat overwhelms you. Everything goes dark...'",
+    "# Player respawns at The Tavern with full health."
+  ],
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-07-combat:world"
+        ],
+        [
+          "t",
+          "tides-end-07-combat"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "Tide's End: Combat"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "tutorial"
+        ],
+        [
+          "tag",
+          "coastal"
+        ],
+        [
+          "tag",
+          "combat"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:tides-end-07-combat:place:the-tavern"
+        ],
+        [
+          "relay",
+          "wss://relay.damus.io"
+        ],
+        [
+          "collaboration",
+          "open"
+        ],
+        [
+          "health",
+          "10"
+        ],
+        [
+          "max-health",
+          "10"
+        ],
+        [
+          "on-player-health",
+          "down",
+          "0",
+          "consequence",
+          "30078:<PUBKEY>:tides-end-07-combat:consequence:death"
+        ],
+        [
+          "colour",
+          "bg",
+          "#1a1a2e"
+        ],
+        [
+          "colour",
+          "text",
+          "#c8c8a9"
+        ],
+        [
+          "colour",
+          "title",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "dim",
+          "#5e8b7e"
+        ],
+        [
+          "colour",
+          "highlight",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "exits",
+          "#5e8b7e"
+        ],
+        [
+          "font",
+          "ibm-plex-mono"
+        ],
+        [
+          "cursor",
+          "beam"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "A coastal village tavern with a dark cellar below.\n\nThis tutorial teaches **combat** — weapons, NPCs with health, attacking, and what happens when you die.\n\nFind a weapon, light your way, and deal with whatever lurks below."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-07-combat:place:the-tavern"
+        ],
+        [
+          "t",
+          "tides-end-07-combat"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Tavern"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-07-combat:item:lantern"
+        ],
+        [
+          "exit",
+          "down"
+        ]
+      ],
+      "content": "A quiet tavern with low beams and the smell of old ale. Dust covers every surface. A **lantern** sits on the bar, and a trapdoor leads **down** to the cellar."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-07-combat:place:cellar-steps"
+        ],
+        [
+          "t",
+          "tides-end-07-combat"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Cellar Steps"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-07-combat:item:rusty-sword"
+        ],
+        [
+          "exit",
+          "up"
+        ],
+        [
+          "exit",
+          "down"
+        ]
+      ],
+      "content": "Narrow stone steps wind downward. Your lantern casts flickering shadows on the damp walls. A **rusty sword** leans against the wall, forgotten by some past visitor. The steps continue **down** into the cellar."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-07-combat:place:the-cellar"
+        ],
+        [
+          "t",
+          "tides-end-07-combat"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Cellar"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:tides-end-07-combat:npc:giant-rat"
+        ],
+        [
+          "exit",
+          "up"
+        ]
+      ],
+      "content": "A dank cellar lined with rotting barrels. Something scurries in the shadows — a **giant rat** hisses at you, baring yellowed teeth."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-07-combat:item:lantern"
+        ],
+        [
+          "t",
+          "tides-end-07-combat"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Lantern"
+        ],
+        [
+          "noun",
+          "lantern",
+          "lamp",
+          "light"
+        ],
+        [
+          "state",
+          "unlit"
+        ],
+        [
+          "verb",
+          "light",
+          "ignite"
+        ],
+        [
+          "on-interact",
+          "light",
+          "set-state",
+          "lit"
+        ],
+        [
+          "transition",
+          "unlit",
+          "lit",
+          "You strike a match and the lantern flares to life, casting warm light."
+        ]
+      ],
+      "content": "A dusty brass lantern. It needs to be lit."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-07-combat:item:rusty-sword"
+        ],
+        [
+          "t",
+          "tides-end-07-combat"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Rusty Sword"
+        ],
+        [
+          "noun",
+          "sword",
+          "rusty sword",
+          "blade"
+        ],
+        [
+          "damage",
+          "3"
+        ],
+        [
+          "on-interact",
+          "attack",
+          "deal-damage-npc",
+          ""
+        ]
+      ],
+      "content": "A battered sword with a notched blade. Rusty but still sharp enough to do damage."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-07-combat:item:cellar-key"
+        ],
+        [
+          "t",
+          "tides-end-07-combat"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Cellar Key"
+        ],
+        [
+          "noun",
+          "key",
+          "cellar key",
+          "rusty key"
+        ]
+      ],
+      "content": "A small rusty key, dropped by the giant rat. It must unlock something."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-07-combat:npc:giant-rat"
+        ],
+        [
+          "t",
+          "tides-end-07-combat"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Giant Rat"
+        ],
+        [
+          "noun",
+          "rat",
+          "giant rat"
+        ],
+        [
+          "health",
+          "8"
+        ],
+        [
+          "damage",
+          "2"
+        ],
+        [
+          "hit-chance",
+          "0.6"
+        ],
+        [
+          "state",
+          "hostile"
+        ],
+        [
+          "on-attacked",
+          "",
+          "deal-damage",
+          "2"
+        ],
+        [
+          "on-health",
+          "down",
+          "0",
+          "set-state",
+          "dead"
+        ],
+        [
+          "on-health",
+          "down",
+          "0",
+          "give-item",
+          "30078:<PUBKEY>:tides-end-07-combat:item:cellar-key"
+        ],
+        [
+          "transition",
+          "hostile",
+          "dead",
+          "The giant rat squeals and collapses. It won't be bothering anyone again. Something glints on the ground — a rusty key."
+        ]
+      ],
+      "content": "An enormous rat the size of a dog. Its matted fur bristles as it bares yellowed fangs at you."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-07-combat:consequence:death"
+        ],
+        [
+          "t",
+          "tides-end-07-combat"
+        ],
+        [
+          "type",
+          "consequence"
+        ],
+        [
+          "respawn",
+          "30078:<PUBKEY>:tides-end-07-combat:place:the-tavern"
+        ]
+      ],
+      "content": "The rat overwhelms you. Everything goes dark...\n\nYou wake up slumped against the tavern bar, bruised but alive. The trapdoor is still open. Perhaps you should find a weapon before trying again."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-07-combat:portal:tavern-to-steps"
+        ],
+        [
+          "t",
+          "tides-end-07-combat"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-07-combat:place:cellar-steps",
+          "down",
+          "A trapdoor in the floor opens onto stone steps descending into darkness."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-07-combat:place:the-tavern",
+          "up",
+          "Stone steps lead back up to the tavern."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-07-combat:item:lantern",
+          "lit",
+          "You need a lit lantern to descend into the dark."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-07-combat:portal:steps-to-cellar"
+        ],
+        [
+          "t",
+          "tides-end-07-combat"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-07-combat:place:the-cellar",
+          "down",
+          "The steps continue down into the cellar proper."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-07-combat:place:cellar-steps",
+          "up",
+          "Steps lead back up."
+        ]
+      ],
+      "content": ""
+    }
+  ]
+}

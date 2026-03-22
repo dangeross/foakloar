@@ -444,7 +444,8 @@ export function validateEvent(template) {
         template.tags.filter((t) => t[0] === 'verb').flatMap((t) => t.slice(1))
       );
       for (const onVerb of onInteractVerbs) {
-        if (onVerb && onVerb !== 'examine' && !declaredVerbs.has(onVerb)) {
+        const builtinVerbs = new Set(['examine', 'talk', 'attack', 'pick up', 'take', 'get', 'grab', 'drop']);
+        if (onVerb && !builtinVerbs.has(onVerb) && !declaredVerbs.has(onVerb)) {
           errors.push(err(
             'undeclared-verb',
             `on-interact uses verb "${onVerb}" but no ["verb", "${onVerb}"] tag exists — players cannot trigger this action`,
