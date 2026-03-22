@@ -1061,6 +1061,15 @@ export class GameEngine {
       return;
     }
 
+    // Fire portal sound effects on traversal
+    for (const tag of getTags(exit.portalEvent, 'sound')) {
+      const soundRef = tag[1];
+      const role = tag[2];
+      if (role === 'effect' && soundRef?.startsWith('30078:')) {
+        this._emitSound(soundRef, tag[3]);
+      }
+    }
+
     this.player.incrementMoveCount();
     this.processOnMove();
     this._processNpcOnMove();

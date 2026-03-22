@@ -363,12 +363,12 @@ export default function App() {
 
       engine.enterRoom(engine.currentPlace);
       commitEngine(engine);
-      // Start sound on initial room entry (not in build mode)
-      if (isAudioReady() && !buildMode) {
+      // Start sound on initial room entry
+      if (isAudioReady()) {
         evaluateSoundTags(mergedEvents, engine.currentPlace, engine.player.state, engine.player.npcStates);
       }
     }
-  }, [status, generation, mergedEvents, buildMode]);
+  }, [status, generation, mergedEvents]);
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -387,8 +387,8 @@ export default function App() {
     draftRef.current = '';
     await engine.handleCommand(val);
     commitEngine(engine);
-    // Update sound layers after state changes (not in build mode)
-    if (isAudioReady() && !buildMode) {
+    // Update sound layers after state changes
+    if (isAudioReady()) {
       evaluateSoundTags(mergedEvents, engine.currentPlace, engine.player.state, engine.player.npcStates);
     }
   }
@@ -510,22 +510,7 @@ export default function App() {
             effectiveMode={effectiveMode}
             onSelectMode={(mode) => { setClientMode(mode); try { localStorage.setItem(`foakloar:mode:${worldTag}`, mode); } catch {} }}
             buildMode={buildMode}
-            onToggleBuild={() => {
-              const next = !buildMode;
-              setBuildMode(next);
-              if (next) {
-                // Stop ambient sounds when entering build mode
-                if (isAudioReady()) hushSound();
-              } else {
-                // Restore ambient sounds when exiting build mode
-                if (isAudioReady() && engineRef.current) {
-                  evaluateSoundTags(
-                    mergedEvents, engineRef.current.currentPlace,
-                    engineRef.current.player.state, engineRef.current.player.npcStates,
-                  );
-                }
-              }
-            }}
+            onToggleBuild={() => setBuildMode(!buildMode)}
             showBuildOption={identity.isProperIdentity || drafts.length > 0}
             draftsCount={drafts.length}
             onOpenDrafts={() => setShowDrafts(true)}
@@ -535,12 +520,10 @@ export default function App() {
           <SoundToggle onAudioReady={async () => {
             if (engineRef.current) {
               await loadSamples(mergedEvents);
-              if (!buildMode) {
-                evaluateSoundTags(
-                  mergedEvents, engineRef.current.currentPlace,
-                  engineRef.current.player.state, engineRef.current.player.npcStates,
-                );
-              }
+              evaluateSoundTags(
+                mergedEvents, engineRef.current.currentPlace,
+                engineRef.current.player.state, engineRef.current.player.npcStates,
+              );
             }
           }} />
           <IdentityButton identity={identity} onClick={() => setShowLogin(!showLogin)} />

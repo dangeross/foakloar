@@ -576,7 +576,7 @@ export async function previewSound(tags, rawCode = null) {
 export function stopPreview() {
   previewActive = false;
   _stopPatterns();
-  // Restore ambient layers if any were playing
+  // Restore ambient layers
   if (lastLayers.length > 0) {
     playLayers(lastLayers);
   }
