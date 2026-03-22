@@ -250,25 +250,67 @@ export function evaluateSoundTags(events, currentPlace, playerState, npcStates =
 }
 
 /**
- * Play a one-shot sound by sound event ref (action-triggered).
+ * Play a one-shot sound via superdough (Strudel's low-level synth trigger).
+ * Does not interfere with ambient Strudel patterns — fires individual notes
+ * directly without going through the pattern evaluator.
  */
 export async function playOneShotRef(soundRef, volume = 1.0) {
   if (!audioReady || muted || !soundRef) return;
   try {
     const ctx = strudelModule?.getAudioContext?.();
-    if (ctx?.state === 'suspended') await ctx.resume();
+    if (!ctx) return;
+    if (ctx.state === 'suspended') await ctx.resume();
     await strudelReady;
 
-    const code = buildStrudelCodeFromRef(soundRef, volume);
-    if (!code) return;
+    if (!eventsMap) return;
+    const soundEvent = eventsMap.get(soundRef);
+    if (!soundEvent) return;
 
-    await strudelModule.evaluate(code);
-    setTimeout(() => {
-      _stopPatterns();
-      if (lastLayers.length > 0) {
-        playLayers(lastLayers);
+    const superdough = window.strudelScope?.superdough;
+    if (!superdough) return;
+
+    // Build value object from sound event tags
+    const tags = soundEvent.tags || [];
+    const get = (name) => tags.find((t) => t[0] === name)?.[1] ?? null;
+
+    const notePattern = get('note');
+    const sample = get('sample');
+    const noise = tags.some((t) => t[0] === 'noise');
+    if (!notePattern && !sample && !noise) return;
+
+    // Base params from tags
+    const params = {};
+    if (get('oscillator')) params.s = get('oscillator');
+    if (get('gain')) params.gain = parseFloat(get('gain')) * volume;
+    else params.gain = 0.5 * volume;
+    if (get('sustain')) params.sustain = parseFloat(get('sustain'));
+    if (get('release')) params.release = parseFloat(get('release'));
+    if (get('attack')) params.attack = parseFloat(get('attack'));
+    if (get('lpf')) params.lpf = parseFloat(get('lpf'));
+    if (get('hpf')) params.hpf = parseFloat(get('hpf'));
+    if (get('room')) params.room = parseFloat(get('room'));
+    if (get('roomsize')) params.roomsize = parseFloat(get('roomsize'));
+    if (get('crush')) params.crush = parseFloat(get('crush'));
+    if (get('pan')) params.pan = parseFloat(get('pan'));
+    if (get('vowel')) params.vowel = get('vowel');
+    if (get('shape')) params.shape = parseFloat(get('shape'));
+
+    const duration = (params.sustain || 0.3) + (params.release || 0.2);
+    const now = ctx.currentTime;
+
+    if (sample) {
+      // Sample-based one-shot
+      await superdough({ ...params, s: sample }, now, duration);
+    } else if (noise) {
+      await superdough({ ...params, s: 'white' }, now, duration);
+    } else {
+      // Note-based — play each note in sequence
+      const notes = notePattern.trim().split(/\s+/).filter((n) => n !== '~');
+      const spacing = duration + 0.05;
+      for (let i = 0; i < notes.length; i++) {
+        await superdough({ ...params, note: notes[i] }, now + i * spacing, duration);
       }
-    }, 2000);
+    }
   } catch (e) {
     console.warn('Sound one-shot error:', e.message || e);
   }
