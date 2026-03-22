@@ -188,14 +188,26 @@
           "east"
         ],
         [
+          "content-type",
+          "text/markdown"
+        ],
+        [
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:dock-gulls",
           "layer",
           "0.5"
         ],
         [
-          "content-type",
-          "text/markdown"
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:dock-ropes",
+          "layer",
+          "0.3"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:beach-waves",
+          "layer",
+          "0.2"
         ]
       ],
       "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air.\n\nGulls cry overhead, and ropes creak against the pilings.\n\nA cobbled road leads **north** toward the village, and a sandy path follows the shoreline **east**."
@@ -230,6 +242,18 @@
         [
           "exit",
           "west"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:square-wind",
+          "ambient",
+          "0.5"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:square-birds",
+          "layer",
+          "0.4"
         ]
       ],
       "content": "A modest square of packed earth ringed by low stone buildings with slate roofs. A dry fountain stands in the centre, its basin cracked and filled with windblown leaves. Smoke drifts from a chimney to the east where a tavern sign swings on rusted chains. To the west, a gap between the houses opens onto dunes and the sound of surf."
@@ -258,14 +282,20 @@
           "west"
         ],
         [
+          "content-type",
+          "text/markdown"
+        ],
+        [
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:tavern-fire",
           "ambient",
           "0.6"
         ],
         [
-          "content-type",
-          "text/markdown"
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:tavern-murmur",
+          "layer",
+          "0.4"
         ]
       ],
       "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale. A fire crackles in a stone hearth, and the murmur of conversation drifts from somewhere unseen.\n\nThe only way out is **west**, back to the square."
@@ -298,18 +328,24 @@
           "west"
         ],
         [
-          "sound",
-          "30078:<PUBKEY>:tides-end-08-sound:sound:beach-waves",
-          "ambient",
-          "0.7"
-        ],
-        [
           "item",
           "30078:<PUBKEY>:tides-end-08-sound:item:sand-coin"
         ],
         [
           "content-type",
           "text/markdown"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:beach-texture",
+          "layer",
+          "0.4"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:beach-waves",
+          "ambient",
+          "0.7"
         ]
       ],
       "content": "Coarse sand stretches in a long curve between dark rocks and the restless sea. Kelp and driftwood lie in tangled lines where the last high tide left them. Gulls wheel overhead, their cries thin against the wind.\n\nThe village lies **east** through a gap in the dunes, and a rocky coastal path leads **west** toward the dock."
@@ -340,6 +376,12 @@
           "30078:<PUBKEY>:tides-end-08-sound:place:village-square",
           "south",
           "The road slopes down to the old dock."
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:cobblestones",
+          "effect",
+          "0.4"
         ]
       ],
       "content": ""
@@ -370,6 +412,12 @@
           "30078:<PUBKEY>:tides-end-08-sound:place:the-tavern",
           "west",
           "The square is visible through the open door."
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:door-creak",
+          "effect",
+          "0.5"
         ]
       ],
       "content": ""
@@ -400,6 +448,12 @@
           "30078:<PUBKEY>:tides-end-08-sound:place:the-beach",
           "east",
           "A path leads back through the dunes to the village."
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:sand-steps",
+          "effect",
+          "0.4"
         ]
       ],
       "content": ""
@@ -430,136 +484,12 @@
           "30078:<PUBKEY>:tides-end-08-sound:place:the-beach",
           "west",
           "A rocky path follows the waterline back to the dock."
-        ]
-      ],
-      "content": ""
-    },
-    {
-      "kind": 30078,
-      "tags": [
-        [
-          "d",
-          "tides-end-08-sound:sound:beach-waves"
         ],
         [
-          "t",
-          "tides-end-08-sound"
-        ],
-        [
-          "type",
-          "sound"
-        ],
-        [
-          "noise",
-          ""
-        ],
-        [
-          "lpf",
-          "400"
-        ],
-        [
-          "gain",
-          "0.3"
-        ],
-        [
-          "room",
-          "0.6"
-        ],
-        [
-          "roomsize",
-          "4"
-        ],
-        [
-          "slow",
-          "2"
-        ]
-      ],
-      "content": ""
-    },
-    {
-      "kind": 30078,
-      "tags": [
-        [
-          "d",
-          "tides-end-08-sound:sound:dock-gulls"
-        ],
-        [
-          "t",
-          "tides-end-08-sound"
-        ],
-        [
-          "type",
-          "sound"
-        ],
-        [
-          "note",
-          "birds3*2 ~ birds3 ~"
-        ],
-        [
-          "gain",
-          "0.3"
-        ],
-        [
-          "room",
+          "sound",
+          "30078:<PUBKEY>:tides-end-08-sound:sound:footsteps",
+          "effect",
           "0.4"
-        ],
-        [
-          "roomsize",
-          "3"
-        ],
-        [
-          "slow",
-          "4"
-        ],
-        [
-          "degrade-by",
-          "0.4"
-        ]
-      ],
-      "content": ""
-    },
-    {
-      "kind": 30078,
-      "tags": [
-        [
-          "d",
-          "tides-end-08-sound:sound:tavern-fire"
-        ],
-        [
-          "t",
-          "tides-end-08-sound"
-        ],
-        [
-          "type",
-          "sound"
-        ],
-        [
-          "note",
-          "fire*4"
-        ],
-        [
-          "lpf",
-          "600"
-        ],
-        [
-          "gain",
-          "0.35"
-        ],
-        [
-          "room",
-          "0.3"
-        ],
-        [
-          "roomsize",
-          "2"
-        ],
-        [
-          "slow",
-          "2"
-        ],
-        [
-          "degrade-by",
-          "0.3"
         ]
       ],
       "content": ""
@@ -647,6 +577,542 @@
         ]
       ],
       "content": "A tarnished copper coin, half-buried in the sand. Its face is worn smooth by the sea, but you can just make out a ship's wheel on one side."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:beach-texture"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "seawolf"
+        ],
+        [
+          "gain",
+          "0.12"
+        ],
+        [
+          "room",
+          "0.6"
+        ],
+        [
+          "lpf",
+          "400"
+        ],
+        [
+          "slow",
+          "6"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:dock-gulls"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "a5 ~ b5 ~ g5 ~"
+        ],
+        [
+          "oscillator",
+          "sine"
+        ],
+        [
+          "gain",
+          "0.15"
+        ],
+        [
+          "sustain",
+          "0.2"
+        ],
+        [
+          "release",
+          "0.5"
+        ],
+        [
+          "room",
+          "0.6"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "degrade-by",
+          "0.5"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:dock-ropes"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c2 ~ d2 ~"
+        ],
+        [
+          "oscillator",
+          "sawtooth"
+        ],
+        [
+          "gain",
+          "0.06"
+        ],
+        [
+          "lpf",
+          "200"
+        ],
+        [
+          "sustain",
+          "0.8"
+        ],
+        [
+          "release",
+          "0.5"
+        ],
+        [
+          "room",
+          "0.3"
+        ],
+        [
+          "slow",
+          "5"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:tavern-fire"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "fire*4"
+        ],
+        [
+          "lpf",
+          "800"
+        ],
+        [
+          "gain",
+          "0.4"
+        ],
+        [
+          "room",
+          "0.3"
+        ],
+        [
+          "slow",
+          "2"
+        ],
+        [
+          "degrade-by",
+          "0.3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:tavern-murmur"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise",
+          ""
+        ],
+        [
+          "lpf",
+          "800"
+        ],
+        [
+          "hpf",
+          "200"
+        ],
+        [
+          "gain",
+          "0.1"
+        ],
+        [
+          "sustain",
+          "3"
+        ],
+        [
+          "release",
+          "1"
+        ],
+        [
+          "attack",
+          "0.5"
+        ],
+        [
+          "slow",
+          "4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:square-wind"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise",
+          ""
+        ],
+        [
+          "lpf",
+          "300"
+        ],
+        [
+          "gain",
+          "0.08"
+        ],
+        [
+          "room",
+          "0.4"
+        ],
+        [
+          "attack",
+          "1"
+        ],
+        [
+          "sustain",
+          "2"
+        ],
+        [
+          "release",
+          "1.5"
+        ],
+        [
+          "slow",
+          "4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:square-birds"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "birds ~ birds3 ~"
+        ],
+        [
+          "gain",
+          "0.2"
+        ],
+        [
+          "room",
+          "0.5"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "degrade-by",
+          "0.4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:door-creak"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "e2"
+        ],
+        [
+          "oscillator",
+          "sawtooth"
+        ],
+        [
+          "lpf",
+          "300"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "sustain",
+          "0.3"
+        ],
+        [
+          "release",
+          "0.5"
+        ],
+        [
+          "room",
+          "0.3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:footsteps"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "hh*4"
+        ],
+        [
+          "gain",
+          "0.15"
+        ],
+        [
+          "lpf",
+          "2000"
+        ],
+        [
+          "crush",
+          "8"
+        ],
+        [
+          "fast",
+          "2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:beach-waves"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise",
+          ""
+        ],
+        [
+          "lpf",
+          "600 250"
+        ],
+        [
+          "gain",
+          "0.5 0.25"
+        ],
+        [
+          "room",
+          "0.7 0.5"
+        ],
+        [
+          "attack",
+          "0.4 0.1"
+        ],
+        [
+          "sustain",
+          "0.6 1.0"
+        ],
+        [
+          "release",
+          "1.2 1.5"
+        ],
+        [
+          "slow",
+          "3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:cobblestones"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "hh hh hh hh"
+        ],
+        [
+          "gain",
+          "0.1"
+        ],
+        [
+          "lpf",
+          "1500"
+        ],
+        [
+          "crush",
+          "6"
+        ],
+        [
+          "fast",
+          "2"
+        ],
+        [
+          "room",
+          "0.2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-08-sound:sound:sand-steps"
+        ],
+        [
+          "t",
+          "tides-end-08-sound"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise",
+          ""
+        ],
+        [
+          "gain",
+          "0.12"
+        ],
+        [
+          "lpf",
+          "1000"
+        ],
+        [
+          "sustain",
+          "0.05"
+        ],
+        [
+          "release",
+          "0.1"
+        ],
+        [
+          "fast",
+          "3"
+        ]
+      ],
+      "content": ""
     }
   ]
 }

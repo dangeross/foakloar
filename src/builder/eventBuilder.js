@@ -325,9 +325,12 @@ export function validateEvent(template) {
     // ── Numeric field validation ─────────────────────────────────────────────
     // Validate that fields declared as type 'number' in the schema are parseable.
     // Catches LLMs writing "ten" instead of "10", "high" instead of "3", etc.
+    // Sound events are exempt — their numeric tags accept Strudel mini-notation
+    // (e.g. "600 250" for alternating values, "0.5*4" for patterns).
     for (const tag of template.tags) {
       const schema = getTagSchema(tag[0], typeTag);
       if (!schema?.fields) continue;
+      if (typeTag === 'sound') continue;
       const values = tagToValues(tag, schema.fields);
       for (const field of schema.fields) {
         if (field.type !== 'number') continue;

@@ -374,28 +374,30 @@ function buildStrudelCodeFromRef(soundRef, volume) {
  */
 function buildStrudelCodeFromEvent(soundEvent, mixVolume) {
   // Tags that take a single value
+  // Helper: if value contains spaces or mini-notation, quote it; otherwise use raw number
+  const num = (v) => isNaN(Number(v)) ? `"${v}"` : parseFloat(v);
   const SINGLE_TAG_MAP = {
     note:         (v) => `note("${v}")`,
     oscillator:   (v) => `.s("${v}")`,
     noise:        ()  => `noise()`,
-    slow:         (v) => `.slow(${parseFloat(v)})`,
-    fast:         (v) => `.fast(${parseFloat(v)})`,
-    room:         (v) => `.room(${parseFloat(v)})`,
-    roomsize:     (v) => `.roomsize(${parseFloat(v)})`,
-    pan:          (v) => `.pan(${parseFloat(v)})`,
-    crush:        (v) => `.crush(${parseInt(v, 10)})`,
-    shape:        (v) => `.shape(${parseFloat(v)})`,
-    sustain:      (v) => `.sustain(${parseFloat(v)})`,
-    attack:       (v) => `.attack(${parseFloat(v)})`,
-    release:      (v) => `.release(${parseFloat(v)})`,
-    lpf:          (v) => `.lpf(${parseFloat(v)})`,
-    hpf:          (v) => `.hpf(${parseFloat(v)})`,
+    slow:         (v) => `.slow(${num(v)})`,
+    fast:         (v) => `.fast(${num(v)})`,
+    room:         (v) => `.room(${num(v)})`,
+    roomsize:     (v) => `.roomsize(${num(v)})`,
+    pan:          (v) => `.pan(${num(v)})`,
+    crush:        (v) => `.crush(${num(v)})`,
+    shape:        (v) => `.shape(${num(v)})`,
+    sustain:      (v) => `.sustain(${num(v)})`,
+    attack:       (v) => `.attack(${num(v)})`,
+    release:      (v) => `.release(${num(v)})`,
+    lpf:          (v) => `.lpf(${num(v)})`,
+    hpf:          (v) => `.hpf(${num(v)})`,
     vowel:        (v) => `.vowel("${v}")`,
     rev:          ()  => `.rev()`,
     palindrome:   ()  => `.palindrome()`,
     jux:          (v) => `.jux(${v})`,  // e.g. jux(rev)
     arp:          (v) => `.arp("${v}")`,
-    'degrade-by': (v) => `.degradeBy(${parseFloat(v)})`,
+    'degrade-by': (v) => `.degradeBy(${num(v)})`,
   };
 
   let code = '';
