@@ -164,6 +164,18 @@ export default function App() {
     if (status === 'ready' && drafts.length > 0 && events.size === 0 && !buildMode) setBuildMode(true);
   }, [status, drafts.length, events.size]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Sound: hush on entering build mode, restore ambient on exit
+  useEffect(() => {
+    if (buildMode) {
+      hushSound();
+    } else if (isAudioReady() && engineRef.current) {
+      evaluateSoundTags(
+        mergedEvents, engineRef.current.currentPlace,
+        engineRef.current.player.state, engineRef.current.player.npcStates,
+      );
+    }
+  }, [buildMode]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Merge drafts into events so the engine can preview unpublished content.
   // Draft events become synthetic events keyed by their a-tag, with the
   // current user's pubkey (or a placeholder). Relay events always win.
@@ -363,12 +375,12 @@ export default function App() {
 
       engine.enterRoom(engine.currentPlace);
       commitEngine(engine);
-      // Start sound on initial room entry
-      if (isAudioReady()) {
+      // Start sound on initial room entry (not in build mode)
+      if (isAudioReady() && !buildMode) {
         evaluateSoundTags(mergedEvents, engine.currentPlace, engine.player.state, engine.player.npcStates);
       }
     }
-  }, [status, generation, mergedEvents]);
+  }, [status, generation, mergedEvents, buildMode]);
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -387,8 +399,8 @@ export default function App() {
     draftRef.current = '';
     await engine.handleCommand(val);
     commitEngine(engine);
-    // Update sound layers after state changes
-    if (isAudioReady()) {
+    // Update sound layers after state changes (not in build mode)
+    if (isAudioReady() && !buildMode) {
       evaluateSoundTags(mergedEvents, engine.currentPlace, engine.player.state, engine.player.npcStates);
     }
   }
@@ -520,10 +532,12 @@ export default function App() {
           <SoundToggle onAudioReady={async () => {
             if (engineRef.current) {
               await loadSamples(mergedEvents);
-              evaluateSoundTags(
-                mergedEvents, engineRef.current.currentPlace,
-                engineRef.current.player.state, engineRef.current.player.npcStates,
-              );
+              if (!buildMode) {
+                evaluateSoundTags(
+                  mergedEvents, engineRef.current.currentPlace,
+                  engineRef.current.player.state, engineRef.current.player.npcStates,
+                );
+              }
             }
           }} />
           <IdentityButton identity={identity} onClick={() => setShowLogin(!showLogin)} />

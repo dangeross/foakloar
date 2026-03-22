@@ -571,15 +571,11 @@ export async function previewSound(tags, rawCode = null) {
 }
 
 /**
- * Stop sound preview and restore ambient.
+ * Stop sound preview. Ambient resumes on next evaluateSoundTags call.
  */
 export function stopPreview() {
   previewActive = false;
   _stopPatterns();
-  // Restore ambient layers
-  if (lastLayers.length > 0) {
-    playLayers(lastLayers);
-  }
 }
 
 /**
@@ -597,9 +593,11 @@ export function decompileStrudelCode(code) {
   const noiseMatch = code.match(/\bnoise\(\)/);
   if (noiseMatch && !noteMatch) tags.push(['noise', '']);
 
-  // .s("...") → oscillator
-  const oscMatch = code.match(/\.s\("([^"]+)"\)/);
-  if (oscMatch) tags.push(['oscillator', oscMatch[1]]);
+  // s("...") or .s("...") → oscillator (starter or chained)
+  const oscStarterMatch = code.match(/^s\("([^"]+)"\)/);
+  const oscChainMatch = code.match(/\.s\("([^"]+)"\)/);
+  if (oscStarterMatch) tags.push(['oscillator', oscStarterMatch[1]]);
+  else if (oscChainMatch) tags.push(['oscillator', oscChainMatch[1]]);
 
   // Single-value float methods
   const floatMethods = [
@@ -610,9 +608,13 @@ export function decompileStrudelCode(code) {
     ['attack', 'attack'], ['release', 'release'],
   ];
   for (const [method, tagName] of floatMethods) {
-    const re = new RegExp(`\\.${method}\\(([\\d.]+)\\)`);
-    const m = code.match(re);
-    if (m) tags.push([tagName, m[1]]);
+    // Match both plain numbers .gain(0.5) and quoted mini-notation .lpf("600 250")
+    const reQuoted = new RegExp(`\\.${method}\\("([^"]+)"\\)`);
+    const rePlain = new RegExp(`\\.${method}\\(([\\d.]+)\\)`);
+    const mq = code.match(reQuoted);
+    const mp = code.match(rePlain);
+    if (mq) tags.push([tagName, mq[1]]);
+    else if (mp) tags.push([tagName, mp[1]]);
   }
 
   // crush (integer)
