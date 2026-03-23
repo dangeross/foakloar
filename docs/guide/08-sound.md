@@ -1,6 +1,6 @@
 # Sound: Ambient Audio and Effects
 
-Sound in FOAKLOAR is synthesised client-side using Strudel (a TidalCycles-style live-coding language built on WebAudio). No audio files are required for basic sounds — built-in oscillators and noise work instantly. For richer soundscapes, sample presets provide hundreds of named audio samples.
+Sound in foakloar is synthesised client-side using Strudel (a TidalCycles-style live-coding language built on WebAudio). No audio files are required for basic sounds — built-in oscillators and noise work instantly. For richer soundscapes, sample presets provide hundreds of named audio samples.
 
 This guide covers sound events, sound types, sample presets, sound as an action type, and tempo control.
 
@@ -29,7 +29,7 @@ A sound is defined as a `type: sound` event with a unique `d`-tag. It describes 
 }
 ```
 
-The source tag comes first — either `note` (for pitched patterns) or `noise` (for white noise). Everything after modifies the source: filters, effects, timing, volume.
+Every sound event needs a source tag: `s` (samples and oscillators), `note` (pitched patterns), or `noise` (white noise). Everything after modifies the source: filters, effects, timing, volume. `s` is the most versatile — it plays samples (`s("bd sd")`), oscillators (`s("sine")`), and noise types (`s("white")`).
 
 ### Source Tags
 

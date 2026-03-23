@@ -16,7 +16,7 @@ const guideModules = import.meta.glob('/docs/guide/*.md', { query: '?raw', impor
 // Import all tutorial JSON files at build time
 const tutorialModules = import.meta.glob('/docs/guide/tutorials/*.json', { query: '?raw', import: 'default' });
 
-const PAGES = [
+const TUTORIALS = [
   { id: '01-getting-started', title: 'Getting Started', subtitle: 'Worlds, Places, Portals' },
   { id: '02-items-and-features', title: 'Items & Features', subtitle: 'Pickable objects, fixed things' },
   { id: '03-state-and-logic', title: 'State & Logic', subtitle: 'Transitions, Requires, Counters' },
@@ -29,6 +29,12 @@ const PAGES = [
   { id: '10-payments', title: 'Payments', subtitle: 'Lightning, LNURL gates' },
   { id: '11-endgame', title: 'Endgame', subtitle: 'Endings, Restart' },
 ];
+
+const SHOWCASES = [
+  { id: 'cartographers-instrument', title: "The Cartographer's Instrument", subtitle: 'A musical puzzle world' },
+];
+
+const PAGES = [...TUTORIALS, ...SHOWCASES];
 
 // Tide's End theme
 const THEME = {
@@ -227,7 +233,7 @@ function Sidebar({ currentPage, onNavigate, open, onToggle }) {
         </button>
 
         <div className="flex flex-col gap-0.5">
-          {PAGES.map((p) => {
+          {TUTORIALS.map((p) => {
             const active = currentPage === p.id;
             const num = p.id.split('-')[0];
             return (
@@ -248,6 +254,34 @@ function Sidebar({ currentPage, onNavigate, open, onToggle }) {
             );
           })}
         </div>
+
+        {SHOWCASES.length > 0 && (
+          <>
+            <div style={{ borderTop: `1px solid ${THEME.tableBorder}`, margin: '0.75rem 0 0.5rem', paddingTop: '0.5rem' }}>
+              <span style={{ color: THEME.dim, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Showcase</span>
+            </div>
+            <div className="flex flex-col gap-0.5">
+              {SHOWCASES.map((p) => {
+                const active = currentPage === p.id;
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => { onNavigate(p.id); if (window.innerWidth < 640) onToggle(); }}
+                    className="block w-full text-left cursor-pointer hover:opacity-80 px-2 py-1"
+                    style={{
+                      color: active ? THEME.highlight : THEME.text,
+                      background: active ? THEME.codeBg : 'none',
+                      border: 'none', font: 'inherit', fontSize: '0.65rem',
+                      borderLeft: active ? `2px solid ${THEME.highlight}` : '2px solid transparent',
+                    }}
+                  >
+                    {p.title}
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Mobile overlay */}

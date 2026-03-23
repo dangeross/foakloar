@@ -35,7 +35,7 @@ Key tags:
 - `salt` -- a unique string tied to this puzzle. Convention: use the puzzle's d-tag plus a version suffix like `:v1`.
 - `on-complete` -- fires when the answer is correct. Typically sets state on another event or gives an item.
 
-The answer is always compared **case-insensitively** by the client. Players don't need to worry about capitalisation.
+Answers are **case-sensitive**. The answer in the answers map must match exactly what the player types. Convention is to use lowercase answers so players don't need to guess capitalisation.
 
 ### Sequence
 
@@ -324,7 +324,7 @@ Import the world, navigate to the clue room, read the clue, go to the puzzle roo
 
 ## Tips
 
-- **Answer case sensitivity:** answers are compared case-insensitively. Players typing `COMPASS`, `compass`, or `Compass` all match.
+- **Answer case sensitivity:** answers are case-sensitive. Use lowercase answers by convention so players don't have to guess capitalisation.
 - **Clue placement matters.** Put clues in rooms the player will visit naturally. If clues are too well-hidden, the puzzle becomes frustrating rather than fun.
 - **Puzzle exit is always available.** Players can type `back`, `leave`, or `cancel` to exit a puzzle prompt. You don't need to tell them this -- the client handles it.
 - **Sequence steps must be separate features.** Each step in a sequence puzzle needs its own feature event with its own state. A single feature cycling through states won't work because `requires` checks the *current* state, not state history.
