@@ -9,7 +9,7 @@ import {
 } from './world.js';
 import { getTrustLevel } from './trust.js';
 import { derivePrivateKey } from './nip44-client.js';
-import { renderRoomContent } from './content.js';
+import { renderRoomContent, renderMarkdown } from './content.js';
 import { stripArticles, buildVerbMap, parseInput, findInventoryItem } from './parser.js';
 import {
   applyExternalSetState, giveItem, evalCounterLow, evalSequencePuzzles,
@@ -233,6 +233,9 @@ export class GameEngine {
         }
       }
     }
+
+    // Re-evaluate quests after on-enter state changes
+    if (isMoving) this._evalQuests();
 
     // Exits — spec 6.7 contested exit model
     this._emitExits(dtag);
@@ -2438,7 +2441,7 @@ export class GameEngine {
         // Endgame quest — render closing prose with distinct styling
         this._emit('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'endgame-separator');
         if (event.content) {
-          this._emit(event.content, 'endgame');
+          this._emitHtml(renderMarkdown(event.content), 'endgame');
         }
         this._emit('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'endgame-separator');
         // Check mode: ["quest-type", "endgame", "open"] = soft end
