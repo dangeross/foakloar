@@ -242,6 +242,20 @@ export function applyTheme(colours) {
 }
 
 /**
+ * Reset theme to defaults by removing inline overrides.
+ * The CSS :root defaults (Tide's End) take effect.
+ */
+export function resetTheme() {
+  const root = document.documentElement;
+  const props = ['bg', 'text', 'title', 'dim', 'highlight', 'error', 'item', 'npc', 'clue', 'puzzle', 'exits'];
+  for (const p of props) root.style.removeProperty(`--colour-${p}`);
+  const effects = ['scanlines', 'glow', 'flicker', 'vignette', 'noise'];
+  for (const e of effects) root.style.removeProperty(`--effect-${e}`);
+  root.style.removeProperty('--font-family');
+  root.style.removeProperty('--cursor-style');
+}
+
+/**
  * Apply resolved effects as CSS custom properties.
  */
 export function applyEffects(effects) {

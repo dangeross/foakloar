@@ -2,10 +2,12 @@
  * router.js — Simple path-based routing for world URLs.
  *
  * URL patterns:
- *   /w              → lobby (world index / create)
+ *   /               → landing page
+ *   /w              → lobby (world index / search)
  *   /w/:slug        → load and play a world by its slug
+ *   /guide          → guide table of contents
+ *   /guide/:page    → guide page
  *   /u/:npub        → author profile page
- *   /               → redirect to /w/the-lake (default world)
  *
  * No external router library — just pathname parsing + pushState.
  */
@@ -56,8 +58,8 @@ export function parseRoute() {
     }
   }
 
-  // Legacy: bare / or anything else → default world
-  return { page: 'game', worldSlug: DEFAULT_WORLD };
+  // / or unknown → landing page
+  return { page: 'landing' };
 }
 
 /**
@@ -90,5 +92,13 @@ export function navigateToGuide(page = null) {
 
 export function navigateToProfile(npub) {
   window.history.pushState({}, '', `/u/${npub}`);
+  window.dispatchEvent(new PopStateEvent('popstate'));
+}
+
+/**
+ * Navigate to the landing page.
+ */
+export function navigateToLanding() {
+  window.history.pushState({}, '', '/');
   window.dispatchEvent(new PopStateEvent('popstate'));
 }

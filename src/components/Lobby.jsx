@@ -18,6 +18,7 @@ import TipPanel from './TipPanel.jsx';
 import { useWorldDiscovery } from '../hooks/useWorldDiscovery.js';
 import { listDraftWorlds, validateImport, importEvents, parseJsonLenient } from '../builder/draftStore.js';
 import { validateEvent } from '../builder/eventBuilder.js';
+import { TIDE_THEME } from '../services/guideTheme.js';
 import ImportPreviewPanel from '../builder/components/ImportPreviewPanel.jsx';
 import { APP_PUBKEY } from '../config.js';
 
@@ -37,7 +38,7 @@ export default function Lobby({
   const [showLogin, setShowLogin] = useState(false);
   const [importPreview, setImportPreview] = useState(null); // { validation, data }
   const importFileRef = useRef(null);
-  const [lobbyMode, setLobbyMode] = useState('curated');
+  const [lobbyMode, setLobbyMode] = useState('search');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [filter, setFilter] = useState('');
   const [visibleCount, setVisibleCount] = useState(10);
@@ -107,12 +108,12 @@ export default function Lobby({
 
   return (
     <div
-      className="max-w-2xl mx-auto p-6 flex flex-col h-dvh font-mono text-xs game-text game-container"
+      className="max-w-2xl mx-auto p-6 flex flex-col min-h-dvh font-mono text-xs game-text game-container"
       style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}
     >
       {/* ── Header ──────────────────────────────────────────────────────── */}
-      <div className="text-sm mb-4 flex justify-between" style={{ color: 'var(--colour-dim)' }}>
-        <span>foakloar</span>
+      <div className="text-sm mb-4 flex justify-between sticky top-0 z-10 py-2" style={{ color: 'var(--colour-dim)', backgroundColor: 'var(--colour-bg)' }}>
+        <button onClick={() => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="cursor-pointer hover:opacity-80" style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit' }}>foakloar</button>
         <span className="flex items-center gap-2">
           {/* Mode dropdown */}
           <span ref={dropdownRef} style={{ position: 'relative' }}>

@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
-/* Default theme custom properties (overridden by world event) */
+/* Default theme — Tide's End coastal palette (overridden by world event) */
 :root {
-  --colour-bg:        #000000;
-  --colour-text:      #00ff41;
-  --colour-title:     #a7f3d0;
-  --colour-dim:       #16a34a;
-  --colour-highlight: #ffffff;
-  --colour-error:     #f87171;
-  --colour-item:      #facc15;
-  --colour-npc:       #fbbf24;
-  --colour-clue:      #22d3ee;
-  --colour-puzzle:    #c084fc;
-  --colour-exits:     #16a34a;
+  --colour-bg:        #1a1a2e;
+  --colour-text:      #c8c8a9;
+  --colour-title:     #d4a574;
+  --colour-dim:       #5e8b7e;
+  --colour-highlight: #d4a574;
+  --colour-error:     #c47070;
+  --colour-item:      #d4a574;
+  --colour-npc:       #d4a574;
+  --colour-clue:      #5e8b7e;
+  --colour-puzzle:    #5e8b7e;
+  --colour-exits:     #5e8b7e;
 
   /* Effect intensities (0.0–1.0, set by theme.js) */
   --effect-scanlines: 0.35;

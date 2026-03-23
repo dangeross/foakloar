@@ -10,6 +10,7 @@ import { marked } from 'marked';
 import { navigateToGuide, navigateToLobby, navigateToWorld } from '../services/router.js';
 import { validateImport, importEvents, parseJsonLenient } from '../builder/draftStore.js';
 import ImportPreviewPanel from '../builder/components/ImportPreviewPanel.jsx';
+import { TIDE_THEME } from '../services/guideTheme.js';
 
 // Import all guide markdown files at build time
 const guideModules = import.meta.glob('/docs/guide/*.md', { query: '?raw', import: 'default' });
@@ -36,17 +37,7 @@ const SHOWCASES = [
 
 const PAGES = [...TUTORIALS, ...SHOWCASES];
 
-// Tide's End theme
-const THEME = {
-  bg: '#1a1a2e',
-  text: '#c8c8a9',
-  accent: '#5e8b7e',
-  highlight: '#d4a574',
-  dim: '#5e8b7e',
-  codeBg: '#12122a',
-  tableBorder: '#3a3a5e',
-  sidebarBg: '#151528',
-};
+const THEME = TIDE_THEME;
 
 const GUIDE_CSS = `
   .guide-content {
@@ -158,12 +149,6 @@ const GUIDE_CSS = `
     color: ${THEME.accent};
   }
 
-  /* Scrollbar — match theme */
-  html::-webkit-scrollbar, .guide-root::-webkit-scrollbar { width: 6px; }
-  html::-webkit-scrollbar-track, .guide-root::-webkit-scrollbar-track { background: ${THEME.bg}; }
-  html::-webkit-scrollbar-thumb, .guide-root::-webkit-scrollbar-thumb { background: ${THEME.tableBorder}; border-radius: 3px; }
-  html::-webkit-scrollbar-thumb:hover, .guide-root::-webkit-scrollbar-thumb:hover { background: ${THEME.accent}; }
-  html { scrollbar-color: ${THEME.tableBorder} ${THEME.bg}; }
 `;
 
 function Sidebar({ currentPage, onNavigate, open, onToggle }) {
@@ -202,11 +187,11 @@ function Sidebar({ currentPage, onNavigate, open, onToggle }) {
       >
         <div className="flex items-center justify-between mb-3">
           <button
-            onClick={() => navigateToLobby()}
+            onClick={() => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); }}
             className="cursor-pointer hover:opacity-80"
-            style={{ color: THEME.dim, background: 'none', border: 'none', font: 'inherit', fontSize: '0.65rem' }}
+            style={{ color: THEME.highlight, background: 'none', border: 'none', font: 'inherit', fontSize: '0.7rem' }}
           >
-            ← lobby
+            foakloar
           </button>
           <button
             onClick={onToggle}
