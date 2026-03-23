@@ -4,6 +4,8 @@ Every story needs an ending. Endgame quests define a world's win condition — t
 
 This guide covers endgame quests, hard vs soft endings, closing prose, the restart command, and chaining quests to build toward a finale.
 
+> ▶ **Try it:** Import [tides-end-11-endgame.json](tutorials/tides-end-11-endgame.json) to explore these concepts in a working world.
+
 ---
 
 ## What is an Endgame Quest?
@@ -263,10 +265,10 @@ Publish all events. The endgame quest is invisible to the player — it fires au
 
 ## Tutorial World
 
-Import **tides-end-10-endgame** to see endgame quests in action. The world contains:
+> ▶ **Try it:** Import [tides-end-11-endgame.json](tutorials/tides-end-11-endgame.json) to play through everything covered in this guide.
+
+The world contains:
 - A prerequisite fetch quest (The Keeper's Errand) that gates access to the pier
 - A departure pier unlocked by quest completion
 - A soft endgame quest that fires when the player reaches the pier
 - Full restart support
-
-Tutorial file: `docs/guide/tutorials/tides-end-10-endgame.json`

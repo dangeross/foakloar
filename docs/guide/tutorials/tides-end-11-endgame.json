@@ -56,11 +56,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:world"
+          "tides-end-11-endgame:world"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "w",
@@ -100,7 +100,7 @@
         ],
         [
           "start",
-          "30078:<PUBKEY>:tides-end-10-endgame:place:the-dock"
+          "30078:<PUBKEY>:tides-end-11-endgame:place:the-dock"
         ],
         [
           "relay",
@@ -160,11 +160,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:place:the-dock"
+          "tides-end-11-endgame:place:the-dock"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -180,7 +180,7 @@
         ],
         [
           "item",
-          "30078:<PUBKEY>:tides-end-10-endgame:item:fish"
+          "30078:<PUBKEY>:tides-end-11-endgame:item:fish"
         ],
         [
           "content-type",
@@ -194,11 +194,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:place:village-square"
+          "tides-end-11-endgame:place:village-square"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -222,7 +222,7 @@
         ],
         [
           "item",
-          "30078:<PUBKEY>:tides-end-10-endgame:item:herbs"
+          "30078:<PUBKEY>:tides-end-11-endgame:item:herbs"
         ],
         [
           "content-type",
@@ -236,11 +236,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:place:the-tavern"
+          "tides-end-11-endgame:place:the-tavern"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -256,11 +256,11 @@
         ],
         [
           "item",
-          "30078:<PUBKEY>:tides-end-10-endgame:item:flour"
+          "30078:<PUBKEY>:tides-end-11-endgame:item:flour"
         ],
         [
           "npc",
-          "30078:<PUBKEY>:tides-end-10-endgame:npc:tavern-keeper"
+          "30078:<PUBKEY>:tides-end-11-endgame:npc:tavern-keeper"
         ],
         [
           "content-type",
@@ -274,11 +274,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:place:departure-pier"
+          "tides-end-11-endgame:place:departure-pier"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -297,7 +297,7 @@
           "player",
           "set-state",
           "visited",
-          "30078:<PUBKEY>:tides-end-10-endgame:feature:landmark-departure"
+          "30078:<PUBKEY>:tides-end-11-endgame:feature:landmark-departure"
         ]
       ],
       "content": "A narrow stone pier stretches out into open water, far from the sheltered harbour. A single boat is moored at the end, its sail furled and waiting. The village is a cluster of grey roofs behind you, small against the sky.\n\nThis is where journeys begin — and where they end.\n\nThe village square lies east."
@@ -307,11 +307,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:portal:dock-to-square"
+          "tides-end-11-endgame:portal:dock-to-square"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -319,13 +319,13 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-10-endgame:place:the-dock",
+          "30078:<PUBKEY>:tides-end-11-endgame:place:the-dock",
           "north",
           "A cobbled road climbs toward the village square."
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-10-endgame:place:village-square",
+          "30078:<PUBKEY>:tides-end-11-endgame:place:village-square",
           "south",
           "The road slopes down to the old dock."
         ]
@@ -337,11 +337,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:portal:square-to-tavern"
+          "tides-end-11-endgame:portal:square-to-tavern"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -349,13 +349,13 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-10-endgame:place:village-square",
+          "30078:<PUBKEY>:tides-end-11-endgame:place:village-square",
           "east",
           "A battered sign reads 'The Anchor' above a low doorway."
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-10-endgame:place:the-tavern",
+          "30078:<PUBKEY>:tides-end-11-endgame:place:the-tavern",
           "west",
           "The square is visible through the open door."
         ]
@@ -367,11 +367,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:portal:square-to-pier"
+          "tides-end-11-endgame:portal:square-to-pier"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -379,19 +379,19 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-10-endgame:place:village-square",
+          "30078:<PUBKEY>:tides-end-11-endgame:place:village-square",
           "west",
           "A narrow path leads west toward a stone pier."
         ],
         [
           "exit",
-          "30078:<PUBKEY>:tides-end-10-endgame:place:departure-pier",
+          "30078:<PUBKEY>:tides-end-11-endgame:place:departure-pier",
           "east",
           "The village square is back the way you came."
         ],
         [
           "requires",
-          "30078:<PUBKEY>:tides-end-10-endgame:quest:keepers-errand",
+          "30078:<PUBKEY>:tides-end-11-endgame:quest:keepers-errand",
           "complete",
           "The path west is overgrown and impassable."
         ]
@@ -403,11 +403,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:item:fish"
+          "tides-end-11-endgame:item:fish"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -430,11 +430,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:item:herbs"
+          "tides-end-11-endgame:item:herbs"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -457,11 +457,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:item:flour"
+          "tides-end-11-endgame:item:flour"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -485,11 +485,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:npc:tavern-keeper"
+          "tides-end-11-endgame:npc:tavern-keeper"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -507,7 +507,7 @@
         ],
         [
           "dialogue",
-          "30078:<PUBKEY>:tides-end-10-endgame:dialogue:keeper-talk"
+          "30078:<PUBKEY>:tides-end-11-endgame:dialogue:keeper-talk"
         ]
       ],
       "content": "A broad-shouldered woman with sun-weathered skin and sharp eyes. She runs The Anchor with quiet efficiency, and knows everything that happens in the village."
@@ -517,11 +517,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:dialogue:keeper-talk"
+          "tides-end-11-endgame:dialogue:keeper-talk"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -535,11 +535,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:feature:landmark-departure"
+          "tides-end-11-endgame:feature:landmark-departure"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -565,11 +565,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:quest:keepers-errand"
+          "tides-end-11-endgame:quest:keepers-errand"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -585,31 +585,31 @@
         ],
         [
           "involves",
-          "30078:<PUBKEY>:tides-end-10-endgame:item:fish"
+          "30078:<PUBKEY>:tides-end-11-endgame:item:fish"
         ],
         [
           "involves",
-          "30078:<PUBKEY>:tides-end-10-endgame:item:herbs"
+          "30078:<PUBKEY>:tides-end-11-endgame:item:herbs"
         ],
         [
           "involves",
-          "30078:<PUBKEY>:tides-end-10-endgame:item:flour"
+          "30078:<PUBKEY>:tides-end-11-endgame:item:flour"
         ],
         [
           "requires",
-          "30078:<PUBKEY>:tides-end-10-endgame:item:fish",
+          "30078:<PUBKEY>:tides-end-11-endgame:item:fish",
           "",
           ""
         ],
         [
           "requires",
-          "30078:<PUBKEY>:tides-end-10-endgame:item:herbs",
+          "30078:<PUBKEY>:tides-end-11-endgame:item:herbs",
           "",
           ""
         ],
         [
           "requires",
-          "30078:<PUBKEY>:tides-end-10-endgame:item:flour",
+          "30078:<PUBKEY>:tides-end-11-endgame:item:flour",
           "",
           ""
         ]
@@ -621,11 +621,11 @@
       "tags": [
         [
           "d",
-          "tides-end-10-endgame:quest:departure"
+          "tides-end-11-endgame:quest:departure"
         ],
         [
           "t",
-          "tides-end-10-endgame"
+          "tides-end-11-endgame"
         ],
         [
           "type",
@@ -642,13 +642,13 @@
         ],
         [
           "requires",
-          "30078:<PUBKEY>:tides-end-10-endgame:quest:keepers-errand",
+          "30078:<PUBKEY>:tides-end-11-endgame:quest:keepers-errand",
           "complete",
           ""
         ],
         [
           "requires",
-          "30078:<PUBKEY>:tides-end-10-endgame:feature:landmark-departure",
+          "30078:<PUBKEY>:tides-end-11-endgame:feature:landmark-departure",
           "visited",
           ""
         ]

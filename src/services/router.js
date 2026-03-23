@@ -32,6 +32,17 @@ export function parseRoute() {
     return { page: 'lobby', worldSlug: null };
   }
 
+  // /guide — guide table of contents
+  if (path === '/guide' || path === '/guide/') {
+    return { page: 'guide', guidePage: null };
+  }
+
+  // /guide/:page — guide page
+  const guideMatch = path.match(/^\/guide\/([a-z0-9-]+)$/i);
+  if (guideMatch) {
+    return { page: 'guide', guidePage: guideMatch[1] };
+  }
+
   // /u/:npub — author profile
   const profileMatch = path.match(/^\/u\/(npub1[a-z0-9]+)$/i);
   if (profileMatch) {
@@ -71,6 +82,12 @@ export function navigateToLobby() {
  * Navigate to an author's profile page.
  * @param {string} npub — bech32-encoded public key (npub1...)
  */
+export function navigateToGuide(page = null) {
+  const url = page ? `/guide/${page}` : '/guide';
+  window.history.pushState({}, '', url);
+  window.dispatchEvent(new PopStateEvent('popstate'));
+}
+
 export function navigateToProfile(npub) {
   window.history.pushState({}, '', `/u/${npub}`);
   window.dispatchEvent(new PopStateEvent('popstate'));

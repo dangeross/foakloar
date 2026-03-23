@@ -2,6 +2,8 @@
 
 NPCs bring your world to life. They are actors that players can talk to, fight, or encounter as they explore. This guide covers how to create NPCs, make them roam between locations, and build branching dialogue trees.
 
+> ▶ **Try it:** Import [tides-end-04-characters.json](tutorials/tides-end-04-characters.json) to explore these concepts in a working world.
+
 ---
 
 ## What is an NPC?
@@ -223,7 +225,9 @@ Enter the room and use `talk to <noun>` to start the conversation. Walk through 
 
 ## Tutorial World
 
-Import `tides-end-04-characters.json` from the `docs/guide/tutorials/` directory to see these concepts in action. The world includes:
+> ▶ **Try it:** Import [tides-end-04-characters.json](tutorials/tides-end-04-characters.json) to play through everything covered in this guide.
+
+The world includes:
 
 - A static NPC (Tavern Keeper) with a branching dialogue tree
 - A roaming NPC (Old Fisherman) that moves between the dock and the beach

@@ -4,6 +4,8 @@ Quests give players direction. They are named objectives with trackable steps th
 
 This guide covers quest events, the four quest display types, the `involves` and `requires` tags on quests, quest rewards, and chaining.
 
+> ▶ **Try it:** Import [tides-end-06-quests.json](tutorials/tides-end-06-quests.json) to explore these concepts in a working world.
+
 ---
 
 ## What is a Quest?
@@ -262,9 +264,9 @@ Publish all events — the items, the reward, and the quest — to the same worl
 
 ## Tutorial World
 
-Import **tides-end-06-quests** to see all three quest types in action. The world contains:
+> ▶ **Try it:** Import [tides-end-06-quests.json](tutorials/tides-end-06-quests.json) to play through everything covered in this guide.
+
+The world contains:
 - An **open** quest (The Keeper's Stew) — collect three ingredients with full visibility
 - A **hidden** quest (Village Explorer) — visit all four places with step titles obscured
 - A **mystery** quest (The Strange Note) — find and read a hidden note with no progress hints
-
-Tutorial file: `docs/guide/tutorials/tides-end-06-quests.json`

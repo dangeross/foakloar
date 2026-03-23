@@ -2,7 +2,7 @@
 
 Puzzles are the core challenge mechanic in foakloar. They gate progression, reward exploration, and give players something to solve rather than just something to find. This guide covers how to create puzzles, place clues that help players solve them, and how sealed (encrypted) content works at a high level.
 
-The companion tutorial world is [tides-end-05-puzzles.json](tutorials/tides-end-05-puzzles.json) -- import it to see riddle and sequence puzzles working together with clue discovery.
+> ▶ **Try it:** Import [tides-end-05-puzzles.json](tutorials/tides-end-05-puzzles.json) to explore these concepts in a working world.
 
 ---
 

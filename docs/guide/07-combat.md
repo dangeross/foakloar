@@ -4,6 +4,8 @@ Combat in foakloar is not a separate system. It is the `on-*` dispatcher applied
 
 This guide covers weapons, NPC combat stats, the attack round sequence, player health, death consequences, and NPC death rewards.
 
+> ▶ **Try it:** Import [tides-end-07-combat.json](tutorials/tides-end-07-combat.json) to explore these concepts in a working world.
+
 ---
 
 ## The Attack Command
@@ -223,10 +225,6 @@ Here is the step-by-step process for adding combat to a world:
 
 ## Tutorial World
 
-The companion tutorial world **tides-end-07-combat** demonstrates all of these mechanics in a three-room tavern cellar. Import it from:
-
-```
-docs/guide/tutorials/tides-end-07-combat.json
-```
+> ▶ **Try it:** Import [tides-end-07-combat.json](tutorials/tides-end-07-combat.json) to play through everything covered in this guide.
 
 The walkthrough: pick up the lantern, light it, descend to the cellar steps, grab the rusty sword, go down to the cellar, and fight the giant rat. Defeating it drops a cellar key. If the rat kills you, you respawn in the tavern.

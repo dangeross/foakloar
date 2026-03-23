@@ -2,7 +2,7 @@
 
 This tutorial introduces the two kinds of "things" that populate a foakloar world: **items** (portable objects the player can pick up and carry) and **features** (fixed parts of a place that can be examined and interacted with but never picked up). It also covers **nouns** and **verbs** — the tags that make things referenceable and interactive.
 
-Import the tutorial world `tides-end-02-things` from `docs/guide/tutorials/tides-end-02-things.json` to follow along.
+> ▶ **Try it:** Import [tides-end-02-things.json](tutorials/tides-end-02-things.json) to explore these concepts in a working world.
 
 ---
 
@@ -188,7 +188,7 @@ Features often have richer interactions than items. Use `verb`, `state`, `transi
 
 ## Tutorial World
 
-Import `docs/guide/tutorials/tides-end-02-things.json` to explore a working example with three items (lantern, coin, key) and three features (notice board, well, fishing nets) across the four Tide's End locations.
+> ▶ **Try it:** Import [tides-end-02-things.json](tutorials/tides-end-02-things.json) to play through everything covered in this guide.
 
 The world includes a walkthrough that picks up all items and examines all features.
 

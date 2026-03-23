@@ -14,6 +14,8 @@ You can build:
 
 Everything is data-driven. Behaviour comes from tags on events, not hardcoded logic.
 
+> ▶ **Try it:** Import [tides-end-01-basics.json](tutorials/tides-end-01-basics.json) to explore these concepts in a working world.
+
 ---
 
 ## The Three Basics: Worlds, Places, and Portals
@@ -100,9 +102,7 @@ Switch out of Build Mode. You start in the Entrance Hall. Type `north` to walk t
 
 ## Tutorial World: Tide's End
 
-A ready-made tutorial world is available to import:
-
-**[tutorials/tides-end-01-basics.json](tutorials/tides-end-01-basics.json)**
+> ▶ **Try it:** Import [tides-end-01-basics.json](tutorials/tides-end-01-basics.json) to play through everything covered in this guide.
 
 This world contains four places (The Dock, Village Square, The Tavern, The Beach) connected by four portals in a logical coastal village layout. It demonstrates:
 

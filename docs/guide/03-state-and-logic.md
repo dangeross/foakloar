@@ -2,7 +2,7 @@
 
 This guide covers the four mechanisms that make foakloar worlds interactive: **state** (how things change), **transitions** (feedback when they change), **requires** (gating access), and **counters** (tracking numbers and thresholds). Together, these let you build locked doors, item puzzles, multi-step mechanisms, and progression gates.
 
-The companion tutorial world is [tides-end-03-state.json](tutorials/tides-end-03-state.json) — import it to see all of these concepts working together.
+> ▶ **Try it:** Import [tides-end-03-state.json](tutorials/tides-end-03-state.json) to explore these concepts in a working world.
 
 ---
 
@@ -278,7 +278,9 @@ Add `["item", "30078:<PUBKEY>:my-world:item:lantern"]` to the place where the la
 
 ## Tutorial World
 
-Import [tides-end-03-state.json](tutorials/tides-end-03-state.json) to play through a working example of all these concepts. The world features:
+> ▶ **Try it:** Import [tides-end-03-state.json](tutorials/tides-end-03-state.json) to play through everything covered in this guide.
+
+The world features:
 
 - A **lantern** that starts `unlit` and transitions to `lit` (requires a matchbox)
 - A **cellar portal** gated by `requires` — the lantern must be `lit` to descend

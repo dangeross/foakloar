@@ -4,6 +4,8 @@ Recipes let players combine items to create new ones. A recipe defines what ingr
 
 This guide covers recipe events, ingredient requirements, crafting verbs, completion actions, and ordered vs unordered recipes.
 
+> ▶ **Try it:** Import [tides-end-09-recipes.json](tutorials/tides-end-09-recipes.json) to explore these concepts in a working world.
+
 ---
 
 ## What is a Recipe?
@@ -232,9 +234,9 @@ Publish all events — ingredients, output, and recipe — to the same world tag
 
 ## Tutorial World
 
-Import **tides-end-09-recipes** to see recipes in action. The world contains:
+> ▶ **Try it:** Import [tides-end-09-recipes.json](tutorials/tides-end-09-recipes.json) to play through everything covered in this guide.
+
+The world contains:
 - Two ingredient items (rope and iron hook) in different locations
 - A recipe that combines them into a fishing rod
 - A fish that can only be caught with the crafted rod
-
-Tutorial file: `docs/guide/tutorials/tides-end-09-recipes.json`

@@ -11,6 +11,7 @@ import { buildTrustSet, resolveClientMode } from '../engine/trust.js';
 import { useStateBackup } from '../hooks/useStateBackup.js';
 import { useNip65 } from '../hooks/useNip65.js';
 import PaymentPanel from './PaymentPanel.jsx';
+import Guide from './Guide.jsx';
 import BuildModeOverlay from '../builder/components/BuildModeOverlay.jsx';
 import EventEditor from '../builder/components/EventEditor.jsx';
 import DraftListPanel from '../builder/components/DraftListPanel.jsx';
@@ -454,6 +455,11 @@ export default function App() {
   // ── Profile route ──────────────────────────────────────────────────────
   if (route.page === 'profile') {
     return <>{noiseOverlay}<AuthorProfile npub={route.npub} pubkeyHex={route.pubkeyHex} identity={identity} /></>;
+  }
+
+  // ── Guide route ──────────────────────────────────────────────────────
+  if (route.page === 'guide') {
+    return <>{noiseOverlay}<Guide guidePage={route.guidePage} /></>;
   }
 
   // ── Lobby route ────────────────────────────────────────────────────────

@@ -1,0 +1,468 @@
+{
+  "walkthrough": [
+    "# Tide's End 10: Payments — Walkthrough",
+    "# This world teaches Payment events (Lightning/LNURL gates).",
+    "# NOTE: Payment requires a real LNURL endpoint to process.",
+    "",
+    "> look",
+    "# You see The Dock description and exit: north",
+    "",
+    "> north",
+    "# Arrive at Harbour Gate. You see the Toll Booth.",
+    "# Exit north is blocked — requires the Entry Token.",
+    "",
+    "> examine booth",
+    "# See the toll booth description.",
+    "",
+    "> talk to keeper",
+    "# The booth keeper's dialogue starts.",
+    "# A dialogue option appears: 'Pay the toll (100 sats)' or 'Walk away'.",
+    "# Selecting 'Pay the toll' activates the payment event.",
+    "",
+    "# If payment succeeds:",
+    "# - You receive the Entry Token (give-item)",
+    "# - Payment state is set to 'paid'",
+    "",
+    "> north",
+    "# Now that you have the Entry Token, the gate opens.",
+    "# Arrive at The Marina.",
+    "",
+    "> look",
+    "# You see The Marina description. Exit: south",
+    "",
+    "> south",
+    "# Back at Harbour Gate.",
+    "",
+    "> south",
+    "# Back at The Dock. Tutorial complete."
+  ],
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-payments:world"
+        ],
+        [
+          "t",
+          "tides-end-10-payments"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "Tide's End: Payments"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "tutorial"
+        ],
+        [
+          "tag",
+          "coastal"
+        ],
+        [
+          "tag",
+          "payments"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:tides-end-10-payments:place:the-dock"
+        ],
+        [
+          "relay",
+          "wss://relay.primal.net"
+        ],
+        [
+          "collaboration",
+          "open"
+        ],
+        [
+          "colour",
+          "bg",
+          "#1a1a2e"
+        ],
+        [
+          "colour",
+          "text",
+          "#c8c8a9"
+        ],
+        [
+          "colour",
+          "title",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "dim",
+          "#5e8b7e"
+        ],
+        [
+          "colour",
+          "highlight",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "exits",
+          "#5e8b7e"
+        ],
+        [
+          "font",
+          "ibm-plex-mono"
+        ],
+        [
+          "cursor",
+          "beam"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "A coastal village where the harbour charges a toll to enter the marina.\n\nThis tutorial demonstrates **Payment events** — Lightning-gated progression using LNURL.\n\n> **Note:** The LNURL in this tutorial is a placeholder. Payment will not process without a real LNURL endpoint configured."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-payments:place:the-dock"
+        ],
+        [
+          "t",
+          "tides-end-10-payments"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Dock"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "Salt-crusted timbers stretch over murky water. Ropes creak against iron cleats as a handful of small boats rock in the swell. A painted sign nailed to a post reads: **HARBOUR GATE — NORTH**. Beyond the gate lies the marina, but passage isn't free."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-payments:place:harbour-gate"
+        ],
+        [
+          "t",
+          "tides-end-10-payments"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Harbour Gate"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:tides-end-10-payments:npc:booth-keeper"
+        ]
+      ],
+      "content": "A stone archway spans the narrow road between the dock and the marina. Iron gates stand half-open, but a wooden toll booth blocks the passage. A weathered sign lists the fee: **100 sats**. No exceptions."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-payments:place:the-marina"
+        ],
+        [
+          "t",
+          "tides-end-10-payments"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Marina"
+        ],
+        [
+          "exit",
+          "south"
+        ]
+      ],
+      "content": "Past the gate, the marina opens up — a sheltered basin ringed by stone quays. Larger vessels are moored here, their masts swaying in unison. The air smells of fresh paint and engine oil. Fishermen mend nets on the dock while gulls squabble over scraps. You made it through the toll."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-payments:portal:dock-to-gate"
+        ],
+        [
+          "t",
+          "tides-end-10-payments"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-10-payments:place:the-dock",
+          "north",
+          "A stone archway marks the harbour gate."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-10-payments:place:harbour-gate",
+          "south",
+          "The dock stretches south over the water."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-payments:portal:gate-to-marina"
+        ],
+        [
+          "t",
+          "tides-end-10-payments"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-10-payments:place:harbour-gate",
+          "north",
+          "The marina lies beyond the gate."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-10-payments:place:the-marina",
+          "south",
+          "The harbour gate is back to the south."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-10-payments:item:entry-token",
+          "",
+          "You need to pay the toll first."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-payments:feature:toll-booth"
+        ],
+        [
+          "t",
+          "tides-end-10-payments"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Toll Booth"
+        ],
+        [
+          "noun",
+          "booth",
+          "toll booth"
+        ]
+      ],
+      "content": "A cramped wooden booth wedged into the archway. Behind a small window, a figure in a heavy coat watches the road with patient eyes. A hand-lettered card reads: *100 sats — no credit, no exceptions.*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-payments:npc:booth-keeper"
+        ],
+        [
+          "t",
+          "tides-end-10-payments"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Booth Keeper"
+        ],
+        [
+          "noun",
+          "keeper",
+          "booth keeper"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:tides-end-10-payments:dialogue:toll-payment"
+        ]
+      ],
+      "content": "A heavyset figure in a salt-stained coat. They don't smile, but they don't scowl either. Just business."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-payments:dialogue:toll-payment"
+        ],
+        [
+          "t",
+          "tides-end-10-payments"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Pay the toll (100 sats)",
+          "30078:<PUBKEY>:tides-end-10-payments:payment:entry-fee"
+        ],
+        [
+          "option",
+          "Walk away",
+          ""
+        ]
+      ],
+      "content": "The keeper slides open the window. \"Hundred sats for passage. Lightning only.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-payments:payment:entry-fee"
+        ],
+        [
+          "t",
+          "tides-end-10-payments"
+        ],
+        [
+          "type",
+          "payment"
+        ],
+        [
+          "title",
+          "Entry Fee"
+        ],
+        [
+          "amount",
+          "100"
+        ],
+        [
+          "unit",
+          "sats"
+        ],
+        [
+          "lnurl",
+          "foakloar@breez.tips"
+        ],
+        [
+          "on-complete",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:tides-end-10-payments:item:entry-token"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "paid"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
+      ],
+      "content": "A toll gate fee of 100 sats grants passage through the harbour gate to the marina."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "tides-end-10-payments:item:entry-token"
+        ],
+        [
+          "t",
+          "tides-end-10-payments"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Entry Token"
+        ],
+        [
+          "noun",
+          "token",
+          "entry token"
+        ]
+      ],
+      "content": "A small brass disc stamped with an anchor. Proof of payment for the harbour gate toll. The booth keeper hands these out after receiving payment."
+    }
+  ]
+}

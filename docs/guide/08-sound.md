@@ -4,6 +4,8 @@ Sound in FOAKLOAR is synthesised client-side using Strudel (a TidalCycles-style 
 
 This guide covers sound events, sound types, sample presets, sound as an action type, and tempo control.
 
+> ▶ **Try it:** Import [tides-end-08-sound.json](tutorials/tides-end-08-sound.json) to explore these concepts in a working world.
+
 ---
 
 ## Sound Events
@@ -251,11 +253,11 @@ To add sound to a world in the builder:
 
 ## Tutorial World
 
-The tutorial world `tides-end-08-sound` demonstrates all sound concepts:
+> ▶ **Try it:** Import [tides-end-08-sound.json](tutorials/tides-end-08-sound.json) to play through everything covered in this guide.
+
+The world demonstrates all sound concepts:
 
 - **Beach** — ambient waves (filtered white noise)
 - **Dock** — seagull layer (bird samples with dropout)
 - **Tavern** — fire ambient (fire samples with filtering)
 - **Sand Coin** — flip interaction triggers a pickup chime (sound as action, oscillator-based effect)
-
-Import from `docs/guide/tutorials/tides-end-08-sound.json`.
