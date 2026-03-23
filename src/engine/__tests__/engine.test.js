@@ -719,12 +719,12 @@ describe('quest display types', () => {
     // Quest should auto-complete via _evalQuests (called from enterRoom state changes)
     engine._evalQuests();
     const output = engine.flush();
-    const text = output.map((e) => e.text).join(' ');
+    const text = output.map((e) => e.html || e.text || '').join(' ');
     expect(text).toContain('The end. You won.');
     expect(engine.gameOver).toBe('hard');
 
     // Should show restart prompt
-    expect(output.some((e) => e.text?.includes('restart'))).toBe(true);
+    expect(output.some((e) => (e.html || e.text || '').includes('restart'))).toBe(true);
 
     // Commands should be blocked
     await engine.handleCommand('look');
@@ -757,8 +757,8 @@ describe('quest display types', () => {
 
     engine._evalQuests();
     const output = engine.flush();
-    expect(output.some((e) => e.text?.includes('Explore freely'))).toBe(true);
-    expect(output.some((e) => e.text?.includes('keep exploring'))).toBe(true);
+    expect(output.some((e) => (e.html || e.text || '').includes('Explore freely'))).toBe(true);
+    expect(output.some((e) => (e.html || e.text || '').includes('keep exploring'))).toBe(true);
     expect(engine.gameOver).toBe('soft');
 
     // Commands should still work

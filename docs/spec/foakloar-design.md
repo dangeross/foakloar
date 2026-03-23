@@ -2179,7 +2179,7 @@ Sound in FOAKLOAR uses two primitives — `type: sound` events define named soun
 
 ### `type: sound` — sound definition event
 
-A named, reusable sound recipe. Declared as a FOAKLOAR event with a `d`-tag for world-scoped uniqueness. Tags are applied in declaration order to build the Strudel chain. `note` or `noise` should come first — they establish the source pattern everything else modifies.
+A named, reusable sound recipe. Declared as a FOAKLOAR event with a `d`-tag for world-scoped uniqueness. Tags are applied in declaration order to build the Strudel chain. `note` or `noise` should come first — they establish the source pattern everything else modifies. All numeric tag values support Strudel mini-notation (e.g. `"600 250"` alternates between values each cycle).
 
 ```json
 {
@@ -2189,7 +2189,7 @@ A named, reusable sound recipe. Declared as a FOAKLOAR event with a `d`-tag for 
     ["t",          "the-lake"],
     ["type",       "sound"],
     ["note",       "c2 ~ ~ ~"],
-    ["oscillator", "sawtooth"],
+    ["s",          "sawtooth"],
     ["lpf",        "200"],
     ["slow",       "4"],
     ["gain",       "0.4"]
@@ -2203,7 +2203,8 @@ A named, reusable sound recipe. Declared as a FOAKLOAR event with a `d`-tag for 
 | Tag | Values | Strudel | Effect |
 |-----|--------|---------|--------|
 | `note` | Mini-notation string | `note("...")` | Pitch sequence. Always first when using oscillators. |
-| `oscillator` | `sine` `triangle` `sawtooth` `square` | `.s("...")` | Waveform. `sine` = smooth, `triangle` = warm, `sawtooth` = buzzy, `square` = hollow/retro. |
+| `s` | `sine` `triangle` `sawtooth` `square` (or sample names) | `.s("...")` | Sound source. `sine` = smooth, `triangle` = warm, `sawtooth` = buzzy, `square` = hollow/retro. With sample libraries loaded, also accepts sample names like `piano`, `bd`, `sd`. |
+| `oscillator` | *(alias for `s`)* | `.s("...")` | Legacy alias — use `s` for new content. |
 | `noise` | *(no value)* | `s("noise")` | White noise source. Base for wind, rain, fire, static. Use with filters. |
 
 **Volume & timing:**
@@ -2214,7 +2215,13 @@ A named, reusable sound recipe. Declared as a FOAKLOAR event with a `d`-tag for 
 | `slow` | float > 1 | `.slow(n)` | Stretch cycle — slower playback. Relative to global BPM. |
 | `fast` | float > 1 | `.fast(n)` | Compress cycle — faster playback. Relative to global BPM. |
 | `pan` | -1.0–1.0 | `.pan(n)` | Stereo position. -1 = left, 0 = centre, 1 = right. |
+
+**ADSR envelope:**
+
+| Tag | Values | Strudel | Effect |
+|-----|--------|---------|--------|
 | `attack` | Seconds e.g. `0.1` | `.attack(n)` | Fade-in time. `0` = instant, higher = gradual swell. |
+| `decay` | Seconds e.g. `0.1` | `.decay(n)` | Time from peak to sustain level. |
 | `sustain` | Seconds e.g. `2` | `.sustain(n)` | How long each note sounds. Longer = droning. Shorter = responsive to state changes — the sound cuts off quickly when a state gate deactivates it. |
 | `release` | Seconds e.g. `0.1` | `.release(n)` | Fade-out after note ends. `0` = hard cut, higher = natural decay. |
 
@@ -2224,6 +2231,9 @@ A named, reusable sound recipe. Declared as a FOAKLOAR event with a `d`-tag for 
 |-----|--------|---------|--------|
 | `lpf` | Hz: `200`–`20000` | `.lpf(n)` | Low-pass — removes highs. Lower = warmer, muffled. Drones, underwater. |
 | `hpf` | Hz: `200`–`20000` | `.hpf(n)` | High-pass — removes lows. Higher = thinner, airy. Shimmer, radio. |
+| `bpf` | Hz | `.bpf(n)` | Bandpass — isolates a frequency band. |
+| `lpq` / `hpq` / `bpq` | 0–50 | `.lpq(n)` | Filter resonance. Boosts frequencies near cutoff. |
+| `ftype` | `12db` `ladder` `24db` | `.ftype(s)` | Filter circuit type. |
 | `vowel` | `a` `e` `i` `o` `u` or pattern | `.vowel("a e i o")` | Formant filter — vocal vowel shaping. Pattern cycles through shapes. |
 
 **Distortion:**
@@ -2232,6 +2242,8 @@ A named, reusable sound recipe. Declared as a FOAKLOAR event with a `d`-tag for 
 |-----|--------|---------|--------|
 | `crush` | 1–16 (lower = harsher) | `.crush(n)` | Bit crush — retro/digital distortion. 16 = clean, 1 = extreme. |
 | `shape` | 0.0–1.0 | `.shape(n)` | Soft saturation — warmth and presence. |
+| `distort` | amount | `.distort(n)` | Waveshaping distortion (worklet). |
+| `coarse` | factor | `.coarse(n)` | Sample rate reduction — lo-fi texture. |
 
 **Effects:**
 
@@ -2239,7 +2251,9 @@ A named, reusable sound recipe. Declared as a FOAKLOAR event with a `d`-tag for 
 |-----|--------|---------|--------|
 | `room` | 0.0–1.0 | `.room(n)` | Reverb wet/dry. 0 = dry, 1 = fully wet. |
 | `roomsize` | 1–10 | `.roomsize(n)` | Reverb room size. Only meaningful with `room` > 0. |
+| `roomfade` / `roomlp` / `roomdim` | varies | — | Reverb fade, lowpass, and damping. |
 | `delay` | time 0.0–1.0, feedback 0.0–1.0 | `.delay(t, f)` | Echo. Time = spacing, feedback = repeats. Two values: `["delay", "0.5", "0.3"]` |
+| `phaser` | Hz | `.phaser(n)` | Phaser effect (with `phaserdepth`, `phasercenter`, `phasersweep`). |
 | `rev` | *(no value)* | `.rev()` | Reverse pattern order within each cycle. |
 | `palindrome` | *(no value)* | `.palindrome()` | Forward then backward — mirrored loop. |
 
@@ -2262,6 +2276,8 @@ A named, reusable sound recipe. Declared as a FOAKLOAR event with a `d`-tag for 
 | Tag | Values | Strudel | Effect |
 |-----|--------|---------|--------|
 | `arp` | `up` `down` `updown` | `.arp("up")` | Arpeggiate chords — play notes in sequence rather than simultaneously. |
+
+**Additional parameter categories:** Filter envelopes (`lpenv`/`hpenv`/`bpenv` + attack/decay/sustain/release per filter), pitch envelopes (`penv` + attack/decay/release/curve/anchor), FM synthesis (`fm`, `fmh`, `fmattack`, `fmdecay`, `fmsustain`, `fmenv`), vibrato (`vib`, `vibmod`), tremolo (`tremolodepth`/`sync`/`skew`/`phase`/`shape`), dynamics (`velocity`, `postgain`, `compressor`), sample manipulation (`n`, `begin`, `end`, `speed`, `cut`, `loop`, `chop`, `striate`, `fit`), and time/pattern transforms (`early`, `late`, `swing`, `iter`, `ply`). See `docs/authoring/tag-reference.md` for the complete tag listing.
 
 ---
 
@@ -2402,16 +2418,16 @@ Sound is a progressive enhancement. Clients that do not implement the sound syst
 ["noise", ""], ["lpf", "400"], ["rand", "0.05", "0.2"], ["slow", "4"], ["gain", "0.3"]
 
 // Water drip — oscillator + delay
-["note", "e5 ~ ~ g5 ~ ~ a5 ~"], ["oscillator", "sine"], ["fast", "2"], ["delay", "0.3", "0.2"], ["gain", "0.3"]
+["note", "e5 ~ ~ g5 ~ ~ a5 ~"], ["s", "sine"], ["fast", "2"], ["delay", "0.3", "0.2"], ["gain", "0.3"]
 
 // Eerie shimmer — stereo reversal
-["note", "c4 eb4 g4"], ["oscillator", "sine"], ["jux", "rev"], ["slow", "8"], ["gain", "0.2"]
+["note", "c4 eb4 g4"], ["s", "sine"], ["jux", "rev"], ["slow", "8"], ["gain", "0.2"]
 
 // Fire crackle — noise + bit crush
 ["noise", ""], ["lpf", "800"], ["crush", "6"], ["rand", "0.1", "0.4"], ["gain", "0.3"]
 
 // Warm cave drone — filtered sawtooth
-["note", "c2 ~ ~ ~"], ["oscillator", "sawtooth"], ["lpf", "200"], ["slow", "4"], ["gain", "0.4"]
+["note", "c2 ~ ~ ~"], ["s", "sawtooth"], ["lpf", "200"], ["slow", "4"], ["gain", "0.4"]
 ```
 
 Content warnings use a `cw` tag with a short string. Clients display these before the world loads — the player can choose not to enter. Common values: `violence`, `horror`, `mild-peril`, `adult`, `flashing-lights`. No enforced vocabulary — world authors choose their own, clients can filter on known values.

@@ -363,7 +363,15 @@ export const TAG_SCHEMAS = {
   ordered:       { label: 'Ordered', desc: 'Whether sequence puzzle steps must be completed in order', fields: [{ name: 'value', type: 'select', required: true, options: ['true', 'false'] }] },
 
   // ── NPC movement ─────────────────────────────────────────────────────────
-  speed:       { label: 'Speed', desc: 'Moves every N player turns', fields: [{ name: 'value', type: 'number', required: true, placeholder: '3' }] },
+  speed: {
+    label: 'Speed',
+    desc: 'NPC roaming speed (turns) or sample playback speed',
+    variants: {
+      npc: { fields: [{ name: 'value', type: 'number', required: true, placeholder: '3' }], desc: 'Moves every N player turns' },
+      sound: { fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }], desc: 'Playback speed. 1 = normal, 2 = double, -1 = reverse.' },
+    },
+    fields: [{ name: 'value', type: 'number', required: true, placeholder: '3' }],
+  },
   order:       { label: 'Order', desc: 'Route traversal order: sequential or random', fields: [{ name: 'value', type: 'select', required: true, options: ['sequential', 'random'] }] },
   route:       { label: 'Route', desc: 'A place this NPC visits when roaming', repeatable: true, fields: [{ name: 'ref', type: 'event-ref', required: true, eventTypeFilter: 'place' }] },
   stash:       { label: 'Stash', desc: 'Place where the NPC deposits stolen items', fields: [{ name: 'ref', type: 'event-ref', required: true, eventTypeFilter: 'place' }] },
@@ -414,7 +422,8 @@ export const TAG_SCHEMAS = {
   // ── Sound event tags ──────────────────────────────────────────────────
   // Source
   note:         { label: 'Note', desc: 'Mini-notation note pattern. First in the Strudel chain. Examples: c3 e3 g3, c2*4, c3 ~ ~ ~', fields: [{ name: 'pattern', type: 'text', required: true, placeholder: 'c3 e3 g3' }] },
-  oscillator:   { label: 'Oscillator', desc: 'Sound source. Built-in: sine, triangle, sawtooth, square. With samples loaded: piano, bass, bd, sd, hh, etc.', fields: [{ name: 'type', type: 'text', required: true, placeholder: 'sine' }] },
+  s:            { label: 'Sound Source', desc: 'Sound source (primary name). Built-in: sine, triangle, sawtooth, square. With samples loaded: piano, bass, bd, sd, hh, etc.', fields: [{ name: 'type', type: 'text', required: true, placeholder: 'sine' }] },
+  oscillator:   { label: 'Oscillator', desc: 'Sound source (alias for s). Built-in: sine, triangle, sawtooth, square. With samples loaded: piano, bass, bd, sd, hh, etc.', fields: [{ name: 'type', type: 'text', required: true, placeholder: 'sine' }] },
   // Volume & timing (text type to allow Strudel mini-notation e.g. "0.5 0.25")
   gain:         { label: 'Gain', desc: 'Volume (0.0–1.0). Supports mini-notation: "0.5 0.25" alternates.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
   slow:         { label: 'Slow', desc: 'Stretch time. 2 = half speed, 4 = quarter speed.', fields: [{ name: 'factor', type: 'text', required: true, placeholder: '2' }] },
@@ -445,6 +454,96 @@ export const TAG_SCHEMAS = {
   release:      { label: 'Release', desc: 'Fade-out time in seconds. Supports mini-notation: "1.2 1.5".', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
   // Sample
   sample:       { label: 'Sample', desc: 'Register external audio file by name. Use the name in note patterns.', repeatable: true, fields: [{ name: 'name', type: 'text', required: true, placeholder: 'kick' }, { name: 'url', type: 'text', required: true, placeholder: 'https://...' }] },
+  // Filters (extended)
+  bpf:          { label: 'Bandpass Filter', desc: 'Bandpass filter center frequency (Hz). Supports mini-notation.', fields: [{ name: 'freq', type: 'text', required: true, placeholder: '1000' }] },
+  bpq:          { label: 'Bandpass Q', desc: 'Bandpass filter Q (resonance). Higher = narrower band.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  lpq:          { label: 'Lowpass Q', desc: 'Lowpass filter resonance (0-50). Boosts frequencies near cutoff.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  hpq:          { label: 'Highpass Q', desc: 'Highpass filter resonance (0-50). Boosts frequencies near cutoff.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  ftype:        { label: 'Filter Type', desc: 'Filter circuit type: 12db, ladder, 24db.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '12db' }] },
+  // ADSR (extended)
+  decay:        { label: 'Decay', desc: 'Decay time in seconds. Time from peak to sustain level.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
+  // Filter envelope — LP
+  lpenv:        { label: 'LP Env Depth', desc: 'Lowpass filter envelope depth in Hz.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '4000' }] },
+  lpattack:     { label: 'LP Env Attack', desc: 'LP filter envelope attack time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.01' }] },
+  lpdecay:      { label: 'LP Env Decay', desc: 'LP filter envelope decay time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
+  lpsustain:    { label: 'LP Env Sustain', desc: 'LP filter envelope sustain level (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
+  lprelease:    { label: 'LP Env Release', desc: 'LP filter envelope release time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
+  // Filter envelope — HP
+  hpenv:        { label: 'HP Env Depth', desc: 'Highpass filter envelope depth in Hz.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '4000' }] },
+  hpattack:     { label: 'HP Env Attack', desc: 'HP filter envelope attack time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.01' }] },
+  hpdecay:      { label: 'HP Env Decay', desc: 'HP filter envelope decay time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
+  hpsustain:    { label: 'HP Env Sustain', desc: 'HP filter envelope sustain level (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
+  hprelease:    { label: 'HP Env Release', desc: 'HP filter envelope release time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
+  // Filter envelope — BP
+  bpenv:        { label: 'BP Env Depth', desc: 'Bandpass filter envelope depth in Hz.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '4000' }] },
+  bpattack:     { label: 'BP Env Attack', desc: 'BP filter envelope attack time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.01' }] },
+  bpdecay:      { label: 'BP Env Decay', desc: 'BP filter envelope decay time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
+  bpsustain:    { label: 'BP Env Sustain', desc: 'BP filter envelope sustain level (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
+  bprelease:    { label: 'BP Env Release', desc: 'BP filter envelope release time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
+  fanchor:      { label: 'Filter Anchor', desc: 'Filter envelope anchor point.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
+  // Pitch envelope
+  penv:         { label: 'Pitch Env Depth', desc: 'Pitch envelope depth in semitones.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '12' }] },
+  pattack:      { label: 'Pitch Env Attack', desc: 'Pitch envelope attack time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.01' }] },
+  pdecay:       { label: 'Pitch Env Decay', desc: 'Pitch envelope decay time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
+  prelease:     { label: 'Pitch Env Release', desc: 'Pitch envelope release time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
+  pcurve:       { label: 'Pitch Curve', desc: 'Pitch envelope curve. 0 = linear, 1 = exponential.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0' }] },
+  panchor:      { label: 'Pitch Anchor', desc: 'Pitch envelope anchor point (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0' }] },
+  // FM synthesis
+  fm:           { label: 'FM Index', desc: 'FM modulation index. Higher = more harmonics.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '2' }] },
+  fmh:          { label: 'FM Harmonicity', desc: 'FM harmonicity ratio. Integer = harmonic, fractional = inharmonic.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  fmattack:     { label: 'FM Env Attack', desc: 'FM envelope attack time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.01' }] },
+  fmdecay:      { label: 'FM Env Decay', desc: 'FM envelope decay time (seconds).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
+  fmsustain:    { label: 'FM Env Sustain', desc: 'FM envelope sustain level (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0' }] },
+  fmenv:        { label: 'FM Env Type', desc: 'FM envelope type: lin (linear) or exp (exponential).', fields: [{ name: 'value', type: 'text', required: true, placeholder: 'lin' }] },
+  // Vibrato
+  vib:          { label: 'Vibrato Freq', desc: 'Vibrato frequency in Hz.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '5' }] },
+  vibmod:       { label: 'Vibrato Depth', desc: 'Vibrato depth in semitones.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
+  // Tremolo
+  tremolodepth: { label: 'Tremolo Depth', desc: 'Tremolo depth (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
+  tremolosync:  { label: 'Tremolo Speed', desc: 'Tremolo speed in cycles.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '4' }] },
+  tremoloskew:  { label: 'Tremolo Skew', desc: 'Tremolo waveform skew (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
+  tremolophase: { label: 'Tremolo Phase', desc: 'Tremolo phase offset.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0' }] },
+  tremoloshape: { label: 'Tremolo Shape', desc: 'Tremolo waveform shape: tri, square, sine, saw, ramp.', fields: [{ name: 'value', type: 'text', required: true, placeholder: 'sine' }] },
+  // Distortion (extended)
+  distort:      { label: 'Distort', desc: 'Waveshaping distortion amount.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  coarse:       { label: 'Coarse', desc: 'Sample rate reduction factor. Higher = more lo-fi.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '4' }] },
+  // Dynamics
+  velocity:     { label: 'Velocity', desc: 'Velocity (0-1). Scales volume and brightness.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  postgain:     { label: 'Post Gain', desc: 'Post-effects gain multiplier.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  compressor:   { label: 'Compressor', desc: 'Dynamics compressor amount.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  // Sample manipulation
+  n:            { label: 'Sample N', desc: 'Sample variant index (selects from sample bank).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0' }] },
+  begin:        { label: 'Begin', desc: 'Sample start point (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0' }] },
+  end:          { label: 'End', desc: 'Sample end point (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  cut:          { label: 'Cut Group', desc: 'Cut group number. Sounds in the same group cut each other off.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  loop:         { label: 'Loop', desc: 'Enable sample looping (0 = off, 1 = on).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  'loop-begin':    { label: 'Loop Begin', desc: 'Loop start point (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0' }] },
+  'loop-end':      { label: 'Loop End', desc: 'Loop end point (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  'loop-at':       { label: 'Loop At', desc: 'Fit sample to N cycles.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  clip:         { label: 'Clip', desc: 'Signal clipping / legato mode.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  chop:         { label: 'Chop', desc: 'Divide sample into N equal parts.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '4' }] },
+  striate:      { label: 'Striate', desc: 'Progressive slice playback. Like chop but with overlap.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '4' }] },
+  fit:          { label: 'Fit', desc: 'Match sample duration to event length.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  // Effects (extended)
+  delaytime:    { label: 'Delay Time', desc: 'Delay time (0-1). Supports mini-notation.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.25' }] },
+  delayfeedback:{ label: 'Delay Feedback', desc: 'Delay feedback amount (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
+  roomfade:     { label: 'Room Fade', desc: 'Reverb fade time.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
+  roomlp:       { label: 'Room LP', desc: 'Reverb lowpass frequency. Darkens reverb tail.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '8000' }] },
+  roomdim:      { label: 'Room Dim', desc: 'Reverb damping frequency.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '8000' }] },
+  phaser:       { label: 'Phaser', desc: 'Phaser speed (rate in Hz).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  phaserdepth:  { label: 'Phaser Depth', desc: 'Phaser depth (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
+  phasercenter: { label: 'Phaser Center', desc: 'Phaser center frequency (Hz).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1000' }] },
+  phasersweep:  { label: 'Phaser Sweep', desc: 'Phaser sweep range (Hz).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '2000' }] },
+  // Other
+  orbit:        { label: 'Orbit', desc: 'Global effects bus context (integer).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0' }] },
+  dry:          { label: 'Dry', desc: 'Dry (unprocessed) output amount (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '1' }] },
+  xfade:        { label: 'Crossfade', desc: 'Crossfade between patterns (0-1).', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0' }] },
+  // Pattern (loop only)
+  early:        { label: 'Early', desc: 'Nudge events earlier in time.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
+  late:         { label: 'Late', desc: 'Nudge events later in time.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.1' }] },
+  swing:        { label: 'Swing', desc: 'Swing amount — offsets every other event.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '0.5' }] },
+  iter:         { label: 'Iter', desc: 'Progressive shift — rotate pattern each cycle.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '4' }] },
+  ply:          { label: 'Ply', desc: 'Repeat each event N times within its slot.', fields: [{ name: 'value', type: 'text', required: true, placeholder: '2' }] },
 
   // ── Consequence-level tags (direct on consequence events) ──────────────
   'set-state':    { label: 'Set State', desc: 'Set state on an external event (NPC, feature, portal). Used in consequences for side effects.', repeatable: true, fields: [{ name: 'state', type: 'text', required: true, placeholder: 'target state (e.g. burning, visible)' }, { name: 'ref', type: 'event-ref', required: true, placeholder: 'target event' }] },
@@ -507,7 +606,7 @@ export const TAGS_BY_EVENT_TYPE = {
   npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health', 'on-player-health', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not', 'sound'],
   dialogue:    ['option', 'requires', 'requires-not', 'on-enter', 'sound'],
   consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage', 'set-state', 'sound'],
-  sound:       ['note', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan', 'lpf', 'hpf', 'vowel', 'crush', 'shape', 'room', 'roomsize', 'delay', 'rev', 'palindrome', 'degrade-by', 'rand', 'jux', 'arp', 'sustain', 'attack', 'release', 'sample'],
+  sound:       ['note', 's', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan', 'lpf', 'hpf', 'bpf', 'bpq', 'lpq', 'hpq', 'ftype', 'vowel', 'crush', 'shape', 'distort', 'coarse', 'room', 'roomsize', 'roomfade', 'roomlp', 'roomdim', 'delay', 'delaytime', 'delayfeedback', 'phaser', 'phaserdepth', 'phasercenter', 'phasersweep', 'rev', 'palindrome', 'degrade-by', 'rand', 'jux', 'arp', 'sustain', 'attack', 'decay', 'release', 'lpenv', 'lpattack', 'lpdecay', 'lpsustain', 'lprelease', 'hpenv', 'hpattack', 'hpdecay', 'hpsustain', 'hprelease', 'bpenv', 'bpattack', 'bpdecay', 'bpsustain', 'bprelease', 'fanchor', 'penv', 'pattack', 'pdecay', 'prelease', 'pcurve', 'panchor', 'fm', 'fmh', 'fmattack', 'fmdecay', 'fmsustain', 'fmenv', 'vib', 'vibmod', 'tremolodepth', 'tremolosync', 'tremoloskew', 'tremolophase', 'tremoloshape', 'velocity', 'postgain', 'compressor', 'n', 'begin', 'end', 'speed', 'cut', 'loop', 'loop-begin', 'loop-end', 'loop-at', 'clip', 'chop', 'striate', 'fit', 'orbit', 'dry', 'xfade', 'early', 'late', 'swing', 'iter', 'ply', 'sample'],
   world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'bpm', 'samples', 'content-type', 'media', 'w'],
   vouch:       ['pubkey', 'scope', 'can-vouch'],
   quest:       ['title', 'quest-type', 'involves', 'requires', 'requires-not', 'on-complete', 'sound'],

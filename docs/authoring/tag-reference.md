@@ -433,33 +433,184 @@ One-way portal (1 exit tag) or two-way (2 exit tags):
 
 ### sound
 
-| Tag | Shape | Req? | Desc |
-|-----|-------|------|------|
-| `note` | `["note", "<pattern>"]` | yes (or `noise`) | — |
-| `noise` | `["noise"]` | opt (alternative to note) | — |
-| `sample` | `["sample", "<name>", "<url>"]` (repeatable) | opt | — |
-| `oscillator` | `["oscillator", "<type>"]` | opt | wave type (sine, saw, etc.) |
-| `gain` | `["gain", "<0.0-1.0>"]` | opt | — |
-| `slow` | `["slow", "<factor>"]` | opt | — |
-| `fast` | `["fast", "<factor>"]` | opt | — |
-| `pan` | `["pan", "<-1.0 to 1.0>"]` | opt | — |
-| `sustain` | `["sustain", "<0.0-1.0>"]` | opt | — |
-| `attack` | `["attack", "<seconds>"]` | opt | — |
-| `release` | `["release", "<seconds>"]` | opt | — |
-| `lpf` | `["lpf", "<freq>"]` | opt | — |
-| `hpf` | `["hpf", "<freq>"]` | opt | — |
-| `vowel` | `["vowel", "<a\|e\|i\|o\|u>"]` | opt | formant filter |
-| `crush` | `["crush", "<bits>"]` | opt | bit crush distortion |
-| `shape` | `["shape", "<amount>"]` | opt | — |
-| `room` | `["room", "<0.0-1.0>"]` | opt | — |
-| `roomsize` | `["roomsize", "<0.0-1.0>"]` | opt | — |
-| `delay` | `["delay", "<time>", "<feedback>"]` | opt | — |
-| `rev` | `["rev"]` | opt | reverse pattern |
-| `palindrome` | `["palindrome"]` | opt | play forward then backward |
-| `degrade-by` | `["degrade-by", "<amount>"]` | opt | lo-fi degradation |
-| `jux` | `["jux", "<function>"]` | opt | stereo mirror effect |
-| `rand` | `["rand", "<0.0-1.0>"]` | opt | — |
-| `arp` | `["arp", "<pattern>"]` | opt | — |
+All numeric values support Strudel mini-notation (e.g. `"600 250"` alternates between values each cycle). Tags marked **loop-only** apply only to ambient/layer roles, not one-shot effects.
+
+Every sound event needs at least one starter tag: `note`, `s` (or `oscillator`), or `noise`. Everything else is optional.
+
+**Source:**
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `note` | `["note", "<pattern>"]` | Pitch sequence in mini-notation. Starter tag. |
+| `s` | `["s", "<source>"]` | Sound source. Built-in: `sine`, `triangle`, `sawtooth`, `square`. Samples: `piano`, `bd`, `sd`, etc. Starter tag. |
+| `oscillator` | `["oscillator", "<source>"]` | Alias for `s`. |
+| `noise` | `["noise"]` | White noise source. Use with filters for wind, rain, fire, static. Starter tag. |
+| `sample` | `["sample", "<name>", "<url>"]` (repeatable) | Register external audio file under a name for use in patterns. |
+| `n` | `["n", "<index>"]` | Sample variant index (selects from sample bank). |
+
+**Filters:**
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `lpf` | `["lpf", "<freq>"]` | Low-pass cutoff (Hz). Lower = warmer, muffled. |
+| `hpf` | `["hpf", "<freq>"]` | High-pass cutoff (Hz). Higher = thinner, airy. |
+| `bpf` | `["bpf", "<freq>"]` | Bandpass center frequency (Hz). |
+| `lpq` | `["lpq", "<value>"]` | Lowpass resonance (0-50). Boosts near cutoff. |
+| `hpq` | `["hpq", "<value>"]` | Highpass resonance (0-50). |
+| `bpq` | `["bpq", "<value>"]` | Bandpass Q (resonance). Higher = narrower band. |
+| `ftype` | `["ftype", "<type>"]` | Filter circuit type: `12db`, `ladder`, `24db`. |
+| `vowel` | `["vowel", "<a\|e\|i\|o\|u>"]` | Formant filter — vocal vowel shaping. Pattern cycles through shapes. |
+
+**ADSR (amplitude envelope):**
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `attack` | `["attack", "<seconds>"]` | Fade-in time. `0` = instant. |
+| `decay` | `["decay", "<seconds>"]` | Time from peak to sustain level. |
+| `sustain` | `["sustain", "<seconds>"]` | Note duration. Longer = droning. |
+| `release` | `["release", "<seconds>"]` | Fade-out after note ends. `0` = hard cut. |
+
+**Filter envelope (LP/HP/BP):**
+
+Each filter has its own ADSR envelope. Replace `lp` with `hp` or `bp` for highpass/bandpass variants.
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `lpenv` | `["lpenv", "<depth-hz>"]` | LP filter envelope depth in Hz. |
+| `lpattack` | `["lpattack", "<seconds>"]` | LP envelope attack time. |
+| `lpdecay` | `["lpdecay", "<seconds>"]` | LP envelope decay time. |
+| `lpsustain` | `["lpsustain", "<0-1>"]` | LP envelope sustain level. |
+| `lprelease` | `["lprelease", "<seconds>"]` | LP envelope release time. |
+| `hpenv` | `["hpenv", "<depth-hz>"]` | HP filter envelope depth in Hz. |
+| `hpattack` | `["hpattack", "<seconds>"]` | HP envelope attack time. |
+| `hpdecay` | `["hpdecay", "<seconds>"]` | HP envelope decay time. |
+| `hpsustain` | `["hpsustain", "<0-1>"]` | HP envelope sustain level. |
+| `hprelease` | `["hprelease", "<seconds>"]` | HP envelope release time. |
+| `bpenv` | `["bpenv", "<depth-hz>"]` | BP filter envelope depth in Hz. |
+| `bpattack` | `["bpattack", "<seconds>"]` | BP envelope attack time. |
+| `bpdecay` | `["bpdecay", "<seconds>"]` | BP envelope decay time. |
+| `bpsustain` | `["bpsustain", "<0-1>"]` | BP envelope sustain level. |
+| `bprelease` | `["bprelease", "<seconds>"]` | BP envelope release time. |
+| `fanchor` | `["fanchor", "<value>"]` | Filter envelope anchor point. |
+
+**Pitch envelope:**
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `penv` | `["penv", "<semitones>"]` | Pitch envelope depth in semitones. |
+| `pattack` | `["pattack", "<seconds>"]` | Pitch envelope attack time. |
+| `pdecay` | `["pdecay", "<seconds>"]` | Pitch envelope decay time. |
+| `prelease` | `["prelease", "<seconds>"]` | Pitch envelope release time. |
+| `pcurve` | `["pcurve", "<0-1>"]` | Pitch curve. 0 = linear, 1 = exponential. |
+| `panchor` | `["panchor", "<0-1>"]` | Pitch envelope anchor point. |
+
+**FM synthesis:**
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `fm` | `["fm", "<index>"]` | FM modulation index. Higher = more harmonics. |
+| `fmh` | `["fmh", "<ratio>"]` | FM harmonicity ratio. Integer = harmonic, fractional = inharmonic. |
+| `fmattack` | `["fmattack", "<seconds>"]` | FM envelope attack time. |
+| `fmdecay` | `["fmdecay", "<seconds>"]` | FM envelope decay time. |
+| `fmsustain` | `["fmsustain", "<0-1>"]` | FM envelope sustain level. |
+| `fmenv` | `["fmenv", "<type>"]` | FM envelope type: `lin` (linear) or `exp` (exponential). |
+
+**Vibrato:**
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `vib` | `["vib", "<hz>"]` | Vibrato frequency in Hz. |
+| `vibmod` | `["vibmod", "<semitones>"]` | Vibrato depth in semitones. |
+
+**Tremolo (loop-only, worklet):**
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `tremolodepth` | `["tremolodepth", "<0-1>"]` | Tremolo depth. |
+| `tremolosync` | `["tremolosync", "<cycles>"]` | Tremolo speed in cycles. |
+| `tremoloskew` | `["tremoloskew", "<0-1>"]` | Tremolo waveform skew. |
+| `tremolophase` | `["tremolophase", "<value>"]` | Tremolo phase offset. |
+| `tremoloshape` | `["tremoloshape", "<shape>"]` | Waveform: `tri`, `square`, `sine`, `saw`, `ramp`. |
+
+**Distortion:**
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `crush` | `["crush", "<1-16>"]` | Bit crush. 1 = extreme, 16 = clean. |
+| `shape` | `["shape", "<0-1>"]` | Soft saturation/warmth. |
+| `distort` | `["distort", "<amount>"]` | Waveshaping distortion (loop-only, worklet). |
+| `coarse` | `["coarse", "<factor>"]` | Sample rate reduction. Higher = more lo-fi. |
+
+**Dynamics:**
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `gain` | `["gain", "<0.0-1.0>"]` | Base volume baked into the definition. |
+| `velocity` | `["velocity", "<0-1>"]` | Velocity — scales volume and brightness. |
+| `postgain` | `["postgain", "<value>"]` | Post-effects gain multiplier. |
+| `compressor` | `["compressor", "<value>"]` | Dynamics compressor amount. |
+
+**Sample manipulation:**
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `begin` | `["begin", "<0-1>"]` | Sample start point. |
+| `end` | `["end", "<0-1>"]` | Sample end point. |
+| `speed` | `["speed", "<value>"]` | Playback speed. 1 = normal, 2 = double, -1 = reverse. |
+| `cut` | `["cut", "<group>"]` | Cut group — sounds in the same group cut each other off. |
+| `loop` | `["loop", "<0\|1>"]` | Enable sample looping. |
+| `loop-begin` | `["loop-begin", "<0-1>"]` | Loop start point. |
+| `loop-end` | `["loop-end", "<0-1>"]` | Loop end point. |
+| `loop-at` | `["loop-at", "<cycles>"]` | Fit sample to N cycles. |
+| `clip` | `["clip", "<value>"]` | Signal clipping / legato mode. |
+| `fit` | `["fit", "<value>"]` | Match sample duration to event length. |
+| `chop` | `["chop", "<n>"]` | Divide sample into N equal parts (loop-only). |
+| `striate` | `["striate", "<n>"]` | Progressive slice playback (loop-only). |
+
+**Effects:**
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `room` | `["room", "<0-1>"]` | Reverb wet/dry. |
+| `roomsize` | `["roomsize", "<1-10>"]` | Reverb room size. |
+| `roomfade` | `["roomfade", "<value>"]` | Reverb fade time. |
+| `roomlp` | `["roomlp", "<freq>"]` | Reverb lowpass — darkens reverb tail. |
+| `roomdim` | `["roomdim", "<freq>"]` | Reverb damping frequency. |
+| `delay` | `["delay", "<time>", "<feedback>"]` | Echo. Time = spacing, feedback = repeats. |
+| `delaytime` | `["delaytime", "<0-1>"]` | Delay time (standalone). |
+| `delayfeedback` | `["delayfeedback", "<0-1>"]` | Delay feedback (standalone). |
+| `phaser` | `["phaser", "<hz>"]` | Phaser speed. |
+| `phaserdepth` | `["phaserdepth", "<0-1>"]` | Phaser depth. |
+| `phasercenter` | `["phasercenter", "<freq>"]` | Phaser center frequency (Hz). |
+| `phasersweep` | `["phasersweep", "<freq>"]` | Phaser sweep range (Hz). |
+
+**Panning & stereo:**
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `pan` | `["pan", "<-1 to 1>"]` | Stereo position. -1 = left, 0 = centre, 1 = right. |
+| `jux` | `["jux", "rev"]` | Stereo width — normal left, reversed right. |
+| `orbit` | `["orbit", "<int>"]` | Global effects bus context. |
+| `dry` | `["dry", "<0-1>"]` | Dry (unprocessed) output amount. |
+| `xfade` | `["xfade", "<0-1>"]` | Crossfade between patterns. |
+
+**Time/Pattern (all loop-only):**
+
+| Tag | Shape | Desc |
+|-----|-------|------|
+| `slow` | `["slow", "<factor>"]` | Stretch cycle — slower playback. |
+| `fast` | `["fast", "<factor>"]` | Compress cycle — faster playback. |
+| `rev` | `["rev"]` | Reverse pattern order within each cycle. |
+| `palindrome` | `["palindrome"]` | Play forward then backward — mirrored loop. |
+| `degrade-by` | `["degrade-by", "<0-1>"]` | Random event dropout each cycle. |
+| `rand` | `["rand", "<min>", "<max>"]` | Random gain per event. |
+| `arp` | `["arp", "<up\|down\|updown>"]` | Arpeggiate chords. |
+| `early` | `["early", "<value>"]` | Nudge events earlier in time. |
+| `late` | `["late", "<value>"]` | Nudge events later in time. |
+| `swing` | `["swing", "<value>"]` | Swing — offsets every other event. |
+| `iter` | `["iter", "<n>"]` | Progressive shift — rotate pattern each cycle. |
+| `ply` | `["ply", "<n>"]` | Repeat each event N times within its slot. |
+| `stack` | `["stack", "<a-tag>, ..."]` | Layer multiple sound events simultaneously. |
 
 **Content field:** optional.
 
