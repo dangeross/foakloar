@@ -445,7 +445,7 @@ function SoundPreview({ tags, onTagsChange }) {
     setEditMode(false);
   };
 
-  const hasSource = tags.some((t) => t[0] === 'note' || t[0] === 'noise' || t[0] === 'oscillator');
+  const hasSource = tags.some((t) => t[0] === 'note' || t[0] === 'noise' || t[0] === 'oscillator' || t[0] === 's');
 
   return (
     <div className="mb-3">
@@ -552,7 +552,7 @@ function SoundPreview({ tags, onTagsChange }) {
 }
 
 const SOUND_TAG_NAMES = new Set([
-  'note', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan',
+  'note', 's', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan',
   'lpf', 'hpf', 'vowel', 'crush', 'shape', 'room', 'roomsize',
   'delay', 'rev', 'palindrome', 'degrade-by', 'rand', 'jux', 'arp',
   'sustain', 'attack', 'release', 'sample',

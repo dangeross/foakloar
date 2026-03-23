@@ -214,12 +214,12 @@ Enter the room and use `talk to <noun>` to start the conversation. Walk through 
 
 ## Tips
 
-- **Dialogue text in content, not text tags.** The `content` field of a dialogue event is the NPC's speech. Do not use `["text", "..."]` tags — they do not exist in the dialogue schema.
-- **Noun aliases matter.** Players will try different names for the same NPC. Add common alternatives: `keeper`, `innkeeper`, `barkeep` for a tavern keeper; `fisherman`, `old man` for an old fisherman. The first value in the `noun` tag is the primary name.
-- **Do not add `examine` to verb tags.** Examine is a built-in command. It works automatically on any event with a `noun` tag.
-- **Keep early dialogue simple.** Start with 2-3 options per node and 2-3 levels of depth. Deep trees with many branches become hard to maintain.
-- **Use dialogue to foreshadow.** NPCs are a natural way to hint at quests, recipes, and puzzles the player will encounter later. The tavern keeper mentions needing ingredients (future quest tutorial). The fisherman describes how to make a fishing rod (future recipe tutorial).
-- **Roaming speed affects encounters.** A speed of 3 means the NPC moves every 3 player moves. Lower values make the NPC harder to pin down. Higher values keep it roughly in place. For tutorial purposes, keep the speed moderate.
+- **Dialogue text in content, not text tags** — The `content` field of a dialogue event is the NPC's speech. Do not use `["text", "..."]` tags — they do not exist in the dialogue schema.
+- **Noun aliases matter** — Players will try different names for the same NPC. Add common alternatives: `keeper`, `innkeeper`, `barkeep` for a tavern keeper; `fisherman`, `old man` for an old fisherman. The first value in the `noun` tag is the primary name.
+- **Do not add `examine` to verb tags** — Examine is a built-in command. It works automatically on any event with a `noun` tag.
+- **Keep early dialogue simple** — Start with 2-3 options per node and 2-3 levels of depth. Deep trees with many branches become hard to maintain.
+- **Use dialogue to foreshadow** — NPCs are a natural way to hint at quests, recipes, and puzzles the player will encounter later. The tavern keeper mentions needing ingredients (future quest tutorial). The fisherman describes how to make a fishing rod (future recipe tutorial).
+- **Roaming speed affects encounters** — A speed of 3 means the NPC moves every 3 player moves. Lower values make the NPC harder to pin down. Higher values keep it roughly in place. For tutorial purposes, keep the speed moderate.
 
 ---
 

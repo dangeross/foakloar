@@ -444,7 +444,6 @@ export const TAG_SCHEMAS = {
   palindrome:   { label: 'Palindrome', desc: 'Play pattern forward then backward — mirrored loop. No value needed.', fields: [] },
   // Texture & randomness
   'degrade-by': { label: 'Degrade By', desc: 'Randomly drop events each cycle (0.0–1.0). 0.3 = ~30% dropped.', fields: [{ name: 'amount', type: 'text', required: true, placeholder: '0.3' }] },
-  rand:         { label: 'Random Gain', desc: 'Random volume per event. Two values: min, max.', fields: [{ name: 'min', type: 'text', required: true, placeholder: '0.1' }, { name: 'max', type: 'text', required: true, placeholder: '0.4' }] },
   // Stereo & layering
   jux:          { label: 'Jux', desc: 'Stereo width — normal in left, reversed in right.', fields: [{ name: 'fn', type: 'select', required: true, options: ['rev'] }] },
   arp:          { label: 'Arpeggio', desc: 'Arpeggiate chords. up = low-high, down = high-low.', fields: [{ name: 'direction', type: 'select', required: true, options: ['up', 'down', 'updown'] }] },
@@ -596,20 +595,20 @@ export const TAG_SCHEMAS = {
 /** Which tags are valid for each event type */
 export const TAGS_BY_EVENT_TYPE = {
   place:       ['title', 'content-type', 'exit', 'item', 'feature', 'npc', 'clue', 'noun', 'state', 'transition', 'requires', 'requires-not', 'on-enter', 'on-player-health', 'media', 'sound', 'bpm', 'cw', 'puzzle'],
-  portal:      ['title', 'exit', 'state', 'transition', 'requires', 'requires-not', 'consequence', 'cw', 'sound'],
-  item:        ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-move', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'damage', 'hit-chance', 'media', 'sound'],
-  feature:     ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'media', 'sound'],
+  portal:      ['title', 'exit', 'state', 'transition', 'requires', 'requires-not', 'consequence', 'cw', 'content-type', 'sound'],
+  item:        ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-move', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'damage', 'hit-chance', 'content-type', 'media', 'sound'],
+  feature:     ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'content-type', 'media', 'sound'],
   clue:        ['title', 'noun', 'state', 'transition', 'content-type', 'requires', 'requires-not', 'media', 'puzzle', 'sound'],
   puzzle:      ['puzzle-type', 'answer-hash', 'salt', 'ordered', 'requires', 'on-complete', 'on-fail', 'counter', 'on-counter', 'content-type', 'sound'],
-  recipe:      ['title', 'noun', 'verb', 'state', 'transition', 'requires', 'on-complete', 'on-fail', 'counter', 'on-counter', 'ordered', 'sound'],
-  payment:     ['title', 'amount', 'unit', 'lnurl', 'on-complete', 'sound'],
-  npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health', 'on-player-health', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not', 'sound'],
-  dialogue:    ['option', 'requires', 'requires-not', 'on-enter', 'sound'],
-  consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage', 'set-state', 'sound'],
-  sound:       ['note', 's', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan', 'lpf', 'hpf', 'bpf', 'bpq', 'lpq', 'hpq', 'ftype', 'vowel', 'crush', 'shape', 'distort', 'coarse', 'room', 'roomsize', 'roomfade', 'roomlp', 'roomdim', 'delay', 'delaytime', 'delayfeedback', 'phaser', 'phaserdepth', 'phasercenter', 'phasersweep', 'rev', 'palindrome', 'degrade-by', 'rand', 'jux', 'arp', 'sustain', 'attack', 'decay', 'release', 'lpenv', 'lpattack', 'lpdecay', 'lpsustain', 'lprelease', 'hpenv', 'hpattack', 'hpdecay', 'hpsustain', 'hprelease', 'bpenv', 'bpattack', 'bpdecay', 'bpsustain', 'bprelease', 'fanchor', 'penv', 'pattack', 'pdecay', 'prelease', 'pcurve', 'panchor', 'fm', 'fmh', 'fmattack', 'fmdecay', 'fmsustain', 'fmenv', 'vib', 'vibmod', 'tremolodepth', 'tremolosync', 'tremoloskew', 'tremolophase', 'tremoloshape', 'velocity', 'postgain', 'compressor', 'n', 'begin', 'end', 'speed', 'cut', 'loop', 'loop-begin', 'loop-end', 'loop-at', 'clip', 'chop', 'striate', 'fit', 'orbit', 'dry', 'xfade', 'early', 'late', 'swing', 'iter', 'ply', 'sample'],
+  recipe:      ['title', 'noun', 'verb', 'state', 'transition', 'requires', 'on-complete', 'on-fail', 'counter', 'on-counter', 'ordered', 'content-type', 'sound'],
+  payment:     ['title', 'amount', 'unit', 'lnurl', 'on-complete', 'content-type', 'sound'],
+  npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health', 'on-player-health', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not', 'content-type', 'sound'],
+  dialogue:    ['option', 'requires', 'requires-not', 'on-enter', 'content-type', 'sound'],
+  consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage', 'set-state', 'content-type', 'sound'],
+  sound:       ['note', 's', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan', 'lpf', 'hpf', 'bpf', 'bpq', 'lpq', 'hpq', 'ftype', 'vowel', 'crush', 'shape', 'distort', 'coarse', 'room', 'roomsize', 'roomfade', 'roomlp', 'roomdim', 'delay', 'delaytime', 'delayfeedback', 'phaser', 'phaserdepth', 'phasercenter', 'phasersweep', 'rev', 'palindrome', 'degrade-by', 'jux', 'arp', 'sustain', 'attack', 'decay', 'release', 'lpenv', 'lpattack', 'lpdecay', 'lpsustain', 'lprelease', 'hpenv', 'hpattack', 'hpdecay', 'hpsustain', 'hprelease', 'bpenv', 'bpattack', 'bpdecay', 'bpsustain', 'bprelease', 'fanchor', 'penv', 'pattack', 'pdecay', 'prelease', 'pcurve', 'panchor', 'fm', 'fmh', 'fmattack', 'fmdecay', 'fmsustain', 'fmenv', 'vib', 'vibmod', 'tremolodepth', 'tremolosync', 'tremoloskew', 'tremolophase', 'tremoloshape', 'velocity', 'postgain', 'compressor', 'n', 'begin', 'end', 'speed', 'cut', 'loop', 'loop-begin', 'loop-end', 'loop-at', 'clip', 'chop', 'striate', 'fit', 'orbit', 'dry', 'xfade', 'early', 'late', 'swing', 'iter', 'ply', 'sample'],
   world:       ['title', 'author', 'version', 'lang', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'on-player-health', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'bpm', 'samples', 'content-type', 'media', 'w'],
   vouch:       ['pubkey', 'scope', 'can-vouch'],
-  quest:       ['title', 'quest-type', 'involves', 'requires', 'requires-not', 'on-complete', 'sound'],
+  quest:       ['title', 'quest-type', 'involves', 'requires', 'requires-not', 'on-complete', 'content-type', 'sound'],
 };
 
 /**

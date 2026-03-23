@@ -522,6 +522,7 @@ function buildStrudelCodeFromRef(soundRef, volume) {
  */
 function buildStrudelCodeFromEvent(soundEvent, mixVolume) {
   // Helper: if value contains spaces or mini-notation, quote it; otherwise use raw number
+  // If value is a number, use raw. Otherwise quote as mini-notation string.
   const num = (v) => isNaN(Number(v)) ? `"${v}"` : parseFloat(v);
 
   const CHAIN_TAG_MAP = {
@@ -670,12 +671,6 @@ function buildStrudelCodeFromEvent(soundEvent, mixVolume) {
       const time = parseFloat(val) || 0.5;
       const feedback = parseFloat(tag[2]) || 0.3;
       code += `.delay(${time}, ${feedback})`;
-      continue;
-    }
-    if (name === 'rand') {
-      const min = parseFloat(val) || 0;
-      const max = parseFloat(tag[2]) || 1;
-      code += `.gain(rand.range(${min}, ${max}))`;
       continue;
     }
     if (name === 'gain') {
@@ -898,10 +893,6 @@ export function decompileStrudelCode(code) {
   // degradeBy
   const degradeMatch = code.match(/\.degradeBy\(([\d.]+)\)/);
   if (degradeMatch) tags.push(['degrade-by', degradeMatch[1]]);
-
-  // rand (gain with rand.range)
-  const randMatch = code.match(/\.gain\(rand\.range\(([\d.]+),\s*([\d.]+)\)\)/);
-  if (randMatch) tags.push(['rand', randMatch[1], randMatch[2]]);
 
   // jux
   const juxMatch = code.match(/\.jux\((\w+)\)/);

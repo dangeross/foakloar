@@ -213,13 +213,13 @@ Here is the step-by-step process for adding combat to a world:
 
 ## Tips
 
-- **Weapon selection.** If the player types `attack rat` without specifying a weapon, the client picks the first inventory item with a `damage` tag. Players can be explicit: `attack rat with sword`.
-- **Hit chance.** Use `hit-chance` on both weapons and NPCs for miss/dodge mechanics. Omit it for guaranteed hits (Zork-style).
-- **Scaling difficulty.** Adjust NPC `health`, `damage`, and `hit-chance` to tune difficulty. High health + high damage = souls-like. Low health + fixed damage = Zork-simple.
-- **Multiple NPCs.** A room can have multiple NPCs. Players target by noun. The client prompts for disambiguation if needed.
-- **Healing.** Add a healing item with `["on-interact", "drink", "heal", "6"]` and `["on-interact", "drink", "consume-item", ""]` to let players recover health.
-- **Gentle deaths.** A consequence with only `respawn` is forgiving — the player keeps everything. Add `clears inventory` for stakes.
-- **NPC state sync.** When an NPC's state changes via `set-state`, it writes to both `npcStates` and the player's `states` map so that `requires` tags can check NPC state elsewhere.
+- **Weapon selection** — If the player types `attack rat` without specifying a weapon, the client picks the first inventory item with a `damage` tag. Players can be explicit: `attack rat with sword`.
+- **Hit chance** — Use `hit-chance` on both weapons and NPCs for miss/dodge mechanics. Omit it for guaranteed hits (Zork-style).
+- **Scaling difficulty** — Adjust NPC `health`, `damage`, and `hit-chance` to tune difficulty. High health + high damage = souls-like. Low health + fixed damage = Zork-simple.
+- **Multiple NPCs** — A room can have multiple NPCs. Players target by noun. The client prompts for disambiguation if needed.
+- **Healing** — Add a healing item with `["on-interact", "drink", "heal", "6"]` and `["on-interact", "drink", "consume-item", ""]` to let players recover health.
+- **Gentle deaths** — A consequence with only `respawn` is forgiving — the player keeps everything. Add `clears inventory` for stakes.
+- **NPC state sync** — When an NPC's state changes via `set-state`, it writes to both `npcStates` and the player's `states` map so that `requires` tags can check NPC state elsewhere.
 
 ---
 

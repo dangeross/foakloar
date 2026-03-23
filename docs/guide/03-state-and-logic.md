@@ -260,19 +260,13 @@ Add `["item", "30078:<PUBKEY>:my-world:item:lantern"]` to the place where the la
 
 ## Tips
 
-- **Requires uses event refs, not strings.** Always use the full `30078:<pubkey>:<d-tag>` format. There is no flag system — the engine resolves the reference to check the event's actual state.
-
-- **Transition text order matters.** The client shows text from the first matching transition. Make sure each state change path has a corresponding `transition` tag.
-
-- **Terminal transitions prevent confusion.** A transition like `["transition", "lit", "lit", "The lantern is already burning."]` tells the player their action had no effect, rather than silently doing nothing.
-
-- **Counter thresholds fire once.** The `on-counter` trigger fires when the counter crosses the threshold, not every time the counter changes while above/below it. The client tracks crossings to prevent repeat firing.
-
-- **Counter messages come from transitions.** Put your player-facing text in `transition` tags, not in `on-counter` tags. The counter trigger fires the `set-state` action, and the transition provides the prose.
-
-- **Multiple requires = AND logic.** If an event has three `requires` tags, all three must pass. The first failure description is shown to the player.
-
-- **Blank state on items = held in any state.** Use blank state when you just need the player to have the item. Use a specific state (like `lit`) when the item must be in a particular condition.
+- **Requires uses event refs, not strings** — Always use the full `30078:<pubkey>:<d-tag>` format. There is no flag system — the engine resolves the reference to check the event's actual state.
+- **Transition text order matters** — The client shows text from the first matching transition. Make sure each state change path has a corresponding `transition` tag.
+- **Terminal transitions prevent confusion** — A transition like `["transition", "lit", "lit", "The lantern is already burning."]` tells the player their action had no effect, rather than silently doing nothing.
+- **Counter thresholds fire once** — The `on-counter` trigger fires when the counter crosses the threshold, not every time the counter changes while above/below it. The client tracks crossings to prevent repeat firing.
+- **Counter messages come from transitions** — Put your player-facing text in `transition` tags, not in `on-counter` tags. The counter trigger fires the `set-state` action, and the transition provides the prose.
+- **Multiple requires = AND logic** — If an event has three `requires` tags, all three must pass. The first failure description is shown to the player.
+- **Blank state on items = held in any state** — Use blank state when you just need the player to have the item. Use a specific state (like `lit`) when the item must be in a particular condition.
 
 ---
 

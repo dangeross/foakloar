@@ -34,7 +34,7 @@ The `quest-type` tag takes an optional third element that controls what happens 
 ["quest-type", "endgame"]
 ```
 
-The win screen renders, and the game stops accepting commands. The player sees the closing prose and is offered two options: restart or share. This is a definitive ending — the story is over.
+The win screen renders, and the game stops accepting commands. The player sees the closing prose and is offered the option to restart (or continue exploring if the endgame is soft). This is a definitive ending — the story is over.
 
 **When to use:** Linear stories with a single conclusion. The player has reached the end and there is nothing more to do.
 
@@ -247,19 +247,13 @@ Publish all events. The endgame quest is invisible to the player — it fires au
 
 ## Tips
 
-**Endgame quests are invisible.** They never appear in the quest log. The player discovers the ending by reaching it, not by tracking it.
-
-**Soft endgame for tutorials.** Use `["quest-type", "endgame", "open"]` for tutorial worlds so the player can continue exploring after seeing the ending.
-
-**Gate the ending location.** Use a portal with `requires` to prevent the player from stumbling into the ending area before they are ready. The prerequisite quest's completion state is a natural gate.
-
-**Closing prose is markdown.** Use italics, line breaks, and emphasis to shape the final text. This is the last thing the player reads — make it count.
-
-**Cascade evaluation.** The client evaluates all quests (including endgame) on every state change. Completing a prerequisite quest immediately re-evaluates the endgame quest. If all conditions pass, the ending fires in the same tick — the player sees the result instantly.
-
-**Restart is always available.** Both hard and soft endings offer restart. Design worlds with replay in mind if you have multiple endings.
-
-**Location as condition.** Use a landmark feature with `on-enter` to track whether the player has reached a specific place. The endgame quest can then require that landmark in state `visited`. This ensures the ending only fires when the player is physically present at the conclusion point.
+- **Endgame quests are invisible** — They never appear in the quest log. The player discovers the ending by reaching it, not by tracking it.
+- **Soft endgame for tutorials** — Use `["quest-type", "endgame", "open"]` for tutorial worlds so the player can continue exploring after seeing the ending.
+- **Gate the ending location** — Use a portal with `requires` to prevent the player from stumbling into the ending area before they are ready. The prerequisite quest's completion state is a natural gate.
+- **Closing prose is markdown** — Use italics, line breaks, and emphasis to shape the final text. This is the last thing the player reads — make it count.
+- **Cascade evaluation** — The client evaluates all quests (including endgame) on every state change. Completing a prerequisite quest immediately re-evaluates the endgame quest. If all conditions pass, the ending fires in the same tick — the player sees the result instantly.
+- **Restart is always available** — Both hard and soft endings offer restart. Design worlds with replay in mind if you have multiple endings.
+- **Location as condition** — Use a landmark feature with `on-enter` to track whether the player has reached a specific place. The endgame quest can then require that landmark in state `visited`. This ensures the ending only fires when the player is physically present at the conclusion point.
 
 ---
 

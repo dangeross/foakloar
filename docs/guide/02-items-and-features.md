@@ -176,13 +176,13 @@ Features often have richer interactions than items. Use `verb`, `state`, `transi
 
 ## Tips
 
-- **Noun aliases matter.** Players will try many phrasings — `key`, `rusty key`, `the key`, `the rusty key`. Give your noun tag enough aliases to cover likely inputs. Articles are stripped automatically, so focus on adjective+noun forms.
-- **One verb tag per canonical verb.** Don't combine unrelated verbs into one tag. `["verb", "read"]` and `["verb", "open"]` should be separate tags.
-- **Do not add `examine` to verb tags.** It is built-in and always works. Same for `take`, `drop`, `look`, and `inventory`.
-- **on-interact references canonical verbs only.** If your verb tag is `["verb", "read", "peruse"]`, your on-interact must use `read`, not `peruse`.
-- **Content is the examine text.** The `content` field on items and features is what the player sees when they `examine` something. Make it descriptive.
-- **Mention things in room descriptions.** Bold the names of items and features in the place's `content` so players know they are there: `An **old lantern** sits on a crate.`
-- **`title` is display, `noun` is parser.** The title `"A Rusty Key"` includes the article for display purposes. The noun tag `["noun", "key", "rusty key"]` omits articles because the parser strips them.
+- **Noun aliases matter** — Players will try many phrasings — `key`, `rusty key`, `the key`, `the rusty key`. Give your noun tag enough aliases to cover likely inputs. Articles are stripped automatically, so focus on adjective+noun forms.
+- **One verb tag per canonical verb** — Don't combine unrelated verbs into one tag. `["verb", "read"]` and `["verb", "open"]` should be separate tags.
+- **Do not add `examine` to verb tags** — It is built-in and always works. Same for `take`, `drop`, `look`, and `inventory`.
+- **on-interact references canonical verbs only** — If your verb tag is `["verb", "read", "peruse"]`, your on-interact must use `read`, not `peruse`.
+- **Content is the examine text** — The `content` field on items and features is what the player sees when they `examine` something. Make it descriptive.
+- **Mention things in room descriptions** — Bold the names of items and features in the place's `content` so players know they are there: `An **old lantern** sits on a crate.`
+- **`title` is display, `noun` is parser** — The title `"A Rusty Key"` includes the article for display purposes. The noun tag `["noun", "key", "rusty key"]` omits articles because the parser strips them.
 
 ---
 

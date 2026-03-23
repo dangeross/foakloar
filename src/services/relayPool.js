@@ -19,14 +19,19 @@ export class RelayPool {
   #seen = new Set();
 
   /** Connect to a list of relay URLs. Tolerates individual failures. */
-  async connect(urls) {
+  async connect(urls, timeoutMs = 5000) {
     const unique = [...new Set(urls)].slice(0, MAX_RELAYS);
     const tasks = unique
       .filter((url) => !this.#relays.has(url))
       .map(async (url) => {
         this.#status.set(url, 'connecting');
         try {
-          const relay = await Relay.connect(url);
+          const relay = await Promise.race([
+            Relay.connect(url),
+            new Promise((_, reject) =>
+              setTimeout(() => reject(new Error('Connection timeout')), timeoutMs)
+            ),
+          ]);
           this.#relays.set(url, relay);
           this.#status.set(url, 'connected');
           console.log(`[pool] Connected to ${url}`);

@@ -603,7 +603,6 @@ Each filter has its own ADSR envelope. Replace `lp` with `hp` or `bp` for highpa
 | `rev` | `["rev"]` | Reverse pattern order within each cycle. |
 | `palindrome` | `["palindrome"]` | Play forward then backward — mirrored loop. |
 | `degrade-by` | `["degrade-by", "<0-1>"]` | Random event dropout each cycle. |
-| `rand` | `["rand", "<min>", "<max>"]` | Random gain per event. |
 | `arp` | `["arp", "<up\|down\|updown>"]` | Arpeggiate chords. |
 | `early` | `["early", "<value>"]` | Nudge events earlier in time. |
 | `late` | `["late", "<value>"]` | Nudge events later in time. |

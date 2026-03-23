@@ -59,596 +59,1723 @@
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:world"],
-        ["t", "cartographers-instrument"],
-        ["w", "foakloar"],
-        ["type", "world"],
-        ["title", "The Cartographer's Instrument"],
-        ["author", "foakloar"],
-        ["version", "1.0.0"],
-        ["lang", "en"],
-        ["tag", "showcase"],
-        ["tag", "sound"],
-        ["tag", "puzzle"],
-        ["tag", "observatory"],
-        ["start", "30078:<PUBKEY>:cartographers-instrument:place:observatory-entrance"],
-        ["relay", "wss://relay.primal.net"],
-        ["collaboration", "closed"],
-        ["theme", "custom"],
-        ["colour", "bg", "#0a0a1a"],
-        ["colour", "text", "#b8c0d0"],
-        ["colour", "title", "#c0c8e0"],
-        ["colour", "dim", "#4a5070"],
-        ["colour", "highlight", "#9090c0"],
-        ["colour", "exits", "#6070a0"],
-        ["colour", "item", "#8888b8"],
-        ["colour", "npc", "#a0a0d0"],
-        ["colour", "clue", "#7080b0"],
-        ["colour", "puzzle", "#9090c0"],
-        ["font", "ibm-plex-mono"],
-        ["cursor", "beam"],
-        ["effects", "crt"],
-        ["scanlines", "0.3"],
-        ["glow", "0.4"],
-        ["flicker", "off"],
-        ["vignette", "0.6"],
-        ["content-type", "text/markdown"],
-        ["bpm", "72"],
-        ["sound", "30078:<PUBKEY>:cartographers-instrument:sound:space-drone", "ambient", "0.4"]
+        [
+          "d",
+          "cartographers-instrument:world"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "The Cartographer's Instrument"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "showcase"
+        ],
+        [
+          "tag",
+          "sound"
+        ],
+        [
+          "tag",
+          "puzzle"
+        ],
+        [
+          "tag",
+          "observatory"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:cartographers-instrument:place:observatory-entrance"
+        ],
+        [
+          "relay",
+          "wss://relay.primal.net"
+        ],
+        [
+          "collaboration",
+          "closed"
+        ],
+        [
+          "theme",
+          "custom"
+        ],
+        [
+          "colour",
+          "bg",
+          "#0a0a1a"
+        ],
+        [
+          "colour",
+          "text",
+          "#b8c0d0"
+        ],
+        [
+          "colour",
+          "title",
+          "#c0c8e0"
+        ],
+        [
+          "colour",
+          "dim",
+          "#4a5070"
+        ],
+        [
+          "colour",
+          "highlight",
+          "#9090c0"
+        ],
+        [
+          "colour",
+          "exits",
+          "#6070a0"
+        ],
+        [
+          "colour",
+          "item",
+          "#8888b8"
+        ],
+        [
+          "colour",
+          "npc",
+          "#a0a0d0"
+        ],
+        [
+          "colour",
+          "clue",
+          "#7080b0"
+        ],
+        [
+          "colour",
+          "puzzle",
+          "#9090c0"
+        ],
+        [
+          "font",
+          "ibm-plex-mono"
+        ],
+        [
+          "cursor",
+          "beam"
+        ],
+        [
+          "effects",
+          "crt"
+        ],
+        [
+          "scanlines",
+          "0.3"
+        ],
+        [
+          "glow",
+          "0.4"
+        ],
+        [
+          "flicker",
+          "off"
+        ],
+        [
+          "vignette",
+          "0.6"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "bpm",
+          "72"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographers-instrument:sound:space-drone",
+          "ambient",
+          "0.4"
+        ]
       ],
       "content": "An ancient observatory, abandoned for centuries. The stars still turn above its broken dome.\n\nSomewhere inside, an instrument waits to complete a composition that was never finished."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:sound:space-drone"],
-        ["t", "cartographers-instrument"],
-        ["type", "sound"],
-        ["note", "c1 ~ ~ ~"],
-        ["s", "sine"],
-        ["lpf", "120"],
-        ["slow", "8"],
-        ["gain", "0.3"],
-        ["room", "0.6"],
-        ["roomsize", "8"]
+        [
+          "d",
+          "cartographers-instrument:sound:space-drone"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c1 ~ ~ ~"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "lpf",
+          "120"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "room",
+          "0.6"
+        ],
+        [
+          "roomsize",
+          "8"
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:sound:entrance-wind"],
-        ["t", "cartographers-instrument"],
-        ["type", "sound"],
-        ["noise", ""],
-        ["lpf", "400"],
-        ["hpf", "100"],
-        ["degrade-by", "0.4"],
-        ["rand", "0.05", "0.15"],
-        ["slow", "6"],
-        ["gain", "0.25"]
+        [
+          "d",
+          "cartographers-instrument:sound:entrance-wind"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "white"
+        ],
+        [
+          "lpf",
+          "400"
+        ],
+        [
+          "hpf",
+          "100"
+        ],
+        [
+          "degrade-by",
+          "0.5"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "gain",
+          "0.3"
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:sound:lunar-drone"],
-        ["t", "cartographers-instrument"],
-        ["type", "sound"],
-        ["note", "c2 ~ c2 ~"],
-        ["s", "triangle"],
-        ["lpf", "300"],
-        ["slow", "4"],
-        ["gain", "0.35"],
-        ["attack", "1.5"],
-        ["sustain", "3"],
-        ["release", "1.5"],
-        ["room", "0.5"],
-        ["roomsize", "6"]
+        [
+          "d",
+          "cartographers-instrument:sound:lunar-drone"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c2 ~ c2 ~"
+        ],
+        [
+          "s",
+          "triangle"
+        ],
+        [
+          "lpf",
+          "300"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "attack",
+          "1.5"
+        ],
+        [
+          "sustain",
+          "3"
+        ],
+        [
+          "release",
+          "1.5"
+        ],
+        [
+          "room",
+          "0.5"
+        ],
+        [
+          "roomsize",
+          "6"
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:sound:solar-arpeggio"],
-        ["t", "cartographers-instrument"],
-        ["type", "sound"],
-        ["note", "g4 b4 d5 g5"],
-        ["s", "sine"],
-        ["gain", "0.3"],
-        ["attack", "0.05"],
-        ["sustain", "0.8"],
-        ["release", "0.6"],
-        ["delay", "0.25", "0.3"],
-        ["room", "0.4"],
-        ["roomsize", "4"]
+        [
+          "d",
+          "cartographers-instrument:sound:solar-arpeggio"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "g4 b4 d5 g5"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "attack",
+          "0.05"
+        ],
+        [
+          "sustain",
+          "0.8"
+        ],
+        [
+          "release",
+          "0.6"
+        ],
+        [
+          "delay",
+          "0.25",
+          "0.3"
+        ],
+        [
+          "room",
+          "0.4"
+        ],
+        [
+          "roomsize",
+          "4"
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:sound:stellar-melody"],
-        ["t", "cartographers-instrument"],
-        ["type", "sound"],
-        ["note", "e3 ~ g3 e3 ~ b3 ~ e3"],
-        ["s", "triangle"],
-        ["gain", "0.3"],
-        ["slow", "2"],
-        ["attack", "0.3"],
-        ["sustain", "1.5"],
-        ["release", "0.8"],
-        ["room", "0.5"],
-        ["roomsize", "5"],
-        ["pan", "0.3"]
+        [
+          "d",
+          "cartographers-instrument:sound:stellar-melody"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "e3 ~ g3 e3 ~ b3 ~ e3"
+        ],
+        [
+          "s",
+          "triangle"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "slow",
+          "2"
+        ],
+        [
+          "attack",
+          "0.3"
+        ],
+        [
+          "sustain",
+          "1.5"
+        ],
+        [
+          "release",
+          "0.8"
+        ],
+        [
+          "room",
+          "0.5"
+        ],
+        [
+          "roomsize",
+          "5"
+        ],
+        [
+          "pan",
+          "0.3"
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:sound:activation-chime"],
-        ["t", "cartographers-instrument"],
-        ["type", "sound"],
-        ["note", "e5 g5 b5 e6"],
-        ["s", "sine"],
-        ["gain", "0.6"],
-        ["fast", "2"],
-        ["attack", "0.01"],
-        ["sustain", "0.3"],
-        ["release", "1.2"],
-        ["room", "0.7"],
-        ["roomsize", "6"]
+        [
+          "d",
+          "cartographers-instrument:sound:activation-chime"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "e5 g5 b5 e6"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "gain",
+          "0.6"
+        ],
+        [
+          "fast",
+          "2"
+        ],
+        [
+          "attack",
+          "0.01"
+        ],
+        [
+          "sustain",
+          "0.3"
+        ],
+        [
+          "release",
+          "1.2"
+        ],
+        [
+          "room",
+          "0.7"
+        ],
+        [
+          "roomsize",
+          "6"
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:sound:full-composition"],
-        ["t", "cartographers-instrument"],
-        ["type", "sound"],
-        ["note", "c3 e3 g3 c4 e4 g4 c5"],
-        ["s", "triangle"],
-        ["gain", "0.4"],
-        ["slow", "2"],
-        ["attack", "0.5"],
-        ["sustain", "2"],
-        ["release", "1.5"],
-        ["room", "0.7"],
-        ["roomsize", "8"],
-        ["jux", "rev"]
+        [
+          "d",
+          "cartographers-instrument:sound:full-composition"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c3 e3 g3 c4 e4 g4 c5"
+        ],
+        [
+          "s",
+          "triangle"
+        ],
+        [
+          "gain",
+          "0.4"
+        ],
+        [
+          "slow",
+          "2"
+        ],
+        [
+          "attack",
+          "0.5"
+        ],
+        [
+          "sustain",
+          "2"
+        ],
+        [
+          "release",
+          "1.5"
+        ],
+        [
+          "room",
+          "0.7"
+        ],
+        [
+          "roomsize",
+          "8"
+        ],
+        [
+          "jux",
+          "rev"
+        ]
       ],
       "content": ""
     },
-
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:place:observatory-entrance"],
-        ["t", "cartographers-instrument"],
-        ["type", "place"],
-        ["title", "Observatory Entrance"],
-        ["content-type", "text/markdown"],
-        ["exit", "north"],
-        ["item", "30078:<PUBKEY>:cartographers-instrument:item:instrument"],
-        ["sound", "30078:<PUBKEY>:cartographers-instrument:sound:entrance-wind", "layer", "0.5"]
+        [
+          "d",
+          "cartographers-instrument:place:observatory-entrance"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Observatory Entrance"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:cartographers-instrument:item:instrument"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographers-instrument:sound:entrance-wind",
+          "layer",
+          "0.5"
+        ]
       ],
       "content": "Crumbling stone steps ascend through a broken arch. The dome above is shattered — great rents in the copper skin let starlight pour through in silver columns. Dust motes drift in the beams like slow constellations.\n\nThe air smells of old stone and cold metal. Something glints on a pedestal near the entrance."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:place:central-hall"],
-        ["t", "cartographers-instrument"],
-        ["type", "place"],
-        ["title", "Central Hall"],
-        ["content-type", "text/markdown"],
-        ["exit", "south"],
-        ["exit", "west"],
-        ["exit", "east"],
-        ["exit", "up"],
-        ["exit", "down"],
-        ["npc", "30078:<PUBKEY>:cartographers-instrument:npc:cartographer"],
-        ["feature", "30078:<PUBKEY>:cartographers-instrument:feature:lunar-echo"],
-        ["feature", "30078:<PUBKEY>:cartographers-instrument:feature:solar-echo"],
-        ["feature", "30078:<PUBKEY>:cartographers-instrument:feature:stellar-echo"]
+        [
+          "d",
+          "cartographers-instrument:place:central-hall"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Central Hall"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "up"
+        ],
+        [
+          "exit",
+          "down"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:cartographers-instrument:npc:cartographer"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographers-instrument:feature:lunar-echo"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographers-instrument:feature:solar-echo"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographers-instrument:feature:stellar-echo"
+        ]
       ],
       "content": "A grand rotunda opens beneath what remains of the dome. The floor is inlaid with a vast star chart — constellations traced in tarnished silver wire across dark stone. Three corridors branch from the central space: west into shadow, east into a faint golden glow, and a spiral stair climbs upward through the ceiling.\n\nA set of stairs descends into darkness at the centre of the chart."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:place:west-wing"],
-        ["t", "cartographers-instrument"],
-        ["type", "place"],
-        ["title", "West Wing — Lunar Observatory"],
-        ["content-type", "text/markdown"],
-        ["exit", "east"],
-        ["feature", "30078:<PUBKEY>:cartographers-instrument:feature:lunar-resonator"],
-        ["feature", "30078:<PUBKEY>:cartographers-instrument:feature:lunar-chart"]
+        [
+          "d",
+          "cartographers-instrument:place:west-wing"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "West Wing — Lunar Observatory"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographers-instrument:feature:lunar-resonator"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographers-instrument:feature:lunar-chart"
+        ]
       ],
       "content": "A circular chamber lined with curved mirrors that once tracked the moon's passage. The mirrors are tarnished now, their surfaces clouded with age. Lunar phase diagrams cover the walls — waxing, waning, full, dark — each annotated with faded musical notation.\n\nAt the centre of the room stands a stone column topped with a complex arrangement of concentric rings. It hums faintly, waiting."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:place:east-wing"],
-        ["t", "cartographers-instrument"],
-        ["type", "place"],
-        ["title", "East Wing — Solar Observatory"],
-        ["content-type", "text/markdown"],
-        ["exit", "west"],
-        ["feature", "30078:<PUBKEY>:cartographers-instrument:feature:solar-resonator"],
-        ["feature", "30078:<PUBKEY>:cartographers-instrument:feature:solar-chart"]
+        [
+          "d",
+          "cartographers-instrument:place:east-wing"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "East Wing — Solar Observatory"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographers-instrument:feature:solar-resonator"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographers-instrument:feature:solar-chart"
+        ]
       ],
       "content": "Brass instruments and crystal prisms fill this chamber, arranged in precise geometric patterns. Where the starlight strikes the prisms, faint rainbows scatter across the walls. The brass fittings are etched with solar trajectories and harmonic intervals.\n\nA tall brass framework stands at the room's centre — an armillary sphere with tuning forks where the celestial rings should be."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:place:tower"],
-        ["t", "cartographers-instrument"],
-        ["type", "place"],
-        ["title", "The Tower"],
-        ["content-type", "text/markdown"],
-        ["exit", "down"],
-        ["feature", "30078:<PUBKEY>:cartographers-instrument:feature:stellar-resonator"],
-        ["feature", "30078:<PUBKEY>:cartographers-instrument:feature:stellar-chart"]
+        [
+          "d",
+          "cartographers-instrument:place:tower"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Tower"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "exit",
+          "down"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographers-instrument:feature:stellar-resonator"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographers-instrument:feature:stellar-chart"
+        ]
       ],
       "content": "The highest point of the observatory. The dome is entirely gone here — nothing between you and the sky. A great telescope points upward, its brass barrel green with verdigris. The view is staggering: stars beyond counting, the Milky Way a river of light.\n\nBeneath the telescope, a crystalline structure sits on a marble plinth — faceted like a diamond, cold to the touch."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:place:star-chamber"],
-        ["t", "cartographers-instrument"],
-        ["type", "place"],
-        ["title", "The Star Chamber"],
-        ["content-type", "text/markdown"],
-        ["exit", "up"],
-        ["feature", "30078:<PUBKEY>:cartographers-instrument:feature:landmark-star-chamber"],
-        ["on-enter", "player", "set-state", "visited", "30078:<PUBKEY>:cartographers-instrument:feature:landmark-star-chamber"],
-        ["feature", "30078:<PUBKEY>:cartographers-instrument:feature:lunar-echo"],
-        ["feature", "30078:<PUBKEY>:cartographers-instrument:feature:solar-echo"],
-        ["feature", "30078:<PUBKEY>:cartographers-instrument:feature:stellar-echo"],
-        ["sound", "30078:<PUBKEY>:cartographers-instrument:sound:full-composition", "ambient", "0.7"]
+        [
+          "d",
+          "cartographers-instrument:place:star-chamber"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Star Chamber"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ],
+        [
+          "exit",
+          "up"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographers-instrument:feature:landmark-star-chamber"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visited",
+          "30078:<PUBKEY>:cartographers-instrument:feature:landmark-star-chamber"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographers-instrument:feature:lunar-echo"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographers-instrument:feature:solar-echo"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:cartographers-instrument:feature:stellar-echo"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographers-instrument:sound:full-composition",
+          "ambient",
+          "0.7"
+        ]
       ],
       "content": "You descend into a chamber that should not exist — a perfect sphere hollowed from the bedrock beneath the observatory. The walls are polished to a mirror finish, and in them you see not your reflection but *stars*. The entire night sky, projected from some impossible source, turning slowly around you.\n\nThe three notes you awakened — the root, the third, the fifth — converge here. The chord resolves. The composition is complete.\n\nThe cartographer's work is finished. The music of the spheres plays on."
     },
-
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:item:instrument"],
-        ["t", "cartographers-instrument"],
-        ["type", "item"],
-        ["title", "The Instrument"],
-        ["noun", "instrument", "astrolabe", "device", "music box"]
+        [
+          "d",
+          "cartographers-instrument:item:instrument"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "The Instrument"
+        ],
+        [
+          "noun",
+          "instrument",
+          "astrolabe",
+          "device",
+          "music box"
+        ]
       ],
       "content": "Part astrolabe, part music box. Concentric brass rings rotate around a central crystal that glows faintly when turned. Tiny hammers rest against tuned tines inside the mechanism. It feels warm in your hands, as though it remembers being held."
     },
-
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:feature:lunar-resonator"],
-        ["t", "cartographers-instrument"],
-        ["type", "feature"],
-        ["title", "Lunar Resonator"],
-        ["noun", "resonator", "column", "rings"],
-        ["verb", "play", "tune", "activate", "use"],
-        ["state", "dormant"],
-        ["requires", "30078:<PUBKEY>:cartographers-instrument:item:instrument", "", "You have nothing to play it with."],
-        ["on-interact", "play", "set-state", "active"],
-        ["on-interact", "play", "set-state", "active", "30078:<PUBKEY>:cartographers-instrument:feature:lunar-echo"],
-        ["on-interact", "play", "sound", "30078:<PUBKEY>:cartographers-instrument:sound:activation-chime"],
-        ["sound", "30078:<PUBKEY>:cartographers-instrument:sound:lunar-drone", "layer", "0.5", "active"],
-        ["transition", "dormant", "active", "You align the instrument's rings to the lunar frequency and strike the central crystal. A deep, resonant tone rises from the stone column. The concentric rings begin to turn slowly. The tarnished mirrors catch the sound and amplify it — silver light blooms across the lunar diagrams on the walls."],
-        ["transition", "active", "active", "The Lunar Resonator hums steadily, its rings turning in slow silver arcs."]
+        [
+          "d",
+          "cartographers-instrument:feature:lunar-resonator"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Lunar Resonator"
+        ],
+        [
+          "noun",
+          "resonator",
+          "column",
+          "rings"
+        ],
+        [
+          "verb",
+          "play",
+          "tune",
+          "activate",
+          "use"
+        ],
+        [
+          "state",
+          "dormant"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographers-instrument:item:instrument",
+          "",
+          "You have nothing to play it with."
+        ],
+        [
+          "on-interact",
+          "play",
+          "set-state",
+          "active"
+        ],
+        [
+          "on-interact",
+          "play",
+          "set-state",
+          "active",
+          "30078:<PUBKEY>:cartographers-instrument:feature:lunar-echo"
+        ],
+        [
+          "on-interact",
+          "play",
+          "sound",
+          "30078:<PUBKEY>:cartographers-instrument:sound:activation-chime"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographers-instrument:sound:lunar-drone",
+          "layer",
+          "0.5",
+          "active"
+        ],
+        [
+          "transition",
+          "dormant",
+          "active",
+          "You align the instrument's rings to the lunar frequency and strike the central crystal. A deep, resonant tone rises from the stone column. The concentric rings begin to turn slowly. The tarnished mirrors catch the sound and amplify it — silver light blooms across the lunar diagrams on the walls."
+        ],
+        [
+          "transition",
+          "active",
+          "active",
+          "The Lunar Resonator hums steadily, its rings turning in slow silver arcs."
+        ]
       ],
       "content": "A stone column topped with concentric rings of dark metal. The rings are scored with precise markings — frequencies, perhaps, or orbital calculations. It stands silent and still."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:feature:solar-resonator"],
-        ["t", "cartographers-instrument"],
-        ["type", "feature"],
-        ["title", "Solar Resonator"],
-        ["noun", "resonator", "sphere", "framework"],
-        ["verb", "play", "tune", "activate", "use"],
-        ["state", "dormant"],
-        ["requires", "30078:<PUBKEY>:cartographers-instrument:item:instrument", "", "You have nothing to play it with."],
-        ["on-interact", "play", "set-state", "active"],
-        ["on-interact", "play", "set-state", "active", "30078:<PUBKEY>:cartographers-instrument:feature:solar-echo"],
-        ["on-interact", "play", "sound", "30078:<PUBKEY>:cartographers-instrument:sound:activation-chime"],
-        ["sound", "30078:<PUBKEY>:cartographers-instrument:sound:solar-arpeggio", "layer", "0.5", "active"],
-        ["transition", "dormant", "active", "You tune the instrument to the solar harmonic and touch it to the armillary sphere. The tuning forks ring out — a bright, ascending chord that fills the chamber. The prisms catch fire with golden light, scattering rainbows that dance and multiply."],
-        ["transition", "active", "active", "The Solar Resonator sings its bright chord, golden light cascading through the prisms."]
+        [
+          "d",
+          "cartographers-instrument:feature:solar-resonator"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Solar Resonator"
+        ],
+        [
+          "noun",
+          "resonator",
+          "sphere",
+          "framework"
+        ],
+        [
+          "verb",
+          "play",
+          "tune",
+          "activate",
+          "use"
+        ],
+        [
+          "state",
+          "dormant"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographers-instrument:item:instrument",
+          "",
+          "You have nothing to play it with."
+        ],
+        [
+          "on-interact",
+          "play",
+          "set-state",
+          "active"
+        ],
+        [
+          "on-interact",
+          "play",
+          "set-state",
+          "active",
+          "30078:<PUBKEY>:cartographers-instrument:feature:solar-echo"
+        ],
+        [
+          "on-interact",
+          "play",
+          "sound",
+          "30078:<PUBKEY>:cartographers-instrument:sound:activation-chime"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographers-instrument:sound:solar-arpeggio",
+          "layer",
+          "0.5",
+          "active"
+        ],
+        [
+          "transition",
+          "dormant",
+          "active",
+          "You tune the instrument to the solar harmonic and touch it to the armillary sphere. The tuning forks ring out — a bright, ascending chord that fills the chamber. The prisms catch fire with golden light, scattering rainbows that dance and multiply."
+        ],
+        [
+          "transition",
+          "active",
+          "active",
+          "The Solar Resonator sings its bright chord, golden light cascading through the prisms."
+        ]
       ],
       "content": "A tall brass armillary sphere with tuning forks mounted where the celestial rings should be. The forks are perfectly still, waiting for the right frequency to set them singing."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:feature:stellar-resonator"],
-        ["t", "cartographers-instrument"],
-        ["type", "feature"],
-        ["title", "Stellar Resonator"],
-        ["noun", "resonator", "crystal", "structure"],
-        ["verb", "play", "tune", "activate", "use"],
-        ["state", "dormant"],
-        ["requires", "30078:<PUBKEY>:cartographers-instrument:item:instrument", "", "You have nothing to play it with."],
-        ["on-interact", "play", "set-state", "active"],
-        ["on-interact", "play", "set-state", "active", "30078:<PUBKEY>:cartographers-instrument:feature:stellar-echo"],
-        ["on-interact", "play", "sound", "30078:<PUBKEY>:cartographers-instrument:sound:activation-chime"],
-        ["sound", "30078:<PUBKEY>:cartographers-instrument:sound:stellar-melody", "layer", "0.5", "active"],
-        ["transition", "dormant", "active", "You find the final frequency — the bridge between the root and the fifth. The crystal blazes with white starlight as the note joins the chord. The telescope lens above flares. Far below, you hear stone grinding against stone as something long sealed opens."],
-        ["transition", "active", "active", "The Stellar Resonator blazes with captured starlight, its note completing the chord."]
+        [
+          "d",
+          "cartographers-instrument:feature:stellar-resonator"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Stellar Resonator"
+        ],
+        [
+          "noun",
+          "resonator",
+          "crystal",
+          "structure"
+        ],
+        [
+          "verb",
+          "play",
+          "tune",
+          "activate",
+          "use"
+        ],
+        [
+          "state",
+          "dormant"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographers-instrument:item:instrument",
+          "",
+          "You have nothing to play it with."
+        ],
+        [
+          "on-interact",
+          "play",
+          "set-state",
+          "active"
+        ],
+        [
+          "on-interact",
+          "play",
+          "set-state",
+          "active",
+          "30078:<PUBKEY>:cartographers-instrument:feature:stellar-echo"
+        ],
+        [
+          "on-interact",
+          "play",
+          "sound",
+          "30078:<PUBKEY>:cartographers-instrument:sound:activation-chime"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographers-instrument:sound:stellar-melody",
+          "layer",
+          "0.5",
+          "active"
+        ],
+        [
+          "transition",
+          "dormant",
+          "active",
+          "You find the final frequency — the bridge between the root and the fifth. The crystal blazes with white starlight as the note joins the chord. The telescope lens above flares. Far below, you hear stone grinding against stone as something long sealed opens."
+        ],
+        [
+          "transition",
+          "active",
+          "active",
+          "The Stellar Resonator blazes with captured starlight, its note completing the chord."
+        ]
       ],
       "content": "A crystalline structure on a marble plinth, faceted like a cut diamond. It refracts the starlight into faint spectral lines across the floor. Silent. Expectant."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:feature:lunar-chart"],
-        ["t", "cartographers-instrument"],
-        ["type", "feature"],
-        ["title", "Lunar Chart"],
-        ["noun", "chart", "diagram", "notation"]
+        [
+          "d",
+          "cartographers-instrument:feature:lunar-chart"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Lunar Chart"
+        ],
+        [
+          "noun",
+          "chart",
+          "diagram",
+          "notation"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
       ],
       "content": "A detailed chart of lunar phases, annotated with musical notation in a cramped, precise hand. A note in the margin reads: *The moon's tone is the root. The lowest. The foundation. All harmony begins here.*"
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:feature:solar-chart"],
-        ["t", "cartographers-instrument"],
-        ["type", "feature"],
-        ["title", "Solar Chart"],
-        ["noun", "chart", "diagram", "notation"]
+        [
+          "d",
+          "cartographers-instrument:feature:solar-chart"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Solar Chart"
+        ],
+        [
+          "noun",
+          "chart",
+          "diagram",
+          "notation"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
       ],
       "content": "Solar trajectory diagrams etched into a brass plate, with harmonic intervals marked alongside each orbital path. An annotation reads: *The sun's tone is the fifth. Bright and ascending. It reaches upward from the root.*"
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:feature:stellar-chart"],
-        ["t", "cartographers-instrument"],
-        ["type", "feature"],
-        ["title", "Stellar Chart"],
-        ["noun", "chart", "diagram", "notation"]
+        [
+          "d",
+          "cartographers-instrument:feature:stellar-chart"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Stellar Chart"
+        ],
+        [
+          "noun",
+          "chart",
+          "diagram",
+          "notation"
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
       ],
       "content": "A star chart carved into the marble floor beneath the telescope. Constellations are connected by lines that form musical staves. One passage is circled in faded ink: *The stars' tone is the third. The bridge between earth and sky. Without it, the chord is hollow.*"
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:feature:landmark-star-chamber"],
-        ["t", "cartographers-instrument"],
-        ["type", "feature"],
-        ["title", "Star Chamber Landmark"],
-        ["state", "unvisited"],
-        ["noun", "landmark"]
+        [
+          "d",
+          "cartographers-instrument:feature:landmark-star-chamber"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Star Chamber Landmark"
+        ],
+        [
+          "state",
+          "unvisited"
+        ],
+        [
+          "noun",
+          "landmark"
+        ]
       ],
       "content": "The Star Chamber."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:feature:lunar-echo"],
-        ["t", "cartographers-instrument"],
-        ["type", "feature"],
-        ["title", "Lunar Resonance"],
-        ["state", "dormant"],
-        ["sound", "30078:<PUBKEY>:cartographers-instrument:sound:lunar-drone", "layer", "0.4", "active"]
+        [
+          "d",
+          "cartographers-instrument:feature:lunar-echo"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Lunar Resonance"
+        ],
+        [
+          "state",
+          "dormant"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographers-instrument:sound:lunar-drone",
+          "layer",
+          "0.4",
+          "active"
+        ]
       ],
       "content": "A faint silver hum resonates through the stone — the echo of the Lunar Resonator."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:feature:solar-echo"],
-        ["t", "cartographers-instrument"],
-        ["type", "feature"],
-        ["title", "Solar Resonance"],
-        ["state", "dormant"],
-        ["sound", "30078:<PUBKEY>:cartographers-instrument:sound:solar-arpeggio", "layer", "0.4", "active"]
+        [
+          "d",
+          "cartographers-instrument:feature:solar-echo"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Solar Resonance"
+        ],
+        [
+          "state",
+          "dormant"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographers-instrument:sound:solar-arpeggio",
+          "layer",
+          "0.4",
+          "active"
+        ]
       ],
       "content": "A bright harmonic shimmer fills the air — the echo of the Solar Resonator."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:feature:stellar-echo"],
-        ["t", "cartographers-instrument"],
-        ["type", "feature"],
-        ["title", "Stellar Resonance"],
-        ["state", "dormant"],
-        ["sound", "30078:<PUBKEY>:cartographers-instrument:sound:stellar-melody", "layer", "0.4", "active"]
+        [
+          "d",
+          "cartographers-instrument:feature:stellar-echo"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Stellar Resonance"
+        ],
+        [
+          "state",
+          "dormant"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographers-instrument:sound:stellar-melody",
+          "layer",
+          "0.4",
+          "active"
+        ]
       ],
       "content": "A melodic pulse weaves through the starlight — the echo of the Stellar Resonator."
     },
-
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:npc:cartographer"],
-        ["t", "cartographers-instrument"],
-        ["type", "npc"],
-        ["title", "Ghost of the Cartographer"],
-        ["noun", "ghost", "cartographer", "spirit", "figure"],
-        ["dialogue", "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:greeting"]
+        [
+          "d",
+          "cartographers-instrument:npc:cartographer"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Ghost of the Cartographer"
+        ],
+        [
+          "noun",
+          "ghost",
+          "cartographer",
+          "spirit",
+          "figure"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:greeting"
+        ]
       ],
       "content": "A translucent figure stands at the centre of the star chart, gazing down at the silver constellations beneath its feet. It wears the robes of a scholar and holds a quill that leaves no mark. Its edges shimmer like heat haze."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:dialogue:cartographer:greeting"],
-        ["t", "cartographers-instrument"],
-        ["type", "dialogue"],
-        ["option", "What is this place?", "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:place"],
-        ["option", "What happened here?", "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:history"],
-        ["option", "How do I use the instrument?", "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:instrument"],
-        ["option", "Leave", ""]
+        [
+          "d",
+          "cartographers-instrument:dialogue:cartographer:greeting"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "What is this place?",
+          "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:place"
+        ],
+        [
+          "option",
+          "What happened here?",
+          "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:history"
+        ],
+        [
+          "option",
+          "How do I use the instrument?",
+          "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:instrument"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
       ],
       "content": "The figure turns toward you. Its eyes are points of white light.\n\n*You found it. The instrument. I wondered if anyone ever would.*"
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:dialogue:cartographer:place"],
-        ["t", "cartographers-instrument"],
-        ["type", "dialogue"],
-        ["option", "Tell me about the resonators", "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:resonators"],
-        ["option", "Leave", ""]
+        [
+          "d",
+          "cartographers-instrument:dialogue:cartographer:place"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Tell me about the resonators",
+          "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:resonators"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
       ],
       "content": "*An observatory. But not for seeing — for listening. I mapped the music of the spheres. Each room remembers its note. The composition was almost complete when I... well. When I stopped being able to hold the instrument.*"
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:dialogue:cartographer:history"],
-        ["t", "cartographers-instrument"],
-        ["type", "dialogue"],
-        ["option", "Tell me about the resonators", "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:resonators"],
-        ["option", "Leave", ""]
+        [
+          "d",
+          "cartographers-instrument:dialogue:cartographer:history"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Tell me about the resonators",
+          "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:resonators"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
       ],
       "content": "*I spent a lifetime charting the celestial harmonics. Three rooms, three notes, three resonators tuned to the music that holds the sky together. I built the instrument to play them. But the composition requires living hands. Mine are... somewhat lacking in that regard now.*"
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:dialogue:cartographer:instrument"],
-        ["t", "cartographers-instrument"],
-        ["type", "dialogue"],
-        ["option", "Tell me about the resonators", "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:resonators"],
-        ["option", "Leave", ""]
+        [
+          "d",
+          "cartographers-instrument:dialogue:cartographer:instrument"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Tell me about the resonators",
+          "30078:<PUBKEY>:cartographers-instrument:dialogue:cartographer:resonators"
+        ],
+        [
+          "option",
+          "Leave",
+          ""
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
       ],
       "content": "*Take it to each resonator. The charts on the walls will tell you which note belongs where. Play them in any order — the composition will find itself. When all three sing together, the Star Chamber will open.*"
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:dialogue:cartographer:resonators"],
-        ["t", "cartographers-instrument"],
-        ["type", "dialogue"],
-        ["option", "Thank you", ""]
+        [
+          "d",
+          "cartographers-instrument:dialogue:cartographer:resonators"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Thank you",
+          ""
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
       ],
       "content": "*Three resonators. The Lunar, to the west — it sounds the root, the foundation of all harmony. The Solar, to the east — the fifth, bright and reaching. And the Stellar, above — the third, the bridge between. Together they form a chord that the ancients believed was the sound of creation itself. The tower will not open until the moon and sun are singing. You must wake them first.*"
     },
-
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:portal:entrance-to-hall"],
-        ["t", "cartographers-instrument"],
-        ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:cartographers-instrument:place:observatory-entrance", "north", "A stone archway leads deeper into the observatory."],
-        ["exit", "30078:<PUBKEY>:cartographers-instrument:place:central-hall", "south", "The entrance arch opens to the night sky beyond."]
+        [
+          "d",
+          "cartographers-instrument:portal:entrance-to-hall"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographers-instrument:place:observatory-entrance",
+          "north",
+          "A stone archway leads deeper into the observatory."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographers-instrument:place:central-hall",
+          "south",
+          "The entrance arch opens to the night sky beyond."
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:portal:hall-to-west"],
-        ["t", "cartographers-instrument"],
-        ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:cartographers-instrument:place:central-hall", "west", "A corridor curves away into shadow. Faded lunar diagrams line the walls."],
-        ["exit", "30078:<PUBKEY>:cartographers-instrument:place:west-wing", "east", "The corridor leads back toward the central rotunda."]
+        [
+          "d",
+          "cartographers-instrument:portal:hall-to-west"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographers-instrument:place:central-hall",
+          "west",
+          "A corridor curves away into shadow. Faded lunar diagrams line the walls."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographers-instrument:place:west-wing",
+          "east",
+          "The corridor leads back toward the central rotunda."
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:portal:hall-to-east"],
-        ["t", "cartographers-instrument"],
-        ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:cartographers-instrument:place:central-hall", "east", "A passage opens toward a faint golden glow. Brass fittings gleam in the starlight."],
-        ["exit", "30078:<PUBKEY>:cartographers-instrument:place:east-wing", "west", "The passage returns to the central rotunda."]
+        [
+          "d",
+          "cartographers-instrument:portal:hall-to-east"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographers-instrument:place:central-hall",
+          "east",
+          "A passage opens toward a faint golden glow. Brass fittings gleam in the starlight."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographers-instrument:place:east-wing",
+          "west",
+          "The passage returns to the central rotunda."
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:portal:hall-to-tower"],
-        ["t", "cartographers-instrument"],
-        ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:cartographers-instrument:place:central-hall", "up", "A spiral staircase winds upward through the ceiling."],
-        ["exit", "30078:<PUBKEY>:cartographers-instrument:place:tower", "down", "The spiral staircase descends to the central hall."],
-        ["requires", "30078:<PUBKEY>:cartographers-instrument:feature:lunar-resonator", "active", "The staircase is blocked by a heavy stone slab. It does not move."],
-        ["requires", "30078:<PUBKEY>:cartographers-instrument:feature:solar-resonator", "active", "The staircase is blocked by a heavy stone slab. It does not move."]
+        [
+          "d",
+          "cartographers-instrument:portal:hall-to-tower"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographers-instrument:place:central-hall",
+          "up",
+          "A spiral staircase winds upward through the ceiling."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographers-instrument:place:tower",
+          "down",
+          "The spiral staircase descends to the central hall."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographers-instrument:feature:lunar-resonator",
+          "active",
+          "The staircase is blocked by a heavy stone slab. It does not move."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographers-instrument:feature:solar-resonator",
+          "active",
+          "The staircase is blocked by a heavy stone slab. It does not move."
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:portal:hall-to-chamber"],
-        ["t", "cartographers-instrument"],
-        ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:cartographers-instrument:place:central-hall", "down", "Stone steps descend into darkness at the centre of the star chart."],
-        ["exit", "30078:<PUBKEY>:cartographers-instrument:place:star-chamber", "up", "Stone steps climb back to the central hall."],
-        ["requires", "30078:<PUBKEY>:cartographers-instrument:feature:stellar-resonator", "active", "The steps descend into solid darkness. Something seals the way."]
+        [
+          "d",
+          "cartographers-instrument:portal:hall-to-chamber"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographers-instrument:place:central-hall",
+          "down",
+          "Stone steps descend into darkness at the centre of the star chart."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:cartographers-instrument:place:star-chamber",
+          "up",
+          "Stone steps climb back to the central hall."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographers-instrument:feature:stellar-resonator",
+          "active",
+          "The steps descend into solid darkness. Something seals the way."
+        ]
       ],
       "content": ""
     },
-
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "cartographers-instrument:quest:the-composition"],
-        ["t", "cartographers-instrument"],
-        ["type", "quest"],
-        ["title", "The Cartographer's Composition"],
-        ["quest-type", "endgame"],
-        ["requires", "30078:<PUBKEY>:cartographers-instrument:feature:lunar-resonator", "active", ""],
-        ["requires", "30078:<PUBKEY>:cartographers-instrument:feature:solar-resonator", "active", ""],
-        ["requires", "30078:<PUBKEY>:cartographers-instrument:feature:stellar-resonator", "active", ""],
-        ["requires", "30078:<PUBKEY>:cartographers-instrument:feature:landmark-star-chamber", "visited", ""]
+        [
+          "d",
+          "cartographers-instrument:quest:the-composition"
+        ],
+        [
+          "t",
+          "cartographers-instrument"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Cartographer's Composition"
+        ],
+        [
+          "quest-type",
+          "endgame"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographers-instrument:feature:lunar-resonator",
+          "active",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographers-instrument:feature:solar-resonator",
+          "active",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographers-instrument:feature:stellar-resonator",
+          "active",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographers-instrument:feature:landmark-star-chamber",
+          "visited",
+          ""
+        ],
+        [
+          "content-type",
+          "text/markdown"
+        ]
       ],
       "content": "**The Music of the Spheres**\n\nThe chord resolves — root, third, fifth — and the Star Chamber sings. The mirrors on the walls show not reflections but the sky itself, turning slowly, endlessly, each star a note in an infinite score.\n\nYou understand now what the cartographer spent a lifetime charting. Not the positions of the stars, but their *sound*. The universe is a composition, and you have played its opening chord.\n\nThe instrument grows warm in your hands. The crystal at its centre pulses once, twice — then settles into a steady glow, beating in time with something vast and distant.\n\nThe cartographer's ghost appears beside you. For the first time, it smiles.\n\n*Thank you. The composition is complete. The spheres will sing it forever now.*\n\nThe figure fades. The music plays on.\n\n---\n\n*You completed The Cartographer's Instrument.*"
     }

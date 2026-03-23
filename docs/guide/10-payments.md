@@ -186,38 +186,15 @@ Payment events require the world author to operate or use a LNURL server. The fo
 
 - **Lightning Address** — Services like Alby, Breez, or WoS provide Lightning Addresses that support LUD-06 pay requests. Some also support LUD-11 verification.
 - **Self-hosted** — Run your own LNURL server (e.g. LNbits, BTCPay Server) for full control over invoice generation and verification.
-- **Shared platform** — A foakloar-specific payment service could abstract LNURL infrastructure for world authors.
-
 If the verify endpoint goes offline, the payment gate becomes unsolvable for new players. Existing players who have already completed the payment are unaffected (their `complete` status is stored locally). Authors should treat LNURL infrastructure as a long-term hosting commitment.
 
 ---
 
 ## Tips
 
-### Recovery on reload
-
-The client stores `payment-hash` values locally before the player pays. On reload, any payment with status `pending` or `paid` (but not `complete`) is re-verified by polling LUD-11 with the stored hash. If the endpoint confirms payment, `on-complete` fires. This handles browser crashes, network drops, and interrupted sessions — the payment hash is the persistent proof.
-
-### Invoice expiry
-
-LNURL-pay invoices typically expire after 60 seconds. If the player does not pay before expiry, the client offers to generate a fresh invoice. The old `payment-hash` is discarded and replaced with the new invoice's hash.
-
-### Proof of payment
-
-The player's Lightning wallet holds the preimage as cryptographic proof of payment. The payment hash (stored by the client) is sufficient for verify endpoint queries. If the player disputes a failed `on-complete`, the preimage from their wallet is unforgeable proof to the world author.
-
-### Amount and unit
-
-The `amount` tag is a string containing an integer. The `unit` tag defaults to `sats` if omitted. These are passed to the LNURL endpoint when requesting an invoice.
-
-### Multiple on-complete actions
-
-A single payment event can have multiple `on-complete` tags. Each fires independently on payment confirmation. Common combinations:
-
-- `give-item` + `set-state` — give a receipt token and mark the payment as paid
-- Multiple `give-item` — give several items on a single payment
-- `set-state` on an external feature — unlock something elsewhere in the world
-
-### Testing without real payments
-
-During world development, you can manually call `engine.completePayment(dtag)` in the browser console to simulate a successful payment and test the `on-complete` flow without a real LNURL endpoint.
+- **Recovery on reload** — The client stores `payment-hash` values locally before the player pays. On reload, any payment with status `pending` or `paid` (but not `complete`) is re-verified by polling LUD-11 with the stored hash. If the endpoint confirms payment, `on-complete` fires. This handles browser crashes, network drops, and interrupted sessions — the payment hash is the persistent proof.
+- **Invoice expiry** — LNURL-pay invoices typically expire after 60 seconds. If the player does not pay before expiry, the client offers to generate a fresh invoice. The old `payment-hash` is discarded and replaced with the new invoice's hash.
+- **Proof of payment** — The player's Lightning wallet holds the preimage as cryptographic proof of payment. The payment hash (stored by the client) is sufficient for verify endpoint queries. If the player disputes a failed `on-complete`, the preimage from their wallet is unforgeable proof to the world author.
+- **Amount and unit** — The `amount` tag is a string containing an integer. The `unit` tag defaults to `sats` if omitted. These are passed to the LNURL endpoint when requesting an invoice.
+- **Multiple on-complete actions** — A single payment event can have multiple `on-complete` tags. Each fires independently on payment confirmation. Common combinations: `give-item` + `set-state` (give a receipt token and mark the payment as paid), multiple `give-item` (give several items on a single payment), or `set-state` on an external feature (unlock something elsewhere in the world).
+- **Testing without real payments** — During world development, you can manually call `engine.completePayment(dtag)` in the browser console to simulate a successful payment and test the `on-complete` flow without a real LNURL endpoint.

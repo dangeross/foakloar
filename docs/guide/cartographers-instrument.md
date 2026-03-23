@@ -62,11 +62,17 @@ A single `quest-type: endgame` quest requires all three resonators active plus a
 ## Walkthrough
 
 1. Pick up The Instrument at the Observatory Entrance.
+
 2. Go north to the Central Hall. Talk to the Ghost for hints.
+
 3. Go west. Examine the Lunar Chart for the clue. Play the resonator.
+
 4. Return east, then go east again. Examine the Solar Chart. Play the resonator.
+
 5. Return west. The spiral staircase is now unblocked — go up.
+
 6. Examine the Stellar Chart. Play the resonator. Something opens below.
+
 7. Go down twice. Enter the Star Chamber. The endgame fires.
 
 The order of the west and east wings does not matter. Both must be activated before the tower becomes accessible.

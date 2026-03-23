@@ -248,17 +248,12 @@ Publish all events — the items, the reward, and the quest — to the same worl
 
 ## Tips
 
-**Quest type affects display only.** The underlying completion logic is identical regardless of quest type. Changing `quest-type` from `open` to `mystery` does not change when the quest completes — it only changes what the player sees in the quest log.
-
-**involves vs requires.** Use `involves` for the steps you want displayed in the quest log. Use `requires` for the actual completion gates. They usually overlap, but you might want to show progress on a step that is not strictly required (e.g. an optional side objective), or require a condition you do not want to display (e.g. a hidden feature state).
-
-**Quest chaining is powerful.** Chain quests by having later quests require earlier ones in state `complete`. This creates narrative arcs with distinct phases. Each phase can have its own quest type — an open prologue, a hidden investigation, a mystery finale.
-
-**Tracking place visits.** The `requires` system does not directly check whether a place has been visited. To create exploration quests, use hidden feature events (one per place) with a default state of `unvisited`, and add `on-enter` triggers to the place events that set these features to `visited`. The quest then requires each landmark feature in state `visited`.
-
-**Auto-evaluation.** Quests evaluate on every state change. You do not need to trigger evaluation manually. Picking up an item, solving a puzzle, entering a room — all of these trigger quest re-evaluation. If a quest's conditions are met, it completes immediately.
-
-**Endgame quests.** Use `quest-type: endgame` for the game's win condition. Endgame quests are hidden from the quest log and their content is rendered as closing prose when they fire. See the endgame documentation for details.
+- **Quest type affects display only** — The underlying completion logic is identical regardless of quest type. Changing `quest-type` from `open` to `mystery` does not change when the quest completes — it only changes what the player sees in the quest log.
+- **involves vs requires** — Use `involves` for the steps you want displayed in the quest log. Use `requires` for the actual completion gates. They usually overlap, but you might want to show progress on a step that is not strictly required (e.g. an optional side objective), or require a condition you do not want to display (e.g. a hidden feature state).
+- **Quest chaining is powerful** — Chain quests by having later quests require earlier ones in state `complete`. This creates narrative arcs with distinct phases. Each phase can have its own quest type — an open prologue, a hidden investigation, a mystery finale.
+- **Tracking place visits** — The `requires` system does not directly check whether a place has been visited. To create exploration quests, use hidden feature events (one per place) with a default state of `unvisited`, and add `on-enter` triggers to the place events that set these features to `visited`. The quest then requires each landmark feature in state `visited`.
+- **Auto-evaluation** — Quests evaluate on every state change. You do not need to trigger evaluation manually. Picking up an item, solving a puzzle, entering a room — all of these trigger quest re-evaluation. If a quest's conditions are met, it completes immediately.
+- **Endgame quests** — Use `quest-type: endgame` for the game's win condition. Endgame quests are hidden from the quest log and their content is rendered as closing prose when they fire. See the endgame documentation for details.
 
 ---
 

@@ -2578,6 +2578,7 @@ export class GameEngine {
       ['inventory (i)', 'Show what you are carrying'],
       ['talk &lt;someone&gt;', 'Talk to someone'],
       ['quests (q)', 'Show quest log'],
+      ['restart', 'Start over (resets all progress)'],
       ['help (h)', 'Show this help'],
     ];
     for (const [cmd, desc] of cmds) {
@@ -2785,6 +2786,30 @@ export class GameEngine {
 
     // Puzzle mode
     if (this.puzzleActive) { await this.handlePuzzleAnswer(input.trim()); return; }
+
+    // Restart confirmation
+    if (this.pendingRestart) {
+      this.pendingRestart = false;
+      if (trimmed === 'yes' || trimmed === 'y') {
+        this._emit('Restarting...', 'narrative');
+        this._emit('', 'restart');
+      } else {
+        this._emit('Restart cancelled.', 'narrative');
+      }
+      return;
+    }
+
+    // Built-in: restart (mid-game needs confirmation, soft endgame does not)
+    if (trimmed === 'restart') {
+      if (this.gameOver === 'soft') {
+        this._emit('Restarting...', 'narrative');
+        this._emit('', 'restart');
+      } else {
+        this.pendingRestart = true;
+        this._emit('Are you sure? This will reset all progress. (yes/no)', 'narrative');
+      }
+      return;
+    }
 
     // Built-in: look in <container>
     const lookInMatch = trimmed.match(/^(?:look|l)\s+in\s+(.+)$/);

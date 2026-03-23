@@ -218,17 +218,12 @@ Publish all events — ingredients, output, and recipe — to the same world tag
 
 ## Tips
 
-**Examine shows ingredients.** Players can always `examine` a recipe to see what it requires. The engine shuffles the list for ordered recipes so the sequence is not spoiled.
-
-**Recipes are not place-scoped.** Unlike items and features, recipes can be crafted from anywhere. The player does not need to be in a specific place — they just need the required items.
-
-**Verb tags need aliases.** Players will try different words. If your recipe uses "craft", also add "combine" and "make" as aliases. Think about what feels natural for the action.
-
-**Failure messages guide the player.** The third element of each `requires` tag is shown when the ingredient is missing. Write helpful messages: "You need some rope" is better than nothing.
-
-**Chain recipes with items.** The output of one recipe can be an ingredient for another. A fishing rod recipe produces a rod; the rod is required to catch fish; the fish is an ingredient for a cooking recipe.
-
-**Non-consumed requirements.** Use `requires` without `consume-item` for tools or environmental conditions. A recipe that needs a lit forge does not consume the forge.
+- **Examine shows ingredients** — Players can always `examine` a recipe to see what it requires. The engine shuffles the list for ordered recipes so the sequence is not spoiled.
+- **Recipes are not place-scoped** — Unlike items and features, recipes can be crafted from anywhere. The player does not need to be in a specific place — they just need the required items.
+- **Verb tags need aliases** — Players will try different words. If your recipe uses "craft", also add "combine" and "make" as aliases. Think about what feels natural for the action.
+- **Failure messages guide the player** — The third element of each `requires` tag is shown when the ingredient is missing. Write helpful messages: "You need some rope" is better than nothing.
+- **Chain recipes with items** — The output of one recipe can be an ingredient for another. A fishing rod recipe produces a rod; the rod is required to catch fish; the fish is an ingredient for a cooking recipe.
+- **Non-consumed requirements** — Use `requires` without `consume-item` for tools or environmental conditions. A recipe that needs a lit forge does not consume the forge.
 
 ---
 

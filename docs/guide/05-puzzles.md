@@ -324,10 +324,10 @@ Import the world, navigate to the clue room, read the clue, go to the puzzle roo
 
 ## Tips
 
-- **Answer case sensitivity:** answers are case-sensitive. Use lowercase answers by convention so players don't have to guess capitalisation.
-- **Clue placement matters.** Put clues in rooms the player will visit naturally. If clues are too well-hidden, the puzzle becomes frustrating rather than fun.
-- **Puzzle exit is always available.** Players can type `back`, `leave`, or `cancel` to exit a puzzle prompt. You don't need to tell them this -- the client handles it.
-- **Sequence steps must be separate features.** Each step in a sequence puzzle needs its own feature event with its own state. A single feature cycling through states won't work because `requires` checks the *current* state, not state history.
-- **Use the `answers` map.** Always include plaintext answers in your world file's top-level `answers` object. The publishing tool uses this to compute `answer-hash` values and handle NIP-44 encryption.
-- **Salt convention:** use the puzzle's d-tag followed by `:v1` as the salt. If you change the answer, bump the version (`:v2`) to invalidate the old hash.
-- **Test with the walkthrough.** Include a walkthrough in your world file that exercises every puzzle. This makes it easy to verify the world works correctly after importing.
+- **Answer case sensitivity** — Answers are case-sensitive. Use lowercase answers by convention so players don't have to guess capitalisation.
+- **Clue placement matters** — Put clues in rooms the player will visit naturally. If clues are too well-hidden, the puzzle becomes frustrating rather than fun.
+- **Puzzle exit is always available** — Players can type `back`, `leave`, or `cancel` to exit a puzzle prompt. You don't need to tell them this -- the client handles it.
+- **Sequence steps must be separate features** — Each step in a sequence puzzle needs its own feature event with its own state. A single feature cycling through states won't work because `requires` checks the *current* state, not state history.
+- **Use the `answers` map** — Always include plaintext answers in your world file's top-level `answers` object. The publishing tool uses this to compute `answer-hash` values and handle NIP-44 encryption.
+- **Salt convention** — Use the puzzle's d-tag followed by `:v1` as the salt. If you change the answer, bump the version (`:v2`) to invalidate the old hash.
+- **Test with the walkthrough** — Include a walkthrough in your world file that exercises every puzzle. This makes it easy to verify the world works correctly after importing.

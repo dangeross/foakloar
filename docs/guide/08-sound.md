@@ -233,21 +233,14 @@ To add sound to a world in the builder:
 
 ## Tips
 
-- **Start with noise for ambients.** Filtered white noise (`noise` + `lpf`) makes convincing wind, waves, and rain with zero sample loading.
-
-- **Use `degrade-by` for organic texture.** Random note dropout prevents loops from sounding mechanical. Values of 0.2-0.4 work well for nature sounds.
-
-- **Layer sparingly.** Too many simultaneous layers create mud. Two or three layers maximum per place.
-
-- **Gate layers by state.** A torch that hums only when lit, a machine that rattles only when running — state-gated layers react to player actions.
-
-- **Keep effects short.** Use `fast` or short `sustain` values for one-shot effects. Long effects overlap awkwardly on repeated triggers.
-
-- **Match BPM to mood.** Slow BPM (60-80) for contemplative areas. Medium (90-120) for exploration. Fast (140+) for combat or urgency.
-
-- **Test volume balance.** Ambient at 0.5-0.7, layers at 0.2-0.4, effects at 0.6-1.0. Remember that `gain` and `volume` multiply.
-
-- **Reverb adds space.** `room` at 0.3-0.5 with `roomsize` 2-4 gives a natural sense of environment. Higher values for caves and cathedrals.
+- **Start with noise for ambients** — Filtered white noise (`noise` + `lpf`) makes convincing wind, waves, and rain with zero sample loading.
+- **Use `degrade-by` for organic texture** — Random note dropout prevents loops from sounding mechanical. Values of 0.2-0.4 work well for nature sounds.
+- **Layer sparingly** — Too many simultaneous layers create mud. Two or three layers maximum per place.
+- **Gate layers by state** — A torch that hums only when lit, a machine that rattles only when running — state-gated layers react to player actions.
+- **Keep effects short** — Use `fast` or short `sustain` values for one-shot effects. Long effects overlap awkwardly on repeated triggers.
+- **Match BPM to mood** — Slow BPM (60-80) for contemplative areas. Medium (90-120) for exploration. Fast (140+) for combat or urgency.
+- **Test volume balance** — Ambient at 0.5-0.7, layers at 0.2-0.4, effects at 0.6-1.0. Remember that `gain` and `volume` multiply.
+- **Reverb adds space** — `room` at 0.3-0.5 with `roomsize` 2-4 gives a natural sense of environment. Higher values for caves and cathedrals.
 
 ---
 

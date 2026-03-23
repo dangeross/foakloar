@@ -258,7 +258,7 @@ function Sidebar({ currentPage, onNavigate, open, onToggle }) {
         {SHOWCASES.length > 0 && (
           <>
             <div style={{ borderTop: `1px solid ${THEME.tableBorder}`, margin: '0.75rem 0 0.5rem', paddingTop: '0.5rem' }}>
-              <span style={{ color: THEME.dim, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Showcase</span>
+              <span style={{ color: THEME.highlight, fontSize: '0.7rem' }}>Showcase</span>
             </div>
             <div className="flex flex-col gap-0.5">
               {SHOWCASES.map((p) => {
@@ -314,34 +314,68 @@ function GuideTOC({ onNavigate }) {
   return (
     <div>
       <h1 style={{ color: THEME.highlight, fontSize: '1.3rem', marginBottom: '0.5rem', fontWeight: 'normal' }}>
-        Foakloar Guide
+        foakloar guide
       </h1>
       <p style={{ color: THEME.dim, fontSize: '0.75rem', marginBottom: '1.5rem', maxWidth: 600 }}>
         Learn to build text adventure worlds. Each tutorial has a companion world you can import and explore.
       </p>
       <div className="flex flex-col gap-1" style={{ maxWidth: 600 }}>
-        {PAGES.map((p) => (
-          <button
-            key={p.id}
-            onClick={() => onNavigate(p.id)}
-            className="text-left cursor-pointer hover:opacity-80 px-3 py-2"
-            style={{
-              color: THEME.text,
-              background: 'none',
-              border: `1px solid ${THEME.tableBorder}`,
-              font: 'inherit', fontSize: '0.75rem',
-            }}
-          >
-            <span style={{ color: THEME.highlight, marginRight: '0.5em' }}>
-              {p.id.split('-')[0]}.
-            </span>
-            <strong style={{ color: THEME.text }}>{p.title}</strong>
-            <span style={{ color: THEME.dim, marginLeft: '0.5em', fontSize: '0.65rem' }}>
-              — {p.subtitle}
-            </span>
-          </button>
-        ))}
+        {TUTORIALS.map((p) => {
+          const num = p.id.split('-')[0];
+          return (
+            <button
+              key={p.id}
+              onClick={() => onNavigate(p.id)}
+              className="text-left cursor-pointer hover:opacity-80 px-3 py-2"
+              style={{
+                color: THEME.text,
+                background: 'none',
+                border: `1px solid ${THEME.tableBorder}`,
+                font: 'inherit', fontSize: '0.75rem',
+              }}
+            >
+              <span style={{ color: THEME.highlight, marginRight: '0.5em' }}>
+                {num}.
+              </span>
+              <strong style={{ color: THEME.text }}>{p.title}</strong>
+              <span style={{ color: THEME.dim, marginLeft: '0.5em', fontSize: '0.65rem' }}>
+                — {p.subtitle}
+              </span>
+            </button>
+          );
+        })}
       </div>
+
+      {SHOWCASES.length > 0 && (
+        <>
+          <h2 style={{ color: THEME.highlight, fontSize: '1rem', marginTop: '2rem', marginBottom: '0.5rem', fontWeight: 'normal' }}>
+            Showcase
+          </h2>
+          <p style={{ color: THEME.dim, fontSize: '0.75rem', marginBottom: '1rem', maxWidth: 600 }}>
+            Complete worlds that demonstrate advanced mechanics working together.
+          </p>
+          <div className="flex flex-col gap-1" style={{ maxWidth: 600 }}>
+            {SHOWCASES.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => onNavigate(p.id)}
+                className="text-left cursor-pointer hover:opacity-80 px-3 py-2"
+                style={{
+                  color: THEME.text,
+                  background: 'none',
+                  border: `1px solid ${THEME.tableBorder}`,
+                  font: 'inherit', fontSize: '0.75rem',
+                }}
+              >
+                <strong style={{ color: THEME.text }}>{p.title}</strong>
+                <span style={{ color: THEME.dim, marginLeft: '0.5em', fontSize: '0.65rem' }}>
+                  — {p.subtitle}
+                </span>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -391,9 +425,9 @@ function GuidePage({ pageId }) {
   const html = useMemo(() => {
     if (!content) return '';
     let rendered = marked(content, { breaks: true });
-    // Convert relative tutorial links
+    // Convert relative tutorial links (any JSON in tutorials/)
     rendered = rendered.replace(
-      /<a href="tutorials\/(tides-end-\d+-[^"]+\.json)"[^>]*>([^<]+)<\/a>/g,
+      /<a href="tutorials\/([^"]+\.json)"[^>]*>([^<]+)<\/a>/g,
       '<a href="/guide/$1" class="tutorial-link" style="color:' + THEME.highlight + '">$2</a>'
     );
     // Convert standalone page ID references to links (not inside tags or filenames)
@@ -428,7 +462,7 @@ function GuidePage({ pageId }) {
             e.preventDefault();
             const path = link.getAttribute('href');
             // Tutorial JSON link — trigger import
-            const jsonMatch = path.match(/^\/guide\/(tides-end-[^/]+\.json)$/);
+            const jsonMatch = path.match(/^\/guide\/([^/]+\.json)$/);
             if (jsonMatch) {
               handleTutorialImport(jsonMatch[1]);
               return;

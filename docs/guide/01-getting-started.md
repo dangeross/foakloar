@@ -133,43 +133,15 @@ The Dock ----(north/south)---- Village Square ----(west/east)---- The Beach
 
 ---
 
-## Tips and Common Mistakes
+## Tips
 
-### Exit slots must match portal bindings
-
-If a place declares `["exit", "north"]`, the portal must bind to the `north` slot on that place. A portal binding to `north` on a place that only has `south` and `east` exits will not work — the client will not render the connection.
-
-### Portal exit tags point TO destinations
-
-A common confusion: the portal's `exit` tag references the **destination** place, not the origin. The slot name tells the client which exit on the origin leads there.
-
-```json
-["exit", "<destination-place-ref>", "<slot-on-origin>", "<label>"]
-```
-
-So if you want the player to go `north` from the Dock to the Square, the portal exit tag references the Square (the destination) with slot `north` (on the Dock).
-
-### Use the `a`-tag format for all references
-
-Event references always use the format `30078:<pubkey>:<d-tag>`. Never use bare d-tags or shorthand. The client resolves references to find the latest version of the target event.
-
-### d-tags must be prefixed with the world slug
-
-Every event's `d` tag starts with the world slug: `my-world:place:garden`, not just `place:garden`. This prevents collisions if the same author publishes multiple worlds.
-
-### Two-way portals need two exit tags
-
-A single exit tag creates a one-way connection. If you want the player to travel in both directions, add two exit tags — one for each direction. Forgetting the return exit is a common mistake that leaves players stranded.
-
-### Keep place descriptions concise
-
-Three to four sentences is the sweet spot. Players read room descriptions many times — overly long prose becomes tedious. Focus on atmosphere, key details, and available directions.
-
-### Collaboration mode matters
-
-- **closed**: Only the genesis author's events are trusted. Good for tightly authored narratives.
-- **vouched**: Genesis author plus explicitly vouched contributors. Good for small teams.
-- **open**: All events are visible in community mode. Good for collaborative or experimental worlds.
+- **Exit slots must match portal bindings** — If a place declares `["exit", "north"]`, the portal must bind to the `north` slot on that place. A portal binding to `north` on a place that only has `south` and `east` exits will not work — the client will not render the connection.
+- **Portal exit tags point TO destinations** — The portal's `exit` tag references the **destination** place, not the origin. The slot name tells the client which exit on the origin leads there: `["exit", "<destination-place-ref>", "<slot-on-origin>", "<label>"]`. So if you want the player to go `north` from the Dock to the Square, the portal exit tag references the Square (the destination) with slot `north` (on the Dock).
+- **Use the `a`-tag format for all references** — Event references always use the format `30078:<pubkey>:<d-tag>`. Never use bare d-tags or shorthand. The client resolves references to find the latest version of the target event.
+- **d-tags must be prefixed with the world slug** — Every event's `d` tag starts with the world slug: `my-world:place:garden`, not just `place:garden`. This prevents collisions if the same author publishes multiple worlds.
+- **Two-way portals need two exit tags** — A single exit tag creates a one-way connection. If you want the player to travel in both directions, add two exit tags — one for each direction. Forgetting the return exit is a common mistake that leaves players stranded.
+- **Keep place descriptions concise** — Three to four sentences is the sweet spot. Players read room descriptions many times — overly long prose becomes tedious. Focus on atmosphere, key details, and available directions.
+- **Collaboration mode matters** — `closed`: only the genesis author's events are trusted (good for tightly authored narratives). `vouched`: genesis author plus explicitly vouched contributors (good for small teams). `open`: all events are visible in community mode (good for collaborative or experimental worlds).
 
 ---
 
