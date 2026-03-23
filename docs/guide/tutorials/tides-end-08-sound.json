@@ -289,13 +289,13 @@
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:tavern-fire",
           "ambient",
-          "0.9"
+          "0.8"
         ],
         [
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:tavern-murmur",
           "layer",
-          "0.7"
+          "0.65"
         ]
       ],
       "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale. A fire crackles in a stone hearth, and the murmur of conversation drifts from somewhere unseen.\n\nThe only way out is **west**, back to the square."
@@ -381,7 +381,7 @@
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:cobblestones",
           "effect",
-          "0.4"
+          "0.5"
         ]
       ],
       "content": ""
@@ -417,7 +417,7 @@
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:door-creak",
           "effect",
-          "0.5"
+          "0.75"
         ]
       ],
       "content": ""
@@ -489,7 +489,7 @@
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:footsteps",
           "effect",
-          "0.4"
+          "0.7"
         ]
       ],
       "content": ""
@@ -573,7 +573,8 @@
           "on-interact",
           "flip",
           "sound",
-          "30078:<PUBKEY>:tides-end-08-sound:sound:pickup-chime"
+          "30078:<PUBKEY>:tides-end-08-sound:sound:pickup-chime",
+          "0.8"
         ]
       ],
       "content": "A tarnished copper coin, half-buried in the sand. Its face is worn smooth by the sea, but you can just make out a ship's wheel on one side."
@@ -744,20 +745,24 @@
           "3000"
         ],
         [
-          "gain",
-          "0.45"
-        ],
-        [
           "room",
           "0.25"
         ],
         [
           "slow",
-          "7"
+          "16"
         ],
         [
           "degrade-by",
           "0.4"
+        ],
+        [
+          "attack",
+          "0.5"
+        ],
+        [
+          "gain",
+          "0.45"
         ]
       ],
       "content": ""
@@ -883,31 +888,23 @@
         ],
         [
           "note",
-          "e2 g2"
+          "e2"
         ],
         [
           "oscillator",
-          "sawtooth"
-        ],
-        [
-          "gain",
-          "0.4"
+          "pink"
         ],
         [
           "lpf",
-          "400"
+          "500"
         ],
         [
           "sustain",
-          "0.3"
+          "0.2"
         ],
         [
           "release",
           "0.4"
-        ],
-        [
-          "room",
-          "0.3"
         ]
       ],
       "content": ""
@@ -928,32 +925,20 @@
           "sound"
         ],
         [
+          "note",
+          "g ~ f ~ g ~ f"
+        ],
+        [
           "oscillator",
-          "white"
-        ],
-        [
-          "gain",
-          "0.1"
-        ],
-        [
-          "lpf",
-          "800"
-        ],
-        [
-          "hpf",
-          "200"
+          "brown"
         ],
         [
           "sustain",
-          "0.05"
+          "0.17"
         ],
         [
           "release",
           "0.08"
-        ],
-        [
-          "fast",
-          "3"
         ]
       ],
       "content": ""
@@ -1024,16 +1009,16 @@
           "sound"
         ],
         [
-          "oscillator",
-          "white"
+          "note",
+          "g ~ f ~ g ~ f ~"
         ],
         [
-          "gain",
-          "0.12"
+          "oscillator",
+          "pink"
         ],
         [
           "lpf",
-          "600"
+          "400"
         ],
         [
           "hpf",
@@ -1041,19 +1026,15 @@
         ],
         [
           "sustain",
-          "0.04"
+          "0.05"
         ],
         [
           "release",
-          "0.1"
-        ],
-        [
-          "room",
           "0.15"
         ],
         [
-          "fast",
-          "3"
+          "room",
+          "0.95"
         ]
       ],
       "content": ""
@@ -1074,24 +1055,28 @@
           "sound"
         ],
         [
+          "note",
+          "c3 ~ c3 ~"
+        ],
+        [
           "oscillator",
           "white"
         ],
         [
-          "gain",
-          "0.08"
+          "lpf",
+          "800"
         ],
         [
-          "lpf",
-          "400"
+          "hpf",
+          "200"
         ],
         [
           "sustain",
-          "0.08"
+          "0.15"
         ],
         [
           "release",
-          "0.15"
+          "0.25"
         ]
       ],
       "content": ""

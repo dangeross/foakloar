@@ -28,7 +28,7 @@ import { validateWorld, verifyPuzzleHashes } from '../builder/validateWorld.js';
 import RelaySettingsPanel from './RelaySettingsPanel.jsx';
 import PublishProgressPanel from '../builder/components/PublishProgressPanel.jsx';
 import SoundToggle from './SoundToggle.jsx';
-import { evaluateSoundTags, isAudioReady, playOneShotRef, loadSamples, hush as hushSound } from '../services/sound.js';
+import { evaluateSoundTags, isAudioReady, playOneShotRef, loadSamples, hush as hushSound, stopPreview } from '../services/sound.js';
 
 /** Map entry types to colour slots */
 const TYPE_COLOUR = {
@@ -788,7 +788,7 @@ export default function App() {
               setDrafts(loadDrafts(worldTag));
             }
           }}
-          onClose={() => setEditorState(null)}
+          onClose={() => { stopPreview(); setEditorState(null); }}
         />
       )}
 

@@ -119,6 +119,23 @@ export default function ModeDropdown({
           {showBuildOption && (
             <>
               <div style={{ borderTop: '1px solid var(--colour-dim)' }}>
+                {buildMode && (
+                  <button
+                    onClick={() => {
+                      onOpenDrafts();
+                      setOpen(false);
+                    }}
+                    className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                    style={{
+                      color: 'var(--colour-text)',
+                      background: 'none',
+                      border: 'none',
+                      font: 'inherit',
+                    }}
+                  >
+                    {'  '}drafts{draftsCount > 0 ? ` (${draftsCount})` : ''}
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     if (!buildMode) onToggleBuild();
@@ -135,23 +152,6 @@ export default function ModeDropdown({
                   {buildMode ? '> ' : '  '}+ build
                 </button>
               </div>
-              {buildMode && (
-                <button
-                  onClick={() => {
-                    onOpenDrafts();
-                    setOpen(false);
-                  }}
-                  className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
-                  style={{
-                    color: 'var(--colour-text)',
-                    background: 'none',
-                    border: 'none',
-                    font: 'inherit',
-                  }}
-                >
-                  {'  '}drafts{draftsCount > 0 ? ` (${draftsCount})` : ''}
-                </button>
-              )}
               {buildMode && onNewWorld && (
                 <button
                   onClick={() => {

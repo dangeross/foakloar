@@ -247,6 +247,7 @@ Combat is data-driven via `on-*` dispatcher:
 
 ## Git Workflow
 
+- **Do not commit until the user says to.** You can suggest committing, but wait for the user to confirm. Never auto-commit.
 - **Feature branches:** use `git rebase main` to sync with main, not `git merge main`. This keeps a linear history.
 - Commit to main directly for small fixes. Use feature branches for larger work.
 - Always push feature branches with `-u origin <branch>` on first push.

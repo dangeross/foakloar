@@ -706,6 +706,21 @@ export default function EventGraph({
                   padding: '2px 0', minWidth: 140, maxHeight: 300, overflowY: 'auto',
                 }}
               >
+                {onOpenDrafts && (
+                  <>
+                    <button
+                      onClick={() => { setShowNewMenu(false); onOpenDrafts(); }}
+                      className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                      style={{
+                        color: 'var(--colour-item)', background: 'none', border: 'none',
+                        font: 'inherit',
+                      }}
+                    >
+                      drafts{draftsCount > 0 ? ` (${draftsCount})` : ''}
+                    </button>
+                    <div style={{ borderTop: '1px solid var(--colour-dim)', margin: '2px 0' }} />
+                  </>
+                )}
                 {GRAPH_EVENT_TYPES.map(({ value, label }) => (
                   <button
                     key={value}
@@ -719,21 +734,6 @@ export default function EventGraph({
                     + {label}
                   </button>
                 ))}
-                {onOpenDrafts && (
-                  <>
-                    <div style={{ borderTop: '1px solid var(--colour-dim)', margin: '2px 0' }} />
-                    <button
-                      onClick={() => { setShowNewMenu(false); onOpenDrafts(); }}
-                      className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
-                      style={{
-                        color: 'var(--colour-item)', background: 'none', border: 'none',
-                        font: 'inherit',
-                      }}
-                    >
-                      drafts{draftsCount > 0 ? ` (${draftsCount})` : ''}
-                    </button>
-                  </>
-                )}
               </div>
             )}
           </div>

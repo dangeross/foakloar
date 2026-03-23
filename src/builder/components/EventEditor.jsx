@@ -13,7 +13,7 @@ import DOSPanel from '../../components/ui/DOSPanel.jsx';
 import DOSButton from './ui/DOSButton.jsx';
 import TagEditor from './TagEditor.jsx';
 import EventPreview from './EventPreview.jsx';
-import { buildStrudelCodeFromTags, previewSound, stopPreview, decompileStrudelCode } from '../../services/sound.js';
+import { buildStrudelCodeFromTags, previewSound, stopPreview, decompileStrudelCode, playOneShotFromTags } from '../../services/sound.js';
 import { buildEventTemplate, buildDTag, publishEvent } from '../eventBuilder.js';
 import { EVENT_TYPE_DESCRIPTIONS } from '../tagSchema.js';
 import { Tooltip } from './TagEditor.jsx';
@@ -383,9 +383,6 @@ export default function EventEditor({
             Save Draft
           </DOSButton>
         )}
-        <DOSButton onClick={() => setShowPreview(true)} colour="highlight">
-          Preview & Publish
-        </DOSButton>
       </div>
     </DOSPanel>
   );
@@ -398,18 +395,26 @@ function SoundPreview({ tags, onTagsChange }) {
   const [editCode, setEditCode] = useState('');
   const generatedCode = useMemo(() => buildStrudelCodeFromTags(tags), [tags]);
 
-  const handlePlay = async () => {
+  // Stop preview on unmount (panel closed while playing)
+  React.useEffect(() => () => { stopPreview(); }, []);
+
+  const handleLoop = async () => {
     if (playing) {
       stopPreview();
       setPlaying(false);
     } else {
-      // Play either the edited code or the generated code
       const codeToPlay = editMode ? editCode : null;
       const ok = codeToPlay
         ? await previewSound(null, codeToPlay)
         : await previewSound(tags);
       setPlaying(ok);
     }
+  };
+
+  const handleOnce = async () => {
+    if (playing) { stopPreview(); setPlaying(false); }
+    // Play via superdough — exactly how it sounds as an in-game one-shot
+    await playOneShotFromTags(tags);
   };
 
   // Stop when tags change while playing
@@ -445,20 +450,50 @@ function SoundPreview({ tags, onTagsChange }) {
   return (
     <div className="mb-3">
       <div className="mb-1 flex items-center gap-2" style={{ color: 'var(--colour-text)', fontSize: '0.65rem' }}>
-        <span>Strudel:</span>
-        <button
-          onClick={handlePlay}
-          disabled={!hasSource && !editMode}
-          style={{
-            color: playing ? 'var(--colour-error)' : 'var(--colour-highlight)',
-            background: 'none', border: '1px solid currentColor',
-            font: 'inherit', fontSize: '0.6rem', padding: '1px 6px',
-            cursor: hasSource || editMode ? 'pointer' : 'default',
-            opacity: hasSource || editMode ? 1 : 0.4,
-          }}
-        >
-          {playing ? '■ Stop' : '▶ Play'}
-        </button>
+        <span style={{ marginRight: '-6px' }}>Strudel:</span><Tooltip text="Loop plays the sound continuously — how it sounds as ambient or layer. Once plays a single trigger via superdough — how it sounds as a one-shot effect (portal transition, action trigger)." />
+        {playing ? (
+          <button
+            onClick={() => { stopPreview(); setPlaying(false); }}
+            style={{
+              color: 'var(--colour-error)',
+              background: 'none', border: '1px solid currentColor',
+              font: 'inherit', fontSize: '0.6rem', padding: '1px 6px',
+              cursor: 'pointer',
+            }}
+          >
+            ■ Stop
+          </button>
+        ) : (
+          <>
+            <button
+              onClick={handleLoop}
+              disabled={!hasSource && !editMode}
+              style={{
+                color: 'var(--colour-highlight)',
+                background: 'none', border: '1px solid currentColor',
+                font: 'inherit', fontSize: '0.6rem', padding: '1px 6px',
+                cursor: hasSource || editMode ? 'pointer' : 'default',
+                opacity: hasSource || editMode ? 1 : 0.4,
+              }}
+            >
+              ▶ Loop
+            </button>
+            <button
+              onClick={handleOnce}
+              disabled={!hasSource && !editMode}
+              style={{
+                color: 'var(--colour-highlight)',
+                background: 'none', border: '1px solid currentColor',
+                font: 'inherit', fontSize: '0.6rem', padding: '1px 6px',
+                cursor: hasSource || editMode ? 'pointer' : 'default',
+                opacity: hasSource || editMode ? 1 : 0.4,
+              }}
+            >
+              ▶ Once
+            </button>
+          </>
+        )}
+        <span style={{ flex: 1 }} />
         <button
           onClick={handleEditToggle}
           style={{

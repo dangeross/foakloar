@@ -260,10 +260,11 @@ function parseSoundEventParams(soundEvent, volume) {
   const notePattern = get('note');
   const sample = get('sample');
   const noise = tags.some((t) => t[0] === 'noise');
-  if (!notePattern && !sample && !noise) return null;
+  const oscillator = get('oscillator');
+  if (!notePattern && !sample && !noise && !oscillator) return null;
 
   const params = {};
-  if (get('oscillator')) params.s = get('oscillator');
+  if (oscillator) params.s = oscillator;
   if (get('gain')) params.gain = parseFloat(get('gain')) * volume;
   else params.gain = 0.5 * volume;
   if (get('sustain')) params.sustain = parseFloat(get('sustain'));
@@ -278,7 +279,7 @@ function parseSoundEventParams(soundEvent, volume) {
   if (get('vowel')) params.vowel = get('vowel');
   if (get('shape')) params.shape = parseFloat(get('shape'));
 
-  return { params, notePattern, sample, noise };
+  return { params, notePattern, sample, noise, oscillator };
 }
 
 /**
@@ -295,7 +296,7 @@ export async function playOneShotRef(soundRef, volume = 1.0) {
 
   const parsed = parseSoundEventParams(soundEvent, volume);
   if (!parsed) return;
-  const { params, notePattern, sample, noise } = parsed;
+  const { params, notePattern, sample, noise, oscillator } = parsed;
   const duration = (params.sustain || 0.3) + (params.release || 0.2);
 
   // Try superdough first (full Strudel engine — samples, effects, filters)
@@ -311,7 +312,10 @@ export async function playOneShotRef(soundRef, volume = 1.0) {
         await superdough({ ...params, s: sample }, now, duration);
       } else if (noise) {
         await superdough({ ...params, s: 'white' }, now, duration);
-      } else {
+      } else if (oscillator && !notePattern) {
+        // Oscillator-only (e.g. white noise effect) — no note needed
+        await superdough({ ...params }, now, duration);
+      } else if (notePattern) {
         const notes = notePattern.trim().split(/\s+/).filter((n) => n !== '~');
         const spacing = duration + 0.05;
         for (let i = 0; i < notes.length; i++) {
@@ -576,6 +580,44 @@ export async function previewSound(tags, rawCode = null) {
 export function stopPreview() {
   previewActive = false;
   _stopPatterns();
+}
+
+/**
+ * Play a one-shot from builder tags (for Effect preview button).
+ * Uses superdough directly — doesn't interfere with ambient.
+ */
+export async function playOneShotFromTags(tags, volume = 1.0) {
+  if (!audioReady || muted) return;
+  const fakeEvent = { tags: tags.map((t) => [...t]) };
+  const parsed = parseSoundEventParams(fakeEvent, volume);
+  if (!parsed) return;
+  const { params, notePattern, sample, noise, oscillator } = parsed;
+  const duration = (params.sustain || 0.3) + (params.release || 0.2);
+
+  const superdough = window.strudelScope?.superdough;
+  const getCtx = strudelModule?.getAudioContext || window.strudelScope?.getAudioContext;
+  const ctx = getCtx?.();
+  if (!superdough || !ctx) return;
+  if (ctx.state === 'suspended') await ctx.resume();
+  const now = ctx.currentTime;
+
+  try {
+    if (sample) {
+      await superdough({ ...params, s: sample }, now, duration);
+    } else if (noise) {
+      await superdough({ ...params, s: 'white' }, now, duration);
+    } else if (oscillator && !notePattern) {
+      await superdough({ ...params }, now, duration);
+    } else if (notePattern) {
+      const notes = notePattern.trim().split(/\s+/).filter((n) => n !== '~');
+      const spacing = duration + 0.05;
+      for (let i = 0; i < notes.length; i++) {
+        await superdough({ ...params, note: notes[i] }, now + i * spacing, duration);
+      }
+    }
+  } catch (e) {
+    console.warn('One-shot preview error:', e.message || e);
+  }
 }
 
 /**
