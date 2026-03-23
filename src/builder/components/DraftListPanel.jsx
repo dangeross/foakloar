@@ -34,6 +34,8 @@ export default function DraftListPanel({
 }) {
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
+  const [confirmPublish, setConfirmPublish] = useState(null); // draft to publish
+  const [confirmPublishAll, setConfirmPublishAll] = useState(false);
   const [expandedValidation, setExpandedValidation] = useState(null);
   const [importPreview, setImportPreview] = useState(null); // { validation, data }
   const [playtestResult, setPlaytestResult] = useState(null); // { walkthrough?, smoke? }
@@ -229,11 +231,22 @@ export default function DraftListPanel({
               </span>
 
               {confirmDelete === id ? (
-                <span className="flex gap-1">
+                <span className="flex gap-1 items-center">
+                  <span style={{ color: 'var(--colour-error)', fontSize: '0.6rem' }}>Delete?</span>
                   <DOSButton onClick={() => { onDelete(id); setConfirmDelete(null); }} colour="error">
                     Yes
                   </DOSButton>
                   <DOSButton onClick={() => setConfirmDelete(null)} colour="dim">
+                    No
+                  </DOSButton>
+                </span>
+              ) : confirmPublish === id ? (
+                <span className="flex gap-1 items-center">
+                  <span style={{ color: 'var(--colour-error)', fontSize: '0.6rem' }}>Publish?</span>
+                  <DOSButton onClick={() => { onPublish(draft); setConfirmPublish(null); }} colour="error">
+                    Yes
+                  </DOSButton>
+                  <DOSButton onClick={() => setConfirmPublish(null)} colour="dim">
                     No
                   </DOSButton>
                 </span>
@@ -242,7 +255,7 @@ export default function DraftListPanel({
                   <DOSButton onClick={() => onEdit(draft)} colour="text">
                     Edit
                   </DOSButton>
-                  <DOSButton onClick={() => onPublish(draft)} colour="highlight" disabled={!isValid}>
+                  <DOSButton onClick={() => setConfirmPublish(id)} colour="highlight" disabled={!isValid}>
                     Pub
                   </DOSButton>
                   <DOSButton onClick={() => setConfirmDelete(id)} colour="error">
@@ -359,27 +372,44 @@ export default function DraftListPanel({
 
         {/* Bulk publish */}
         {drafts.length > 0 && (
-          <DOSButton onClick={onBulkPublish} colour="highlight">
+          <DOSButton onClick={() => { setConfirmPublishAll(true); setConfirmDeleteAll(false); }} colour="highlight">
             Publish All ({drafts.length})
           </DOSButton>
         )}
 
         {/* Delete all */}
-        {drafts.length > 0 && !confirmDeleteAll && (
-          <DOSButton onClick={() => setConfirmDeleteAll(true)} colour="error">
+        {drafts.length > 0 && (
+          <DOSButton onClick={() => { setConfirmDeleteAll(true); setConfirmPublishAll(false); }} colour="error">
             Delete All
           </DOSButton>
         )}
+
+        {/* Confirmation rows — below the buttons */}
+        {confirmPublishAll && (
+          <div className="flex gap-1 items-center mt-1" style={{ fontSize: '0.65rem' }}>
+            <span style={{ color: 'var(--colour-error)' }}>
+              Publish {drafts.length} events to relays?
+            </span>
+            <DOSButton onClick={() => { onBulkPublish(); setConfirmPublishAll(false); }} colour="error">
+              Yes
+            </DOSButton>
+            <DOSButton onClick={() => setConfirmPublishAll(false)} colour="dim">
+              No
+            </DOSButton>
+          </div>
+        )}
         {confirmDeleteAll && (
-          <span className="flex gap-1 items-center">
-            <span style={{ color: 'var(--colour-error)', fontSize: '0.65rem' }}>Delete all drafts?</span>
+          <div className="flex gap-1 items-center mt-1" style={{ fontSize: '0.65rem' }}>
+            <span style={{ color: 'var(--colour-error)' }}>
+              Delete all {drafts.length} drafts?
+            </span>
             <DOSButton onClick={() => { onDeleteAll(); setConfirmDeleteAll(false); }} colour="error">
               Yes
             </DOSButton>
             <DOSButton onClick={() => setConfirmDeleteAll(false)} colour="dim">
               No
             </DOSButton>
-          </span>
+          </div>
         )}
       </div>{/* end footer */}
       </div>{/* end flex wrapper */}
