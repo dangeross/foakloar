@@ -216,10 +216,6 @@
           "30078:<PUBKEY>:tides-end-09-recipes:item:hook"
         ],
         [
-          "item",
-          "30078:<PUBKEY>:tides-end-09-recipes:item:raw-fish"
-        ],
-        [
           "content-type",
           "text/markdown"
         ]
@@ -371,7 +367,7 @@
           "coil"
         ]
       ],
-      "content": "A sturdy coil of hemp rope, salt-stiffened but still strong. The kind used to moor small boats or lash cargo. It could be useful for making something."
+      "content": "A coil of sturdy hemp rope, weathered by salt air but still strong. It could be useful for making something — if you had the right parts."
     },
     {
       "kind": 30078,
@@ -398,7 +394,7 @@
           "iron hook"
         ]
       ],
-      "content": "A curved iron hook, pitted with rust but still sharp. It was probably part of a fishing rig before the sea claimed it. With the right materials, it could be put to use again."
+      "content": "A heavy iron hook, rusted at the bend but sharp at the point. A fisherman would know what to do with this and some rope."
     },
     {
       "kind": 30078,
@@ -423,6 +419,40 @@
           "noun",
           "rod",
           "fishing rod"
+        ],
+        [
+          "verb",
+          "fish",
+          "cast",
+          "use"
+        ],
+        [
+          "state",
+          "new"
+        ],
+        [
+          "transition",
+          "new",
+          "used",
+          "You cast the line into the shallows. After a moment, a tug — you haul in a wriggling fish."
+        ],
+        [
+          "transition",
+          "used",
+          "used",
+          "You cast again, but nothing bites this time."
+        ],
+        [
+          "on-interact",
+          "fish",
+          "set-state",
+          "used"
+        ],
+        [
+          "on-interact",
+          "fish",
+          "give-item",
+          "30078:<PUBKEY>:tides-end-09-recipes:item:raw-fish"
         ]
       ],
       "content": "A makeshift fishing rod — a length of rope tied to a sturdy hook, lashed to a piece of driftwood. Simple, but it should work well enough to catch something from the shallows."
@@ -450,12 +480,6 @@
           "noun",
           "fish",
           "raw fish"
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:tides-end-09-recipes:item:fishing-rod",
-          "",
-          "You'd need something to catch fish with."
         ]
       ],
       "content": "A silvery fish, freshly caught from the shallows. Its scales flash in the light as it flaps weakly. Not much on its own, but it would make a decent meal."
@@ -510,7 +534,7 @@
           "requires",
           "30078:<PUBKEY>:tides-end-09-recipes:item:hook",
           "",
-          "You need a hook."
+          "You need a hook of some kind."
         ],
         [
           "on-complete",
@@ -535,7 +559,7 @@
           "false"
         ]
       ],
-      "content": "A fishing rod can be fashioned from rope and a hook. The dock fishermen make them all the time — nothing fancy, just something strong enough to haul in a catch from the shallows."
+      "content": "You tie the iron hook to the end of the rope, wrapping it tight. The knots hold firm — a crude but serviceable fishing rod."
     }
   ]
 }

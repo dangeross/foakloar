@@ -2362,6 +2362,9 @@ export class GameEngine {
   _fireCraftComplete(event, dtag) {
     this.player.markPuzzleSolved(dtag);
 
+    // Emit recipe content as crafting prose
+    if (event.content) this._emit(event.content, 'narrative');
+
     // Fire on-complete actions
     for (const tag of getTags(event, 'on-complete')) {
       const action = tag[2];

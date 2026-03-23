@@ -230,6 +230,7 @@ Stitches two exit slots together. Owned and published by whoever creates the con
 - The client renders conflicting portals as *"the passage north feels unstable — you sense two possible destinations."*
 - One-way portals have a single `exit` tag. Two-way portals have two. A hub place could have many.
 - `requires` tags on a portal gate traversal inline — no separate lock event needed. The optional failed description tells the player why they cannot pass.
+- `sound` tags on a portal with role `effect` fire as one-shots when the player traverses the portal. Use for door creaks, footstep sounds, transition effects.
 
 ```json
 // One-way teleport trap
@@ -1043,6 +1044,7 @@ Defines what items combine to produce a new item. Structurally identical to a se
 }
 ```
 
+- `content` — optional prose, shown on examine (ingredient checklist) and on successful craft (completion text). Use it to describe the crafting moment.
 - `ordered: true` — ingredients must be combined in sequence; client evaluates `requires` in tag order
 - **Ingredient consumption is explicit** — items are only consumed if listed as `on-complete consume-item` tags. `requires` gates the recipe (player must hold the item) but does not consume it. This allows non-item requirements — a lit forge, a specific place state — without consuming them:
 

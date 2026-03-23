@@ -241,6 +241,7 @@ Combat is data-driven via `on-*` dispatcher:
 - Read the spec before implementing any new mechanic
 - All world events must use tag shapes exactly as defined in the spec
 - Discuss any proposed spec extensions before writing code
+- **Keep docs in sync:** changes to the spec (`docs/spec/foakloar-design.md`), authoring guide (`docs/authoring/foakloar-authoring-guide.md`), or tag reference (`docs/authoring/tag-reference.md`) must be reflected in the other docs if applicable. Also update the spec changelog (`docs/spec/CHANGELOG.md`).
 - The client should be event/data-driven — behaviour comes from tags, not hardcoded logic
 - Test each phase with world content that exercises the new mechanic
 - Run `npm test` to verify all engine tests pass before committing

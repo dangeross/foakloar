@@ -7,6 +7,12 @@
 
 ### Added
 
+**Recipe content as craft prose**
+Recipe `content` field is shown on successful craft (completion text), in addition to on examine. Gives authors a way to describe the crafting moment.
+
+**Portal sound effects on traversal**
+Portal `sound` tags with role `effect` fire as one-shots when the player traverses. Supports door creaks, footsteps, transition sounds.
+
 **`puzzle` tag on NIP-44 sealed events**
 Declares which puzzle's answer is the decryption key. Used by the publishing tool to encrypt `content` before signing.
 ```json

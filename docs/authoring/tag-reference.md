@@ -205,7 +205,7 @@ D-tag: `<slug>:world`
 | `requires-not` | `["requires-not", "<ref>", "<state>", "<desc>"]` (repeatable) | opt | — |
 | `consequence` | `["consequence", "<consequence-ref>"]` | opt | portal death trap ref |
 | `cw` | `["cw", "<warning>"]` (repeatable) | opt | content warning label |
-| `sound` | `["sound", "<sound-ref>", "<role>", "<volume>", "<state?>"]` (repeatable) | opt | — |
+| `sound` | `["sound", "<sound-ref>", "effect", "<volume>"]` (repeatable) | opt | one-shot on traversal (door creak, footsteps) |
 
 **NOT valid on portal:** `title`, `noun`, `verb`, `item`, `feature`, `npc`, `clue`, `on-interact`, `on-enter`, `counter`, `damage`, `health`, `media`, `dialogue`, `contains`
 
@@ -397,6 +397,8 @@ One-way portal (1 exit tag) or two-way (2 exit tags):
 | `on-counter` | `["on-counter", "<dir>", "<counter>", "<threshold>", "<action>", "<action-target?>"]` (repeatable) | opt | — |
 | `ordered` | `["ordered", "true"\|"false"]` | opt | sequence steps must be in order |
 | `sound` | `["sound", "<sound-ref>", "<role>", "<volume>", "<state?>"]` (repeatable) | opt | — |
+
+**Content field:** optional. Shown on examine (with ingredient checklist) AND on successful craft (as completion prose).
 
 ### clue
 
