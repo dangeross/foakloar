@@ -102,27 +102,45 @@ The 5th element (`ext-ref`) is optional — include it to target a different eve
 ---
 ## Action Types
 
-| Action | Target | Example |
-|--------|--------|---------|
+Every trigger tag ends with `..., "<action>", "<target>", "<ext-ref?>"]`. The trigger prefix varies (see Trigger Shapes above) but **everything from the action onwards is consistent across all triggers**.
+
+The action tail is always: `"<action>", "<target>"` — with an optional `"<ext-ref>"` for `set-state` targeting another event.
+
+### Actions with a single target
+
+| Action | Target | Full example |
+|--------|--------|-------------|
 | `set-state` | state string | `["on-interact", "light", "set-state", "lit"]` |
-| `set-state` (ext) | state + ref | `["on-interact", "press", "set-state", "open", "30078:<pk>:...:gate"]` |
-| `traverse` | portal ref | `["on-interact", "enter", "traverse", "30078:<pk>:...:portal"]` |
+| `set-state` (ext) | state string + ext-ref | `["on-interact", "press", "set-state", "open", "30078:<pk>:...:gate"]` |
 | `give-item` | item ref | `["on-complete", "", "give-item", "30078:<pk>:...:item"]` |
 | `consume-item` | item ref | `["on-complete", "", "consume-item", "30078:<pk>:...:item"]` |
-| `deal-damage` | number | `["on-attacked", "", "deal-damage", "2"]` |
-| `deal-damage-npc` | ref or `""` | `["on-interact", "attack", "deal-damage-npc", ""]` (blank = combat target) |
-| `heal` | number | `["on-interact", "drink", "heal", "5"]` |
+| `traverse` | portal ref | `["on-interact", "enter", "traverse", "30078:<pk>:...:portal"]` |
+| `deal-damage` | amount | `["on-attacked", "", "deal-damage", "2"]` |
+| `deal-damage-npc` | `""` (blank = combat target) | `["on-interact", "attack", "deal-damage-npc", ""]` |
+| `heal` | amount | `["on-interact", "drink", "heal", "5"]` |
 | `consequence` | consequence ref | `["on-player-health", "down", "0", "consequence", "30078:<pk>:...:death"]` |
 | `steals-item` | item ref or `"any"` | `["on-encounter", "", "steals-item", "any"]` |
-| `deposits` | — (no target) | `["on-health", "down", "0", "deposits"]` |
-| `flees` | — (no target) | `["on-health", "down", "3", "flees"]` |
-| `decrement` | counter name | `["on-interact", "use", "decrement", "battery"]` |
-| `increment` | counter name | `["on-interact", "crank", "increment", "cranks"]` |
-| `set-counter` | name, value | `["on-interact", "reset", "set-counter", "cranks", "0"]` (self) |
-| `set-counter` (ext) | name, value, ref | `["on-interact", "reset", "set-counter", "cranks", "0", "<ref>"]` |
+| `deposits` | `""` | `["on-health", "down", "0", "deposits", ""]` |
+| `flees` | `""` | `["on-health", "down", "3", "flees", ""]` |
 | `sound` | sound ref | `["on-interact", "ring", "sound", "30078:<pk>:...:sound:bell"]` |
+| `activate` | event ref (recipe, puzzle, or payment) | `["on-interact", "use", "activate", "30078:<pk>:...:recipe"]` |
 
-No other action types exist. Do not invent actions like `unlock`, `teleport`, `remove`, etc.
+### Counter actions (target = counter name + value)
+
+| Action | Target elements | Full example |
+|--------|----------------|-------------|
+| `decrement` | counter, amount | `["on-move", "on", "decrement", "battery", "1"]` |
+| `increment` | counter, amount | `["on-interact", "crank", "increment", "cranks", "1"]` |
+| `set-counter` | counter, value | `["on-interact", "reset", "set-counter", "cranks", "0"]` |
+
+### Notes
+
+- `activate` triggers the target event's native mechanic: recipe → crafting prompt, puzzle → puzzle prompt, payment → payment flow.
+- `set-state` is the only action that supports an ext-ref (optional 5th element targeting another event). All other actions act on self or take a ref as the target directly.
+- `deposits` and `flees` take a blank target — they have no arguments.
+- `deal-damage-npc` takes a blank target — the combat target NPC is resolved from context.
+- NIP-44 crypto keys are derived automatically when a puzzle with `answer-hash` + `salt` is solved — no action tag needed.
+- No other action types exist. Do not invent actions like `unlock`, `teleport`, `remove`, etc.
 
 ---
 ## Event Type Reference

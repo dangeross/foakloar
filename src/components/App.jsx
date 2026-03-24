@@ -419,6 +419,19 @@ export default function App() {
     }
   }
 
+  // Expose command sender for preview testing (dev only)
+  if (import.meta.env.DEV) {
+    window.__engine = () => getEngine();
+    window.__sendCommand = async (cmd) => {
+      const engine = getEngine();
+      await engine.handleCommand(cmd);
+      commitEngine(engine);
+      if (isAudioReady() && !buildMode) {
+        evaluateSoundTags(mergedEvents, engine.currentPlace, engine.player.state, engine.player.npcStates);
+      }
+    };
+  }
+
   function onKeyDown(e) {
     const hist = historyRef.current;
     if (hist.length === 0) return;

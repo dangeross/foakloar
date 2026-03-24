@@ -206,7 +206,7 @@ export class GameEngine {
     // Place on-enter triggers (only on actual movement)
     if (isMoving) {
       for (const tag of getTags(room, 'on-enter')) {
-        if (tag[1] !== 'player') continue;
+        if (tag[1] && tag[1] !== 'player') continue;
         const action = tag[2];
         const actionTarget = tag[3];
         const extTarget = tag[4];
@@ -717,6 +717,27 @@ export class GameEngine {
       } else if (action === 'sound') {
         this._emitSound(targetState, targetRef);
         acted = true;
+      } else if (action === 'activate') {
+        const activateRef = targetState;  // event ref to activate
+        const activateEvent = this.events.get(activateRef);
+        if (activateEvent) {
+          const activateType = getTag(activateEvent, 'type');
+          if (activateType === 'recipe') {
+            this._attemptCraft(activateEvent, activateRef);
+          } else if (activateType === 'puzzle') {
+            if (this.player.isPuzzleSolved(activateRef)) {
+              this._emit('You have already solved this.', 'narrative');
+            } else {
+              this._emit(`\nA riddle appears:`, 'puzzle-title');
+              this._emit(activateEvent.content, 'puzzle');
+              this._emit('Type your answer (or "back" to leave)...', 'hint');
+              this.puzzleActive = activateRef;
+            }
+          } else if (activateType === 'payment') {
+            this._activatePayment(activateRef, activateEvent);
+          }
+          acted = true;
+        }
       }
     }
     if (acted) {
@@ -1854,19 +1875,19 @@ export class GameEngine {
     this._emit('Correct!', 'success');
     this.player.markPuzzleSolved(this.puzzleActive);
 
+    // Auto-derive and store NIP-44 crypto key from puzzle answer + salt
     const derivedPrivKey = await derivePrivateKey(
       answer.trim(),
       salt
     );
+    this.player.addCryptoKey(derivedPrivKey);
 
     for (const tag of getTags(puzzleEvent, 'on-complete')) {
       const action = tag[2];
       const value = tag[3];
       const extRef = tag[4];
 
-      if (action === 'give-crypto-key') {
-        this.player.addCryptoKey(derivedPrivKey);
-      } else if (action === 'consequence' && (value || extRef)) {
+      if (action === 'consequence' && (value || extRef)) {
         this._executeConsequence(extRef || value);
       } else if (action === 'traverse' && (value || extRef)) {
         this._traverse(extRef || value);
@@ -2228,6 +2249,17 @@ export class GameEngine {
         for (let i = 1; i < nt.length; i++) {
           if (nt[i].toLowerCase() === noun) return { event, dtag, type: 'recipe' };
         }
+      }
+    }
+    return null;
+  }
+
+  /** Find a recipe whose verb tag matches the given verb (canonical). */
+  _findRecipeByVerb(verb) {
+    for (const [dtag, event] of this.events) {
+      if (getTag(event, 'type') !== 'recipe') continue;
+      for (const vt of getTags(event, 'verb')) {
+        if (vt[1]?.toLowerCase() === verb) return { event, dtag, type: 'recipe' };
       }
     }
     return null;
@@ -2653,7 +2685,13 @@ export class GameEngine {
 
       const currentState = this.player.getState(dtag) ?? fDefault;
       if (!this.processFeatureInteract(event, dtag, verb, currentState)) {
-        if (verb !== 'examine') this._emit('Nothing happens.', 'narrative');
+        // Feature didn't handle the verb — check if a recipe uses this verb
+        const recipeByVerb = this._findRecipeByVerb(verb);
+        if (recipeByVerb) {
+          this._attemptCraft(recipeByVerb.event, recipeByVerb.dtag);
+        } else if (verb !== 'examine') {
+          this._emit('Nothing happens.', 'narrative');
+        }
       }
     } else if (type === 'npc') {
       if (verb === 'examine') {
@@ -2942,10 +2980,16 @@ export class GameEngine {
       return;
     }
 
-    // Verb with no noun
+    // Verb with no noun — check if a recipe matches the verb
     if (parsed && !parsed.noun1) {
       if (parsed.verb === 'examine') {
         if (this.place) this.enterRoom(this.currentPlace);
+        return;
+      }
+      // Check recipes by verb match
+      const recipeByVerb = this._findRecipeByVerb(parsed.verb);
+      if (recipeByVerb) {
+        this._attemptCraft(recipeByVerb.event, recipeByVerb.dtag);
         return;
       }
       this._emit(`${parsed.verb} what?`, 'error');

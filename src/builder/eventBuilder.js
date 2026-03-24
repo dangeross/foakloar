@@ -156,7 +156,7 @@ export function validateEvent(template) {
     }
 
     // Title required on most event types
-    const typesWithTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest', 'recipe'];
+    const typesWithTitle = ['place', 'item', 'feature', 'clue', 'npc', 'payment', 'world', 'quest', 'recipe', 'puzzle'];
     if (typesWithTitle.includes(typeTag) && !tagNames.has('title')) {
       errors.push(err('missing-tag', 'Missing title tag', `Add a ["title", "<display name>"] tag to "${dTagValue}".`));
     }

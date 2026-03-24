@@ -13,6 +13,12 @@ Recipe `content` field is shown on successful craft (completion text), in additi
 **Portal sound effects on traversal**
 Portal `sound` tags with role `effect` fire as one-shots when the player traverses. Supports door creaks, footsteps, transition sounds.
 
+**`activate` action type**
+New action type that triggers a target event's native mechanic based on its type: recipe → crafting prompt, puzzle → puzzle prompt, payment → payment flow. Used to scope recipes/puzzles to a feature interaction: `["on-interact", "use", "activate", "<event-ref>"]`. Valid on `on-interact` and `on-complete` triggers.
+
+**Auto crypto-key derivation on puzzle solve**
+When a puzzle with `answer-hash` + `salt` tags is solved, the engine automatically derives and stores the NIP-44 decryption key from the answer. No explicit action tag needed.
+
 **`puzzle` tag on NIP-44 sealed events**
 Declares which puzzle's answer is the decryption key. Used by the publishing tool to encrypt `content` before signing.
 ```json

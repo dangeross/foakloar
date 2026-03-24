@@ -546,18 +546,18 @@ New action types can be added without changing the tag structure — the dispatc
 
 ✓ = valid and meaningful  —  = not applicable or nonsensical in this context
 
-| Trigger | `set-state` | `give-item` | `consume-item` | `traverse` | `deal-damage` | `deal-damage-npc` | `heal` | `consequence` | `steals-item` | `deposits` | `flees` | `decrement` | `increment` | `set-counter` | `sound` |
-|---------|-------------|-------------|----------------|------------|---------------|-------------------|--------|---------------|---------------|------------|---------|-------------|-------------|---------------|---------|
-| `on-interact` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ | | ✓ |
-| `on-complete` | ✓ | ✓ | ✓ | ✓ | — | — | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ | | ✓ |
-| `on-enter` | ✓ | ✓ | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ | | ✓ |
-| `on-encounter` | ✓ | — | — | — | ✓ | — | — | ✓ | ✓ | ✓ | ✓ | ✓ | — | — | | ✓ |
-| `on-attacked` | ✓ | — | — | — | ✓ | ✓ | — | ✓ | ✓ | — | ✓ | ✓ | ✓ | ✓ | | ✓ |
-| `on-health` | ✓ | ✓ | — | ✓ | — | — | — | ✓ | — | ✓ | — | — | — | — | | ✓ |
-| `on-player-health` | ✓ | — | — | ✓ | — | — | — | ✓ | — | — | — | — | — | — | | ✓ |
-| `on-move` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ | | ✓ |
-| `on-counter` | ✓ | ✓ | — | — | ✓ | — | ✓ | ✓ | — | — | — | — | — | — | | ✓ |
-| `on-fail` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | — | — | | ✓ |
+| Trigger | `set-state` | `give-item` | `consume-item` | `traverse` | `deal-damage` | `deal-damage-npc` | `heal` | `consequence` | `steals-item` | `deposits` | `flees` | `decrement` | `increment` | `set-counter` | `sound` | `activate` |
+|---------|-------------|-------------|----------------|------------|---------------|-------------------|--------|---------------|---------------|------------|---------|-------------|-------------|---------------|---------|------------|
+| `on-interact` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `on-complete` | ✓ | ✓ | ✓ | ✓ | — | — | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `on-enter` | ✓ | ✓ | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ | ✓ | — |
+| `on-encounter` | ✓ | — | — | — | ✓ | — | — | ✓ | ✓ | ✓ | ✓ | ✓ | — | — | ✓ | — |
+| `on-attacked` | ✓ | — | — | — | ✓ | ✓ | — | ✓ | ✓ | — | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| `on-health` | ✓ | ✓ | — | ✓ | — | — | — | ✓ | — | ✓ | — | — | — | — | ✓ | — |
+| `on-player-health` | ✓ | — | — | ✓ | — | — | — | ✓ | — | — | — | — | — | — | ✓ | — |
+| `on-move` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ | ✓ | — |
+| `on-counter` | ✓ | ✓ | — | — | ✓ | — | ✓ | ✓ | — | — | — | — | — | — | ✓ | — |
+| `on-fail` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | — | — | ✓ | — |
 
 **Notes:**
 - `steals-item`, `deposits`, `flees` are NPC-only actions — only meaningful on `on-encounter` and `on-attacked` where an NPC is the actor
@@ -566,6 +566,7 @@ New action types can be added without changing the tag structure — the dispatc
 - `consume-item` on `on-interact` — single-use items consumed on use
 - `give-item` on `on-health` — NPC drops loot on death
 - `traverse` on `on-health` — teleport player on NPC death (reward chamber, cutscene location)
+- `activate` triggers the target event's native mechanic — recipe (crafting), puzzle (prompt), or payment (invoice). Used to scope recipes/puzzles to a feature interaction.
 - `increment`/`decrement`/`set-counter` on `on-attacked` — track hits taken, shield durability, attack counters
 - `on-fail` only fires on `riddle` and `cipher` puzzles — sequence/observe puzzles have no wrong-answer state
 - The matrix reflects intent, not hard enforcement. The client should handle unexpected combinations gracefully rather than erroring.

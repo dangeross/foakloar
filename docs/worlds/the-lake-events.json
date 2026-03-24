@@ -157,10 +157,6 @@
           "east"
         ],
         [
-          "exit",
-          "south"
-        ],
-        [
           "feature",
           "30078:<PUBKEY>:the-lake:feature:weathered-journal"
         ],
@@ -313,6 +309,10 @@
           "30078:<PUBKEY>:the-lake:sound:chapel-ambient",
           "ambient",
           "0.7"
+        ],
+        [
+          "exit",
+          "down"
         ]
       ],
       "content": "What remains of a chapel stands open to the sky. The roof collapsed long ago, and ivy crawls over the broken pews. A bronze altar squats before the east wall, green with age. At the far end, a stone wall bears a crumbling inscription, still partly legible. Something about the altar invites you to kneel — to pray."
@@ -469,6 +469,10 @@
           "30078:<PUBKEY>:the-lake:sound:lake-ambient",
           "ambient",
           "1.0"
+        ],
+        [
+          "exit",
+          "east"
         ]
       ],
       "content": "You emerge onto a narrow ledge above an underground lake. The water is **black and still**, reflecting nothing. The cavern stretches beyond sight.\n\nTo the north, a heavy iron gate bars a passage cut into the rock. The air is cold and tastes of **stone and deep water**.\n\n> *Something vast moves beneath the surface — a ripple, then stillness.*"
@@ -511,7 +515,7 @@
         [
           "media",
           "text/plain",
-          "        _______________\n       /               \\\n      |   [O]     [|]   |\n      |                 |\n      |  ~~~~~~~~~~~   |\n      |  ~ CHANNELS ~  |\n      |  ~~~~~~~~~~~   |\n       \\_____________/"
+          "  ┌───────────────────┐\n  │  (O)         [║]  │\n  │                   │\n  │  ═══════════════  │\n  │  ≈  CHANNELS  ≈   │\n  │  ═══════════════  │\n  │                   │\n  └───────────────────┘"
         ],
         [
           "sound",
@@ -1038,7 +1042,7 @@
         [
           "counter",
           "battery",
-          "50"
+          "200"
         ],
         [
           "on-move",
@@ -1150,25 +1154,6 @@
           "noun",
           "amulet",
           "serpent amulet"
-        ],
-        [
-          "verb",
-          "insert",
-          "place",
-          "put"
-        ],
-        [
-          "on-interact",
-          "insert",
-          "set-state",
-          "amulet-placed",
-          "30078:<PUBKEY>:the-lake:feature:mechanism"
-        ],
-        [
-          "on-interact",
-          "take",
-          "sound",
-          "30078:<PUBKEY>:the-lake:sound:pickup"
         ]
       ],
       "content": "An amulet of orichalcum, shaped like a coiled serpent. It is warm to the touch, as if alive."
@@ -1196,25 +1181,6 @@
           "noun",
           "staff",
           "serpent staff"
-        ],
-        [
-          "verb",
-          "insert",
-          "place",
-          "put"
-        ],
-        [
-          "on-interact",
-          "insert",
-          "set-state",
-          "activated",
-          "30078:<PUBKEY>:the-lake:feature:mechanism"
-        ],
-        [
-          "on-interact",
-          "take",
-          "sound",
-          "30078:<PUBKEY>:the-lake:sound:pickup"
         ]
       ],
       "content": "A staff of dark wood, carved with serpent scales. The head is shaped like a coiled serpent, matching the amulet."
@@ -1724,7 +1690,7 @@
           "transition",
           "sealed",
           "open",
-          "The heavy lid grinds aside. Inside, on a bed of crumbled velvet, lie a serpent amulet and a serpent staff, both of orichalcum."
+          "The heavy lid grinds aside. Inside, on a bed of crumbled velvet, lies a serpent staff of orichalcum."
         ],
         [
           "transition",
@@ -1743,12 +1709,6 @@
           "open",
           "set-state",
           "open"
-        ],
-        [
-          "on-interact",
-          "open",
-          "give-item",
-          "30078:<PUBKEY>:the-lake:item:serpent-amulet"
         ],
         [
           "on-interact",
@@ -1818,6 +1778,17 @@
           "activated",
           "activated",
           "The mechanism hums steadily. Golden light pulses through the orichalcum channels. The way below is open."
+        ],
+        [
+          "verb",
+          "use",
+          "activate"
+        ],
+        [
+          "on-interact",
+          "use",
+          "activate",
+          "30078:<PUBKEY>:the-lake:recipe:activate-mechanism"
         ]
       ],
       "content": "A complex device of dark stone and orichalcum channels, set into the north wall. Two recesses are carved into its face — one round, one long and narrow. The orichalcum channels trace intricate patterns across the wall and floor, all converging on this point."
@@ -1968,6 +1939,10 @@
           "puzzle"
         ],
         [
+          "title",
+          "The Chapel Riddle"
+        ],
+        [
           "puzzle-type",
           "riddle"
         ],
@@ -2009,6 +1984,10 @@
         [
           "type",
           "puzzle"
+        ],
+        [
+          "title",
+          "The Chapel Riddle"
         ],
         [
           "puzzle-type",
@@ -3297,14 +3276,6 @@
         ],
         [
           "involves",
-          "30078:<PUBKEY>:the-lake:item:serpent-amulet"
-        ],
-        [
-          "involves",
-          "30078:<PUBKEY>:the-lake:item:serpent-staff"
-        ],
-        [
-          "involves",
           "30078:<PUBKEY>:the-lake:feature:mechanism"
         ],
         [
@@ -3315,21 +3286,13 @@
         ],
         [
           "requires",
-          "30078:<PUBKEY>:the-lake:item:serpent-amulet",
-          "",
-          ""
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:the-lake:item:serpent-staff",
-          "",
-          ""
-        ],
-        [
-          "requires",
           "30078:<PUBKEY>:the-lake:feature:mechanism",
           "activated",
           ""
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-lake:recipe:activate-mechanism"
         ]
       ],
       "content": "The chapel holds secrets older than the lake. Find them all."
@@ -3755,12 +3718,88 @@
         ],
         [
           "requires",
-          "30078:<PUBKEY>:the-lake:place:sanctum",
+          "30078:<PUBKEY>:the-lake:feature:sanctum-landmark",
           "visited",
           ""
         ]
       ],
       "content": "You have reached the Sanctum beneath the lake. The sealed knowledge of the watchers is yours — not treasure, but memory. The serpent rests. The mechanism sleeps. And you understand, at last, what the lake remembers.\n\n*The world above will forget, as it always does. But the lake will remember you.*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:recipe:activate-mechanism"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "recipe"
+        ],
+        [
+          "title",
+          "Activate the Mechanism"
+        ],
+        [
+          "verb",
+          "use",
+          "activate",
+          "place",
+          "insert"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:item:serpent-amulet",
+          "",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:item:serpent-staff",
+          "",
+          ""
+        ],
+        [
+          "ordered",
+          "true"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "activated",
+          "30078:<PUBKEY>:the-lake:feature:mechanism"
+        ],
+        [
+          "on-complete",
+          "",
+          "consume-item",
+          "30078:<PUBKEY>:the-lake:item:serpent-amulet"
+        ],
+        [
+          "on-complete",
+          "",
+          "consume-item",
+          "30078:<PUBKEY>:the-lake:item:serpent-staff"
+        ],
+        [
+          "noun",
+          "amulet and staff",
+          "serpent items"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:the-lake:portal:mechanism-to-sanctum"
+        ]
+      ],
+      "content": "You place the serpent amulet into the round recess and slide the serpent staff into the narrow slot. The orichalcum channels blaze with golden light. The mechanism hums — a deep, resonant tone that shakes dust from the ceiling."
     },
     {
       "kind": 30078,
@@ -3788,15 +3827,9 @@
         [
           "state",
           "unseen"
-        ],
-        [
-          "on-interact",
-          "examine",
-          "set-state",
-          "visited"
         ]
       ],
-      "content": "The sanctum stretches before you, warm and golden."
+      "content": "The sanctum hums with ancient energy."
     }
   ]
 }

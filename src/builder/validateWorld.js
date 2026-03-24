@@ -155,6 +155,15 @@ export function validateWorld(events, answers = {}) {
             fix: `Create the puzzle event with d-tag "${puzzleDTagStr}", or check the puzzle reference.`,
           });
         } else {
+          const puzzleType = getTagValue(puzzleEvent, 'puzzle-type');
+          if (puzzleType === 'sequence') {
+            errors.push({
+              dTag,
+              category: 'nip44',
+              message: `NIP-44 content references puzzle "${puzzleDTagStr}" which is type "sequence" — sequence puzzles have no typed answer so no encryption key can be derived`,
+              fix: `Change the puzzle to type "riddle" (player types an answer that becomes the key), or remove the NIP-44 content-type.`,
+            });
+          }
           const salt = getTagValue(puzzleEvent, 'salt');
           if (!salt) {
             errors.push({
