@@ -16,7 +16,7 @@ import EventPreview from './EventPreview.jsx';
 import { buildStrudelCodeFromTags, previewSound, stopPreview, decompileStrudelCode, playOneShotFromTags } from '../../services/sound.js';
 import { buildEventTemplate, buildDTag, publishEvent } from '../eventBuilder.js';
 import { EVENT_TYPE_DESCRIPTIONS } from '../tagSchema.js';
-import { Tooltip } from './TagEditor.jsx';
+import { Tooltip, getGuideUrl } from './TagEditor.jsx';
 import { resolvePubkeyPlaceholder, loadAnswers, saveAnswer } from '../draftStore.js';
 import { renderMarkdown } from '../../engine/content.js';
 import Nip44Preview from './Nip44Preview.jsx';
@@ -201,7 +201,18 @@ export default function EventEditor({
 
   return (
     <DOSPanel
-      title={`${eventTemplate ? 'EDIT' : 'NEW'} ${eventType.toUpperCase()}`}
+      title={<>
+        {`${eventTemplate ? 'EDIT' : 'NEW'} ${eventType.toUpperCase()}`}
+        {getGuideUrl(eventType) && (
+          <a
+            href={getGuideUrl(eventType)}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'var(--colour-bg)', opacity: 0.7, marginLeft: '0.5em', fontSize: '0.65rem' }}
+            onClick={(e) => e.stopPropagation()}
+          >[?]</a>
+        )}
+      </>}
       onClose={onClose}
       minWidth="32em"
       maxWidth="95vw"

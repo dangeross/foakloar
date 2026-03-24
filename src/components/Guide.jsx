@@ -583,7 +583,9 @@ export default function Guide({ guidePage, identity }) {
               </div>
             )}
           </div>
-          <IdentityButton identity={identity} />
+          <span style={{ '--colour-highlight': '#ffffff', '--colour-dim': THEME.dim }}>
+            <IdentityButton identity={identity} />
+          </span>
         </div>
 
         <div style={{ padding: '1.5rem 2rem' }}>

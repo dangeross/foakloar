@@ -14,6 +14,24 @@ import { TAG_SCHEMAS, TAGS_BY_EVENT_TYPE, getTagSchema, valuesToTag, tagToValues
 import DOSButton from './ui/DOSButton.jsx';
 import InlineList from './ui/InlineList.jsx';
 
+// Map event types to guide page IDs
+const EVENT_TYPE_GUIDE_MAP = {
+  world: '01-getting-started',
+  place: '01-getting-started',
+  portal: '01-getting-started',
+  item: '02-items-and-features',
+  feature: '02-items-and-features',
+  npc: '04-characters',
+  dialogue: '04-characters',
+  clue: '05-puzzles',
+  puzzle: '05-puzzles',
+  quest: '06-quests',
+  recipe: '09-recipes',
+  consequence: '07-combat',
+  sound: '08-sound',
+  payment: '10-payments',
+};
+
 /** Tooltip — styled info icon that shows description on hover */
 function Tooltip({ text }) {
   if (!text) return null;
@@ -73,7 +91,13 @@ function Tooltip({ text }) {
   );
 }
 
-export { Tooltip };
+/** Returns the guide page URL for an event type, or null */
+function getGuideUrl(eventType) {
+  const pageId = EVENT_TYPE_GUIDE_MAP[eventType];
+  return pageId ? `/guide/${pageId}` : null;
+}
+
+export { Tooltip, getGuideUrl };
 
 /** Input styled for DOS aesthetic */
 function DOSInput({ value, onChange, placeholder, type = 'text', className = '', style = {} }) {
