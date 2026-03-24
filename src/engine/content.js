@@ -40,19 +40,20 @@ export function renderRoomContent(room, cryptoKeys) {
       } catch {}
     }
     if (decrypted) {
-      // Render decrypted content according to inner format (third element of content-type)
-      if (innerFormat === 'text/markdown') {
-        entries.push({ html: renderMarkdown(decrypted), type: 'markdown' });
-      } else {
+      // Render decrypted content — default markdown, text/plain opt-out
+      if (innerFormat === 'text/plain') {
         entries.push({ text: decrypted, type: 'win' });
+      } else {
+        entries.push({ html: renderMarkdown(decrypted), type: 'markdown' });
       }
     } else {
       entries.push({ text: 'The air hums with sealed energy. You lack the key to read what is written here.', type: 'sealed' });
     }
-  } else if (contentType === 'text/markdown') {
-    entries.push({ html: renderMarkdown(room.content), type: 'markdown' });
-  } else {
+  } else if (contentType === 'text/plain') {
     entries.push({ text: room.content, type: 'narrative' });
+  } else {
+    // Default: render as markdown (covers text/markdown and no content-type)
+    entries.push({ html: renderMarkdown(room.content), type: 'markdown' });
   }
 
   // Media tags

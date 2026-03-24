@@ -105,7 +105,7 @@ describe('unordered crafting', () => {
 
     engine._attemptCraft(recipe, ref(`${WORLD}:recipe:iron-key`));
 
-    const msg = engine.output.find((o) => o.text === 'Already crafted.');
+    const msg = engine.output.find((o) => o.text === 'You already did that.');
     expect(msg).toBeTruthy();
   });
 });

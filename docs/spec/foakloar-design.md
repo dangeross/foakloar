@@ -50,11 +50,11 @@ References between events use the `a` tag format (`30078:pubkey:d-tag`) so links
 
 #### content field
 
-The `content` field carries the primary prose description rendered to the player. Its format is declared by an optional `content-type` tag — if absent, `text/plain` is assumed.
+The `content` field carries the primary prose description rendered to the player. Content is rendered as **markdown by default** — bold, italic, and line breaks are supported without any extra tags. Use `content-type` only to opt out or for sealed content:
 
 ```json
-["content-type", "text/plain"]        // default — plain text prose
-["content-type", "text/markdown"]     // markdown rendered by client
+// No content-type tag needed — markdown is the default
+["content-type", "text/plain"]        // opt-out: disable markdown formatting
 ["content-type", "application/nip44"] // NIP-44 encrypted — state: sealed
 ```
 
@@ -75,7 +75,6 @@ Multiple `media` tags are allowed — one per content block. A place with ASCII 
     ["t",            "the-lake"],
     ["type",         "place"],
     ["title",        "West of House"],
-    ["content-type", "text/markdown"],
     ["media",        "text/plain", "    +--------+\n    |        |\n    | HOUSE  |\n    |        |\n    +--------+"]
   ],
   "content": "You are standing in an open field west of a **white house**, with a boarded front door. There is a small mailbox here."

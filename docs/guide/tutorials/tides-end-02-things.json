@@ -157,10 +157,6 @@
         [
           "cursor",
           "beam"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A small coastal village where the river meets the sea.\n\nExplore the dock, village, tavern, and beach. Pick up items and examine features to learn how things work."
@@ -199,10 +195,6 @@
         [
           "feature",
           "30078:<PUBKEY>:tides-end-02-things:feature:fishing-nets"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air.\n\nTangled **fishing nets** hang from a post, drying in the breeze. An **old lantern** sits on a crate near the mooring ropes.\n\nA cobbled road leads north toward the village, and a sandy path follows the shoreline east."
@@ -245,10 +237,6 @@
         [
           "feature",
           "30078:<PUBKEY>:tides-end-02-things:feature:old-well"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A modest square of packed earth ringed by low stone buildings with slate roofs. A dry fountain stands in the centre, its basin cracked and filled with windblown leaves.\n\nA weathered **notice board** leans against the fountain. Nearby, an **old well** with a rusted handle sits half-hidden by overgrown ivy.\n\nSmoke drifts from a chimney to the east where a tavern sign swings on rusted chains. To the west, a gap between the houses opens onto dunes and the sound of surf."
@@ -279,10 +267,6 @@
         [
           "item",
           "30078:<PUBKEY>:tides-end-02-things:item:rusty-key"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale.\n\nA **rusty key** lies forgotten on the bar, half-buried under a pile of cork coasters.\n\nThe only way out is west, back to the square."
@@ -317,10 +301,6 @@
         [
           "item",
           "30078:<PUBKEY>:tides-end-02-things:item:coin"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Coarse sand stretches in a long curve between dark rocks and the restless sea. Kelp and driftwood lie in tangled lines where the last high tide left them. Gulls wheel overhead, their cries thin against the wind.\n\nSomething glints near your feet — a **coin** half-buried in the wet sand.\n\nThe village lies east through a gap in the dunes, and a rocky coastal path leads west toward the dock."

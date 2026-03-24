@@ -139,10 +139,6 @@
           "30078:<PUBKEY>:cartographer:sound:world-breath",
           "ambient",
           "0.3"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The valley has no name on any map.\n\nThat is not an accident.\n\nYou are four days in. Your compass has been unreliable since day two. You have recorded this in your field notes as *observer error, possible heat exhaustion*, because the alternative is not something a working cartographer can afford to believe.\n\nSomething found you on the third morning and decided to trust you.\n\nYou are going to find out what that costs."
@@ -208,10 +204,6 @@
           "30078:<PUBKEY>:cartographer:sound:threshold-drone",
           "ambient",
           "0.5"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The valley announces itself as a wall of green so dense it reads as solid. There is a gap — barely — where a previous survey party cut through and didn't bother to mark properly. You found it because you were looking for exactly this kind of carelessness. Someone else's failure to be thorough.\n\nYour survey kit is where you left it, beside the marker stone. The work starts here."
@@ -277,10 +269,6 @@
           "30078:<PUBKEY>:cartographer:sound:camp-stillness",
           "ambient",
           "0.4"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A clearing barely large enough to call one. Your tent, your equipment cases, the cold remains of last night's fire. The kind of camp you make when you're planning to be somewhere else soon.\n\nAsha is here. She arrived before you woke, as she has every morning since the third day. She doesn't explain how. She sits with the patience of someone who has been waiting for much longer than this particular morning."
@@ -338,10 +326,6 @@
           "30078:<PUBKEY>:cartographer:sound:camp-stillness",
           "ambient",
           "0.3"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Hidden badly — the kind of badly that suggests Vael didn't expect anyone competent to be looking. Three supply crates stacked against a tree that has a blaze mark cut into it at eye height. The blaze faces west. He's oriented toward the interior.\n\nHe's closer than you thought."
@@ -404,10 +388,6 @@
           "30078:<PUBKEY>:cartographer:sound:river-rush",
           "ambient",
           "0.6"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The river is fast and cold and about chest-deep at the safest point. You crossed it three days ago going in and it cost you. The cold gets into you before you're halfway and doesn't leave for hours.\n\nThere is a cairn on the near bank that you didn't build. It's old. Someone marked this crossing deliberately.\n\n*The crossing damages you each time. Plan accordingly.*"
@@ -480,10 +460,6 @@
           "30078:<PUBKEY>:cartographer:sound:valley-pulse",
           "layer",
           "0.2"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The sky disappears here. The canopy closes thirty metres up and the light that reaches the floor is green and diffuse and sourceless — it could be any time of day. Your compass needle moves without provocation. You've stopped trusting it and started trusting the moss, the slope of the ground, the way sound behaves differently to the north.\n\nYou are not alone here. The valley has a quality of attention that you have no clinical term for and have stopped trying to find one."
@@ -558,10 +534,6 @@
           "30078:<PUBKEY>:cartographer:sound:first-record-theme",
           "layer",
           "0.3"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Forty-three cairns in a pattern that is not random and is not decorative and is not any surveying convention you were taught. They range from knee-height to twice your height. Some are old enough that trees have grown around them. Some look recent.\n\nYour instruments want to tell you things about this place and you are not sure you're reading them correctly. The central cairn is different from the others. Everything in this field points at it."
@@ -616,10 +588,6 @@
           "30078:<PUBKEY>:cartographer:sound:trust-warmth",
           "ambient",
           "0.4"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A structure that has grown rather than been built — woven into the living canopy over decades, additions accreted as need required. It is the most comfortable place you have found in four days and you do not say this out loud because comfort feels like the wrong thing to acknowledge here.\n\nThe walls hold things: tools, dried plants, and a cartographic record unlike anything in any archive you have studied. The Kael-Sura have been mapping this valley for longer than your discipline has existed."
@@ -685,10 +653,6 @@
         [
           "bpm",
           "46"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The canopy breaks here and for the first time in days you can see sky. The valley spreads below you — much larger than your current map suggests, and differently shaped. What you thought was the valley floor is a shelf. The real interior is lower, older, darker.\n\nThere are bearing stones along the ridge crest. Cut, positioned, deliberate. They are oriented toward something specific in the interior that you cannot yet see from here.\n\nYour compass works on the ridge. You have written this down twice."
@@ -762,10 +726,6 @@
           "30078:<PUBKEY>:cartographer:sound:first-record-theme",
           "layer",
           "0.2"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Someone came here before you. They came prepared, they came professional, and they did not come back out.\n\nThe equipment is expensive and rotting — two seasons in this humidity. The field notes are partially legible. They got further than you would have expected given what they apparently understood about where they were going, which was: almost nothing.\n\nVael has been here. Recently. He took some of the notes."
@@ -838,10 +798,6 @@
         [
           "bpm",
           "40"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The cave entrance is almost invisible — growth has reclaimed it to within a body-width of passable. Inside: darkness that adjusts slowly, and markings on every surface. Not pictographs. Not decoration. Survey notation in a system you have never seen, so dense and precise it stops your breath.\n\nThe Kael-Sura have been mapping the interior of this cave for as long as they have been mapping the valley above it. The map goes down."
@@ -908,10 +864,6 @@
         [
           "bpm",
           "38"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The gallery is vast enough that your lamp doesn't reach the ceiling. The walls are continuous survey notation — the same system as above, but here complete, coherent, layered over centuries of addition. Your hands move to your instruments before your mind has caught up.\n\nThis is the First Record. Not a metaphor, not an archive. A living survey of a living place, updated by generation after generation of Kael-Sura cartographers who understood that the most durable document is one that never stops being written.\n\nYou are the first outsider to read it. You can feel the weight of that."
@@ -978,10 +930,6 @@
           "30078:<PUBKEY>:cartographer:sound:spring-drops",
           "layer",
           "0.4"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The river begins here. Not from rainfall, not from snowmelt — from the rock itself, from a fissure that has been producing the same flow for longer than the valley has had people in it. The Kael-Sura know this. It is the first sentence of the First Record.\n\nThe inscription around the basin is not notation. It is the only part of the First Record written in language rather than survey marks. You can read fragments of it. The fragments are enough to understand what the Auric Stones actually are.\n\nYou sit with this for a moment."
@@ -1058,10 +1006,6 @@
         [
           "bpm",
           "34"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The Auric Stones are not golden. They are amber — geological amber, older than anything with eyes — and they are arranged in a configuration that completes the First Record the way a full stop completes a sentence. Remove them and the sentence becomes a question with no answer. Remove them and the river source loses the only index that tells the valley where it is in relation to itself.\n\nVael is here. He has been here long enough to understand most of this. He is looking at the stones with an expression you have only seen on people who have just understood that they want something they cannot have without becoming someone they hadn't planned to be.\n\nHe looks at you. You both know what the other knows. The valley is quiet in a way that feels like listening."

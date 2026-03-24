@@ -179,7 +179,7 @@ D-tag: `<slug>:world`
 | `sound` | `["sound", "<sound-ref>", "<role>", "<volume>", "<state?>"]` (repeatable) | opt | — |
 | `bpm` | `["bpm", "<number>"]` | opt | beats per minute for sounds |
 | `samples` | `["samples", "<preset-or-url>"]` (repeatable) | opt | Strudel sample preset or URL |
-| `content-type` | `["content-type", "<mime>"]` | opt | MIME type for sealed content |
+| `content-type` | `["content-type", "application/nip44"\|"text/plain"]` | opt | Default is markdown. Use `application/nip44` for sealed content or `text/plain` to disable formatting |
 | `media` | `["media", "<mime>", "<value>"]` (repeatable) | opt | — |
 
 **NOT valid on world:** `noun`, `verb`, `exit`, `item`, `feature`, `npc`, `clue`, `requires`, `on-interact`, `damage`, `dialogue`, `counter`
@@ -204,7 +204,7 @@ D-tag: `<slug>:world`
 | `media` | `["media", "<mime>", "<value>"]` (repeatable) | opt | — |
 | `sound` | `["sound", "<sound-ref>", "<role>", "<volume>", "<state?>"]` (repeatable) | opt | — |
 | `bpm` | `["bpm", "<number>"]` | opt | beats per minute for sounds |
-| `content-type` | `["content-type", "<mime>"]` | opt | MIME type for sealed content |
+| `content-type` | `["content-type", "application/nip44"\|"text/plain"]` | opt | Default is markdown. Use `application/nip44` for sealed content or `text/plain` to disable formatting |
 | `cw` | `["cw", "<warning>"]` (repeatable) | opt | content warning label |
 | `puzzle` | `["puzzle", "<puzzle-ref>"]` | opt (NIP-44) | encryption key source (NIP-44) |
 
@@ -380,7 +380,7 @@ One-way portal (1 exit tag) or two-way (2 exit tags):
 | `on-fail` | `["on-fail", "", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | — |
 | `counter` | `["counter", "<name>", "<initial>"]` (repeatable) | opt | — |
 | `on-counter` | `["on-counter", "<dir>", "<counter>", "<threshold>", "<action>", "<action-target?>"]` (repeatable) | opt | — |
-| `content-type` | `["content-type", "<mime>"]` | opt | MIME type for sealed content |
+| `content-type` | `["content-type", "application/nip44"\|"text/plain"]` | opt | Default is markdown. Use `application/nip44` for sealed content or `text/plain` to disable formatting |
 | `sound` | `["sound", "<sound-ref>", "<role>", "<volume>", "<state?>"]` (repeatable) | opt | — |
 
 `on-complete` and `on-fail` trigger-target is always `""`.
@@ -428,7 +428,7 @@ One-way portal (1 exit tag) or two-way (2 exit tags):
 | `transition` | `["transition", "<from>", "<to>", "<text?>"]` (repeatable) | opt | — |
 | `requires` | `["requires", "<ref>", "<state>", "<desc>"]` (repeatable) | opt | — |
 | `requires-not` | `["requires-not", "<ref>", "<state>", "<desc>"]` (repeatable) | opt | — |
-| `content-type` | `["content-type", "<mime>"]` | opt | MIME type for sealed content |
+| `content-type` | `["content-type", "application/nip44"\|"text/plain"]` | opt | Default is markdown. Use `application/nip44` for sealed content or `text/plain` to disable formatting |
 | `media` | `["media", "<mime>", "<value>"]` (repeatable) | opt | — |
 | `puzzle` | `["puzzle", "<puzzle-ref>"]` | opt (NIP-44) | encryption key source (NIP-44) |
 | `sound` | `["sound", "<sound-ref>", "<role>", "<volume>", "<state?>"]` (repeatable) | opt | — |

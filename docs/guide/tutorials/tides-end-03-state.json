@@ -53,233 +53,639 @@
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:world"],
-        ["t", "tides-end-03-state"],
-        ["w", "foakloar"],
-        ["type", "world"],
-        ["title", "Tide's End: State & Logic"],
-        ["author", "foakloar"],
-        ["version", "1.0.0"],
-        ["lang", "en"],
-        ["tag", "tutorial"],
-        ["tag", "coastal"],
-        ["tag", "intermediate"],
-        ["start", "30078:<PUBKEY>:tides-end-03-state:place:the-dock"],
-        ["relay", "wss://relay.primal.net"],
-        ["collaboration", "open"],
-        ["colour", "bg", "#1a1a2e"],
-        ["colour", "text", "#c8c8a9"],
-        ["colour", "title", "#d4a574"],
-        ["colour", "dim", "#5e8b7e"],
-        ["colour", "highlight", "#d4a574"],
-        ["colour", "exits", "#5e8b7e"],
-        ["font", "ibm-plex-mono"],
-        ["cursor", "beam"],
-        ["content-type", "text/markdown"]
+        [
+          "d",
+          "tides-end-03-state:world"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "Tide's End: State & Logic"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "tutorial"
+        ],
+        [
+          "tag",
+          "coastal"
+        ],
+        [
+          "tag",
+          "intermediate"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:tides-end-03-state:place:the-dock"
+        ],
+        [
+          "relay",
+          "wss://relay.primal.net"
+        ],
+        [
+          "collaboration",
+          "open"
+        ],
+        [
+          "colour",
+          "bg",
+          "#1a1a2e"
+        ],
+        [
+          "colour",
+          "text",
+          "#c8c8a9"
+        ],
+        [
+          "colour",
+          "title",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "dim",
+          "#5e8b7e"
+        ],
+        [
+          "colour",
+          "highlight",
+          "#d4a574"
+        ],
+        [
+          "colour",
+          "exits",
+          "#5e8b7e"
+        ],
+        [
+          "font",
+          "ibm-plex-mono"
+        ],
+        [
+          "cursor",
+          "beam"
+        ]
       ],
       "content": "A small coastal village where the river meets the sea.\n\nThis tutorial teaches **state**, **transitions**, **requires**, and **counters**. Light the lantern, unlock the cellar, and raise the well bucket."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:place:the-dock"],
-        ["t", "tides-end-03-state"],
-        ["type", "place"],
-        ["title", "The Dock"],
-        ["exit", "north"],
-        ["exit", "east"],
-        ["item", "30078:<PUBKEY>:tides-end-03-state:item:lantern"]
+        [
+          "d",
+          "tides-end-03-state:place:the-dock"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Dock"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-03-state:item:lantern"
+        ]
       ],
       "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air. An old lantern sits on the planks, left behind by a fisherman. A cobbled road leads north toward the village, and a sandy path follows the shoreline east."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:place:village-square"],
-        ["t", "tides-end-03-state"],
-        ["type", "place"],
-        ["title", "Village Square"],
-        ["exit", "south"],
-        ["exit", "east"],
-        ["exit", "west"],
-        ["feature", "30078:<PUBKEY>:tides-end-03-state:feature:well"],
-        ["item", "30078:<PUBKEY>:tides-end-03-state:item:wet-rope"]
+        [
+          "d",
+          "tides-end-03-state:place:village-square"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Village Square"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:tides-end-03-state:feature:well"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-03-state:item:wet-rope"
+        ]
       ],
       "content": "A modest square of packed earth ringed by low stone buildings with slate roofs. A stone well stands in the centre, its rope descending into darkness. Smoke drifts from a chimney to the east where a tavern sign swings on rusted chains. To the west, a gap between the houses opens onto dunes and the sound of surf."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:place:the-tavern"],
-        ["t", "tides-end-03-state"],
-        ["type", "place"],
-        ["title", "The Tavern"],
-        ["exit", "west"],
-        ["exit", "down"],
-        ["item", "30078:<PUBKEY>:tides-end-03-state:item:matchbox"]
+        [
+          "d",
+          "tides-end-03-state:place:the-tavern"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Tavern"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "exit",
+          "down"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-03-state:item:matchbox"
+        ]
       ],
       "content": "The low-ceilinged room is warm and dim, lit by tallow candles guttering in glass jars. A long bar of driftwood planks runs along the far wall, its surface stained dark with years of spilled ale. A matchbox has been left on the bar. A trapdoor in the floor leads down to a cellar."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:place:the-beach"],
-        ["t", "tides-end-03-state"],
-        ["type", "place"],
-        ["title", "The Beach"],
-        ["exit", "east"],
-        ["exit", "west"]
+        [
+          "d",
+          "tides-end-03-state:place:the-beach"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Beach"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ]
       ],
       "content": "Coarse sand stretches in a long curve between dark rocks and the restless sea. Kelp and driftwood lie in tangled lines where the last high tide left them. Gulls wheel overhead, their cries thin against the wind. The village lies east through a gap in the dunes, and a rocky coastal path leads west toward the dock."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:place:the-cellar"],
-        ["t", "tides-end-03-state"],
-        ["type", "place"],
-        ["title", "The Cellar"],
-        ["exit", "up"],
-        ["item", "30078:<PUBKEY>:tides-end-03-state:item:old-map"]
+        [
+          "d",
+          "tides-end-03-state:place:the-cellar"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Cellar"
+        ],
+        [
+          "exit",
+          "up"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:tides-end-03-state:item:old-map"
+        ]
       ],
       "content": "A damp stone room beneath the tavern. Casks line the walls, their iron bands rusted orange. Cobwebs hang in thick curtains from the low ceiling. The lantern light catches something on a shelf — an old map, its edges curling with age. A ladder leads back up through the trapdoor."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:portal:dock-to-square"],
-        ["t", "tides-end-03-state"],
-        ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-03-state:place:the-dock", "north", "A cobbled road climbs toward the village square."],
-        ["exit", "30078:<PUBKEY>:tides-end-03-state:place:village-square", "south", "The road slopes down to the old dock."]
+        [
+          "d",
+          "tides-end-03-state:portal:dock-to-square"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-03-state:place:the-dock",
+          "north",
+          "A cobbled road climbs toward the village square."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-03-state:place:village-square",
+          "south",
+          "The road slopes down to the old dock."
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:portal:square-to-tavern"],
-        ["t", "tides-end-03-state"],
-        ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-03-state:place:village-square", "east", "A battered sign reads 'The Anchor' above a low doorway."],
-        ["exit", "30078:<PUBKEY>:tides-end-03-state:place:the-tavern", "west", "The square is visible through the open door."]
+        [
+          "d",
+          "tides-end-03-state:portal:square-to-tavern"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-03-state:place:village-square",
+          "east",
+          "A battered sign reads 'The Anchor' above a low doorway."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-03-state:place:the-tavern",
+          "west",
+          "The square is visible through the open door."
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:portal:square-to-beach"],
-        ["t", "tides-end-03-state"],
-        ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-03-state:place:village-square", "west", "A sandy track winds through the dunes toward the shore."],
-        ["exit", "30078:<PUBKEY>:tides-end-03-state:place:the-beach", "east", "A path leads back through the dunes to the village."]
+        [
+          "d",
+          "tides-end-03-state:portal:square-to-beach"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-03-state:place:village-square",
+          "west",
+          "A sandy track winds through the dunes toward the shore."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-03-state:place:the-beach",
+          "east",
+          "A path leads back through the dunes to the village."
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:portal:dock-to-beach"],
-        ["t", "tides-end-03-state"],
-        ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-03-state:place:the-dock", "east", "The shoreline curves east past the rocks toward a sandy beach."],
-        ["exit", "30078:<PUBKEY>:tides-end-03-state:place:the-beach", "west", "A rocky path follows the waterline back to the dock."]
+        [
+          "d",
+          "tides-end-03-state:portal:dock-to-beach"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-03-state:place:the-dock",
+          "east",
+          "The shoreline curves east past the rocks toward a sandy beach."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-03-state:place:the-beach",
+          "west",
+          "A rocky path follows the waterline back to the dock."
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:portal:tavern-to-cellar"],
-        ["t", "tides-end-03-state"],
-        ["type", "portal"],
-        ["exit", "30078:<PUBKEY>:tides-end-03-state:place:the-tavern", "down", "A trapdoor opens onto a dark ladder descending into the cellar."],
-        ["exit", "30078:<PUBKEY>:tides-end-03-state:place:the-cellar", "up", "The ladder leads back up to the tavern."],
-        ["requires", "30078:<PUBKEY>:tides-end-03-state:item:lantern", "lit", "It is pitch black down there. You need a light."]
+        [
+          "d",
+          "tides-end-03-state:portal:tavern-to-cellar"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-03-state:place:the-tavern",
+          "down",
+          "A trapdoor opens onto a dark ladder descending into the cellar."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:tides-end-03-state:place:the-cellar",
+          "up",
+          "The ladder leads back up to the tavern."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-03-state:item:lantern",
+          "lit",
+          "It is pitch black down there. You need a light."
+        ]
       ],
       "content": ""
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:item:lantern"],
-        ["t", "tides-end-03-state"],
-        ["type", "item"],
-        ["title", "Lantern"],
-        ["noun", "lantern", "old lantern", "lamp"],
-        ["state", "unlit"],
-        ["verb", "light", "ignite", "strike"],
-        ["requires", "30078:<PUBKEY>:tides-end-03-state:item:matchbox", "", "You have nothing to light it with."],
-        ["on-interact", "light", "set-state", "lit"],
-        ["transition", "unlit", "lit", "You strike the flint. The lantern flares to life."],
-        ["transition", "lit", "lit", "The lantern is already burning."]
+        [
+          "d",
+          "tides-end-03-state:item:lantern"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Lantern"
+        ],
+        [
+          "noun",
+          "lantern",
+          "old lantern",
+          "lamp"
+        ],
+        [
+          "state",
+          "unlit"
+        ],
+        [
+          "verb",
+          "light",
+          "ignite",
+          "strike"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-03-state:item:matchbox",
+          "",
+          "You have nothing to light it with."
+        ],
+        [
+          "on-interact",
+          "light",
+          "set-state",
+          "lit"
+        ],
+        [
+          "transition",
+          "unlit",
+          "lit",
+          "You strike the flint. The lantern flares to life."
+        ],
+        [
+          "transition",
+          "lit",
+          "lit",
+          "The lantern is already burning."
+        ]
       ],
       "content": "A battered tin lantern with a glass pane and a stub of candle inside."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:item:matchbox"],
-        ["t", "tides-end-03-state"],
-        ["type", "item"],
-        ["title", "Matchbox"],
-        ["noun", "matchbox", "matches", "box of matches"]
+        [
+          "d",
+          "tides-end-03-state:item:matchbox"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Matchbox"
+        ],
+        [
+          "noun",
+          "matchbox",
+          "matches",
+          "box of matches"
+        ]
       ],
       "content": "A small cardboard matchbox, half full. The striker strip is worn but usable."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:item:old-map"],
-        ["t", "tides-end-03-state"],
-        ["type", "item"],
-        ["title", "Old Map"],
-        ["noun", "map", "old map", "chart"]
+        [
+          "d",
+          "tides-end-03-state:item:old-map"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Old Map"
+        ],
+        [
+          "noun",
+          "map",
+          "old map",
+          "chart"
+        ]
       ],
       "content": "A hand-drawn map of the coast, faded with age. Tide marks and depth soundings line the shore. An X marks a spot beyond the headland."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:item:wet-rope"],
-        ["t", "tides-end-03-state"],
-        ["type", "item"],
-        ["title", "Wet Rope"],
-        ["noun", "rope", "wet rope"],
-        ["requires", "30078:<PUBKEY>:tides-end-03-state:feature:well", "raised", "The rope is still attached to the bucket deep in the well."]
+        [
+          "d",
+          "tides-end-03-state:item:wet-rope"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Wet Rope"
+        ],
+        [
+          "noun",
+          "rope",
+          "wet rope"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:tides-end-03-state:feature:well",
+          "raised",
+          "The rope is still attached to the bucket deep in the well."
+        ]
       ],
       "content": "A length of rough hemp rope, dripping wet. It was attached to the well bucket."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d", "tides-end-03-state:feature:well"],
-        ["t", "tides-end-03-state"],
-        ["type", "feature"],
-        ["title", "Stone Well"],
-        ["noun", "well", "stone well"],
-        ["state", "default"],
-        ["verb", "crank", "turn", "wind"],
-        ["counter", "cranks", "0"],
-        ["on-interact", "crank", "increment", "cranks"],
-        ["on-counter", "up", "cranks", "3", "set-state", "raised"],
-        ["transition", "default", "raised", "The bucket rises from the depths, water sloshing. A length of rope trails from the handle."]
+        [
+          "d",
+          "tides-end-03-state:feature:well"
+        ],
+        [
+          "t",
+          "tides-end-03-state"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Stone Well"
+        ],
+        [
+          "noun",
+          "well",
+          "stone well"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "verb",
+          "crank",
+          "turn",
+          "wind"
+        ],
+        [
+          "counter",
+          "cranks",
+          "0"
+        ],
+        [
+          "on-interact",
+          "crank",
+          "increment",
+          "cranks"
+        ],
+        [
+          "on-counter",
+          "up",
+          "cranks",
+          "3",
+          "set-state",
+          "raised"
+        ],
+        [
+          "transition",
+          "default",
+          "raised",
+          "The bucket rises from the depths, water sloshing. A length of rope trails from the handle."
+        ]
       ],
       "content": "A circular stone well with a wooden crank handle. The rope descends into darkness. You can hear water far below."
     }

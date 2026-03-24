@@ -138,10 +138,6 @@
         [
           "cursor",
           "beam"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A small coastal village where the river meets the sea.\n\nThis tutorial teaches **recipes and crafting** — combining items to create new ones. Find the right ingredients and craft a fishing rod to catch your dinner.\n\nType `inventory` to check what you're carrying."
@@ -176,10 +172,6 @@
         [
           "item",
           "30078:<PUBKEY>:tides-end-09-recipes:item:rope"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Weathered planks creak beneath your feet as the dock juts out over grey-green water. Fishing boats knock gently against their moorings, their paint flaking in long pale strips. The smell of salt and tar hangs in the still air.\n\nA coil of **rope** lies near a bollard, forgotten by some fisherman.\n\nA sandy path follows the shoreline east toward the beach, and a cobbled road leads north to the village square."
@@ -214,10 +206,6 @@
         [
           "item",
           "30078:<PUBKEY>:tides-end-09-recipes:item:hook"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Coarse sand stretches in a long curve between dark rocks and the restless sea. Kelp and driftwood lie in tangled lines where the last high tide left them. Gulls wheel overhead, their cries thin against the wind.\n\nAn **iron hook** glints among the pebbles, half-buried in the wet sand.\n\nThe dock lies west along a rocky path, and the village is east through the dunes."

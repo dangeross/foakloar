@@ -1849,7 +1849,7 @@ export class GameEngine {
     const trimmed = answer.trim().toLowerCase();
     if (['back', 'leave', 'cancel', 'quit', 'exit'].includes(trimmed)) {
       this.puzzleActive = null;
-      this._emit('You step away from the puzzle.', 'narrative');
+      this._emit('You pause and step back.', 'narrative');
       return;
     }
 
@@ -2282,7 +2282,7 @@ export class GameEngine {
       }
     }
     if (this.player.isPuzzleSolved(dtag)) {
-      this._emit('Already crafted.', 'narrative');
+      this._emit('You aleady did that.', 'narrative');
     }
   }
 
@@ -2310,7 +2310,7 @@ export class GameEngine {
   /** Attempt to craft a recipe. */
   _attemptCraft(event, dtag) {
     if (this.player.isPuzzleSolved(dtag)) {
-      this._emit('Already crafted.', 'narrative');
+      this._emit('You already did that.', 'narrative');
       return;
     }
 
@@ -2828,6 +2828,11 @@ export class GameEngine {
 
     // Crafting mode — ordered recipe step
     if (this.craftingActive) {
+      if (/^(back|cancel|leave|quit|exit)$/i.test(trimmed)) {
+        this.craftingActive = null;
+        this._emit('You pause and step back.', 'narrative');
+        return;
+      }
       if (this._handleCraftStep(trimmed)) return;
     }
 

@@ -90,9 +90,9 @@ export const TAG_SCHEMAS = {
   title:          { label: 'Title', desc: 'Display name shown to the player', fields: [{ name: 'value', type: 'text', required: true, placeholder: 'Display title' }] },
   'content-type': {
     label: 'Content Type',
-    desc: 'How the content body is formatted (plain text, markdown, or NIP-44 encrypted)',
+    desc: 'Content is markdown by default. Use text/plain to disable formatting, or application/nip44 for sealed content.',
     fields: [
-      { name: 'value', type: 'select', required: false, options: ['text/plain', 'text/markdown', 'application/nip44'] },
+      { name: 'value', type: 'select', required: false, options: ['text/plain', 'application/nip44'] },
       { name: 'plaintext-format', type: 'select', required: false, options: ['', 'text/plain', 'text/markdown'], placeholder: 'Plaintext format (for NIP-44)' },
     ],
   },

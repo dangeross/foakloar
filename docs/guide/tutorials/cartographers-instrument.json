@@ -202,10 +202,6 @@
           "0.6"
         ],
         [
-          "content-type",
-          "text/markdown"
-        ],
-        [
           "bpm",
           "72"
         ],
@@ -601,10 +597,6 @@
           "Observatory Entrance"
         ],
         [
-          "content-type",
-          "text/markdown"
-        ],
-        [
           "exit",
           "north"
         ],
@@ -639,10 +631,6 @@
         [
           "title",
           "Central Hall"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ],
         [
           "exit",
@@ -703,10 +691,6 @@
           "West Wing — Lunar Observatory"
         ],
         [
-          "content-type",
-          "text/markdown"
-        ],
-        [
           "exit",
           "east"
         ],
@@ -739,10 +723,6 @@
         [
           "title",
           "East Wing — Solar Observatory"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ],
         [
           "exit",
@@ -779,10 +759,6 @@
           "The Tower"
         ],
         [
-          "content-type",
-          "text/markdown"
-        ],
-        [
           "exit",
           "down"
         ],
@@ -815,10 +791,6 @@
         [
           "title",
           "The Star Chamber"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ],
         [
           "exit",
@@ -1158,10 +1130,6 @@
           "chart",
           "diagram",
           "notation"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A detailed chart of lunar phases, annotated with musical notation in a cramped, precise hand. A note in the margin reads: *The moon's tone is the root. The lowest. The foundation. All harmony begins here.*"
@@ -1190,10 +1158,6 @@
           "chart",
           "diagram",
           "notation"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Solar trajectory diagrams etched into a brass plate, with harmonic intervals marked alongside each orbital path. An annotation reads: *The sun's tone is the fifth. Bright and ascending. It reaches upward from the root.*"
@@ -1222,10 +1186,6 @@
           "chart",
           "diagram",
           "notation"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A star chart carved into the marble floor beneath the telescope. Constellations are connected by lines that form musical staves. One passage is circled in faded ink: *The stars' tone is the third. The bridge between earth and sky. Without it, the chord is hollow.*"
@@ -1426,10 +1386,6 @@
           "option",
           "Leave",
           ""
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The figure turns toward you. Its eyes are points of white light.\n\n*You found it. The instrument. I wondered if anyone ever would.*"
@@ -1458,10 +1414,6 @@
           "option",
           "Leave",
           ""
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "*An observatory. But not for seeing — for listening. I mapped the music of the spheres. Each room remembers its note. The composition was almost complete when I... well. When I stopped being able to hold the instrument.*"
@@ -1490,10 +1442,6 @@
           "option",
           "Leave",
           ""
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "*I spent a lifetime charting the celestial harmonics. Three rooms, three notes, three resonators tuned to the music that holds the sky together. I built the instrument to play them. But the composition requires living hands. Mine are... somewhat lacking in that regard now.*"
@@ -1522,10 +1470,6 @@
           "option",
           "Leave",
           ""
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "*Take it to each resonator. The charts on the walls will tell you which note belongs where. Play them in any order — the composition will find itself. When all three sing together, the Star Chamber will open.*"
@@ -1549,10 +1493,6 @@
           "option",
           "Thank you",
           ""
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "*Three resonators. The Lunar, to the west — it sounds the root, the foundation of all harmony. The Solar, to the east — the fifth, bright and reaching. And the Stellar, above — the third, the bridge between. Together they form a chord that the ancients believed was the sound of creation itself. The tower will not open until the moon and sun are singing. You must wake them first.*"
@@ -1771,10 +1711,6 @@
           "30078:<PUBKEY>:cartographers-instrument:feature:landmark-star-chamber",
           "visited",
           ""
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "**The Music of the Spheres**\n\nThe chord resolves — root, third, fifth — and the Star Chamber sings. The mirrors on the walls show not reflections but the sky itself, turning slowly, endlessly, each star a note in an infinite score.\n\nYou understand now what the cartographer spent a lifetime charting. Not the positions of the stars, but their *sound*. The universe is a composition, and you have played its opening chord.\n\nThe instrument grows warm in your hands. The crystal at its centre pulses once, twice — then settles into a steady glow, beating in time with something vast and distant.\n\nThe cartographer's ghost appears beside you. For the first time, it smiles.\n\n*Thank you. The composition is complete. The spheres will sing it forever now.*\n\nThe figure fades. The music plays on.\n\n---\n\n*You completed The Cartographer's Instrument.*"

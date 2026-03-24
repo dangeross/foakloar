@@ -133,10 +133,6 @@
         [
           "cursor",
           "beam"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A coastal village where the harbour charges a toll to enter the marina.\n\nThis tutorial demonstrates **Payment events** — Lightning-gated progression using LNURL.\n\n> **Note:** The LNURL in this tutorial is a placeholder. Payment will not process without a real LNURL endpoint configured."
@@ -163,10 +159,6 @@
         [
           "exit",
           "north"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Salt-crusted timbers stretch over murky water. Ropes creak against iron cleats as a handful of small boats rock in the swell. A painted sign nailed to a post reads: **HARBOUR GATE — NORTH**. Beyond the gate lies the marina, but passage isn't free."
@@ -197,10 +189,6 @@
         [
           "exit",
           "north"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ],
         [
           "npc",
@@ -429,10 +417,6 @@
           "",
           "set-state",
           "paid"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A toll gate fee of 100 sats grants passage through the harbour gate to the marina."

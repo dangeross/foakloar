@@ -99,10 +99,6 @@
           "beam"
         ],
         [
-          "content-type",
-          "text/markdown"
-        ],
-        [
           "bpm",
           "60"
         ]
@@ -433,10 +429,6 @@
           "30078:<PUBKEY>:lighthouse:feature:tide-wrack"
         ],
         [
-          "content-type",
-          "text/markdown"
-        ],
-        [
           "sound",
           "30078:<PUBKEY>:lighthouse:sound:coastal-drone",
           "ambient",
@@ -501,10 +493,6 @@
           "30078:<PUBKEY>:lighthouse:item:crank-handle"
         ],
         [
-          "content-type",
-          "text/markdown"
-        ],
-        [
           "sound",
           "30078:<PUBKEY>:lighthouse:sound:base-drone",
           "ambient",
@@ -565,10 +553,6 @@
           "30078:<PUBKEY>:lighthouse:feature:lens"
         ],
         [
-          "content-type",
-          "text/markdown"
-        ],
-        [
           "sound",
           "30078:<PUBKEY>:lighthouse:sound:lamp-tension",
           "ambient",
@@ -615,10 +599,6 @@
         [
           "feature",
           "30078:<PUBKEY>:lighthouse:feature:cold-hearth"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ],
         [
           "sound",

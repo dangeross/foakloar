@@ -67,10 +67,6 @@
         [
           "health",
           "10"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "An abandoned smithy. The forge is cold but the tools are here.\n\nSomething is locked in the chest."
@@ -115,7 +111,7 @@
         [
           "exit",
           "north",
-          "The road north \u2014 beyond the edge of this map."
+          "The road north — beyond the edge of this map."
         ],
         [
           "feature",
@@ -128,13 +124,9 @@
         [
           "feature",
           "30078:<PUBKEY>:forge:feature:bellows"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
-      "content": "A stone-floored smithy. The forge dominates the centre \u2014 cold ash in the grate, bellows overhead. A heavy chest sits against the far wall, locked. The tools are all here. The smith is not."
+      "content": "A stone-floored smithy. The forge dominates the centre — cold ash in the grate, bellows overhead. A heavy chest sits against the far wall, locked. The tools are all here. The smith is not."
     },
     {
       "kind": 30078,
@@ -174,13 +166,9 @@
         [
           "feature",
           "30078:<PUBKEY>:forge:feature:shelves"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
-      "content": "A small storeroom. Shelves line the walls \u2014 most empty, a few holding raw materials. An iron bar sits on the lowest shelf."
+      "content": "A small storeroom. Shelves line the walls — most empty, a few holding raw materials. An iron bar sits on the lowest shelf."
     },
     {
       "kind": 30078,
@@ -224,13 +212,9 @@
         [
           "feature",
           "30078:<PUBKEY>:forge:feature:wood-pile"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
-      "content": "A small yard behind the smithy. A pile of wood sits against the wall. Something is tangled in the wood \u2014 a strip of leather, stiff with age."
+      "content": "A small yard behind the smithy. A pile of wood sits against the wall. Something is tangled in the wood — a strip of leather, stiff with age."
     },
     {
       "kind": 30078,
@@ -738,74 +722,177 @@
       ],
       "content": "Heavy leather bellows mounted above the forge. A few pumps would bring a dying fire back to life."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d",       "forge:item:sack"],
-        ["t",       "forge"],
-        ["type",    "item"],
-        ["title",   "Brown Sack"],
-        ["noun",    "sack", "bag"],
-        ["verb",    "examine", "look"],
-        ["contains","30078:<PUBKEY>:forge:item:bread", "", ""],
-        ["contains","30078:<PUBKEY>:forge:item:garlic", "", ""]
+        [
+          "d",
+          "forge:item:sack"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Brown Sack"
+        ],
+        [
+          "noun",
+          "sack",
+          "bag"
+        ],
+        [
+          "verb",
+          "examine",
+          "look"
+        ],
+        [
+          "contains",
+          "30078:<PUBKEY>:forge:item:bread",
+          "",
+          ""
+        ],
+        [
+          "contains",
+          "30078:<PUBKEY>:forge:item:garlic",
+          "",
+          ""
+        ]
       ],
       "content": "A brown sack, smelling faintly of garlic."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d",     "forge:item:bread"],
-        ["t",     "forge"],
-        ["type",  "item"],
-        ["title", "Bread"],
-        ["noun",  "bread", "loaf"],
-        ["verb",  "examine"]
+        [
+          "d",
+          "forge:item:bread"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Bread"
+        ],
+        [
+          "noun",
+          "bread",
+          "loaf"
+        ],
+        [
+          "verb",
+          "examine"
+        ]
       ],
       "content": "A stale loaf. Still edible."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d",     "forge:item:garlic"],
-        ["t",     "forge"],
-        ["type",  "item"],
-        ["title", "Garlic"],
-        ["noun",  "garlic", "clove"],
-        ["verb",  "examine"]
+        [
+          "d",
+          "forge:item:garlic"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Garlic"
+        ],
+        [
+          "noun",
+          "garlic",
+          "clove"
+        ],
+        [
+          "verb",
+          "examine"
+        ]
       ],
       "content": "A bulb of garlic, pungent and dry."
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d",     "forge:item:smith-journal"],
-        ["t",     "forge"],
-        ["type",  "item"],
-        ["title", "Smith's Journal"],
-        ["noun",  "journal", "book", "diary"],
-        ["verb",  "examine", "read"]
+        [
+          "d",
+          "forge:item:smith-journal"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Smith's Journal"
+        ],
+        [
+          "noun",
+          "journal",
+          "book",
+          "diary"
+        ],
+        [
+          "verb",
+          "examine",
+          "read"
+        ]
       ],
       "content": "A worn journal. The last entry reads: 'The iron must go first, then the leather for grip. The forge must be hot.'"
     },
-
     {
       "kind": 30078,
       "tags": [
-        ["d",     "forge:item:gold-coin"],
-        ["t",     "forge"],
-        ["type",  "item"],
-        ["title", "Gold Coin"],
-        ["noun",  "coin", "gold", "gold coin"],
-        ["verb",  "examine"]
+        [
+          "d",
+          "forge:item:gold-coin"
+        ],
+        [
+          "t",
+          "forge"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Gold Coin"
+        ],
+        [
+          "noun",
+          "coin",
+          "gold",
+          "gold coin"
+        ],
+        [
+          "verb",
+          "examine"
+        ]
       ],
       "content": "A heavy gold coin, stamped with a serpent crest."
     },
-
     {
       "kind": 30078,
       "tags": [
@@ -994,7 +1081,7 @@
           "hidden"
         ]
       ],
-      "content": "Most shelves are bare. One holds an iron bar \u2014 the last of the stock."
+      "content": "Most shelves are bare. One holds an iron bar — the last of the stock."
     },
     {
       "kind": 30078,

@@ -4,6 +4,7 @@ import { usePlayerState } from '../hooks/usePlayerState.js';
 import { useSigner } from '../hooks/useSigner.js';
 import { parseRoute, navigateToWorld, navigateToLobby, navigateToProfile } from '../services/router.js';
 import { GameEngine } from '../engine/engine.js';
+import { renderMarkdown } from '../engine/content.js';
 import { PlayerStateMutator } from '../engine/player-state.js';
 import { getTag, getTags } from '../engine/world.js';
 import { resolveTheme, applyTheme, resetTheme, resolveEffects, applyEffects, resolveFont, resolveFontSize, resolveFontSizePanel, resolveCursor, applyFontAndCursor, loadFont } from '../services/theme.js';
@@ -849,6 +850,14 @@ export default function App() {
           }
           if (entry.html) {
             return <div key={i} className={extraClass} style={style} dangerouslySetInnerHTML={{ __html: entry.html }} />;
+          }
+          // Render narrative/prose types through markdown for italic/bold support
+          const mdTypes = new Set(['narrative', 'puzzle', 'clue', 'dialogue', 'win', 'endgame']);
+          if (entry.text && mdTypes.has(entry.type)) {
+            const html = renderMarkdown(entry.text);
+            if (html !== entry.text) {
+              return <div key={i} className={extraClass} style={style} dangerouslySetInnerHTML={{ __html: html }} />;
+            }
           }
           return <p key={i} className={extraClass} style={style}>{entry.text}</p>;
         })}

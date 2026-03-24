@@ -152,10 +152,6 @@
         [
           "bpm",
           "90"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A small coastal village where the river meets the sea.\n\nListen to the world around you. Each place has its own soundscape."
@@ -186,10 +182,6 @@
         [
           "exit",
           "east"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ],
         [
           "sound",
@@ -282,10 +274,6 @@
           "west"
         ],
         [
-          "content-type",
-          "text/markdown"
-        ],
-        [
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:tavern-fire",
           "ambient",
@@ -330,10 +318,6 @@
         [
           "item",
           "30078:<PUBKEY>:tides-end-08-sound:item:sand-coin"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ],
         [
           "sound",

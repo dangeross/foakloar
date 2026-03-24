@@ -160,10 +160,6 @@
         [
           "cursor",
           "beam"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A coastal village tavern with a dark cellar below.\n\nThis tutorial teaches **combat** — weapons, NPCs with health, attacking, and what happens when you die.\n\nFind a weapon, light your way, and deal with whatever lurks below."
@@ -194,10 +190,6 @@
         [
           "exit",
           "down"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A quiet tavern with low beams and the smell of old ale. Dust covers every surface. A **lantern** sits on the bar, and a trapdoor leads **down** to the cellar."
@@ -232,10 +224,6 @@
         [
           "exit",
           "down"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Narrow stone steps wind downward. Your lantern casts flickering shadows on the damp walls. A **rusty sword** leans against the wall, forgotten by some past visitor. The steps continue **down** into the cellar."
@@ -266,10 +254,6 @@
         [
           "exit",
           "up"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A dank cellar lined with rotting barrels. Something scurries in the shadows — a **giant rat** hisses at you, baring yellowed teeth."

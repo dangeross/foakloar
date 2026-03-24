@@ -440,10 +440,6 @@
           "Underground Lake"
         ],
         [
-          "content-type",
-          "text/markdown"
-        ],
-        [
           "exit",
           "up"
         ],
@@ -1310,10 +1306,6 @@
           "faded",
           "faded",
           ""
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Faded letters carved deep into stone. Most have been worn away by time."

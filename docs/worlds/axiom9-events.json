@@ -119,10 +119,6 @@
           "30078:<PUBKEY>:axiom9:sound:city-drone",
           "ambient",
           "0.5"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The city never sleeps because sleep implies the possibility of waking.\n\nYou have seventy-two hours before your retirement.\n\nYou know because you counted the injections."
@@ -207,10 +203,6 @@
           "30078:<PUBKEY>:axiom9:sound:rain-layer",
           "layer",
           "0.4"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The transit hub runs twenty-four hours because there is no other time down here. Rain hammers a corrugated ceiling somewhere above. Holographic adverts flicker between states — one shows a sky you've never seen. The air smells of coolant and something cheaper than food."
@@ -280,10 +272,6 @@
           "30078:<PUBKEY>:axiom9:sound:market-hum",
           "ambient",
           "0.5"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Condensation beads on every surface. Six stalls, eight lanterns, a hundred smells layered over each other. Someone is arguing in a dialect you half-understand. The noodle steam is warm enough to feel like kindness."
@@ -337,10 +325,6 @@
           "30078:<PUBKEY>:axiom9:sound:parlour-stillness",
           "ambient",
           "0.4"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Small. Warm. Smells of incense and solder. A wall of filing cabinets runs floor to ceiling, each drawer labelled in a hand too small to read from here. Mei Ling sits cross-legged on a workbench, holding a circuit board to the light."
@@ -395,10 +379,6 @@
           "30078:<PUBKEY>:axiom9:sound:precinct-pulse",
           "ambient",
           "0.3"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "No sign. The merchandise is behind mesh, bolted to the wall. Everything here is technically illegal and practically necessary. The broker watches from behind stacked crates without moving."
@@ -465,10 +445,6 @@
           "30078:<PUBKEY>:axiom9:sound:precinct-pulse",
           "ambient",
           "0.6"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Marble floors that haven't been polished in years. A crest on the wall — the Bureau of Human Verification. Behind the duty desk, a uniform reads something and pretends not to notice you."
@@ -519,10 +495,6 @@
           "30078:<PUBKEY>:axiom9:sound:interrogation-tone",
           "ambient",
           "0.6"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A table. Two chairs. A machine on the table with a biometric reader and a long paper roll. One wall is glass — the kind you can't see through from this side. The overhead light hums at exactly the frequency that makes you feel guilty."
@@ -595,10 +567,6 @@
           "30078:<PUBKEY>:axiom9:sound:data-flicker",
           "layer",
           "0.3"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Rows of filing cabinets and server stacks. Indicator lights blink in irregular rhythms. The room smells of old paper and newer fear. A terminal glows at the far end, cursor blinking."
@@ -652,10 +620,6 @@
           "30078:<PUBKEY>:axiom9:sound:director-stillness",
           "ambient",
           "0.4"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A corner office with windows that would show the city if they weren't frosted. A desk of dark wood — real wood, which tells you something about the Director. Photographs on the wall: official, unsmiling. One is missing, rectangle of clean paint where it hung."
@@ -724,10 +688,6 @@
           "30078:<PUBKEY>:axiom9:sound:tunnel-hiss",
           "ambient",
           "0.6"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Low ceiling, wet floor, pipes bleeding steam at irregular intervals. The path splits. Something has scraped the wall to the north — not writing, not quite. The eastern passage hums with power.\n\n*The heat damages you each time you enter.*"
@@ -792,10 +752,6 @@
           "30078:<PUBKEY>:axiom9:sound:den-warmth",
           "ambient",
           "0.4"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "A space carved out of infrastructure — sleeping mats, stolen heaters, photographs pinned to a concrete wall. This is where they came to remember they were real. Some of them are still here."
@@ -856,10 +812,6 @@
           "30078:<PUBKEY>:axiom9:sound:data-flicker",
           "layer",
           "0.4"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "Server stacks from floor to ceiling, blinking in the dark like a city seen from altitude. Cold — deliberately, precisely cold. A terminal on the south wall is dark. One chip slot is open and waiting."
@@ -923,10 +875,6 @@
           "layer",
           "0.4",
           "transmitting"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "An antenna assembly fills the ceiling, rigged from salvage and precision. Someone built this carefully. A broadcast console runs along the far wall — analog switches beside digital readouts, patched together across three generations of technology. The archive log sits beside it, sealed."
@@ -985,10 +933,6 @@
           "30078:<PUBKEY>:axiom9:sound:open-wind",
           "ambient",
           "0.4"
-        ],
-        [
-          "content-type",
-          "text/markdown"
         ]
       ],
       "content": "The sector was decommissioned seven years ago. The buildings are still here — so is everything inside them, preserved by neglect. The perimeter wall has a gap where the floods got underneath it. North is unmonitored. North is outside the city's record."
