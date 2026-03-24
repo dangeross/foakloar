@@ -105,6 +105,18 @@ export default function App() {
     return () => window.removeEventListener('popstate', onNav);
   }, []);
 
+  // Dynamic page titles
+  useEffect(() => {
+    const titles = {
+      landing: 'Foakloar — Text Adventure Worlds',
+      lobby: 'Explore — Foakloar',
+      guide: route.guidePage ? `${route.guidePage} — Foakloar Guide` : 'Guide — Foakloar',
+      profile: 'Profile — Foakloar',
+      game: route.worldSlug ? `${route.worldSlug} — Foakloar` : 'Foakloar',
+    };
+    document.title = titles[route.page] || 'Foakloar';
+  }, [route]);
+
   const worldTag = route.worldSlug;
 
   // ── Core hooks (worldTag-scoped) ─────────────────────────────────────────

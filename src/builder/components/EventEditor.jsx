@@ -461,7 +461,7 @@ function SoundPreview({ tags, onTagsChange }) {
   return (
     <div className="mb-3">
       <div className="mb-1 flex items-center gap-2" style={{ color: 'var(--colour-text)', fontSize: '0.65rem' }}>
-        <span style={{ marginRight: '-6px' }}>Strudel:</span><Tooltip text="Loop plays the sound continuously — how it sounds as ambient or layer. Once plays a single trigger via superdough — how it sounds as a one-shot effect (portal transition, action trigger)." />
+        <a href="https://strudel.cc/learn/effects/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--colour-highlight)', textDecoration: 'none', marginRight: '-6px' }}>Strudel</a>:<Tooltip text="Loop plays the sound continuously — how it sounds as ambient or layer. Once plays a single trigger via superdough — how it sounds as a one-shot effect (portal transition, action trigger)." />
         {playing ? (
           <button
             onClick={() => { stopPreview(); setPlaying(false); }}
