@@ -568,6 +568,17 @@
           "30078:<PUBKEY>:the-lake:sound:sanctum-resonance",
           "ambient",
           "0.8"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-lake:feature:sanctum-landmark"
+        ],
+        [
+          "on-enter",
+          "",
+          "set-state",
+          "visited",
+          "30078:<PUBKEY>:the-lake:feature:sanctum-landmark"
         ]
       ],
       "content": "The sanctum lies beyond."
@@ -3717,6 +3728,75 @@
         ]
       ],
       "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:quest:what-lies-below"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "What Lies Below"
+        ],
+        [
+          "quest-type",
+          "endgame",
+          "open"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-lake:place:sanctum",
+          "visited",
+          ""
+        ]
+      ],
+      "content": "You have reached the Sanctum beneath the lake. The sealed knowledge of the watchers is yours — not treasure, but memory. The serpent rests. The mechanism sleeps. And you understand, at last, what the lake remembers.\n\n*The world above will forget, as it always does. But the lake will remember you.*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:feature:sanctum-landmark"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Sanctum"
+        ],
+        [
+          "noun",
+          "sanctum"
+        ],
+        [
+          "state",
+          "unseen"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "visited"
+        ]
+      ],
+      "content": "The sanctum stretches before you, warm and golden."
     }
   ]
 }

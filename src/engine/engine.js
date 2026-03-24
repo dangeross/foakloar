@@ -1694,6 +1694,8 @@ export class GameEngine {
   _npcStealsItem(npcDtag, target) {
     const npcEvent = this.events.get(npcDtag);
     const npcTitle = npcEvent ? getTag(npcEvent, 'title') : 'Someone';
+    // Ensure NPC state exists so it can carry stolen items
+    this.player.ensureNpcState(npcDtag, { state: getDefaultState(npcEvent) || 'default', inventory: [] });
 
     if (target === 'any') {
       // Steal the most recently acquired item
@@ -1735,6 +1737,12 @@ export class GameEngine {
 
       if (!npcsByPlace.has(npcPlace)) npcsByPlace.set(npcPlace, []);
       npcsByPlace.get(npcPlace).push({ dtag, event, state: npcState });
+
+      // Auto-deposit: if NPC has a stash tag and is at the stash place, deposit items
+      const stashRef = getTag(event, 'stash');
+      if (stashRef && npcPlace === stashRef) {
+        this._npcDeposits(dtag, npcPlace);
+      }
 
       // Fire on-enter triggers for the NPC's current place
       for (const tag of getTags(event, 'on-enter')) {

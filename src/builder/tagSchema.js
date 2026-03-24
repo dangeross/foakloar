@@ -205,7 +205,7 @@ export const TAG_SCHEMAS = {
     desc: 'Fires an action when the player enters this place or encounters this NPC',
     repeatable: true,
     fields: [
-      { name: 'trigger', type: 'text', required: true, placeholder: 'player' },
+      { name: 'trigger', type: 'text', required: false, placeholder: 'blank = any player' },
       { name: 'action', type: 'select', required: true, options: TRIGGER_ACTIONS['on-enter'] },
       { name: 'target', type: 'text', required: false, placeholder: 'action target' },
       { name: 'event-ref', type: 'event-ref', required: false, placeholder: 'target event (blank = self)' },
