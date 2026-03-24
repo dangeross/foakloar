@@ -8,8 +8,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { marked } from 'marked';
 import { navigateToGuide, navigateToLobby, navigateToWorld } from '../services/router.js';
-import { validateImport, importEvents, parseJsonLenient } from '../builder/draftStore.js';
+import { validateImport, importEvents, saveDraft, parseJsonLenient } from '../builder/draftStore.js';
 import ImportPreviewPanel from '../builder/components/ImportPreviewPanel.jsx';
+import WorldCreator from '../builder/components/WorldCreator.jsx';
+import IdentityButton from './ui/IdentityButton.jsx';
 import { TIDE_THEME } from '../services/guideTheme.js';
 
 // Import all guide markdown files at build time
@@ -167,7 +169,7 @@ function Sidebar({ currentPage, onNavigate, open, onToggle }) {
         id="guide-sidebar-toggle"
         onClick={onToggle}
       >
-        ☰ guide
+        ☰
       </button>
 
       {/* Sidebar */}
@@ -267,6 +269,7 @@ function Sidebar({ currentPage, onNavigate, open, onToggle }) {
             </div>
           </>
         )}
+
       </div>
 
       {/* Mobile overlay */}
@@ -287,7 +290,9 @@ function Sidebar({ currentPage, onNavigate, open, onToggle }) {
           #guide-sidebar-toggle { display: ${open ? 'none' : 'block'} !important; }
           .guide-sidebar { transform: translateX(${open ? '0' : '-100%'}) !important; }
           .guide-overlay { display: ${open ? 'block' : 'none'} !important; }
-          .guide-main { margin-left: 0 !important; padding-left: 1rem !important; padding-top: 2.5rem !important; }
+          .guide-main { margin-left: 0 !important; padding-left: 0 !important; padding-top: 0 !important; }
+          #guide-sidebar-toggle { position: absolute !important; left: 0.5rem !important; top: 0.4rem !important; display: ${open ? 'none' : 'block'} !important; border: none !important; background: none !important; }
+          .guide-header { padding: 0.4rem 1rem 0.4rem 2.5rem !important; }
           .guide-sidebar-close { display: block !important; }
         }
       `}</style>
@@ -301,8 +306,11 @@ function GuideTOC({ onNavigate }) {
       <h1 style={{ color: THEME.highlight, fontSize: '1.3rem', marginBottom: '0.5rem', fontWeight: 'normal' }}>
         foakloar guide
       </h1>
-      <p style={{ color: THEME.dim, fontSize: '0.75rem', marginBottom: '1.5rem', maxWidth: 600 }}>
+      <p style={{ color: THEME.dim, fontSize: '0.75rem', marginBottom: '0.75rem', maxWidth: 600 }}>
         Learn to build text adventure worlds. Each tutorial has a companion world you can import and explore.
+      </p>
+      <p style={{ color: THEME.text, fontSize: '0.75rem', marginBottom: '1.5rem', maxWidth: 600 }}>
+        Ready to start? Click <span style={{ color: THEME.highlight }}>[build]</span> above to create your first world.
       </p>
       <div className="flex flex-col gap-1" style={{ maxWidth: 600 }}>
         {TUTORIALS.map((p) => {
@@ -495,8 +503,19 @@ function GuidePage({ pageId }) {
   );
 }
 
-export default function Guide({ guidePage }) {
+export default function Guide({ guidePage, identity }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showCreator, setShowCreator] = useState(false);
+  const [buildOpen, setBuildOpen] = useState(false);
+  const buildRef = React.useRef(null);
+
+  // Close build dropdown on outside click
+  React.useEffect(() => {
+    if (!buildOpen) return;
+    const handler = (e) => { if (buildRef.current && !buildRef.current.contains(e.target)) setBuildOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [buildOpen]);
 
   const handleNavigate = (pageId) => {
     navigateToGuide(pageId);
@@ -525,13 +544,68 @@ export default function Guide({ guidePage }) {
         open={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
       />
-      <div className="guide-main" style={{ marginLeft: '200px', padding: '1.5rem 2rem' }}>
-        {guidePage ? (
-          <GuidePage pageId={guidePage} />
-        ) : (
-          <GuideTOC onNavigate={handleNavigate} />
-        )}
+      <div className="guide-main" style={{ marginLeft: '200px' }}>
+        {/* Header bar */}
+        <div className="flex items-center justify-end gap-3 guide-header" style={{
+          padding: '0.4rem 2rem',
+          borderBottom: `1px solid ${THEME.tableBorder}`,
+          position: 'sticky', top: 0, zIndex: 30,
+          backgroundColor: THEME.bg,
+        }}>
+          <div ref={buildRef} style={{ position: 'relative' }}>
+            <button
+              onClick={() => setBuildOpen(!buildOpen)}
+              className="cursor-pointer hover:opacity-80 text-sm"
+              style={{ color: THEME.highlight, background: 'none', border: 'none', font: 'inherit' }}
+            >
+              [build]
+            </button>
+            {buildOpen && (
+              <div style={{
+                position: 'absolute', right: 0, top: '100%', marginTop: '4px',
+                background: THEME.sidebarBg, border: `1px solid ${THEME.tableBorder}`,
+                padding: '0.25rem 0', zIndex: 50, minWidth: '120px',
+              }}>
+                <button
+                  onClick={() => { setBuildOpen(false); navigateToLobby(); }}
+                  className="block w-full text-left cursor-pointer hover:opacity-80 px-3 py-1 text-sm"
+                  style={{ color: THEME.accent, background: 'none', border: 'none', font: 'inherit' }}
+                >
+                  explore
+                </button>
+                <button
+                  onClick={() => { setBuildOpen(false); setShowCreator(true); }}
+                  className="block w-full text-left cursor-pointer hover:opacity-80 px-3 py-1 text-sm"
+                  style={{ color: THEME.highlight, background: 'none', border: 'none', font: 'inherit' }}
+                >
+                  + world
+                </button>
+              </div>
+            )}
+          </div>
+          <IdentityButton identity={identity} />
+        </div>
+
+        <div style={{ padding: '1.5rem 2rem' }}>
+          {guidePage ? (
+            <GuidePage pageId={guidePage} />
+          ) : (
+            <GuideTOC onNavigate={handleNavigate} />
+          )}
+        </div>
       </div>
+
+      {/* World Creator panel */}
+      {showCreator && (
+        <WorldCreator
+          onClose={() => setShowCreator(false)}
+          onSaveDrafts={(worldSlug, templates) => {
+            for (const tmpl of templates) saveDraft(worldSlug, tmpl);
+            setShowCreator(false);
+            navigateToWorld(worldSlug);
+          }}
+        />
+      )}
     </div>
   );
 }

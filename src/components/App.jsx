@@ -463,7 +463,7 @@ export default function App() {
 
   // ── Guide route ──────────────────────────────────────────────────────
   if (route.page === 'guide') {
-    return <>{noiseOverlay}<Guide guidePage={route.guidePage} /></>;
+    return <>{noiseOverlay}<Guide guidePage={route.guidePage} identity={identity} /></>;
   }
 
   // ── Landing route ──────────────────────────────────────────────────────
@@ -766,8 +766,10 @@ export default function App() {
           onDeleteAll={() => {
             clearDrafts(worldTag);
             setDrafts([]);
+            setShowDrafts(false);
+            setBuildMode(false);
             if (events.size === 0) {
-              navigateToLobby();
+              setTimeout(() => navigateToLobby(), 0);
             }
           }}
         />
