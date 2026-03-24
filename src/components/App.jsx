@@ -771,7 +771,7 @@ export default function App() {
             a.click();
             URL.revokeObjectURL(url);
           }}
-          onBulkPublish={async () => {
+          onBulkPublish={async (onProgress) => {
             if (!identity.signer || !identity.pubkey) return;
             // Pre-flight world validation
             const currentDrafts = loadDrafts(worldTag);
@@ -785,7 +785,7 @@ export default function App() {
               alert(`Cannot publish — ${allErrors.length} error(s):\n\n${msgs.join('\n')}`);
               return;
             }
-            const result = await bulkPublish(worldTag, identity.pubkey, identity.signer, pool);
+            const result = await bulkPublish(worldTag, identity.pubkey, identity.signer, pool, { onProgress });
             setDrafts(loadDrafts(worldTag));
             setPublishResult(result);
           }}

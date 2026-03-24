@@ -40,6 +40,7 @@ export default function DraftListPanel({
   const [importPreview, setImportPreview] = useState(null); // { validation, data }
   const [playtestResult, setPlaytestResult] = useState(null); // { walkthrough?, smoke? }
   const [playtesting, setPlaytesting] = useState(false);
+  const [publishProgress, setPublishProgress] = useState(null); // { total, published, failed }
   const fileRef = useRef(null);
 
   // Validate all drafts upfront (per-event + cross-event)
@@ -373,30 +374,67 @@ export default function DraftListPanel({
 
         {/* Bulk publish */}
         {drafts.length > 0 && (
-          <DOSButton onClick={() => { setConfirmPublishAll(true); setConfirmDeleteAll(false); }} colour="highlight">
+          <DOSButton
+            onClick={() => { setConfirmPublishAll(true); setConfirmDeleteAll(false); }}
+            colour={publishProgress ? 'dim' : 'highlight'}
+            disabled={!!publishProgress}
+          >
             Publish All ({drafts.length})
           </DOSButton>
         )}
 
         {/* Delete all */}
         {drafts.length > 0 && (
-          <DOSButton onClick={() => { setConfirmDeleteAll(true); setConfirmPublishAll(false); }} colour="error">
+          <DOSButton
+            onClick={() => { setConfirmDeleteAll(true); setConfirmPublishAll(false); }}
+            colour={publishProgress ? 'dim' : 'error'}
+            disabled={!!publishProgress}
+          >
             Delete All
           </DOSButton>
         )}
 
         {/* Confirmation rows — below the buttons */}
-        {confirmPublishAll && (
+        {confirmPublishAll && !publishProgress && (
           <div className="flex gap-1 items-center mt-1" style={{ fontSize: '0.65rem' }}>
             <span style={{ color: 'var(--colour-error)' }}>
               Publish {drafts.length} events to relays?
             </span>
-            <DOSButton onClick={() => { onBulkPublish(); setConfirmPublishAll(false); }} colour="error">
+            <DOSButton onClick={() => {
+              setConfirmPublishAll(false);
+              setPublishProgress({ total: drafts.length, published: 0, failed: 0 });
+              onBulkPublish((progress) => {
+                setPublishProgress(progress);
+                if (progress.published + progress.failed >= progress.total) {
+                  setTimeout(() => setPublishProgress(null), 1500);
+                }
+              });
+            }} colour="error">
               Yes
             </DOSButton>
             <DOSButton onClick={() => setConfirmPublishAll(false)} colour="dim">
               No
             </DOSButton>
+          </div>
+        )}
+        {publishProgress && (
+          <div className="mt-1" style={{ fontSize: '0.65rem' }}>
+            <div style={{ color: 'var(--colour-dim)', marginBottom: '0.25rem' }}>
+              Publishing {publishProgress.published}/{publishProgress.total}...
+            </div>
+            <div style={{
+              background: 'var(--colour-bg, #000)',
+              height: '0.5rem',
+              width: '100%',
+              border: '1px solid var(--colour-text)',
+            }}>
+              <div style={{
+                background: publishProgress.failed > 0 ? 'var(--colour-error)' : 'var(--colour-highlight)',
+                height: '100%',
+                width: `${Math.round(((publishProgress.published + publishProgress.failed) / publishProgress.total) * 100)}%`,
+                transition: 'width 0.2s',
+              }} />
+            </div>
           </div>
         )}
         {confirmDeleteAll && (
