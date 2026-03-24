@@ -791,11 +791,12 @@ export default function App() {
           onDeleteAll={() => {
             clearDrafts(worldTag);
             setDrafts([]);
-            setShowDrafts(false);
-            setBuildMode(false);
             if (events.size === 0) {
+              setShowDrafts(false);
+              setBuildMode(false);
               setTimeout(() => navigateToLobby(), 0);
             }
+            // else: stay in drafts panel so user can import again
           }}
         />
       )}

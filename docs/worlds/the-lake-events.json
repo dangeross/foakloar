@@ -32,7 +32,7 @@
         ],
         [
           "version",
-          "1.0.0"
+          "0.1.1"
         ],
         [
           "lang",
@@ -69,10 +69,6 @@
         [
           "collaboration",
           "vouched"
-        ],
-        [
-          "collaborator",
-          "<COLLAB_PUBKEY>"
         ],
         [
           "health",
@@ -116,11 +112,6 @@
         [
           "content-type",
           "text/plain"
-        ],
-        [
-          "media",
-          "text/plain",
-          "    ~  ~  ~\n  ~ THE  ~\n  ~ LAKE ~\n    ~  ~  ~"
         ]
       ],
       "content": "An ancient lake, hidden underground. Something sleeps beneath it.\n\nThe world above has forgotten it exists. You haven't."

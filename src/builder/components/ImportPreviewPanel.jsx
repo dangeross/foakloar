@@ -17,7 +17,10 @@ export default function ImportPreviewPanel({ validation, onConfirm, onClose, zIn
   const { valid, rejected, warnings, hints, worldSlug, walkthroughSteps } = validation;
 
   return (
-    <DOSPanel title="IMPORT PREVIEW" onClose={onClose} minWidth="28em" zIndex={zIndex}>
+    <DOSPanel title="IMPORT PREVIEW" onClose={onClose} minWidth="28em" zIndex={zIndex} noPadding>
+      <div style={{ display: 'flex', flexDirection: 'column', maxHeight: 'calc(80vh - 6em)', minHeight: 0 }}>
+      {/* Scrollable content */}
+      <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', minHeight: 0, padding: '0.5rem 0.75rem 0' }}>
       {worldSlug && (
         <div className="mb-2" style={{ color: 'var(--colour-title)' }}>
           World: {worldSlug}
@@ -101,9 +104,10 @@ export default function ImportPreviewPanel({ validation, onConfirm, onClose, zIn
           ))}
         </div>
       )}
+      </div>{/* end scrollable */}
 
-      {/* Actions */}
-      <div className="flex gap-2 pt-2" style={{ borderTop: '1px solid var(--colour-dim)' }}>
+      {/* Fixed footer */}
+      <div className="flex gap-2 shrink-0" style={{ borderTop: '1px solid var(--colour-dim)', padding: '0.5rem 0.75rem' }}>
         <DOSButton onClick={onClose} colour="dim">
           Cancel
         </DOSButton>
@@ -113,6 +117,7 @@ export default function ImportPreviewPanel({ validation, onConfirm, onClose, zIn
           </DOSButton>
         )}
       </div>
+      </div>{/* end flex wrapper */}
     </DOSPanel>
   );
 }
