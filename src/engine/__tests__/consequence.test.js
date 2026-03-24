@@ -270,9 +270,10 @@ describe('consequence dispatch sites', () => {
 
   it('lethal portal fires consequence on requires failure', () => {
     const arena = makePlace('arena', {
+      exits: ['north'],
       extraTags: [['exit', ref(`${WORLD}:place:chasm`), 'north', 'A narrow ledge.']],
     });
-    const chasm = makePlace('chasm');
+    const chasm = makePlace('chasm', { exits: ['south'] });
     const entrance = makePlace('entrance');
     const portal = makePortal('lethal-bridge', [
       [`${WORLD}:place:arena`, 'north', 'Across the chasm.'],

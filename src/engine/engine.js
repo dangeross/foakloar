@@ -78,6 +78,7 @@ export class GameEngine {
     this.output.push({ sound: pattern, volume: parseFloat(volume) || 1.0, type: 'sound' });
   }
 
+
   /**
    * Return and clear the output buffer.
    */
@@ -860,6 +861,9 @@ export class GameEngine {
     }
 
     this._emit(`Taken: ${getTag(match.event, 'title')}`, 'item');
+    // Dispatch on-interact take (e.g. for pickup sounds)
+    const currentState = this.player.getState(match.dtag);
+    this.processFeatureInteract(match.event, match.dtag, 'take', currentState);
     this._evalQuests();
   }
 

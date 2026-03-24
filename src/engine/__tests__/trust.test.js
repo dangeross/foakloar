@@ -227,8 +227,8 @@ describe('resolveExitsWithTrust', () => {
   const destRef = ref(`${WORLD}:place:cave`);
 
   function setup({ collaboration = 'vouched', collaborators = [], vouches = [], portals = [] } = {}) {
-    const place = makePlace('start');
-    const dest = makePlace('cave');
+    const place = makePlace('start', { exits: ['north', 'south', 'east', 'west'] });
+    const dest = makePlace('cave', { exits: ['north', 'south', 'east', 'west'] });
     const world = makeWorldEvent({ collaboration, collaborators });
 
     const allEvents = [place, dest, world, ...vouches, ...portals];
@@ -338,8 +338,8 @@ describe('resolveExitsWithTrust', () => {
     const portal = makePortalAs(PUBKEY2, 'p1',
       [[placeRef, 'north', ''], [destRef, 'south', '']],
     );
-    const place = makePlace('start');
-    const dest = makePlace('cave');
+    const place = makePlace('start', { exits: ['north'] });
+    const dest = makePlace('cave', { exits: ['south'] });
     const events = buildEvents(place, dest, portal);
 
     const { exits, hiddenByTrust } = resolveExitsWithTrust(events, placeRef, freshState(), null, 'community', getTrustLevel);
@@ -373,8 +373,8 @@ describe('Engine contested exit UI', () => {
   const destRef2 = refFor(PUBKEY2, `${WORLD}:place:bridge`);
 
   function setupEngine({ collaboration = 'vouched', collaborators = [], vouches = [], portals = [], clientMode = 'community', places: extraPlaces = [] } = {}) {
-    const place = makePlace('start');
-    const dest = makePlace('cave');
+    const place = makePlace('start', { exits: ['north', 'south', 'east', 'west'] });
+    const dest = makePlace('cave', { exits: ['north', 'south', 'east', 'west'] });
     const world = makeWorldEvent({ collaboration, collaborators });
     const allEvents = [place, dest, world, ...vouches, ...portals, ...extraPlaces];
     const events = buildEvents(...allEvents);

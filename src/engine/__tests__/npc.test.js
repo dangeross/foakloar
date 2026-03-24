@@ -254,8 +254,8 @@ describe('engine roaming NPC integration', () => {
   });
 
   it('increments moveCount on movement', async () => {
-    const room1 = makePlace('room1');
-    const room2 = makePlace('room2');
+    const room1 = makePlace('room1', { exits: ['north'] });
+    const room2 = makePlace('room2', { exits: ['south'] });
     const portal = makePortal('p1', [
       [`${WORLD}:place:room1`, 'north'],
       [`${WORLD}:place:room2`, 'south'],
@@ -270,8 +270,8 @@ describe('engine roaming NPC integration', () => {
   });
 
   it('NPC deposits items at stash on arrival', async () => {
-    const room1 = makePlace('room1');
-    const stashRoom = makePlace('stash');
+    const room1 = makePlace('room1', { exits: ['north'] });
+    const stashRoom = makePlace('stash', { exits: ['south'] });
     const portal = makePortal('p1', [
       [`${WORLD}:place:room1`, 'north'],
       [`${WORLD}:place:stash`, 'south'],
@@ -428,8 +428,8 @@ describe('engine roaming NPC integration', () => {
   });
 
   it('deposited items appear at stash room, not original room', async () => {
-    const cave = makePlace('cave', { items: [`${WORLD}:item:key`] });
-    const stash = makePlace('stash');
+    const cave = makePlace('cave', { items: [`${WORLD}:item:key`], exits: ['north'] });
+    const stash = makePlace('stash', { exits: ['south'] });
     const portal = makePortal('p1', [
       [`${WORLD}:place:cave`, 'north'],
       [`${WORLD}:place:stash`, 'south'],

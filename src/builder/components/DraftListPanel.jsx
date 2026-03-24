@@ -169,6 +169,7 @@ export default function DraftListPanel({
   if (importPreview) {
     return (
       <ImportPreviewPanel
+        zIndex={zIndex ? zIndex + 10 : 60}
         validation={importPreview.validation}
         onConfirm={() => {
           // Import only the valid events

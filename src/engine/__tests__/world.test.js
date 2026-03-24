@@ -276,8 +276,8 @@ describe('findByNoun', () => {
 
 describe('resolveExits', () => {
   it('resolves portal exits for a place', () => {
-    const place1 = makePlace('room1');
-    const place2 = makePlace('room2');
+    const place1 = makePlace('room1', { exits: ['north'] });
+    const place2 = makePlace('room2', { exits: ['south'] });
     const portal = makePortal('p1', [
       [`${WORLD}:place:room1`, 'north'],
       [`${WORLD}:place:room2`, 'south'],
@@ -291,8 +291,8 @@ describe('resolveExits', () => {
   });
 
   it('hides portals with hidden state', () => {
-    const place1 = makePlace('room1');
-    const place2 = makePlace('room2');
+    const place1 = makePlace('room1', { exits: ['north'] });
+    const place2 = makePlace('room2', { exits: ['south'] });
     const portal = makePortal('p1', [
       [`${WORLD}:place:room1`, 'north'],
       [`${WORLD}:place:room2`, 'south'],
@@ -304,8 +304,8 @@ describe('resolveExits', () => {
   });
 
   it('shows portal when player state overrides hidden', () => {
-    const place1 = makePlace('room1');
-    const place2 = makePlace('room2');
+    const place1 = makePlace('room1', { exits: ['north'] });
+    const place2 = makePlace('room2', { exits: ['south'] });
     const portal = makePortal('p1', [
       [`${WORLD}:place:room1`, 'north'],
       [`${WORLD}:place:room2`, 'south'],

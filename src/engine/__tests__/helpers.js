@@ -28,7 +28,7 @@ export function makeEvent(dtag, tags = [], content = '') {
 }
 
 /** Create a place event. */
-export function makePlace(name, { features = [], items = [], npcs = [], portals = [], puzzles = [], extraTags = [] } = {}) {
+export function makePlace(name, { features = [], items = [], npcs = [], portals = [], puzzles = [], exits = [], extraTags = [] } = {}) {
   const dtag = `${WORLD}:place:${name}`;
   const tags = [
     ['type', 'place'],
@@ -38,6 +38,7 @@ export function makePlace(name, { features = [], items = [], npcs = [], portals 
     ...npcs.map((n) => ['npc', ref(n)]),
     ...portals.map((p) => ['portal', ref(p)]),
     ...puzzles.map((p) => ['puzzle', ref(p)]),
+    ...exits.map((e) => ['exit', e]),
     ...extraTags,
   ];
   return makeEvent(dtag, tags, `You are in the ${name}.`);

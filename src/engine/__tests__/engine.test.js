@@ -99,8 +99,8 @@ describe('enterRoom', () => {
   });
 
   it('shows exits', () => {
-    const room1 = makePlace('room1');
-    const room2 = makePlace('room2');
+    const room1 = makePlace('room1', { exits: ['north'] });
+    const room2 = makePlace('room2', { exits: ['south'] });
     const portal = makePortal('p1', [
       [`${WORLD}:place:room1`, 'north'],
       [`${WORLD}:place:room2`, 'south'],
@@ -216,8 +216,8 @@ describe('handlePickup', () => {
 
 describe('movement', () => {
   it('moves to an adjacent room', async () => {
-    const room1 = makePlace('room1');
-    const room2 = makePlace('room2');
+    const room1 = makePlace('room1', { exits: ['north'] });
+    const room2 = makePlace('room2', { exits: ['south'] });
     const portal = makePortal('p1', [
       [`${WORLD}:place:room1`, 'north'],
       [`${WORLD}:place:room2`, 'south'],
@@ -233,8 +233,8 @@ describe('movement', () => {
 
   it('rejects movement through gated portal', async () => {
     const key = makeItem('key');
-    const room1 = makePlace('room1');
-    const room2 = makePlace('room2');
+    const room1 = makePlace('room1', { exits: ['north'] });
+    const room2 = makePlace('room2', { exits: ['south'] });
     const portal = makePortal('p1', [
       [`${WORLD}:place:room1`, 'north'],
       [`${WORLD}:place:room2`, 'south'],
@@ -275,8 +275,8 @@ describe('processOnMove', () => {
       onMove: [['on', 'decrement', 'battery', '1']],
       nouns: [['lantern']],
     });
-    const room1 = makePlace('room1');
-    const room2 = makePlace('room2');
+    const room1 = makePlace('room1', { exits: ['north'] });
+    const room2 = makePlace('room2', { exits: ['south'] });
     const portal = makePortal('p1', [
       [`${WORLD}:place:room1`, 'north'],
       [`${WORLD}:place:room2`, 'south'],
@@ -305,8 +305,8 @@ describe('processOnMove', () => {
       transitions: [['on', 'flickering', 'The lantern flickers ominously.']],
       nouns: [['lantern']],
     });
-    const room1 = makePlace('room1');
-    const room2 = makePlace('room2');
+    const room1 = makePlace('room1', { exits: ['north'] });
+    const room2 = makePlace('room2', { exits: ['south'] });
     const portal = makePortal('p1', [
       [`${WORLD}:place:room1`, 'north'],
       [`${WORLD}:place:room2`, 'south'],

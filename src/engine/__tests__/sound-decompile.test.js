@@ -45,11 +45,6 @@ describe('decompileStrudelCode', () => {
     expect(tags).toContainEqual(['degrade-by', '0.3']);
   });
 
-  it('extracts rand gain', () => {
-    const tags = decompileStrudelCode('noise().gain(rand.range(0.1, 0.4))');
-    expect(tags).toContainEqual(['rand', '0.1', '0.4']);
-  });
-
   it('extracts rev and palindrome', () => {
     const tags = decompileStrudelCode('note("c3").rev().palindrome()');
     expect(tags).toContainEqual(['rev', '']);

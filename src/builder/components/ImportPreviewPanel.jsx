@@ -13,11 +13,11 @@ function getTagValue(event, name) {
   return event.tags?.find((t) => t[0] === name)?.[1] || null;
 }
 
-export default function ImportPreviewPanel({ validation, onConfirm, onClose }) {
+export default function ImportPreviewPanel({ validation, onConfirm, onClose, zIndex }) {
   const { valid, rejected, warnings, hints, worldSlug, walkthroughSteps } = validation;
 
   return (
-    <DOSPanel title="IMPORT PREVIEW" onClose={onClose} minWidth="28em">
+    <DOSPanel title="IMPORT PREVIEW" onClose={onClose} minWidth="28em" zIndex={zIndex}>
       {worldSlug && (
         <div className="mb-2" style={{ color: 'var(--colour-title)' }}>
           World: {worldSlug}

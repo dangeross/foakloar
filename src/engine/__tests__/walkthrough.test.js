@@ -23,8 +23,9 @@ function buildTestWorld() {
   const start = makePlace('start', {
     features: [`${WORLD}:feature:sign`],
     items: [`${WORLD}:item:key`],
+    exits: ['north'],
   });
-  const cave = makePlace('cave');
+  const cave = makePlace('cave', { exits: ['south'] });
   const sign = makeFeature('sign', {
     state: 'unread',
     transitions: [['unread', 'read', 'The sign says: go north.']],

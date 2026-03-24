@@ -167,6 +167,12 @@ export function findTransition(event, currentState, targetState) {
 export function resolveExits(events, placeDTag, playerState) {
   const exits = [];
 
+  // Collect declared exit slots on the place — portals can only use declared slots
+  const placeEvent = events.get(placeDTag);
+  const declaredSlots = new Set(
+    placeEvent ? getTags(placeEvent, 'exit').map((t) => t[1]) : []
+  );
+
   for (const [, event] of events) {
     if (getTag(event, 'type') !== 'portal') continue;
 
@@ -187,6 +193,9 @@ export function resolveExits(events, placeDTag, playerState) {
 
       const slot = tag[2];
       const label = tag[3] || '';
+
+      // Security: only allow portal exits on declared exit slots
+      if (!declaredSlots.has(slot)) continue;
 
       for (let j = 0; j < exitTags.length; j++) {
         if (j === i) continue;

@@ -55,10 +55,6 @@
           "puzzle"
         ],
         [
-          "cw",
-          "mild-peril"
-        ],
-        [
           "start",
           "30078:<PUBKEY>:the-lake:place:clearing"
         ],
@@ -176,7 +172,7 @@
           "sound",
           "30078:<PUBKEY>:the-lake:sound:forest-ambient",
           "ambient",
-          "0.5"
+          "0.7"
         ]
       ],
       "content": "You stand in a sun-dappled clearing. Tall oaks ring the space, their branches filtering the light into golden shafts. A worn path leads north toward darkness. To the west, crumbling stonework is visible through the trees. To the east, smoke rises from a chimney hidden among the oaks. To the south, the forest thickens into an impenetrable wall — but the undergrowth looks recently disturbed, as if someone has been trying to cut a path."
@@ -211,6 +207,18 @@
         [
           "npc",
           "30078:<PUBKEY>:the-lake:npc:hermit"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:cottage-fire",
+          "ambient",
+          "0.7"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:forest-ambient",
+          "layer",
+          "0.2"
         ]
       ],
       "content": "A small stone cottage, low-ceilinged and cluttered. Dried herbs hang from the rafters. A workbench is covered in half-finished carvings. Bookshelves line the walls, stuffed with crumbling volumes. In the corner sits a heavy wooden chest. An old man sits by the fireplace, watching you."
@@ -254,16 +262,16 @@
           "sound",
           "30078:<PUBKEY>:the-lake:sound:cave-drone",
           "ambient",
-          "0.6"
+          "0.8"
         ],
         [
           "sound",
           "30078:<PUBKEY>:the-lake:sound:water-drip",
           "layer",
-          "0.3"
+          "0.5"
         ]
       ],
-      "content": "The air is cool and damp. You stand in a natural cavern, its walls slick with moisture. Something glints on the ground nearby. An old brass lantern sits on a ledge. A rough-hewn stairway descends into darkness."
+      "content": "The air is cool and damp. You stand in a natural cavern, its walls slick with moisture. Something glints on the ground nearby. An old brass lantern sits on a ledge — it looks like it could still be turned on. A rough-hewn stairway descends into darkness."
     },
     {
       "kind": 30078,
@@ -304,10 +312,10 @@
           "sound",
           "30078:<PUBKEY>:the-lake:sound:chapel-ambient",
           "ambient",
-          "0.5"
+          "0.7"
         ]
       ],
-      "content": "What remains of a chapel stands open to the sky. The roof collapsed long ago, and ivy crawls over the broken pews. A bronze altar squats before the east wall, green with age. At the far end, a stone wall bears a crumbling inscription, still partly legible."
+      "content": "What remains of a chapel stands open to the sky. The roof collapsed long ago, and ivy crawls over the broken pews. A bronze altar squats before the east wall, green with age. At the far end, a stone wall bears a crumbling inscription, still partly legible. Something about the altar invites you to kneel — to pray."
     },
     {
       "kind": 30078,
@@ -339,6 +347,12 @@
         [
           "feature",
           "30078:<PUBKEY>:the-lake:feature:stone-sarcophagus"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:crypt-drone",
+          "ambient",
+          "0.7"
         ]
       ],
       "content": "Stone steps descend into a vaulted crypt. The air is cold and dry, preserved for centuries. Carved pillars line the walls, and at the far end a stone sarcophagus rests on a raised dais. The walls are covered in intricate carvings."
@@ -400,13 +414,17 @@
           "sound",
           "30078:<PUBKEY>:the-lake:sound:deep-drone",
           "ambient",
-          "0.7"
+          "0.9"
         ],
         [
           "sound",
           "30078:<PUBKEY>:the-lake:sound:water-echo",
           "layer",
-          "0.4"
+          "0.6"
+        ],
+        [
+          "exit",
+          "south"
         ]
       ],
       "content": "Your lantern light plays across a junction of tunnels. The walls are streaked with mineral deposits — red ochre, pale calcite, veins of something that glitters. Ancient paintings cover the wall to your left. The passage continues down into deeper darkness."
@@ -450,7 +468,7 @@
           "sound",
           "30078:<PUBKEY>:the-lake:sound:lake-ambient",
           "ambient",
-          "0.8"
+          "1.0"
         ]
       ],
       "content": "You emerge onto a narrow ledge above an underground lake. The water is **black and still**, reflecting nothing. The cavern stretches beyond sight.\n\nTo the north, a heavy iron gate bars a passage cut into the rock. The air is cold and tastes of **stone and deep water**.\n\n> *Something vast moves beneath the surface — a ripple, then stillness.*"
@@ -494,6 +512,18 @@
           "media",
           "text/plain",
           "        _______________\n       /               \\\n      |   [O]     [|]   |\n      |                 |\n      |  ~~~~~~~~~~~   |\n      |  ~ CHANNELS ~  |\n      |  ~~~~~~~~~~~   |\n       \\_____________/"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:mechanism-tick",
+          "ambient",
+          "0.6"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:deep-drone",
+          "layer",
+          "0.3"
         ]
       ],
       "content": "A circular chamber carved from living rock. Orichalcum channels trace intricate patterns across the walls and floor, all converging on a complex device set into the north wall. The air hums with a low, expectant vibration. The passage south leads back to the underground lake."
@@ -524,9 +554,23 @@
         [
           "content-type",
           "application/nip44"
+        ],
+        [
+          "puzzle",
+          "30078:<PUBKEY>:the-lake:puzzle:chapel-riddle"
+        ],
+        [
+          "exit",
+          "up"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:sanctum-resonance",
+          "ambient",
+          "0.8"
         ]
       ],
-      "content": null
+      "content": "The sanctum lies beyond."
     },
     {
       "kind": 30078,
@@ -834,6 +878,18 @@
         [
           "state",
           "hidden"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:underground-lake",
+          "east",
+          "A hidden passage leads east along the cavern wall."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:sanctum",
+          "west",
+          "The passage leads west back to the underground lake."
         ]
       ],
       "content": ""
@@ -861,6 +917,12 @@
           "noun",
           "key",
           "iron key"
+        ],
+        [
+          "on-interact",
+          "take",
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:pickup"
         ]
       ],
       "content": "Heavy and cold. The bow is shaped like a serpent."
@@ -890,13 +952,6 @@
           "brass lantern",
           "lamp",
           "light"
-        ],
-        [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect"
         ],
         [
           "verb",
@@ -1051,6 +1106,12 @@
           "layer",
           "0.2",
           "flickering"
+        ],
+        [
+          "on-interact",
+          "take",
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:pickup"
         ]
       ],
       "content": "A sturdy brass lantern, dented but functional. A small dial on the side reads the battery level."
@@ -1081,13 +1142,6 @@
         ],
         [
           "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect"
-        ],
-        [
-          "verb",
           "insert",
           "place",
           "put"
@@ -1098,6 +1152,12 @@
           "set-state",
           "amulet-placed",
           "30078:<PUBKEY>:the-lake:feature:mechanism"
+        ],
+        [
+          "on-interact",
+          "take",
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:pickup"
         ]
       ],
       "content": "An amulet of orichalcum, shaped like a coiled serpent. It is warm to the touch, as if alive."
@@ -1128,13 +1188,6 @@
         ],
         [
           "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect"
-        ],
-        [
-          "verb",
           "insert",
           "place",
           "put"
@@ -1145,6 +1198,12 @@
           "set-state",
           "activated",
           "30078:<PUBKEY>:the-lake:feature:mechanism"
+        ],
+        [
+          "on-interact",
+          "take",
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:pickup"
         ]
       ],
       "content": "A staff of dark wood, carved with serpent scales. The head is shaped like a coiled serpent, matching the amulet."
@@ -1172,13 +1231,6 @@
           "noun",
           "altar",
           "bronze altar"
-        ],
-        [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect"
         ],
         [
           "verb",
@@ -1269,19 +1321,31 @@
           "wall"
         ],
         [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect",
-          "read"
-        ],
-        [
           "on-interact",
           "examine",
           "set-state",
           "visible",
           "30078:<PUBKEY>:the-lake:puzzle:chapel-riddle"
+        ],
+        [
+          "transition",
+          "faded",
+          "revealed",
+          "The symbols on the inscription rearrange before your eyes. New text emerges from the stone: *\"The answer opens what lies below the lake. Speak it again where the water meets the dark.\"*"
+        ],
+        [
+          "state",
+          "faded"
+        ],
+        [
+          "transition",
+          "faded",
+          "faded",
+          ""
+        ],
+        [
+          "content-type",
+          "text/markdown"
         ]
       ],
       "content": "Faded letters carved deep into stone. Most have been worn away by time."
@@ -1310,14 +1374,6 @@
           "journal",
           "book",
           "diary"
-        ],
-        [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect",
-          "read"
         ],
         [
           "on-interact",
@@ -1353,14 +1409,6 @@
           "stone",
           "standing stone",
           "monolith"
-        ],
-        [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect",
-          "read"
         ],
         [
           "state",
@@ -1413,13 +1461,6 @@
           "stained glass"
         ],
         [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect"
-        ],
-        [
           "on-interact",
           "examine",
           "set-state",
@@ -1454,22 +1495,44 @@
           "locked chest"
         ],
         [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect"
-        ],
-        [
-          "verb",
-          "open",
-          "unlock"
-        ],
-        [
           "requires",
           "30078:<PUBKEY>:the-lake:item:iron-key",
           "",
           "The chest is bound with a heavy lock. You need a key."
+        ],
+        [
+          "verb",
+          "open",
+          "unlock",
+          "use"
+        ],
+        [
+          "state",
+          "locked"
+        ],
+        [
+          "transition",
+          "locked",
+          "open",
+          "You turn the iron key in the lock. With a heavy click, the chest opens."
+        ],
+        [
+          "transition",
+          "open",
+          "open",
+          "The chest is already open."
+        ],
+        [
+          "on-interact",
+          "open",
+          "set-state",
+          "open"
+        ],
+        [
+          "on-interact",
+          "open",
+          "give-item",
+          "30078:<PUBKEY>:the-lake:item:serpent-amulet"
         ]
       ],
       "content": "A heavy wooden chest, bound with iron bands. You turn the iron key and the lock clicks open. Inside, a serpent amulet rests on faded cloth."
@@ -1499,13 +1562,6 @@
           "cave paintings",
           "paint",
           "art"
-        ],
-        [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect"
         ],
         [
           "on-interact",
@@ -1541,13 +1597,6 @@
           "gate",
           "door",
           "iron gate"
-        ],
-        [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect"
         ],
         [
           "verb",
@@ -1618,14 +1667,6 @@
           "walls"
         ],
         [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect",
-          "read"
-        ],
-        [
           "on-interact",
           "examine",
           "set-state",
@@ -1659,13 +1700,6 @@
           "sarcophagus",
           "tomb",
           "coffin"
-        ],
-        [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect"
         ],
         [
           "verb",
@@ -1739,13 +1773,6 @@
           "device",
           "channels",
           "orichalcum"
-        ],
-        [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect"
         ],
         [
           "state",
@@ -1944,8 +1971,15 @@
         [
           "on-complete",
           "",
-          "give-crypto-key",
-          "28fde9c3481ca232f431aac17b91ff3218efd419c2ce42a7940ddd16ae10b50f"
+          "set-state",
+          "solved"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "revealed",
+          "30078:<PUBKEY>:the-lake:feature:crumbling-inscription"
         ]
       ],
       "content": "I have a neck but no head, a body but no soul. I guard what you seek but ask nothing in return. What am I?"
@@ -1987,7 +2021,7 @@
           "30078:<PUBKEY>:the-lake:portal:mechanism-to-sanctum"
         ]
       ],
-      "content": ""
+      "content": "The orichalcum channels form a sequence puzzle. Place the amulet first, then the staff, to activate the mechanism."
     },
     {
       "kind": 30078,
@@ -2013,20 +2047,6 @@
           "hermit",
           "old man",
           "man"
-        ],
-        [
-          "verb",
-          "talk",
-          "speak",
-          "chat",
-          "ask"
-        ],
-        [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect"
         ],
         [
           "dialogue",
@@ -2073,13 +2093,6 @@
           "presence"
         ],
         [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect"
-        ],
-        [
           "speed",
           "3"
         ],
@@ -2093,19 +2106,7 @@
         ],
         [
           "route",
-          "30078:<PUBKEY>:the-lake:place:flooded-passage"
-        ],
-        [
-          "route",
-          "30078:<PUBKEY>:the-lake:place:echo-chamber"
-        ],
-        [
-          "route",
           "30078:<PUBKEY>:the-lake:place:underground-lake"
-        ],
-        [
-          "stash",
-          "30078:<PUBKEY>:the-lake:place:flooded-passage"
         ],
         [
           "on-encounter",
@@ -2114,9 +2115,12 @@
           "30078:<PUBKEY>:the-lake:item:iron-key"
         ],
         [
-          "on-enter",
-          "30078:<PUBKEY>:the-lake:place:flooded-passage",
-          "deposits"
+          "route",
+          "30078:<PUBKEY>:the-lake:place:flooded-passage"
+        ],
+        [
+          "stash",
+          "30078:<PUBKEY>:the-lake:place:flooded-passage"
         ]
       ],
       "content": "A tall, gaunt figure draped in shadow. It moves without sound, its long fingers curling and uncurling. It does not acknowledge you — it is interested only in what you carry."
@@ -2137,10 +2141,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "Hm? A visitor. It's been... a while. What brings you to these woods?"
-        ],
-        [
           "option",
           "Ask about the cave",
           "30078:<PUBKEY>:the-lake:dialogue:hermit:cave"
@@ -2156,7 +2156,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "Hm? A visitor. It's been... a while. What brings you to these woods?"
     },
     {
       "kind": 30078,
@@ -2174,10 +2174,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "Back again. The cave spoke to you, did it? Good. There's more to find."
-        ],
-        [
           "option",
           "Ask about the chapel",
           "30078:<PUBKEY>:the-lake:dialogue:hermit:chapel"
@@ -2193,7 +2189,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "Back again. The cave spoke to you, did it? Good. There's more to find."
     },
     {
       "kind": 30078,
@@ -2211,10 +2207,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "You found the chapel. I wondered if you would. The watchers left more than prayers there."
-        ],
-        [
           "option",
           "Ask about the lake",
           "30078:<PUBKEY>:the-lake:dialogue:hermit:lake"
@@ -2230,7 +2222,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "You found the chapel. I wondered if you would. The watchers left more than prayers there."
     },
     {
       "kind": 30078,
@@ -2248,10 +2240,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "North of the clearing, there's a cave. Old. Older than me. Take a light — the dark below doesn't forgive the careless. There are paintings on the walls, if you look."
-        ],
-        [
           "option",
           "Ask about the paintings",
           "30078:<PUBKEY>:the-lake:dialogue:hermit:paintings"
@@ -2262,7 +2250,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "North of the clearing, there's a cave. Old. Older than me. Take a light — the dark below doesn't forgive the careless. There are paintings on the walls, if you look."
     },
     {
       "kind": 30078,
@@ -2280,16 +2268,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "They painted what they saw. The lake, the serpent, the ones who came before. Don't dismiss the art of the ancients — it tells truth more honestly than words."
-        ],
-        [
           "option",
           "Leave",
           ""
         ]
       ],
-      "content": ""
+      "content": "They painted what they saw. The lake, the serpent, the ones who came before. Don't dismiss the art of the ancients — it tells truth more honestly than words."
     },
     {
       "kind": 30078,
@@ -2307,10 +2291,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "The chapel was built by the first watchers. They knew about the serpent. Pray at the altar — if you've earned the right."
-        ],
-        [
           "option",
           "Ask about the watchers",
           "30078:<PUBKEY>:the-lake:dialogue:hermit:watchers"
@@ -2321,7 +2301,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "The chapel was built by the first watchers. They knew about the serpent. Pray at the altar — if you've earned the right. There's an inscription too, a riddle. The watchers loved their word games. *He chuckles.* They kept their secrets in bottles, you know. Everything precious went into a bottle."
     },
     {
       "kind": 30078,
@@ -2339,16 +2319,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "They watched the lake. Tended the serpent. Kept the mechanism. That's all I know. Or all I'll say."
-        ],
-        [
           "option",
           "Leave",
           ""
         ]
       ],
-      "content": ""
+      "content": "They watched the lake. Tended the serpent. Kept the mechanism. That's all I know. Or all I'll say."
     },
     {
       "kind": 30078,
@@ -2366,10 +2342,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "Below the cave network there's water. A lake. Black and still. Something lives there — old, patient. Not unfriendly, but... discerning. It chooses who passes."
-        ],
-        [
           "option",
           "Ask about the serpent",
           "30078:<PUBKEY>:the-lake:dialogue:hermit:serpent"
@@ -2380,7 +2352,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "Below the cave network there's water. A lake. Black and still. Something lives there — old, patient. Not unfriendly, but... discerning. It chooses who passes."
     },
     {
       "kind": 30078,
@@ -2398,16 +2370,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "The serpent is a guardian. Not yours, not mine. It guards what's beneath. If you want to pass, you'll need its mark — an amulet of orichalcum. The crypt beneath the chapel holds answers."
-        ],
-        [
           "option",
           "Leave",
           ""
         ]
       ],
-      "content": ""
+      "content": "The serpent is a guardian. Not yours, not mine. It guards what's beneath. If you want to pass, you'll need its mark — an amulet of orichalcum. The crypt beneath the chapel holds answers."
     },
     {
       "kind": 30078,
@@ -2425,10 +2393,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "The lake remembers what we forgot. That's not metaphor — what sleeps beneath those waters dreamed something vast. The mechanism was built to wake it, or to keep it sleeping. I was never sure which."
-        ],
-        [
           "option",
           "Ask about the mechanism",
           "30078:<PUBKEY>:the-lake:dialogue:hermit:mechanism"
@@ -2439,7 +2403,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "The lake remembers what we forgot. That's not metaphor — what sleeps beneath those waters dreamed something vast. The mechanism was built to wake it, or to keep it sleeping. I was never sure which."
     },
     {
       "kind": 30078,
@@ -2457,16 +2421,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "North of the lake, through the serpent's passage. You'll need the staff and the amulet. Beyond that... I cannot help you. Some doors open only for those who earned the key."
-        ],
-        [
           "option",
           "Leave",
           ""
         ]
       ],
-      "content": ""
+      "content": "North of the lake, through the serpent's passage. You'll need the staff and the amulet. Beyond that... I cannot help you. Some doors open only for those who earned the key."
     },
     {
       "kind": 30078,
@@ -2495,19 +2455,6 @@
           "figure"
         ],
         [
-          "verb",
-          "talk",
-          "speak",
-          "ask"
-        ],
-        [
-          "verb",
-          "examine",
-          "x",
-          "look at",
-          "inspect"
-        ],
-        [
           "dialogue",
           "30078:<PUBKEY>:the-lake:dialogue:ferryman-greeting"
         ],
@@ -2534,10 +2481,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "The figure extends an open palm. Ten sats. No more, no less."
-        ],
-        [
           "option",
           "Pay the toll",
           "30078:<PUBKEY>:the-lake:payment:ferry-toll"
@@ -2548,7 +2491,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "The figure extends an open palm. Ten sats. No more, no less."
     },
     {
       "kind": 30078,
@@ -2564,6 +2507,10 @@
         [
           "type",
           "payment"
+        ],
+        [
+          "title",
+          "Ferry Toll"
         ],
         [
           "amount",
@@ -2609,6 +2556,12 @@
           "noun",
           "token",
           "ferry token"
+        ],
+        [
+          "on-interact",
+          "take",
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:pickup"
         ]
       ],
       "content": "A smooth black stone, warm to the touch. The Ferryman will honour it."
@@ -2665,16 +2618,40 @@
           "sound"
         ],
         [
-          "note",
-          "e4 ~ g4 ~"
+          "s",
+          "white"
         ],
         [
-          "oscillator",
-          "triangle"
+          "lpf",
+          "500"
+        ],
+        [
+          "hpf",
+          "80"
+        ],
+        [
+          "gain",
+          "0.2"
+        ],
+        [
+          "attack",
+          "0.5"
+        ],
+        [
+          "sustain",
+          "1.5"
+        ],
+        [
+          "release",
+          "1"
         ],
         [
           "slow",
           "3"
+        ],
+        [
+          "room",
+          "0.4"
         ]
       ],
       "content": ""
@@ -2696,19 +2673,51 @@
         ],
         [
           "note",
-          "c2 ~ ~ ~"
+          "c2 ~ eb2 ~"
         ],
         [
-          "oscillator",
+          "s",
           "sine"
         ],
         [
+          "lpf",
+          "200"
+        ],
+        [
+          "gain",
+          "0.35"
+        ],
+        [
+          "attack",
+          "1"
+        ],
+        [
+          "sustain",
+          "3"
+        ],
+        [
+          "release",
+          "2"
+        ],
+        [
           "slow",
-          "4"
+          "6"
         ],
         [
           "room",
           "0.8"
+        ],
+        [
+          "roomsize",
+          "8"
+        ],
+        [
+          "fm",
+          "0.5"
+        ],
+        [
+          "fmh",
+          "2"
         ]
       ],
       "content": ""
@@ -2729,20 +2738,40 @@
           "sound"
         ],
         [
-          "note",
-          "f1 ~ ~ ~ ~ ~ ~ ~"
+          "s",
+          "brown"
         ],
         [
-          "oscillator",
-          "sine"
+          "lpf",
+          "120"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "attack",
+          "1.5"
+        ],
+        [
+          "sustain",
+          "4"
+        ],
+        [
+          "release",
+          "2"
         ],
         [
           "slow",
-          "6"
+          "5"
         ],
         [
           "room",
           "0.9"
+        ],
+        [
+          "roomsize",
+          "10"
         ]
       ],
       "content": ""
@@ -2763,24 +2792,44 @@
           "sound"
         ],
         [
-          "note",
-          "c3 ~ ~ ~ ~ ~ ~ ~"
+          "s",
+          "white"
         ],
         [
-          "oscillator",
-          "ocarina"
+          "lpf",
+          "400 200"
+        ],
+        [
+          "hpf",
+          "60"
+        ],
+        [
+          "gain",
+          "0.35 0.15"
+        ],
+        [
+          "attack",
+          "0.6 0.2"
+        ],
+        [
+          "sustain",
+          "1 2"
+        ],
+        [
+          "release",
+          "1.5 2"
         ],
         [
           "slow",
-          "8"
+          "4"
         ],
         [
           "room",
-          "1.0"
+          "0.7"
         ],
         [
-          "delay",
-          "0.4"
+          "roomsize",
+          "6"
         ]
       ],
       "content": ""
@@ -2802,15 +2851,39 @@
         ],
         [
           "note",
-          "a5 ~ ~ ~ ~ ~ ~ ~"
+          "a5 ~ ~ e6 ~ ~ c6 ~ ~ ~ g5 ~ ~ ~ ~ ~"
         ],
         [
-          "oscillator",
+          "s",
           "sine"
         ],
         [
-          "fast",
-          "2"
+          "gain",
+          "0.15"
+        ],
+        [
+          "sustain",
+          "0.02"
+        ],
+        [
+          "release",
+          "0.3"
+        ],
+        [
+          "room",
+          "0.9"
+        ],
+        [
+          "roomsize",
+          "8"
+        ],
+        [
+          "degrade-by",
+          "0.4"
+        ],
+        [
+          "slow",
+          "3"
         ]
       ],
       "content": ""
@@ -2832,22 +2905,47 @@
         ],
         [
           "note",
-          "e5 ~ a5 ~ ~ ~ g5 ~"
+          "e4 ~ a4 ~ ~ g4 ~ ~"
         ],
         [
-          "oscillator",
-          "sine"
+          "s",
+          "triangle"
         ],
         [
-          "fast",
-          "3"
+          "gain",
+          "0.12"
+        ],
+        [
+          "sustain",
+          "0.3"
+        ],
+        [
+          "release",
+          "1.2"
         ],
         [
           "room",
-          "0.6"
+          "0.8"
+        ],
+        [
+          "roomsize",
+          "6"
         ],
         [
           "delay",
+          "0.3",
+          "0.4"
+        ],
+        [
+          "delaytime",
+          "0.35"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "degrade-by",
           "0.3"
         ]
       ],
@@ -2873,28 +2971,36 @@
           "g2"
         ],
         [
-          "oscillator",
+          "s",
           "sine"
         ],
         [
           "lpf",
-          "400"
-        ],
-        [
-          "sustain",
-          "2"
-        ],
-        [
-          "release",
-          "0.1"
-        ],
-        [
-          "slow",
-          "2"
+          "300"
         ],
         [
           "gain",
-          "0.6"
+          "0.15"
+        ],
+        [
+          "sustain",
+          "3"
+        ],
+        [
+          "release",
+          "0.5"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "fm",
+          "0.3"
+        ],
+        [
+          "fmh",
+          "1"
         ]
       ],
       "content": ""
@@ -2915,29 +3021,24 @@
           "sound"
         ],
         [
-          "noise",
-          ""
+          "s",
+          "fire*2"
         ],
         [
           "lpf",
-          "500"
+          "2000"
         ],
         [
-          "shape",
-          "0.4"
+          "gain",
+          "0.2"
+        ],
+        [
+          "slow",
+          "3"
         ],
         [
           "degrade-by",
-          "0.15"
-        ],
-        [
-          "rand",
-          "0.1",
-          "0.35"
-        ],
-        [
-          "fast",
-          "6"
+          "0.25"
         ]
       ],
       "content": ""
@@ -2959,15 +3060,35 @@
         ],
         [
           "note",
-          "c4 e4 g4"
+          "c5 e5 g5"
         ],
         [
-          "oscillator",
+          "s",
           "sine"
         ],
         [
+          "gain",
+          "0.4"
+        ],
+        [
+          "attack",
+          "0.01"
+        ],
+        [
+          "sustain",
+          "0.15"
+        ],
+        [
+          "release",
+          "0.8"
+        ],
+        [
+          "room",
+          "0.5"
+        ],
+        [
           "fast",
-          "4"
+          "2"
         ]
       ],
       "content": ""
@@ -2989,19 +3110,43 @@
         ],
         [
           "note",
-          "a3 ~ e3 ~"
+          "a3 ~ e3 ~ c3 ~ ~"
         ],
         [
-          "oscillator",
-          "pipeorgan_quiet"
+          "s",
+          "triangle"
+        ],
+        [
+          "lpf",
+          "800"
+        ],
+        [
+          "gain",
+          "0.25"
+        ],
+        [
+          "attack",
+          "0.8"
+        ],
+        [
+          "sustain",
+          "2"
+        ],
+        [
+          "release",
+          "1.5"
         ],
         [
           "slow",
-          "4"
+          "6"
         ],
         [
           "room",
-          "0.8"
+          "0.9"
+        ],
+        [
+          "roomsize",
+          "8"
         ]
       ],
       "content": ""
@@ -3020,10 +3165,6 @@
         [
           "type",
           "consequence"
-        ],
-        [
-          "title",
-          "Death"
         ],
         [
           "respawn",
@@ -3058,10 +3199,6 @@
         [
           "type",
           "consequence"
-        ],
-        [
-          "title",
-          "Consumed by Darkness"
         ],
         [
           "respawn",
@@ -3299,6 +3436,287 @@
         ]
       ],
       "content": "Follow the trail. Each step reveals the next."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:cottage-fire"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "fire*2 fire*1"
+        ],
+        [
+          "lpf",
+          "2500"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "degrade-by",
+          "0.3"
+        ],
+        [
+          "attack",
+          "0.3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:crypt-drone"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "f2 ~ ~ ~ e2 ~ ~ ~"
+        ],
+        [
+          "s",
+          "sawtooth"
+        ],
+        [
+          "lpf",
+          "180"
+        ],
+        [
+          "gain",
+          "0.15"
+        ],
+        [
+          "attack",
+          "1.5"
+        ],
+        [
+          "sustain",
+          "4"
+        ],
+        [
+          "release",
+          "2"
+        ],
+        [
+          "slow",
+          "5"
+        ],
+        [
+          "room",
+          "0.95"
+        ],
+        [
+          "roomsize",
+          "10"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:mechanism-tick"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "metal"
+        ],
+        [
+          "lpf",
+          "1500"
+        ],
+        [
+          "gain",
+          "0.2"
+        ],
+        [
+          "degrade-by",
+          "0.5"
+        ],
+        [
+          "room",
+          "0.4"
+        ],
+        [
+          "slow",
+          "2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:sound:sanctum-resonance"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c2 ~ g2 ~ eb2 ~ ~ ~"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "gain",
+          "0.25"
+        ],
+        [
+          "attack",
+          "2"
+        ],
+        [
+          "sustain",
+          "5"
+        ],
+        [
+          "release",
+          "3"
+        ],
+        [
+          "slow",
+          "6"
+        ],
+        [
+          "room",
+          "1.0"
+        ],
+        [
+          "roomsize",
+          "10"
+        ],
+        [
+          "fm",
+          "0.8"
+        ],
+        [
+          "fmh",
+          "3"
+        ],
+        [
+          "delay",
+          "0.4",
+          "0.5"
+        ],
+        [
+          "delaytime",
+          "0.5"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:place:flooded-passage"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Flooded Passage"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:water-drip",
+          "ambient",
+          "0.7"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:the-lake:sound:deep-drone",
+          "layer",
+          "0.3"
+        ]
+      ],
+      "content": "The passage narrows here, the floor slick with dark water that rises to your ankles. The walls glisten with moisture and strange mineral deposits. Objects lie half-submerged in the shallows — things dropped or abandoned."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-lake:portal:cave-to-flooded"
+        ],
+        [
+          "t",
+          "the-lake"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:flooded-passage",
+          "north",
+          "A narrow passage slopes down into standing water."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-lake:place:cave-network",
+          "south",
+          "The passage rises back toward the cave network."
+        ]
+      ],
+      "content": ""
     }
   ]
 }
