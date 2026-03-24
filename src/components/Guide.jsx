@@ -167,7 +167,7 @@ function Sidebar({ currentPage, onNavigate, open, onToggle }) {
           position: 'fixed', top: '0.5rem', left: '0.5rem', zIndex: 50,
           color: THEME.highlight, background: THEME.sidebarBg,
           border: `1px solid ${THEME.tableBorder}`,
-          font: 'inherit', fontSize: '0.7rem', padding: '4px 8px',
+          font: 'inherit', fontSize: '0.875rem', padding: '4px 8px',
           display: 'none',
         }}
         id="guide-sidebar-toggle"
@@ -195,7 +195,7 @@ function Sidebar({ currentPage, onNavigate, open, onToggle }) {
           <button
             onClick={() => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); }}
             className="cursor-pointer hover:opacity-80"
-            style={{ color: THEME.highlight, background: 'none', border: 'none', font: 'inherit', fontSize: '0.7rem' }}
+            style={{ color: THEME.highlight, background: 'none', border: 'none', font: 'inherit', fontSize: '0.875rem' }}
           >
             foakloar
           </button>
@@ -204,7 +204,7 @@ function Sidebar({ currentPage, onNavigate, open, onToggle }) {
             className="cursor-pointer hover:opacity-80 guide-sidebar-close"
             style={{
               color: THEME.dim, background: 'none', border: 'none',
-              font: 'inherit', fontSize: '0.7rem', display: 'none',
+              font: 'inherit', fontSize: '0.875rem', display: 'none',
             }}
           >
             ✕
@@ -749,8 +749,8 @@ export default function Guide({ guidePage, identity }) {
           <div ref={buildRef} style={{ position: 'relative' }}>
             <button
               onClick={() => setBuildOpen(!buildOpen)}
-              className="cursor-pointer hover:opacity-80 text-sm"
-              style={{ color: THEME.highlight, background: 'none', border: 'none', font: 'inherit' }}
+              className="cursor-pointer hover:opacity-80"
+              style={{ color: THEME.highlight, background: 'none', border: 'none', font: 'inherit', fontSize: '14px' }}
             >
               [build]
             </button>
@@ -777,7 +777,7 @@ export default function Guide({ guidePage, identity }) {
               </div>
             )}
           </div>
-          <span style={{ '--colour-highlight': '#ffffff', '--colour-dim': THEME.dim }}>
+          <span style={{ '--colour-highlight': '#ffffff', '--colour-dim': THEME.dim, fontSize: '14px' }}>
             <IdentityButton identity={identity} />
           </span>
         </div>

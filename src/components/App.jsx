@@ -266,8 +266,9 @@ export default function App() {
     return { trustSet, availableModes, effectiveMode };
   }, [worldConfig, mergedEvents, clientMode]);
 
-  // Apply theme, effects, font, and cursor from world event
+  // Apply theme, effects, font, and cursor from world event (game pages only)
   useEffect(() => {
+    if (route.page !== 'game') return;
     const we = worldConfig?.worldEvent || null;
     applyTheme(resolveTheme(we));
     applyEffects(resolveEffects(we));

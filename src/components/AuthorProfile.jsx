@@ -10,8 +10,7 @@ import WorldCard from './WorldCard.jsx';
 import TipPanel from './TipPanel.jsx';
 import { useWorldDiscovery } from '../hooks/useWorldDiscovery.js';
 import { useProfile } from '../hooks/useProfile.js';
-import IdentityButton from './ui/IdentityButton.jsx';
-import LoginPanel from './ui/LoginPanel.jsx';
+import PageHeader from './ui/PageHeader.jsx';
 import { navigateToLobby, navigateToWorld } from '../services/router.js';
 
 export default function AuthorProfile({ npub, pubkeyHex, identity }) {
@@ -20,7 +19,6 @@ export default function AuthorProfile({ npub, pubkeyHex, identity }) {
   const [copied, setCopied] = useState(false);
   const [showTip, setShowTip] = useState(false);
   const [zapTarget, setZapTarget] = useState(null); // { eventId, pubkey }
-  const [showLogin, setShowLogin] = useState(false);
 
   const shortNpub = npub.length > 20
     ? npub.slice(0, 12) + '...' + npub.slice(-8)
@@ -30,26 +28,22 @@ export default function AuthorProfile({ npub, pubkeyHex, identity }) {
 
   return (
     <div
-      className="max-w-2xl mx-auto p-6 flex flex-col h-screen font-mono text-xs"
+      className="max-w-2xl mx-auto flex flex-col min-h-dvh font-mono text-xs"
       style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}
     >
       {/* Header */}
-      <div className="text-sm mb-4 flex justify-between" style={{ color: 'var(--colour-dim)' }}>
-        <span>foakloar</span>
-        <span className="flex items-center gap-2">
-          <button
-            onClick={() => navigateToLobby()}
-            className="cursor-pointer"
-            style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: 0 }}
-          >
-            [worlds]
-          </button>
-          <IdentityButton identity={identity} onClick={() => setShowLogin(!showLogin)} />
-        </span>
-      </div>
+      <PageHeader identity={identity}>
+        <button
+          onClick={() => navigateToLobby()}
+          className="cursor-pointer"
+          style={{ color: 'var(--colour-dim)', background: 'none', border: 'none', font: 'inherit', padding: 0 }}
+        >
+          [worlds]
+        </button>
+      </PageHeader>
 
       {/* Author info */}
-      <div className="mb-4 pb-3" style={{ borderBottom: '1px solid var(--colour-dim)' }}>
+      <div className="mb-4 pb-3 px-6" style={{ borderBottom: '1px solid var(--colour-dim)' }}>
         <div className="mb-1" style={{ color: 'var(--colour-title)' }}>
           {displayName || shortNpub}
         </div>
@@ -80,7 +74,7 @@ export default function AuthorProfile({ npub, pubkeyHex, identity }) {
           </div>
         )}
         {profile?.about && (
-          <div className="mb-1" style={{ color: 'var(--colour-text)', opacity: 0.8 }}>
+          <div className="mb-1" style={{ color: 'var(--colour-text)', opacity: 0.8, whiteSpace: 'pre-wrap' }}>
             {profile.about}
           </div>
         )}
@@ -103,7 +97,7 @@ export default function AuthorProfile({ npub, pubkeyHex, identity }) {
       </div>
 
       {/* Worlds */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 px-6 pb-6">
         <div className="mb-2" style={{ color: 'var(--colour-dim)' }}>
           Worlds
         </div>
@@ -126,11 +120,6 @@ export default function AuthorProfile({ npub, pubkeyHex, identity }) {
           />
         ))}
       </div>
-
-      {/* Login panel */}
-      {showLogin && (
-        <LoginPanel identity={identity} onClose={() => setShowLogin(false)} />
-      )}
 
       {/* Tip panel (author) */}
       {showTip && profile?.lud16 && (

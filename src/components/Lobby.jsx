@@ -11,7 +11,7 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import DOSPanel from './ui/DOSPanel.jsx';
-import IdentityButton from './ui/IdentityButton.jsx';
+import PageHeader from './ui/PageHeader.jsx';
 import LoginPanel from './ui/LoginPanel.jsx';
 import WorldCard from './WorldCard.jsx';
 import TipPanel from './TipPanel.jsx';
@@ -35,7 +35,6 @@ export default function Lobby({
   worldCreatorNode,
 }) {
   const [slug, setSlug] = useState('');
-  const [showLogin, setShowLogin] = useState(false);
   const [importPreview, setImportPreview] = useState(null); // { validation, data }
   const importFileRef = useRef(null);
   const [lobbyMode, setLobbyMode] = useState('search');
@@ -108,103 +107,98 @@ export default function Lobby({
 
   return (
     <div
-      className="max-w-2xl mx-auto p-6 flex flex-col min-h-dvh font-mono text-xs game-text game-container"
+      className="max-w-2xl mx-auto flex flex-col min-h-dvh font-mono text-xs"
       style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}
     >
       {/* ── Header ──────────────────────────────────────────────────────── */}
-      <div className="text-sm mb-4 flex justify-between sticky top-0 z-10 py-2" style={{ color: 'var(--colour-dim)', backgroundColor: 'var(--colour-bg)' }}>
-        <button onClick={() => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="cursor-pointer hover:opacity-80" style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit' }}>foakloar</button>
-        <span className="flex items-center gap-2">
-          {/* Mode dropdown */}
-          <span ref={dropdownRef} style={{ position: 'relative' }}>
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="cursor-pointer"
+      <PageHeader identity={identity}>
+        {/* Mode dropdown */}
+        <span ref={dropdownRef} style={{ position: 'relative' }}>
+          <button
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            className="cursor-pointer"
+            style={{
+              color: 'var(--colour-dim)',
+              background: 'none',
+              border: 'none',
+              font: 'inherit',
+              padding: 0,
+            }}
+          >
+            [{LOBBY_MODES.find((m) => m.value === lobbyMode)?.label}]
+          </button>
+
+          {dropdownOpen && (
+            <div
+              className="font-mono text-xs"
               style={{
-                color: 'var(--colour-dim)',
-                background: 'none',
-                border: 'none',
-                font: 'inherit',
-                padding: 0,
+                position: 'absolute',
+                top: '100%',
+                right: 0,
+                marginTop: '0.25rem',
+                border: '1px solid var(--colour-dim)',
+                backgroundColor: 'var(--colour-bg)',
+                boxShadow: '2px 2px 0 var(--colour-dim)',
+                zIndex: 100,
+                minWidth: '10em',
               }}
             >
-              [{LOBBY_MODES.find((m) => m.value === lobbyMode)?.label}]
-            </button>
-
-            {dropdownOpen && (
-              <div
-                className="font-mono text-xs"
-                style={{
-                  position: 'absolute',
-                  top: '100%',
-                  right: 0,
-                  marginTop: '0.25rem',
-                  border: '1px solid var(--colour-dim)',
-                  backgroundColor: 'var(--colour-bg)',
-                  boxShadow: '2px 2px 0 var(--colour-dim)',
-                  zIndex: 100,
-                  minWidth: '10em',
-                }}
-              >
-                {LOBBY_MODES.map((mode) => (
-                  <button
-                    key={mode.value}
-                    onClick={() => {
-                      setLobbyMode(mode.value);
-                      setDropdownOpen(false);
-                    }}
-                    className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
-                    style={{
-                      color: mode.value === lobbyMode
-                        ? 'var(--colour-highlight)'
-                        : 'var(--colour-text)',
-                      background: 'none',
-                      border: 'none',
-                      font: 'inherit',
-                    }}
-                  >
-                    {mode.value === lobbyMode ? '> ' : '  '}{mode.label}
-                  </button>
-                ))}
-                <div style={{ borderTop: '1px solid var(--colour-dim)' }}>
-                  <button
-                    onClick={() => {
-                      onCreateWorld();
-                      setDropdownOpen(false);
-                    }}
-                    className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
-                    style={{
-                      color: 'var(--colour-item)',
-                      background: 'none',
-                      border: 'none',
-                      font: 'inherit',
-                    }}
-                  >
-                    {'  '}+ world
-                  </button>
-                  <button
-                    onClick={() => {
-                      importFileRef.current?.click();
-                      setDropdownOpen(false);
-                    }}
-                    className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
-                    style={{
-                      color: 'var(--colour-item)',
-                      background: 'none',
-                      border: 'none',
-                      font: 'inherit',
-                    }}
-                  >
-                    {'  '}import
-                  </button>
-                </div>
+              {LOBBY_MODES.map((mode) => (
+                <button
+                  key={mode.value}
+                  onClick={() => {
+                    setLobbyMode(mode.value);
+                    setDropdownOpen(false);
+                  }}
+                  className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                  style={{
+                    color: mode.value === lobbyMode
+                      ? 'var(--colour-highlight)'
+                      : 'var(--colour-text)',
+                    background: 'none',
+                    border: 'none',
+                    font: 'inherit',
+                  }}
+                >
+                  {mode.value === lobbyMode ? '> ' : '  '}{mode.label}
+                </button>
+              ))}
+              <div style={{ borderTop: '1px solid var(--colour-dim)' }}>
+                <button
+                  onClick={() => {
+                    onCreateWorld();
+                    setDropdownOpen(false);
+                  }}
+                  className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                  style={{
+                    color: 'var(--colour-item)',
+                    background: 'none',
+                    border: 'none',
+                    font: 'inherit',
+                  }}
+                >
+                  {'  '}+ world
+                </button>
+                <button
+                  onClick={() => {
+                    importFileRef.current?.click();
+                    setDropdownOpen(false);
+                  }}
+                  className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                  style={{
+                    color: 'var(--colour-item)',
+                    background: 'none',
+                    border: 'none',
+                    font: 'inherit',
+                  }}
+                >
+                  {'  '}import
+                </button>
               </div>
-            )}
-          </span>
-
-          <IdentityButton identity={identity} onClick={() => setShowLogin(!showLogin)} />
+            </div>
+          )}
         </span>
-      </div>
+      </PageHeader>
 
       {/* ── Hidden file input for world import ────────────────────────── */}
       <input
@@ -274,13 +268,8 @@ export default function Lobby({
         />
       )}
 
-      {/* ── Login panel ─────────────────────────────────────────────────── */}
-      {showLogin && (
-        <LoginPanel identity={identity} onClose={() => setShowLogin(false)} />
-      )}
-
       {/* ── Body ────────────────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 px-6 pb-6">
         {/* Manual slug input */}
         <div className="mb-6">
           <form
