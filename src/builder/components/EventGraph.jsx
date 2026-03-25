@@ -183,7 +183,7 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode, answers) {
     return dTag ? (issuesByDTag.get(dTag) || []) : [];
   }
 
-  const SKIP_TYPES = new Set(['vouch', 'player-state']);
+  const SKIP_TYPES = new Set(['vouch', 'player-state', 'report', 'revoke']);
   const places = new Map();
   const portals = [];
   let worldRef = null;
@@ -339,7 +339,7 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode, answers) {
 
 // ── Sidebar ─────────────────────────────────────────────────────────────
 
-function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, onClose, pubkey, trustSet, issuesByDTag }) {
+function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, onRevoke, onClose, pubkey, trustSet, issuesByDTag }) {
   if (!selectedRef) return null;
   const event = events.get(selectedRef);
   if (!event) return null;
@@ -348,6 +348,20 @@ function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, 
   const title = getTag(event, 'title') || selectedRef.split(':').pop();
   const author = event.pubkey;
   const isDraft = !!event._isDraft;
+
+  // Collect reports targeting this event
+  const reports = [];
+  for (const [, ev] of events) {
+    if (getTag(ev, 'type') !== 'report') continue;
+    const target = ev.tags.find((t) => t[0] === 'target')?.[1];
+    if (target === selectedRef) {
+      reports.push({
+        reason: ev.tags.find((t) => t[0] === 'reason')?.[1] || '',
+        reporter: ev.pubkey,
+        createdAt: ev.created_at,
+      });
+    }
+  }
 
   // Collect entities for places
   const entities = [];
@@ -451,6 +465,12 @@ function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, 
             style={{ color: 'var(--colour-item)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', cursor: 'pointer', marginLeft: 4 }}
           >[vouch]</button>
         )}
+        {onRevoke && pk !== pubkey && pk !== trustSet?.genesisPubkey && trustSet?.vouched?.has(pk) && (
+          <button
+            onClick={() => onRevoke(pk)}
+            style={{ color: 'var(--colour-error)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', cursor: 'pointer', marginLeft: 4 }}
+          >[revoke]</button>
+        )}
       </div>
     );
   };
@@ -511,6 +531,31 @@ function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, 
           </div>
         );
       })()}
+
+      {/* Reports */}
+      {reports.length > 0 && (
+        <div style={{ marginTop: 4, marginBottom: 4, padding: '4px 6px', border: '1px solid var(--colour-error)', borderRadius: 2 }}>
+          <div style={{ color: 'var(--colour-error)', fontSize: '0.5rem', marginBottom: 2 }}>
+            {reports.length} report{reports.length > 1 ? 's' : ''}
+          </div>
+          {reports.slice(0, 3).map((r, i) => (
+            <div key={i} style={{ fontSize: '0.45rem', color: 'var(--colour-dim)', marginBottom: 2 }}>
+              "{r.reason}" — {r.reporter.slice(0, 8)}...
+            </div>
+          ))}
+          {reports.length > 3 && (
+            <div style={{ fontSize: '0.45rem', color: 'var(--colour-dim)' }}>
+              + {reports.length - 3} more
+            </div>
+          )}
+          {onRevoke && author !== pubkey && (
+            <button
+              onClick={() => onRevoke(author)}
+              style={{ color: 'var(--colour-error)', background: 'none', border: 'none', font: 'inherit', fontSize: '0.5rem', cursor: 'pointer', marginTop: 2 }}
+            >[revoke author]</button>
+          )}
+        </div>
+      )}
 
       <div style={{ marginTop: 4, marginBottom: 8 }} />
 
@@ -599,7 +644,7 @@ let savedViewport = null;
 
 export default function EventGraph({
   events, currentPlace, onEditEvent, onNewEvent, onNewPortal, onClose,
-  pubkey, trustSet, clientMode, onVouch, onOpenDrafts, onOpenTrust, draftsCount, answers,
+  pubkey, trustSet, clientMode, onVouch, onRevoke, onOpenDrafts, onOpenTrust, draftsCount, answers,
 }) {
   const [showNewMenu, setShowNewMenu] = useState(false);
   const [selectedRef, setSelectedRef] = useState(null);
@@ -797,6 +842,7 @@ export default function EventGraph({
         onEditEvent={onEditEvent}
         onNewPortal={onNewPortal}
         onVouch={onVouch}
+        onRevoke={onRevoke}
         onClose={() => setSelectedRef(null)}
         pubkey={pubkey}
         trustSet={trustSet}

@@ -635,3 +635,22 @@ export async function publishReport({ pool, signer, worldSlug, targetRef, reason
   };
   return publishEvent(signer, pool, template);
 }
+
+/**
+ * Publish a revoke event to remove a vouched author's trust.
+ */
+export async function publishRevoke({ pool, signer, worldSlug, targetPubkey }) {
+  const shortSigner = signer.getPublicKey?.()?.slice(0, 8) || 'mod';
+  const shortTarget = targetPubkey.slice(0, 8);
+  const template = {
+    kind: 30078,
+    tags: [
+      ['d', `${worldSlug}:revoke:${shortSigner}-${shortTarget}`],
+      ['t', worldSlug],
+      ['type', 'revoke'],
+      ['pubkey', targetPubkey],
+    ],
+    content: '',
+  };
+  return publishEvent(signer, pool, template);
+}

@@ -22,7 +22,7 @@ import WorldCreator from '../builder/components/WorldCreator.jsx';
 import VouchPanel from '../builder/components/VouchPanel.jsx';
 import TrustPanel from '../builder/components/TrustPanel.jsx';
 import EventGraph from '../builder/components/EventGraph.jsx';
-import { publishReport } from '../builder/eventBuilder.js';
+import { publishReport, publishRevoke } from '../builder/eventBuilder.js';
 import Lobby from './Lobby.jsx';
 import AuthorProfile from './AuthorProfile.jsx';
 import TipPanel from './TipPanel.jsx';
@@ -820,6 +820,19 @@ export default function App() {
             setEditorState({ eventType: 'portal', initialTags });
           }}
           onVouch={identity?.signer ? (targetPubkey) => setVouchTarget(targetPubkey) : null}
+          onRevoke={identity?.signer && pool && (() => {
+            const ts = trustInfo?.trustSet;
+            if (!ts || !identity?.pubkey) return false;
+            if (identity.pubkey === ts.genesisPubkey) return true;
+            if (ts.collaborators?.has(identity.pubkey)) return true;
+            if (ts.vouched?.get(identity.pubkey)?.canVouch) return true;
+            return false;
+          })() ? async (targetPubkey) => {
+            if (!confirm(`Revoke all content by ${targetPubkey.slice(0, 12)}...? This will hide their events from all players.`)) return;
+            const result = await publishRevoke({ pool, signer: identity.signer, worldSlug: worldTag, targetPubkey });
+            if (result.ok) { alert('Revocation published.'); }
+            else { alert('Failed to publish revocation: ' + result.error); }
+          } : null}
           onOpenDrafts={() => setShowDrafts(true)}
           onOpenTrust={identity?.pubkey && trustInfo?.trustSet ? () => setShowTrust(true) : null}
           draftsCount={drafts.length}
