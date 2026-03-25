@@ -108,6 +108,9 @@ export default function App() {
   }, []);
 
   // Dynamic page titles
+  // Reset theme to defaults on non-game routes (must be in effect, not render)
+  useEffect(() => { if (route.page !== 'game') resetTheme(); }, [route.page]);
+
   useEffect(() => {
     const titles = {
       landing: 'Foakloar — Text Adventure Worlds',
@@ -152,6 +155,28 @@ export default function App() {
   const [showTrust, setShowTrust] = useState(false);
   const engineRef = useRef(null);
   const inputRef = useRef(null);
+  const prevWorldTag = useRef(worldTag);
+
+  // Reset state when world changes (SPA navigation between worlds)
+  useEffect(() => {
+    if (prevWorldTag.current !== worldTag) {
+      prevWorldTag.current = worldTag;
+      setLog([]);
+      setBuildMode(false);
+      setShowDrafts(false);
+      setEditorState(null);
+      setShowWorldCreator(false);
+      setShowZap(false);
+      setVouchTarget(null);
+      setPublishResult(null);
+      setShowRelaySettings(false);
+      setShowTrust(false);
+      setPreviewUnvouched(false);
+      setGeneration(g => g + 1);
+      engineRef.current = null;
+      setDrafts(loadDrafts(worldTag || ''));
+    }
+  }, [worldTag]);
   const logEndRef = useRef(null);
   const historyRef = useRef([]);
   const historyIndexRef = useRef(-1);
@@ -166,7 +191,7 @@ export default function App() {
       setLog([]);
       setGeneration((g) => g + 1);
       setDrafts(loadDrafts(worldTag || ''));
-      try { setClientMode(localStorage.getItem(`foakloar:mode:${worldTag}`) || 'community'); } catch { setClientMode('community'); }
+      // clientMode removed — collaboration mode is read from the world event, no user switching
     }
   }, [worldTag]);
 
@@ -518,8 +543,7 @@ export default function App() {
     return <>{noiseOverlay}<AuthorProfile npub={route.npub} pubkeyHex={route.pubkeyHex} identity={identity} /></>;
   }
 
-  // ── Non-game routes: reset theme to defaults ──────────────────────────
-  if (route.page !== 'game') resetTheme();
+  // ── Non-game routes: reset theme to defaults (moved to effect below) ──
 
   // ── Guide route ──────────────────────────────────────────────────────
   if (route.page === 'guide') {
