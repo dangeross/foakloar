@@ -31,6 +31,7 @@ const TUTORIALS = [
   { id: '09-recipes', title: 'Recipes', subtitle: 'Crafting, Ingredients' },
   { id: '10-payments', title: 'Payments', subtitle: 'Lightning, LNURL gates' },
   { id: '11-endgame', title: 'Endgame', subtitle: 'Endings, Restart' },
+  { id: '12-trust', title: 'Trust & Collaboration', subtitle: 'Vouching, Revoking, Modes' },
 ];
 
 const AUTHORING = [

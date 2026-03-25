@@ -109,7 +109,19 @@ export default function App() {
 
   // Dynamic page titles
   // Reset theme to defaults on non-game routes (must be in effect, not render)
-  useEffect(() => { if (route.page !== 'game') resetTheme(); }, [route.page]);
+  useEffect(() => {
+    if (route.page !== 'game') {
+      resetTheme();
+      if (route.page === 'guide') {
+        // Disable CRT effects entirely on guide pages
+        const root = document.documentElement;
+        root.style.setProperty('--effect-scanlines', '0');
+        root.style.setProperty('--effect-vignette', '0.15');
+        root.style.setProperty('--effect-glow', '0.1');
+        root.style.setProperty('--effect-noise', '0');
+      }
+    }
+  }, [route.page]);
 
   useEffect(() => {
     const titles = {
@@ -547,7 +559,7 @@ export default function App() {
 
   // ── Guide route ──────────────────────────────────────────────────────
   if (route.page === 'guide') {
-    return <>{noiseOverlay}<Guide guidePage={route.guidePage} identity={identity} /></>;
+    return <Guide guidePage={route.guidePage} identity={identity} />;
   }
 
   // ── Landing route ──────────────────────────────────────────────────────
