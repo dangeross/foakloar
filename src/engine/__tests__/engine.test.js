@@ -43,7 +43,7 @@ describe('enterRoom', () => {
     const output = engine.flush();
 
     expect(output.some((e) => e.type === 'title' && e.text.includes('Clearing'))).toBe(true);
-    expect(output.some((e) => e.type === 'narrative')).toBe(true);
+    expect(output.some((e) => e.type === 'narrative' || e.type === 'markdown')).toBe(true);
   });
 
   it('sets player place', () => {

@@ -15,7 +15,20 @@ describe('sanitizeHtml', () => {
   });
 
   it('strips inline event handlers', () => {
-    expect(sanitizeHtml('<div onclick="x()">hi</div>')).toBe('<div >hi</div>');
+    expect(sanitizeHtml('<div onclick="x()">hi</div>')).toBe('<div>hi</div>');
+  });
+
+  it('strips iframe, object, embed, style tags with content', () => {
+    expect(sanitizeHtml('<p>ok</p><iframe src="evil.com">x</iframe>')).toBe('<p>ok</p>');
+    expect(sanitizeHtml('<style>.x{}</style>text')).toBe('text');
+  });
+
+  it('blocks javascript: in href', () => {
+    expect(sanitizeHtml('<a href="javascript:alert(1)">click</a>')).toBe('<a>click</a>');
+  });
+
+  it('allows safe href', () => {
+    expect(sanitizeHtml('<a href="https://example.com">link</a>')).toBe('<a href="https://example.com">link</a>');
   });
 });
 
@@ -36,10 +49,12 @@ describe('renderMarkdown', () => {
 // ── renderRoomContent ───────────────────────────────────────────────────
 
 describe('renderRoomContent', () => {
-  it('renders plain text by default (no content-type)', () => {
+  it('renders markdown by default (no content-type)', () => {
     const room = makeRoom('A dark cave.');
     const entries = renderRoomContent(room, []);
-    expect(entries).toEqual([{ text: 'A dark cave.', type: 'narrative' }]);
+    expect(entries).toHaveLength(1);
+    expect(entries[0].type).toBe('markdown');
+    expect(entries[0].html).toContain('A dark cave.');
   });
 
   it('renders text/markdown as HTML', () => {

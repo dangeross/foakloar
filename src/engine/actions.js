@@ -7,15 +7,21 @@ import {
   getTag, getTags, getDefaultState, findTransition,
   checkRequires,
 } from './world.js';
+import { isEventTrusted } from './trust.js';
 
 /**
  * Apply a set-state action on an external target event.
  * Handles clue, puzzle, portal, feature types.
  * Returns { acted, puzzleActivated } where puzzleActivated is a dtag or null.
  */
-export function applyExternalSetState(targetRef, targetState, events, player, emit, emitHtml) {
+export function applyExternalSetState(targetRef, targetState, events, player, emit, emitHtml, trustSet, clientMode) {
   const targetEvent = events.get(targetRef);  // targetRef is full a-tag
   if (!targetEvent) return { acted: false, puzzleActivated: null };
+
+  // Security: verify target event's author is trusted
+  if (trustSet && isEventTrusted(targetEvent, trustSet, clientMode) === 'hidden') {
+    return { acted: false, puzzleActivated: null };
+  }
 
   const targetType = getTag(targetEvent, 'type');
 
@@ -64,11 +70,16 @@ export function applyExternalSetState(targetRef, targetState, events, player, em
 /**
  * Give an item to the player — initialize state and counters.
  */
-export function giveItem(itemRef, events, player, emit) {
+export function giveItem(itemRef, events, player, emit, trustSet, clientMode) {
   if (player.hasItem(itemRef)) return;  // itemRef is full a-tag
 
-  player.pickUp(itemRef);
+  // Security: verify item event's author is trusted
   const itemEvent = events.get(itemRef);
+  if (trustSet && itemEvent && isEventTrusted(itemEvent, trustSet, clientMode) === 'hidden') {
+    return;
+  }
+
+  player.pickUp(itemRef);
   const itemDefaultState = itemEvent ? getDefaultState(itemEvent) : null;
   if (itemDefaultState) player.setState(itemRef, itemDefaultState);
 
@@ -124,7 +135,7 @@ export function evalCounterLow(item, dtag, currentState, player, emit) {
 /**
  * Evaluate sequence puzzles in the current room after feature state changes.
  */
-export function evalSequencePuzzles(place, events, player, emit, emitSound) {
+export function evalSequencePuzzles(place, events, player, emit, emitSound, trustSet, clientMode) {
   if (!place) return;
 
   for (const ref of getTags(place, 'puzzle')) {
@@ -152,6 +163,8 @@ export function evalSequencePuzzles(place, events, player, emit, emitSound) {
       if (action === 'set-state' && extRef) {
         const targetEvent = events.get(extRef);  // extRef is full a-tag
         if (!targetEvent) continue;
+        // Security: verify target author
+        if (trustSet && isEventTrusted(targetEvent, trustSet, clientMode) === 'hidden') continue;
         const targetType = getTag(targetEvent, 'type');
         if (targetType === 'portal') {
           const portalCurrentState = player.getState(extRef) ?? getDefaultState(targetEvent);
@@ -171,7 +184,7 @@ export function evalSequencePuzzles(place, events, player, emit, emitSound) {
       } else if (action === 'give-item' && value) {
         const itemEvent = events.get(value);
         if (itemEvent && !player.hasItem(value)) {
-          giveItem(value, events, player, emit);
+          giveItem(value, events, player, emit, trustSet, clientMode);
         }
       } else if (action === 'consume-item' && value) {
         if (player.hasItem(value)) {

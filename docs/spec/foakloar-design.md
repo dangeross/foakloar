@@ -118,6 +118,7 @@ Individual tag values have no protocol-level size limit, but contribute to `max_
 | `quest` | Quest | Optional named quest grouping |
 | `consequence` | Consequence | A reusable outcome fired by portals, NPCs, or interactions |
 | `vouch` | Vouch | Delegated trust endorsement |
+| `revoke` | Revoke | Revokes a previously issued vouch |
 | `player-state` | PlayerState | Encrypted player progress backup |
 
 ---
@@ -2545,7 +2546,7 @@ The `collaboration` tag on the world event controls who the client trusts:
 | Mode | Tag | Who is trusted |
 |------|-----|----------------|
 | `closed` | `["collaboration", "closed"]` | Genesis pubkey only |
-| `vouched` | `["collaboration", "vouched"]` | Genesis + `collaborator` tags + `vouch` events |
+| `vouched` | `["collaboration", "vouched"]` | Genesis + `collaborator` tags + `vouch` events (minus `revoke` events) |
 | `open` | `["collaboration", "open"]` | Any pubkey — fully permissionless |
 
 **`closed`** — solo world, total authorial control. Use for canonical story worlds.
@@ -2603,6 +2604,32 @@ Vouch events are only valid if authored by a pubkey already in the trust set (ge
 
 ---
 
+### 6.5.1 Vouch Revocation
+
+A vouch can be revoked by publishing a revoke event:
+
+```json
+{
+  "kind": 30078,
+  "pubkey": "<revoking-author>",
+  "tags": [
+    ["d",      "the-lake:revoke:dave"],
+    ["t",      "the-lake"],
+    ["type",   "revoke"],
+    ["pubkey", "<revoked-pubkey>"]
+  ],
+  "content": ""
+}
+```
+
+Revocation follows the same chain as vouching:
+- Genesis and collaborators can revoke any vouched pubkey
+- A vouched author (with `can-vouch: true`) can only revoke pubkeys they personally vouched
+
+**Cascading:** revoking pubkey A also invalidates all vouches that A issued. If A vouched B who vouched C, revoking A removes both B and C (unless B or C has an alternate vouch path through a different trusted author).
+
+---
+
 ### 6.6 Trust Rules (client enforcement)
 
 The client applies these rules when rendering any event:
@@ -2623,8 +2650,8 @@ When you're in Alice's place, you trust Alice's reference chain. When you traver
 
 **4. The reference chain is the security boundary**
 ```
-World event (genesis) 
-  → place (trusted author) 
+World event (genesis)
+  → place (trusted author)
     → features / items / NPCs / portals (referenced by place)
       → clues / dialogue / consequences (referenced by features/NPCs)
 ```
@@ -2632,6 +2659,29 @@ An attacker can publish anything — but if no trusted event in the chain refere
 
 **5. Content is always sanitised**
 `content` and tag values are author-supplied strings. The client must sanitise before rendering — no raw HTML, no script execution. Unknown `content-type` values fall back to `text/plain`.
+
+**6. Image URL protocol validation**
+`media` tag URLs and any image references must use `https:` (or `http:`) protocol only. `javascript:`, `data:`, and other URI schemes are blocked to prevent XSS via image injection.
+
+**7. World event genesis pinning**
+The world event is pinned to the genesis pubkey — the author of the world event with the oldest `created_at` timestamp wins. This prevents an attacker from publishing a competing world event with the same `d`-tag to hijack the trust root.
+
+**8. Portal exit slot enforcement**
+Portals can only claim exit slots that are declared on the originating place event via `exit` tags. A portal claiming an undeclared slot is invalid and silently ignored. This prevents exit injection — an attacker cannot add new directions to a place they do not control.
+
+---
+
+### 6.6.1 Author Chain Validation
+
+The trust model validates not just top-level event visibility but the entire reference chain. When a trusted event references another event (via action targets, entity refs, dialogue nodes, etc.), the referenced event's author must also be in the trust set.
+
+Events from untrusted authors are silently skipped:
+- Items, features, NPCs, clues, sounds referenced by a place but authored by an untrusted pubkey are not rendered
+- Action targets (`set-state`, `give-item`, `consequence`) pointing to untrusted events are not executed
+- Dialogue nodes from untrusted authors are not shown
+- Payment events from untrusted authors are blocked
+- Portal exits are only allowed on declared exit slots (portals cannot inject exits)
+- The world event is pinned to the genesis pubkey (oldest `created_at` wins)
 
 ---
 

@@ -57,7 +57,7 @@ const SPEC_ACTION_TYPES = [
   'set-state', 'traverse', 'give-item', 'consume-item',
   'deal-damage', 'deal-damage-npc', 'heal', 'consequence',
   'steals-item', 'deposits', 'flees', 'decrement', 'increment', 'set-counter',
-  'sound',
+  'sound', 'activate',
 ];
 
 describe('action type options on triggers', () => {

@@ -639,6 +639,17 @@ Tags: `title` (req), `amount` (req), `unit` (`sats`|`msats`, req), `lnurl` (req)
 
 Tags: `pubkey` (req), `scope` (`portal`|`place`|`all`, req), `can-vouch` (`true`|`false`, req).
 
+### revoke
+
+Revokes a previously vouched pubkey. Must be published by genesis, a collaborator, or the author who issued the original vouch.
+
+| Tag | Shape | Req |
+|-----|-------|-----|
+| `type` | `["type", "revoke"]` | yes |
+| `pubkey` | `["pubkey", "<revoked-pubkey>"]` | yes |
+| `t` | `["t", "<world-slug>"]` | yes |
+| `d` | `["d", "<slug>:revoke:<name>"]` | yes |
+
 ## Trigger Shape Quick Reference
 
 | Trigger | Shape |

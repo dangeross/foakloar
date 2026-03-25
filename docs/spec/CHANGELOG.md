@@ -5,6 +5,23 @@
 
 ## [Unreleased] — March 2026
 
+### Added — Security Audit
+
+**Vouch revocation (`type: revoke`)**
+New event type for revoking a previously issued vouch. Chain-aware cascading — revoking pubkey A also invalidates all vouches A issued, unless alternate vouch paths exist. Genesis and collaborators can revoke any vouched pubkey; vouched authors with `can-vouch: true` can only revoke pubkeys they personally vouched.
+
+**Author chain validation (section 6.6.1)**
+Trust checks now apply to the entire event reference chain, not just top-level visibility. Items, features, NPCs, clues, sounds, action targets, dialogue nodes, and payment events authored by untrusted pubkeys are silently skipped even if referenced by a trusted event.
+
+**Image URL protocol validation (trust rule 6)**
+`media` tag URLs and image references must use `https:` or `http:` protocol. `javascript:`, `data:`, and other URI schemes are blocked to prevent XSS via image injection.
+
+**World event genesis pinning (trust rule 7)**
+The world event is pinned to the genesis pubkey — oldest `created_at` wins. Prevents an attacker from publishing a competing world event with the same `d`-tag to hijack the trust root.
+
+**Portal exit slot enforcement (trust rule 8)**
+Portals can only claim exit slots declared on the originating place event via `exit` tags. Undeclared slots are silently ignored, preventing exit injection.
+
 ### Added
 
 **Recipe content as craft prose**

@@ -7,7 +7,7 @@ import {
   getTag, getTags, resolveExits, resolveExitsWithTrust, checkRequires,
   findByNoun, aTagOf, getDefaultState, findTransition,
 } from './world.js';
-import { getTrustLevel } from './trust.js';
+import { getTrustLevel, isRefTrusted, isEventTrusted } from './trust.js';
 import { derivePrivateKey } from './nip44-client.js';
 import { renderRoomContent, renderMarkdown } from './content.js';
 import { stripArticles, buildVerbMap, parseInput, findInventoryItem } from './parser.js';
@@ -158,6 +158,7 @@ export class GameEngine {
     for (const itemDtag of placeItems) {
       const item = this.events.get(itemDtag);
       if (!item) continue;
+      if (this.config.trustSet && isEventTrusted(item, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
       const itemReq = checkRequires(item, this.player.state, this.events);
       if (!itemReq.allowed) continue;
       this._emit(`You see: ${getTag(item, 'title')}`, 'item');
@@ -168,6 +169,7 @@ export class GameEngine {
       const fDTag = ref[1];  // full a-tag
       const feature = this.events.get(fDTag);
       if (!feature) continue;
+      if (this.config.trustSet && isEventTrusted(feature, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
       const fDefaultState = getDefaultState(feature);
       const fCurrentState = this.player.getState(fDTag) ?? fDefaultState;
       if (fCurrentState === 'hidden') continue;
@@ -179,6 +181,7 @@ export class GameEngine {
       const npcDTag = ref[1];  // full a-tag
       const npc = this.events.get(npcDTag);
       if (!npc) continue;
+      if (this.config.trustSet && isEventTrusted(npc, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
       // Skip roaming NPCs here — they're handled below
       if (getTags(npc, 'route').length > 0) continue;
       const npcReq = checkRequires(npc, this.player.state, this.events);
@@ -192,6 +195,7 @@ export class GameEngine {
       (npcDtag) => this.player.getNpcState(npcDtag),
     );
     for (const { npcEvent, npcDtag } of roamingHere) {
+      if (this.config.trustSet && isEventTrusted(npcEvent, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
       const npcReq = checkRequires(npcEvent, this.player.state, this.events);
       if (!npcReq.allowed) continue;
       // Ensure NPC state is initialized
@@ -217,16 +221,18 @@ export class GameEngine {
               extTarget, actionTarget, this.events, this.player,
               (t, ty) => this._emit(t, ty),
               (h, ty) => this._emitHtml(h, ty),
+              this.config.trustSet, this.config.clientMode,
             );
           }
         } else if (action === 'give-item' && actionTarget) {
-          giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty));
+          giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
         } else if (action === 'deal-damage') {
           const dmg = parseInt(actionTarget, 10) || 1;
           this._dealDamageToPlayer(dmg, null, null);
         } else if (action === 'consequence' && actionTarget) {
           this._executeConsequence(actionTarget);
         } else if (action === 'sound') {
+          if (this.config.trustSet && isRefTrusted(actionTarget, this.events, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
           this._emitSound(actionTarget, extTarget);
         } else if (action === 'increment' || action === 'decrement' || action === 'set-counter') {
           // Counter actions on the place event
@@ -615,6 +621,8 @@ export class GameEngine {
       if (this.player.hasItem(ref)) continue; // already taken
       const refEvent = this.events.get(ref);
       if (!refEvent) continue;
+      // Security: skip contained items whose author is untrusted
+      if (this.config.trustSet && isEventTrusted(refEvent, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
       const reqState = tag[2] || '';
       const failMsg = tag[3] || '';
       const name = getTag(refEvent, 'title') || ref.split(':').pop();
@@ -660,6 +668,7 @@ export class GameEngine {
           targetRef, targetState, this.events, this.player,
           (t, ty) => this._emit(t, ty),
           (h, ty) => this._emitHtml(h, ty),
+          this.config.trustSet, this.config.clientMode,
         );
         if (result.puzzleActivated) {
           this.puzzleActive = result.puzzleActivated;
@@ -680,7 +689,7 @@ export class GameEngine {
       } else if (action === 'give-item') {
         const itemDTag = targetState;  // targetState is the item a-tag ref
         if (!this.player.hasItem(itemDTag)) {
-          giveItem(targetState, this.events, this.player, (t, ty) => this._emit(t, ty));
+          giveItem(targetState, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
         }
         acted = true;
       } else if (action === 'consume-item') {
@@ -719,6 +728,7 @@ export class GameEngine {
         acted = true;
       } else if (action === 'activate') {
         const activateRef = targetState;  // event ref to activate
+        if (this.config.trustSet && isRefTrusted(activateRef, this.events, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
         const activateEvent = this.events.get(activateRef);
         if (activateEvent) {
           const activateType = getTag(activateEvent, 'type');
@@ -752,7 +762,7 @@ export class GameEngine {
           }
         }
       }
-      evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty), (p, v) => this._emitSound(p, v));
+      evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty), (p, v) => this._emitSound(p, v), this.config.trustSet, this.config.clientMode);
       this._evalQuests();
     }
     return acted;
@@ -908,6 +918,7 @@ export class GameEngine {
         const extDTag = targetRef;  // full a-tag
         const extEvent = this.events.get(extDTag);
         if (!extEvent) continue;
+        if (this.config.trustSet && isEventTrusted(extEvent, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
 
         const extType = getTag(extEvent, 'type');
         if (extType === 'feature') {
@@ -919,7 +930,7 @@ export class GameEngine {
             }
             if (transition.text) this._emit(transition.text, 'narrative');
             acted = true;
-            evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty), (p, v) => this._emitSound(p, v));
+            evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty), (p, v) => this._emitSound(p, v), this.config.trustSet, this.config.clientMode);
           }
         } else if (extType === 'portal') {
           const extCurrentState = this.player.getState(extDTag) ?? getDefaultState(extEvent);
@@ -944,7 +955,7 @@ export class GameEngine {
         }
       } else if (action === 'give-item' && targetState) {
         if (!this.player.hasItem(targetState)) {
-          giveItem(targetState, this.events, this.player, (t, ty) => this._emit(t, ty));
+          giveItem(targetState, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
         }
         acted = true;
       } else if (action === 'sound') {
@@ -1333,6 +1344,7 @@ export class GameEngine {
           extRef, target, this.events, this.player,
           (t, ty) => this._emit(t, ty),
           (h, ty) => this._emitHtml(h, ty),
+          this.config.trustSet, this.config.clientMode,
         );
         if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
       }
@@ -1343,7 +1355,7 @@ export class GameEngine {
     } else if (action === 'flees' && npcDtag) {
       this._npcFlees(sourceEvent, npcDtag);
     } else if (action === 'give-item' && target) {
-      giveItem(target, this.events, this.player, (t, ty) => this._emit(t, ty));
+      giveItem(target, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
     } else if (action === 'sound' && target) {
       this._emitSound(target, extRef);
     }
@@ -1412,6 +1424,7 @@ export class GameEngine {
               extTarget, actionTarget, this.events, this.player,
               (t, ty) => this._emit(t, ty),
               (h, ty) => this._emitHtml(h, ty),
+              this.config.trustSet, this.config.clientMode,
             );
             if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
           } else {
@@ -1482,10 +1495,14 @@ export class GameEngine {
       // set-counter: position 4 = value, position 5 = external ref
       targetDtag = externalRef;
       targetEvent = this.events.get(externalRef);
+      // Security: verify external target author is trusted
+      if (this.config.trustSet && targetEvent && isEventTrusted(targetEvent, this.config.trustSet, this.config.clientMode) === 'hidden') return;
     } else if ((action === 'increment' || action === 'decrement') && valueOrRef && this.events.has(valueOrRef)) {
       // increment/decrement: position 4 = external ref (if it resolves to an event)
       targetDtag = valueOrRef;
       targetEvent = this.events.get(valueOrRef);
+      // Security: verify external target author is trusted
+      if (this.config.trustSet && targetEvent && isEventTrusted(targetEvent, this.config.trustSet, this.config.clientMode) === 'hidden') return;
       valueOrRef = null; // not a numeric value
     }
 
@@ -1559,11 +1576,14 @@ export class GameEngine {
     const event = this.events.get(consequenceRef);
     if (!event) return;
 
+    // Security: verify consequence event's author is trusted
+    if (this.config.trustSet && isEventTrusted(event, this.config.trustSet, this.config.clientMode) === 'hidden') return;
+
     const tags = event.tags;
 
     // 1. give-item
     for (const tag of tags.filter((t) => t[0] === 'give-item')) {
-      giveItem(tag[1], this.events, this.player, (t, ty) => this._emit(t, ty));
+      giveItem(tag[1], this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
     }
 
     // 2. consume-item
@@ -1594,6 +1614,7 @@ export class GameEngine {
           targetRef, targetState, this.events, this.player,
           (t, ty) => this._emit(t, ty),
           (h, ty) => this._emitHtml(h, ty),
+          this.config.trustSet, this.config.clientMode,
         );
         if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
       }
@@ -1663,6 +1684,7 @@ export class GameEngine {
             extTarget, actionTarget, this.events, this.player,
             (t, ty) => this._emit(t, ty),
             (h, ty) => this._emitHtml(h, ty),
+            this.config.trustSet, this.config.clientMode,
           );
           if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
         } else {
@@ -1762,6 +1784,9 @@ export class GameEngine {
       // Auto-deposit: if NPC has a stash tag and is at the stash place, deposit items
       const stashRef = getTag(event, 'stash');
       if (stashRef && npcPlace === stashRef) {
+        // Security: verify stash place author is trusted
+        const stashEvent = this.events.get(stashRef);
+        if (this.config.trustSet && stashEvent && isEventTrusted(stashEvent, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
         this._npcDeposits(dtag, npcPlace);
       }
 
@@ -1808,6 +1833,7 @@ export class GameEngine {
                 extTarget, actionTarget, this.events, this.player,
                 (t, ty) => this._emit(t, ty),
                 (h, ty) => this._emitHtml(h, ty),
+                this.config.trustSet, this.config.clientMode,
               );
             } else {
               const ns = this.player.getNpcState(npc.dtag);
@@ -1942,6 +1968,7 @@ export class GameEngine {
           extRef, value, this.events, this.player,
           (t, ty) => this._emit(t, ty),
           (h, ty) => this._emitHtml(h, ty),
+          this.config.trustSet, this.config.clientMode,
         );
         if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
       } else if (action === 'consequence' && value) {
@@ -2010,6 +2037,13 @@ export class GameEngine {
       return;
     }
 
+    // Security: verify dialogue node author is trusted
+    if (this.config.trustSet && isEventTrusted(node, this.config.trustSet, this.config.clientMode) === 'hidden') {
+      this._emit('The conversation ends.', 'narrative');
+      this.dialogueActive = null;
+      return;
+    }
+
     this.player.markDialogueVisited(nodeDtag);
     this.dialogueActive = { npcDtag, nodeDtag };
 
@@ -2023,7 +2057,7 @@ export class GameEngine {
       const actionTarget = tag[3];
 
       if (action === 'give-item' && actionTarget) {
-        giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty));
+        giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
       } else if (action === 'set-state' && actionTarget) {
         const extRef = tag[4];  // full a-tag
         if (extRef) {
@@ -2075,6 +2109,8 @@ export class GameEngine {
         const nextDtag = nextRef;  // full a-tag
         const destNode = this.events.get(nextDtag);
         if (destNode) {
+          // Security: skip options whose destination author is untrusted
+          if (this.config.trustSet && isEventTrusted(destNode, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
           const destReq = checkRequires(destNode, this.player.state, this.events);
           if (destReq.allowed) {
             visibleOptions.push({ label, nextDtag });
@@ -2110,6 +2146,11 @@ export class GameEngine {
     } else {
       // Check if the target is a payment event
       const targetEvent = this.events.get(selected.nextDtag);
+      if (this.config.trustSet && targetEvent && isEventTrusted(targetEvent, this.config.trustSet, this.config.clientMode) === 'hidden') {
+        this._emit('The conversation ends.', 'narrative');
+        this.dialogueActive = null;
+        return;
+      }
       const targetType = targetEvent ? getTag(targetEvent, 'type') : null;
 
       if (targetType === 'payment') {
@@ -2139,6 +2180,12 @@ export class GameEngine {
   // ── Payment ─────────────────────────────────────────────────────────
 
   _activatePayment(dtag, paymentEvent) {
+    // Security: verify payment event's author is trusted
+    if (this.config.trustSet && isEventTrusted(paymentEvent, this.config.trustSet, this.config.clientMode) === 'hidden') {
+      this._emit('Payment unavailable.', 'error');
+      return;
+    }
+
     const lnurl = getTag(paymentEvent, 'lnurl');
     const amount = getTag(paymentEvent, 'amount');
     const unit = getTag(paymentEvent, 'unit') || 'sats';
@@ -2181,7 +2228,7 @@ export class GameEngine {
       const actionTarget = tag[3];
 
       if (action === 'give-item' && actionTarget) {
-        giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty));
+        giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
       } else if (action === 'set-state') {
         if (actionTarget) {
           this.player.setState(dtag, actionTarget);
@@ -2419,7 +2466,7 @@ export class GameEngine {
       const extRef = tag[4];
 
       if (action === 'give-item') {
-        giveItem(value, this.events, this.player, (t, ty) => this._emit(t, ty));
+        giveItem(value, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
       } else if (action === 'consume-item') {
         if (this.player.hasItem(value)) {
           this.player.removeItem(value);
@@ -2429,6 +2476,7 @@ export class GameEngine {
           extRef, value, this.events, this.player,
           (t, ty) => this._emit(t, ty),
           (h, ty) => this._emitHtml(h, ty),
+          this.config.trustSet, this.config.clientMode,
         );
         if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
       } else if (action === 'consequence' && (value || extRef)) {
@@ -2511,6 +2559,7 @@ export class GameEngine {
         if (action === 'set-state' && extRef) {
           const targetEvent = this.events.get(extRef);
           if (!targetEvent) continue;
+          if (this.config.trustSet && isEventTrusted(targetEvent, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
           const targetType = getTag(targetEvent, 'type');
           if (targetType === 'portal' || targetType === 'feature') {
             const currentState = this.player.getState(extRef) ?? getDefaultState(targetEvent);
@@ -2521,7 +2570,7 @@ export class GameEngine {
             }
           }
         } else if (action === 'give-item' && (value || extRef)) {
-          giveItem(extRef || value, this.events, this.player, (t, ty) => this._emit(t, ty));
+          giveItem(extRef || value, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
         } else if (action === 'consequence' && (value || extRef)) {
           this._executeConsequence(extRef || value);
         } else if (action === 'sound') {
@@ -2566,6 +2615,8 @@ export class GameEngine {
           const invRef = inv[1];
           const invEvent = this.events.get(invRef);
           if (!invEvent) return null;
+          // Security: skip involves refs whose author is untrusted
+          if (this.config.trustSet && isEventTrusted(invEvent, this.config.trustSet, this.config.clientMode) === 'hidden') return null;
           const invTitle = getTag(invEvent, 'title') || invRef.split(':').pop();
           const state = this.player.getState(invRef);
           const solved = this.player.isPuzzleSolved(invRef);

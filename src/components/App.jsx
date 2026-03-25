@@ -236,16 +236,23 @@ export default function App() {
     if (mergedEvents.size === 0 || !worldTag) return null;
 
     // Find the world event: d-tag = "<slug>:world" or "<slug>", type = "world"
+    // If multiple world events exist, prefer the first one seen (genesis).
+    // A competing world event from a different author is ignored.
     const expectedDTag = `${worldTag}:world`;
     let worldEvent = null;
+    const candidates = [];
     for (const [, ev] of mergedEvents) {
       const dTag = ev.tags.find((t) => t[0] === 'd')?.[1];
       const typeTag = ev.tags.find((t) => t[0] === 'type')?.[1];
       if (typeTag === 'world' && (dTag === expectedDTag || dTag === worldTag)) {
-        worldEvent = ev;
-        break;
+        candidates.push(ev);
       }
     }
+    if (candidates.length === 0) return null;
+    // Pick the oldest world event (lowest created_at) as genesis — attacker's
+    // newer event won't override the original author
+    candidates.sort((a, b) => (a.created_at || 0) - (b.created_at || 0));
+    worldEvent = candidates[0];
     if (!worldEvent) return null;
 
     const authorPubkey = worldEvent.pubkey;

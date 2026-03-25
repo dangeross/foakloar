@@ -5,12 +5,20 @@
 
 import { getTag, getTags } from './world.js';
 
+// ── Scope inference from event type ────────────────────────────────────────
+const TYPE_SCOPE = {
+  place: 'place', portal: 'portal', item: 'all', feature: 'all',
+  npc: 'all', clue: 'all', puzzle: 'all', quest: 'all', recipe: 'all',
+  consequence: 'all', sound: 'all', dialogue: 'all', payment: 'all',
+  world: 'all', vouch: 'all', revoke: 'all',
+};
+
 /**
  * Build the trust set from the world event and all events in the map.
  *
  * @param {Object} worldEvent — the world manifest event
  * @param {Map} events — full event map (keyed by a-tag)
- * @returns {{ genesisPubkey: string, collaboration: string, collaborators: Set<string>, vouched: Map<string, { scope: string, canVouch: boolean }> }}
+ * @returns {{ genesisPubkey: string, collaboration: string, collaborators: Set<string>, vouched: Map<string, { scope: string, canVouch: boolean, vouchedBy: string }> }}
  */
 export function buildTrustSet(worldEvent, events) {
   const genesisPubkey = worldEvent.pubkey;
@@ -22,13 +30,17 @@ export function buildTrustSet(worldEvent, events) {
   // Vouch chain — only relevant for vouched/open collaboration
   const vouched = new Map();
   if (collaboration === 'vouched' || collaboration === 'open') {
-    // Collect all vouch events from the map
+    // Collect vouch and revoke events
     const vouchEvents = [];
+    const revokeEvents = [];
     for (const [, ev] of events) {
-      if (getTag(ev, 'type') === 'vouch') vouchEvents.push(ev);
+      const type = getTag(ev, 'type');
+      if (type === 'vouch') vouchEvents.push(ev);
+      if (type === 'revoke') revokeEvents.push(ev);
     }
 
     // Fixed-point walk: keep adding vouched pubkeys until stable
+    // Track who vouched whom for revocation chain validation
     let changed = true;
     while (changed) {
       changed = false;
@@ -43,9 +55,47 @@ export function buildTrustSet(worldEvent, events) {
 
         const scope = getTag(ev, 'scope') || 'all';
         const canVouch = getTag(ev, 'can-vouch') === 'true';
-        vouched.set(vouchedPubkey, { scope, canVouch });
+        vouched.set(vouchedPubkey, { scope, canVouch, vouchedBy: authorPubkey });
         changed = true;
       }
+    }
+
+    // Apply revocations — chain-aware
+    const revoked = new Set();
+    for (const ev of revokeEvents) {
+      const revokedPubkey = getTag(ev, 'pubkey');
+      if (!revokedPubkey || !vouched.has(revokedPubkey)) continue;
+
+      const revokerPubkey = ev.pubkey;
+      // Genesis/collaborator can revoke anyone
+      if (revokerPubkey === genesisPubkey || collaborators.has(revokerPubkey)) {
+        revoked.add(revokedPubkey);
+        continue;
+      }
+      // Vouched author can only revoke pubkeys they personally vouched
+      const entry = vouched.get(revokedPubkey);
+      if (entry?.vouchedBy === revokerPubkey) {
+        revoked.add(revokedPubkey);
+      }
+    }
+
+    // Cascade: remove revoked + anyone whose only vouch path goes through revoked
+    if (revoked.size > 0) {
+      let cascadeChanged = true;
+      while (cascadeChanged) {
+        cascadeChanged = false;
+        for (const [pk, entry] of vouched) {
+          if (revoked.has(pk)) continue; // already marked
+          // If voucher was revoked, this pubkey loses trust (unless vouched by genesis/collaborator)
+          if (revoked.has(entry.vouchedBy) &&
+              entry.vouchedBy !== genesisPubkey &&
+              !collaborators.has(entry.vouchedBy)) {
+            revoked.add(pk);
+            cascadeChanged = true;
+          }
+        }
+      }
+      for (const pk of revoked) vouched.delete(pk);
     }
   }
 
@@ -121,6 +171,39 @@ export function getTrustLevel(trustSet, pubkey, scope, clientMode) {
  */
 export function isPubkeyTrusted(trustSet, pubkey, scope, clientMode) {
   return getTrustLevel(trustSet, pubkey, scope, clientMode) !== 'hidden';
+}
+
+/**
+ * Check if an event is trusted based on its author and type.
+ * Infers scope from the event's type tag.
+ *
+ * @param {Object} event — the event to check
+ * @param {Object} trustSet — from buildTrustSet
+ * @param {string} clientMode — 'canonical' | 'community' | 'explorer'
+ * @returns {'trusted'|'unverified'|'hidden'}
+ */
+export function isEventTrusted(event, trustSet, clientMode) {
+  if (!event || !trustSet) return 'hidden';
+  const type = getTag(event, 'type') || 'all';
+  const scope = TYPE_SCOPE[type] || 'all';
+  return getTrustLevel(trustSet, event.pubkey, scope, clientMode);
+}
+
+/**
+ * Check if an event ref (a-tag) resolves to a trusted event.
+ * Returns 'hidden' if the ref doesn't resolve or the author is untrusted.
+ *
+ * @param {string} ref — event ref (a-tag format: 30078:pubkey:d-tag)
+ * @param {Map} events — full event map
+ * @param {Object} trustSet — from buildTrustSet
+ * @param {string} clientMode — 'canonical' | 'community' | 'explorer'
+ * @returns {'trusted'|'unverified'|'hidden'}
+ */
+export function isRefTrusted(ref, events, trustSet, clientMode) {
+  if (!ref || !events) return 'hidden';
+  const event = events.get(ref);
+  if (!event) return 'hidden';
+  return isEventTrusted(event, trustSet, clientMode);
 }
 
 /**
