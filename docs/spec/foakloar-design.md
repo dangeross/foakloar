@@ -2775,6 +2775,53 @@ Contested portals are a feature of open worlds — unreliable cartography, diver
 
 ---
 
+### 6.9 Open World Moderation
+
+In `open` collaboration worlds, all content is visible without trust labels — the player accepted the open model when entering. Curation is post-hoc: moderators (genesis, collaborators, vouched with `can-vouch`) prune bad content after the fact using revocation.
+
+#### Report Command
+
+Players can report content they encounter:
+
+- `report` — reports the current place
+- `report <noun>` — reports a specific entity (item, feature, NPC) resolved via noun lookup
+
+**Flow:**
+1. Engine resolves the target event (place or entity via noun)
+2. Shows: `Report "<title>" by npub1...? Reason (or "cancel" to abort):`
+3. Player types a reason (free text) or `cancel`
+4. On confirm: publishes a report event
+
+**Report event shape:**
+
+```json
+{
+  "kind": 30078,
+  "tags": [
+    ["d",      "<slug>:report:<reporter-short>-<target-short>"],
+    ["t",      "<world-slug>"],
+    ["type",   "report"],
+    ["target", "<event-a-tag>"],
+    ["reason", "<free-text-reason>"]
+  ],
+  "content": ""
+}
+```
+
+Reports are visible to moderators in build mode. The moderator can then revoke the reported author's content or dismiss the report. Reports do not affect gameplay — they are signals for moderators.
+
+#### Open World Trust Rules
+
+| Rule | Behaviour |
+|------|-----------|
+| Player experience | All content visible, no trust labels, no confirmation prompts |
+| Moderator experience | Build mode shows author info, report counts, revoke button |
+| Content filtering | None — players see everything |
+| Bad content removal | Moderators publish revoke events to remove author's content |
+| Report visibility | Only moderators see report events |
+
+---
+
 ## 7. NPC & Dialogue System
 
 NPCs are world actors defined by their author. They can be static (always say the same thing) or dynamic (state-aware).

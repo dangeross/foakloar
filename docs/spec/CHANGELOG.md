@@ -5,6 +5,11 @@
 
 ## [Unreleased] — March 2026
 
+### Added — Open World Moderation
+
+**Report command (`type: report`)**
+Players can report content in open collaboration worlds: `report` (place) or `report <noun>` (entity). Publishes a report event with target ref and free-text reason. Reports are signals for moderators — no gameplay effect. Moderators see reports in build mode and can revoke offending authors. See spec section 6.9.
+
 ### Added — Security Audit
 
 **Vouch revocation (`type: revoke`)**

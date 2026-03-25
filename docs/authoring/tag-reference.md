@@ -650,6 +650,18 @@ Revokes a previously vouched pubkey. Must be published by genesis, a collaborato
 | `t` | `["t", "<world-slug>"]` | yes |
 | `d` | `["d", "<slug>:revoke:<name>"]` | yes |
 
+### report
+
+Player-submitted report for open world moderation. Published by the player, visible to moderators in build mode.
+
+| Tag | Shape | Req |
+|-----|-------|-----|
+| `type` | `["type", "report"]` | yes |
+| `target` | `["target", "<event-a-tag>"]` | yes |
+| `reason` | `["reason", "<free-text>"]` | yes |
+| `t` | `["t", "<world-slug>"]` | yes |
+| `d` | `["d", "<slug>:report:<reporter>-<target>"]` | yes |
+
 ## Trigger Shape Quick Reference
 
 | Trigger | Shape |
