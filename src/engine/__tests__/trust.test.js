@@ -456,7 +456,7 @@ describe('Engine contested exit UI', () => {
     expect(texts.some((t) => t?.includes('(unverified)'))).toBe(true);
   });
 
-  it('unverified portal selection triggers confirmation', () => {
+  it('unverified portal selection navigates directly (no confirmation)', () => {
     const untrustedPortal = makePortalAs(PUBKEY2, 'p1',
       [[placeRef, 'south', 'Dark Path'], [destRef, 'north', '']],
     );
@@ -469,58 +469,10 @@ describe('Engine contested exit UI', () => {
     engine.flush();
 
     engine.handleMove('south', 1);
-    const out = engine.flush();
-    const texts = out.map((o) => o.text);
-
-    // Should show confirmation, not navigate yet
-    expect(engine.currentPlace).toBe(placeRef);
-    expect(engine.pendingConfirm).not.toBeNull();
-    expect(texts.some((t) => t?.includes('proceed?'))).toBe(true);
-  });
-
-  it('confirming yes on unverified portal navigates', async () => {
-    const untrustedPortal = makePortalAs(PUBKEY2, 'p1',
-      [[placeRef, 'south', 'Dark Path'], [destRef, 'north', '']],
-    );
-    const engine = setupEngine({
-      collaboration: 'open',
-      portals: [untrustedPortal],
-      clientMode: 'community',
-    });
-    engine.enterRoom(placeRef);
     engine.flush();
 
-    engine.handleMove('south', 1); // triggers confirmation
-    engine.flush();
-
-    await engine.handleCommand('yes');
-    const out = engine.flush();
-
+    // Should navigate directly — no confirmation step
     expect(engine.currentPlace).toBe(destRef);
-    expect(engine.pendingConfirm).toBeNull();
-  });
-
-  it('confirming no on unverified portal stays', async () => {
-    const untrustedPortal = makePortalAs(PUBKEY2, 'p1',
-      [[placeRef, 'south', 'Dark Path'], [destRef, 'north', '']],
-    );
-    const engine = setupEngine({
-      collaboration: 'open',
-      portals: [untrustedPortal],
-      clientMode: 'community',
-    });
-    engine.enterRoom(placeRef);
-    engine.flush();
-
-    engine.handleMove('south', 1);
-    engine.flush();
-
-    await engine.handleCommand('no');
-    const out = engine.flush();
-
-    expect(engine.currentPlace).toBe(placeRef);
-    expect(engine.pendingConfirm).toBeNull();
-    expect(out.some((o) => o.text?.includes('stay where you are'))).toBe(true);
   });
 
   it('multiple trusted portals on same slot show disambiguation', () => {

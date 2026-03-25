@@ -35,7 +35,6 @@ export class GameEngine {
     this.puzzleActive = null;
     this.dialogueActive = null;
     this.paymentActive = null;   // { dtag, lnurl, amount, unit, description }
-    this.pendingConfirm = null;
     this.pendingChoice = null;  // { direction, exits } — disambiguation list awaiting numeric input
     this.craftingActive = null; // { recipeDtag, step, itemRequires } — ordered crafting mode
     this.combatTarget = null;  // NPC dtag during a combat round
@@ -63,6 +62,16 @@ export class GameEngine {
       if (getTag(event, 'type') === 'world') return event;
     }
     return null;
+  }
+
+  // In open worlds, don't label content as unverified (spec 6.9)
+  _isOpenWorld() {
+    return this.config.trustSet?.collaboration === 'open';
+  }
+
+  _uvLabel(trustLevel) {
+    if (this._isOpenWorld()) return '';
+    return trustLevel === 'unverified' ? ' (unverified)' : '';
   }
 
   // ── Output helpers ────────────────────────────────────────────────────
@@ -163,7 +172,7 @@ export class GameEngine {
       if (itemTrust === 'hidden') continue;
       const itemReq = checkRequires(item, this.player.state, this.events);
       if (!itemReq.allowed) continue;
-      const uv = itemTrust === 'unverified' ? ' (unverified)' : '';
+      const uv = this._uvLabel(itemTrust);
       this._emit(`You see: ${getTag(item, 'title')}${uv}`, 'item');
     }
 
@@ -177,7 +186,7 @@ export class GameEngine {
       const fDefaultState = getDefaultState(feature);
       const fCurrentState = this.player.getState(fDTag) ?? fDefaultState;
       if (fCurrentState === 'hidden') continue;
-      const fUv = fTrust === 'unverified' ? ' (unverified)' : '';
+      const fUv = this._uvLabel(fTrust);
       this._emit(`There is a ${getTag(feature, 'title')} here.${fUv}`, 'feature');
     }
 
@@ -192,7 +201,7 @@ export class GameEngine {
       if (getTags(npc, 'route').length > 0) continue;
       const npcReq = checkRequires(npc, this.player.state, this.events);
       if (!npcReq.allowed) continue;
-      const npcUv = npcTrust === 'unverified' ? ' (unverified)' : '';
+      const npcUv = this._uvLabel(npcTrust);
       this._emit(`${getTag(npc, 'title')} is here.${npcUv}`, 'npc');
     }
 
@@ -208,7 +217,7 @@ export class GameEngine {
       if (!npcReq.allowed) continue;
       // Ensure NPC state is initialized
       this.player.ensureNpcState(npcDtag, initNpcState(npcEvent));
-      const roamUv = roamTrust === 'unverified' ? ' (unverified)' : '';
+      const roamUv = this._uvLabel(roamTrust);
       this._emit(`${getTag(npcEvent, 'title')} is here.${roamUv}`, 'npc');
       // Fire on-encounter triggers only on actual movement, not on look
       if (isMoving) {
@@ -333,20 +342,27 @@ export class GameEngine {
 
     // Unverified-only slots (open + community or vouched + explorer)
     if (unverifiedOnlySlots.length > 0) {
+      const isOpen = this._isOpenWorld();
       for (const { slot, count } of unverifiedOnlySlots) {
-        const prefix = labels.length > 0 ? '       ' : 'Exits: ';
-        if (count === 1) {
-          this._emit(`${prefix}${slot} (unverified)`, 'exits-untrusted');
+        if (isOpen) {
+          // Open worlds: show as normal exits, no labels
+          labels.push(slot);
         } else {
-          this._emit(`${prefix}${slot} (${count} unverified paths)`, 'exits-untrusted');
+          const prefix = labels.length > 0 ? '       ' : 'Exits: ';
+          if (count === 1) {
+            this._emit(`${prefix}${slot} (unverified)`, 'exits-untrusted');
+          } else {
+            this._emit(`${prefix}${slot} (${count} unverified paths)`, 'exits-untrusted');
+          }
         }
       }
     }
 
     // [+N unverified] hints for slots that have a trusted portal but also unverified/hidden alternatives
     // Only shown in community/explorer mode — in canonical mode, hidden portals are fully invisible
+    // In open worlds, skip these hints (all content shown as-is)
     const mode = this.config.clientMode || 'community';
-    if (mode !== 'canonical') {
+    if (mode !== 'canonical' && !this._isOpenWorld()) {
       // Count hidden-by-trust exits per slot
       for (const [slot, count] of Object.entries(hiddenPerSlot)) {
         if (slotGroups[slot]?.some((e) => e.trustLevel === 'trusted')) {
@@ -1031,7 +1047,7 @@ export class GameEngine {
    * - Multiple trusted → disambiguation list
    * - One trusted + unverified → navigate trusted, show [+N unverified] hint
    * - Unverified only → short list (max 5) with trust indicators, require choice
-   * - Unverified portal → confirmation required (pendingConfirm state)
+   * - Unverified portal → navigate directly (open worlds) or after choice (preview mode)
    */
   handleMove(direction, choiceIndex = null) {
     const { exits: allExits, hiddenByTrust } = this._resolveRoomExits(this.currentPlace);
@@ -1109,14 +1125,8 @@ export class GameEngine {
           this._emit(`Choose 1-${unverifiedExits.length}.`, 'error');
           return;
         }
-        // Unverified portal — confirmation required
-        const chosen = unverifiedExits[choiceIndex - 1];
-        const pk = chosen.portalEvent.pubkey.slice(0, 12) + '...';
-        const label = chosen.label || 'an unknown path';
-        this.pendingConfirm = { exit: chosen };
-        this._emit(`You are about to enter an unverified path by ${pk}`, 'exits-untrusted');
-        this._emit(`"${label}" — proceed? (yes/no)`, 'exits-untrusted');
-        return;
+        // Navigate to selected unverified portal
+        exit = unverifiedExits[choiceIndex - 1];
       }
     }
 
@@ -2874,24 +2884,6 @@ export class GameEngine {
       return;
     }
 
-    // Confirmation mode — unverified portal entry
-    if (this.pendingConfirm) {
-      if (trimmed === 'yes' || trimmed === 'y') {
-        const exit = this.pendingConfirm.exit;
-        this.pendingConfirm = null;
-        const req = checkRequires(exit.portalEvent, this.player.state, this.events);
-        if (!req.allowed) { this._emit(req.reason, 'error'); return; }
-        this.player.incrementMoveCount();
-        this.processOnMove();
-        this._processNpcOnMove();
-        this.enterRoom(exit.destinationDTag, { isMoving: true });
-      } else {
-        this.pendingConfirm = null;
-        this._emit('You stay where you are.', 'narrative');
-      }
-      return;
-    }
-
     // Choice mode — disambiguation list awaiting numeric input
     if (this.pendingChoice) {
       const num = parseInt(trimmed, 10);
@@ -2903,15 +2895,8 @@ export class GameEngine {
           return;
         }
         const chosen = exits[num - 1];
-        if (chosen.trustLevel !== 'trusted' && !this.config.previewUnvouched) {
-          // Unverified portal — confirmation required (unless previewing)
-          const pk = chosen.portalEvent.pubkey.slice(0, 12) + '...';
-          const label = chosen.label || 'an unknown path';
-          this.pendingConfirm = { exit: chosen };
-          this._emit(`You are about to enter an unverified path by ${pk}`, 'exits-untrusted');
-          this._emit(`"${label}" — proceed? (yes/no)`, 'exits-untrusted');
-        } else {
-          // Trusted portal — navigate directly
+        {
+          // Navigate directly
           const req = checkRequires(chosen.portalEvent, this.player.state, this.events);
           if (!req.allowed) { this._emit(req.reason, 'error'); return; }
           this.player.incrementMoveCount();
