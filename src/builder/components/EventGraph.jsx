@@ -367,18 +367,25 @@ function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, 
   // Collect portals for places (from portal events)
   const portals = [];
   if (type === 'place') {
+    // Declared exit slots on this place
+    const declaredSlots = new Set(
+      getTags(event, 'exit').map((e) => e[1]?.startsWith('30078:') ? e[2] : e[1]).filter(Boolean)
+    );
+
     for (const [, ev] of events) {
       if (getTag(ev, 'type') !== 'portal') continue;
       const exits = getTags(ev, 'exit');
       const matchesPlace = exits.some((e) => e[1] === selectedRef);
       if (!matchesPlace) continue;
       const portalRef = `30078:${ev.pubkey}:${getTag(ev, 'd')}`;
-      const slots = exits.filter((e) => e[1] === selectedRef).map((e) => e[2]).join(', ');
+      const slotList = exits.filter((e) => e[1] === selectedRef).map((e) => e[2]);
+      const slots = slotList.join(', ');
+      const undeclaredSlot = slotList.some((s) => !declaredSlots.has(s));
       const dests = exits.filter((e) => e[1] !== selectedRef).map((e) => {
         const dEvent = events.get(e[1]);
         return dEvent ? getTag(dEvent, 'title') || 'unknown' : 'unknown';
       });
-      portals.push({ ref: portalRef, slots, dests: dests.join(', '), author: ev.pubkey, isDraft: !!ev._isDraft });
+      portals.push({ ref: portalRef, slots, dests: dests.join(', '), author: ev.pubkey, isDraft: !!ev._isDraft, undeclaredSlot });
     }
     // Also collect exit tags directly on the place event.
     // Two forms: ["exit", "north"] — slot only (portal is sole source of destination)
@@ -531,9 +538,10 @@ function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, 
                 </div>
               ) : (
                 <div>
-                  <span style={{ color: 'var(--colour-exits)' }}>{p.slots}</span>
+                  <span style={{ color: p.undeclaredSlot ? 'var(--colour-error)' : 'var(--colour-exits)' }}>{p.slots}</span>
                   <span style={{ color: 'var(--colour-dim)' }}> → </span><span style={{ color: 'var(--colour-text)' }}>{p.dests}</span>
                   {p.isDraft && <span style={{ color: 'var(--colour-item)', fontSize: '0.45rem' }}> DRAFT</span>}
+                  {p.undeclaredSlot && <span style={{ color: 'var(--colour-error)', fontSize: '0.45rem' }}> no exit slot</span>}
                   <button
                     onClick={() => onEditEvent(p.ref)}
                     style={{ color: 'var(--colour-highlight)', background: 'none', border: 'none', font: 'inherit', fontSize: 'inherit', cursor: 'pointer', marginLeft: 4 }}
