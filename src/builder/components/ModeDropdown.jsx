@@ -1,30 +1,24 @@
 /**
- * ModeDropdown — Compact dropdown for selecting play/build mode and trust level.
+ * ModeDropdown — Compact dropdown for build mode, preview toggle, and settings.
  *
- * Replaces the row of header buttons with a single dropdown toggle.
- * Shows: current mode label, and expands to show all available modes.
+ * Shows the world's collaboration mode as a label (not selectable).
+ * Trusted authors (genesis/collaborator/voucher) get a "preview unvouched"
+ * toggle to evaluate content before vouching.
  */
 
 import React, { useState, useRef, useEffect } from 'react';
 
-const MODE_LABELS = {
-  canonical: 'original',
-  community: 'collaborative',
-  explorer: 'open',
-  build: 'build',
-};
-
-const MODE_LABELS_SHORT = {
-  canonical: 'orig',
-  community: 'collab',
-  explorer: 'open',
-  build: 'build',
+const COLLAB_LABELS = {
+  closed: 'closed',
+  vouched: 'vouched',
+  open: 'open',
 };
 
 export default function ModeDropdown({
-  availableModes,
-  effectiveMode,
-  onSelectMode,
+  collaboration,       // world's collaboration mode string
+  canPreviewUnvouched, // true if user is genesis/collaborator/voucher
+  previewUnvouched,    // current preview state
+  onTogglePreview,     // callback to toggle preview
   buildMode,
   onToggleBuild,
   showBuildOption,
@@ -32,7 +26,7 @@ export default function ModeDropdown({
   onOpenDrafts,
   onNewWorld,
   // Relay status
-  relayStatus,         // Map<url, status>
+  relayStatus,
   onOpenRelaySettings,
 }) {
   const [open, setOpen] = useState(false);
@@ -50,8 +44,8 @@ export default function ModeDropdown({
     return () => document.removeEventListener('mousedown', handleClick);
   }, [open]);
 
-  const currentLabel = buildMode ? MODE_LABELS.build : (MODE_LABELS[effectiveMode] || effectiveMode);
-  const currentLabelShort = buildMode ? MODE_LABELS_SHORT.build : (MODE_LABELS_SHORT[effectiveMode] || effectiveMode);
+  const collabLabel = COLLAB_LABELS[collaboration] || collaboration || 'open';
+  const buttonLabel = buildMode ? 'build' : collabLabel;
 
   return (
     <span ref={ref} style={{ position: 'relative' }}>
@@ -66,8 +60,7 @@ export default function ModeDropdown({
           padding: 0,
         }}
       >
-        <span className="hidden sm:inline">[{currentLabel}]</span>
-        <span className="sm:hidden">[{currentLabelShort}]</span>
+        [{buttonLabel}]
       </button>
 
       {open && (
@@ -82,38 +75,36 @@ export default function ModeDropdown({
             backgroundColor: 'var(--colour-bg)',
             boxShadow: '2px 2px 0 var(--colour-dim)',
             zIndex: 100,
-            minWidth: '12em',
+            minWidth: '14em',
             whiteSpace: 'nowrap',
           }}
         >
-          {/* Play modes */}
+          {/* Collaboration mode (read-only label) */}
           <div
             className="px-2 py-1"
             style={{ color: 'var(--colour-dim)', borderBottom: '1px solid var(--colour-dim)' }}
           >
-            play mode
+            world: {collabLabel}
           </div>
-          {availableModes.map((mode) => (
+
+          {/* Preview unvouched toggle */}
+          {canPreviewUnvouched && (
             <button
-              key={mode}
               onClick={() => {
-                onSelectMode(mode);
-                if (buildMode) onToggleBuild();
+                onTogglePreview();
                 setOpen(false);
               }}
               className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
               style={{
-                color: !buildMode && mode === effectiveMode
-                  ? 'var(--colour-highlight)'
-                  : 'var(--colour-text)',
+                color: previewUnvouched ? 'var(--colour-highlight)' : 'var(--colour-text)',
                 background: 'none',
                 border: 'none',
                 font: 'inherit',
               }}
             >
-              {!buildMode && mode === effectiveMode ? '> ' : '  '}{MODE_LABELS[mode] || mode}
+              {previewUnvouched ? '> ' : '  '}preview unvouched
             </button>
-          ))}
+          )}
 
           {/* Build mode */}
           {showBuildOption && (

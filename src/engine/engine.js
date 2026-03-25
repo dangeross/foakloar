@@ -158,10 +158,12 @@ export class GameEngine {
     for (const itemDtag of placeItems) {
       const item = this.events.get(itemDtag);
       if (!item) continue;
-      if (this.config.trustSet && isEventTrusted(item, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
+      const itemTrust = this.config.trustSet ? isEventTrusted(item, this.config.trustSet, this.config.clientMode) : 'trusted';
+      if (itemTrust === 'hidden') continue;
       const itemReq = checkRequires(item, this.player.state, this.events);
       if (!itemReq.allowed) continue;
-      this._emit(`You see: ${getTag(item, 'title')}`, 'item');
+      const uv = itemTrust === 'unverified' ? ' (unverified)' : '';
+      this._emit(`You see: ${getTag(item, 'title')}${uv}`, 'item');
     }
 
     // Features (skip hidden)
@@ -169,11 +171,13 @@ export class GameEngine {
       const fDTag = ref[1];  // full a-tag
       const feature = this.events.get(fDTag);
       if (!feature) continue;
-      if (this.config.trustSet && isEventTrusted(feature, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
+      const fTrust = this.config.trustSet ? isEventTrusted(feature, this.config.trustSet, this.config.clientMode) : 'trusted';
+      if (fTrust === 'hidden') continue;
       const fDefaultState = getDefaultState(feature);
       const fCurrentState = this.player.getState(fDTag) ?? fDefaultState;
       if (fCurrentState === 'hidden') continue;
-      this._emit(`There is a ${getTag(feature, 'title')} here.`, 'feature');
+      const fUv = fTrust === 'unverified' ? ' (unverified)' : '';
+      this._emit(`There is a ${getTag(feature, 'title')} here.${fUv}`, 'feature');
     }
 
     // Static NPCs (placed by the room)
@@ -181,12 +185,14 @@ export class GameEngine {
       const npcDTag = ref[1];  // full a-tag
       const npc = this.events.get(npcDTag);
       if (!npc) continue;
-      if (this.config.trustSet && isEventTrusted(npc, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
+      const npcTrust = this.config.trustSet ? isEventTrusted(npc, this.config.trustSet, this.config.clientMode) : 'trusted';
+      if (npcTrust === 'hidden') continue;
       // Skip roaming NPCs here — they're handled below
       if (getTags(npc, 'route').length > 0) continue;
       const npcReq = checkRequires(npc, this.player.state, this.events);
       if (!npcReq.allowed) continue;
-      this._emit(`${getTag(npc, 'title')} is here.`, 'npc');
+      const npcUv = npcTrust === 'unverified' ? ' (unverified)' : '';
+      this._emit(`${getTag(npc, 'title')} is here.${npcUv}`, 'npc');
     }
 
     // Roaming NPCs — check if any are currently at this place
@@ -195,12 +201,14 @@ export class GameEngine {
       (npcDtag) => this.player.getNpcState(npcDtag),
     );
     for (const { npcEvent, npcDtag } of roamingHere) {
-      if (this.config.trustSet && isEventTrusted(npcEvent, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
+      const roamTrust = this.config.trustSet ? isEventTrusted(npcEvent, this.config.trustSet, this.config.clientMode) : 'trusted';
+      if (roamTrust === 'hidden') continue;
       const npcReq = checkRequires(npcEvent, this.player.state, this.events);
       if (!npcReq.allowed) continue;
       // Ensure NPC state is initialized
       this.player.ensureNpcState(npcDtag, initNpcState(npcEvent));
-      this._emit(`${getTag(npcEvent, 'title')} is here.`, 'npc');
+      const roamUv = roamTrust === 'unverified' ? ' (unverified)' : '';
+      this._emit(`${getTag(npcEvent, 'title')} is here.${roamUv}`, 'npc');
       // Fire on-encounter triggers only on actual movement, not on look
       if (isMoving) {
         this._fireNpcEncounter(npcEvent, npcDtag);
@@ -1058,33 +1066,57 @@ export class GameEngine {
       }
       exit = trustedExits[choiceIndex - 1];
     } else if (unverifiedExits.length > 0) {
-      // Unverified only — short list (max 5)
-      if (choiceIndex === null) {
-        this._emit(`Multiple paths ${direction}:`, 'narrative');
-        const shown = unverifiedExits.slice(0, 5);
-        for (let i = 0; i < shown.length; i++) {
-          const label = shown[i].label || `path ${i + 1}`;
-          const pk = shown[i].portalEvent.pubkey.slice(0, 12) + '...';
-          this._emit(`  ${i + 1}. ${label} (unverified) [${pk}]`, 'exits-untrusted');
+      if (this.config.previewUnvouched) {
+        // Preview mode — navigate directly (single) or after choice (multiple), no confirmation
+        if (unverifiedExits.length === 1 && choiceIndex === null) {
+          exit = unverifiedExits[0];
+        } else if (choiceIndex === null) {
+          this._emit(`Multiple paths ${direction}:`, 'narrative');
+          for (let i = 0; i < unverifiedExits.length; i++) {
+            const label = unverifiedExits[i].label || `path ${i + 1}`;
+            const pk = unverifiedExits[i].portalEvent.pubkey.slice(0, 12) + '...';
+            this._emit(`  ${i + 1}. ${label} (unverified) [${pk}]`, 'exits-untrusted');
+          }
+          this.pendingChoice = { direction, exits: unverifiedExits, unverified: true };
+          return;
+        } else if (choiceIndex >= 1 && choiceIndex <= unverifiedExits.length) {
+          exit = unverifiedExits[choiceIndex - 1];
+        } else {
+          this._emit(`Choose 1-${unverifiedExits.length}.`, 'error');
+          return;
         }
-        if (unverifiedExits.length > 5) {
-          this._emit(`  + ${unverifiedExits.length - 5} more — type "look ${direction}" to see all`, 'exits-untrusted');
+      } else {
+        // Normal mode — list + confirmation required
+        if (choiceIndex === null) {
+          const heading = unverifiedExits.length === 1
+            ? `Unverified path ${direction}:`
+            : `Multiple paths ${direction}:`;
+          this._emit(heading, 'narrative');
+          const shown = unverifiedExits.slice(0, 5);
+          for (let i = 0; i < shown.length; i++) {
+            const label = shown[i].label || `path ${i + 1}`;
+            const pk = shown[i].portalEvent.pubkey.slice(0, 12) + '...';
+            this._emit(`  ${i + 1}. ${label} (unverified) [${pk}]`, 'exits-untrusted');
+          }
+          if (unverifiedExits.length > 5) {
+            this._emit(`  + ${unverifiedExits.length - 5} more — type "look ${direction}" to see all`, 'exits-untrusted');
+          }
+          this.pendingChoice = { direction, exits: unverifiedExits, unverified: true };
+          return;
         }
-        this.pendingChoice = { direction, exits: unverifiedExits, unverified: true };
+        if (choiceIndex < 1 || choiceIndex > unverifiedExits.length) {
+          this._emit(`Choose 1-${unverifiedExits.length}.`, 'error');
+          return;
+        }
+        // Unverified portal — confirmation required
+        const chosen = unverifiedExits[choiceIndex - 1];
+        const pk = chosen.portalEvent.pubkey.slice(0, 12) + '...';
+        const label = chosen.label || 'an unknown path';
+        this.pendingConfirm = { exit: chosen };
+        this._emit(`You are about to enter an unverified path by ${pk}`, 'exits-untrusted');
+        this._emit(`"${label}" — proceed? (yes/no)`, 'exits-untrusted');
         return;
       }
-      if (choiceIndex < 1 || choiceIndex > unverifiedExits.length) {
-        this._emit(`Choose 1-${unverifiedExits.length}.`, 'error');
-        return;
-      }
-      // Unverified portal — confirmation required
-      const chosen = unverifiedExits[choiceIndex - 1];
-      const pk = chosen.portalEvent.pubkey.slice(0, 12) + '...';
-      const label = chosen.label || 'an unknown path';
-      this.pendingConfirm = { exit: chosen };
-      this._emit(`You are about to enter an unverified path by ${pk}`, 'exits-untrusted');
-      this._emit(`"${label}" — proceed? (yes/no)`, 'exits-untrusted');
-      return;
     }
 
     const req = checkRequires(exit.portalEvent, this.player.state, this.events);
@@ -2855,8 +2887,8 @@ export class GameEngine {
           return;
         }
         const chosen = exits[num - 1];
-        if (chosen.trustLevel !== 'trusted') {
-          // Unverified portal — confirmation required
+        if (chosen.trustLevel !== 'trusted' && !this.config.previewUnvouched) {
+          // Unverified portal — confirmation required (unless previewing)
           const pk = chosen.portalEvent.pubkey.slice(0, 12) + '...';
           const label = chosen.label || 'an unknown path';
           this.pendingConfirm = { exit: chosen };

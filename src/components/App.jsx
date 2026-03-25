@@ -8,7 +8,7 @@ import { renderMarkdown } from '../engine/content.js';
 import { PlayerStateMutator } from '../engine/player-state.js';
 import { getTag, getTags } from '../engine/world.js';
 import { resolveTheme, applyTheme, resetTheme, resolveEffects, applyEffects, resolveFont, resolveFontSize, resolveFontSizePanel, resolveCursor, applyFontAndCursor, loadFont } from '../services/theme.js';
-import { buildTrustSet, resolveClientMode } from '../engine/trust.js';
+import { buildTrustSet } from '../engine/trust.js';
 import { useStateBackup } from '../hooks/useStateBackup.js';
 import { useNip65 } from '../hooks/useNip65.js';
 import PaymentPanel from './PaymentPanel.jsx';
@@ -135,10 +135,7 @@ export default function App() {
     replaceState: player.replaceState,
   });
   const [log, setLog] = useState([]);
-  const [clientMode, setClientMode] = useState(() => {
-    if (!worldTag) return 'community';
-    try { return localStorage.getItem(`foakloar:mode:${worldTag}`) || 'community'; } catch { return 'community'; }
-  });
+  const [previewUnvouched, setPreviewUnvouched] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [generation, setGeneration] = useState(0);
   // Build mode state
@@ -271,9 +268,25 @@ export default function App() {
   const trustInfo = useMemo(() => {
     if (!worldConfig?.worldEvent) return null;
     const trustSet = buildTrustSet(worldConfig.worldEvent, mergedEvents);
-    const { availableModes, effectiveMode } = resolveClientMode(trustSet.collaboration, clientMode);
-    return { trustSet, availableModes, effectiveMode };
-  }, [worldConfig, mergedEvents, clientMode]);
+    const collaboration = trustSet.collaboration || 'open';
+    // Determine effective client mode from collaboration + preview toggle
+    let effectiveMode;
+    if (collaboration === 'closed') {
+      effectiveMode = 'canonical';
+    } else if (collaboration === 'vouched') {
+      effectiveMode = previewUnvouched ? 'explorer' : 'community';
+    } else {
+      effectiveMode = 'community';
+    }
+    // Check if current user can preview unvouched content
+    const userPk = identity?.pubkey;
+    const canPreview = userPk && (
+      userPk === trustSet.genesisPubkey ||
+      trustSet.collaborators?.has(userPk) ||
+      trustSet.vouched?.get(userPk)?.canVouch
+    );
+    return { trustSet, effectiveMode, collaboration, canPreviewUnvouched: !!canPreview };
+  }, [worldConfig, mergedEvents, previewUnvouched, identity?.pubkey]);
 
   // Apply theme, effects, font, and cursor from world event (game pages only)
   useEffect(() => {
@@ -311,12 +324,12 @@ export default function App() {
       engineRef.current = new GameEngine({
         events: mergedEvents,
         player: mutator,
-        config: { GENESIS_PLACE: genesisPlace, AUTHOR_PUBKEY: authorPubkey, trustSet, clientMode: effectiveMode },
+        config: { GENESIS_PLACE: genesisPlace, AUTHOR_PUBKEY: authorPubkey, trustSet, clientMode: effectiveMode, previewUnvouched },
       });
     } else {
       engineRef.current.events = mergedEvents;
       engineRef.current.player = mutator;
-      engineRef.current.config = { ...engineRef.current.config, AUTHOR_PUBKEY: authorPubkey, trustSet, clientMode: effectiveMode };
+      engineRef.current.config = { ...engineRef.current.config, AUTHOR_PUBKEY: authorPubkey, trustSet, clientMode: effectiveMode, previewUnvouched };
     }
     return engineRef.current;
   }, [mergedEvents, player.state, worldConfig, trustInfo]);
@@ -407,6 +420,17 @@ export default function App() {
     }
   }, [status, generation, mergedEvents, buildMode]);
 
+  // Re-enter room when preview mode changes (trust config updated)
+  useEffect(() => {
+    if (status !== 'ready' || log.length === 0) return;
+    const engine = getEngine(); // updates engine config with new trustInfo
+    engine.enterRoom(engine.currentPlace);
+    commitEngine(engine);
+    if (isAudioReady() && !buildMode) {
+      evaluateSoundTags(mergedEvents, engine.currentPlace, engine.player.state, engine.player.npcStates);
+    }
+  }, [previewUnvouched]); // eslint-disable-line react-hooks/exhaustive-deps
+
   async function onSubmit(e) {
     e.preventDefault();
     const val = inputRef.current.value;
@@ -483,7 +507,7 @@ export default function App() {
     const draftTitle = worldDraft?.tags?.find((t) => t[0] === 'title')?.[1];
     return draftTitle || worldTag || 'foakloar';
   }, [worldConfig, drafts, worldTag]);
-  const availableModes = trustInfo?.availableModes || [];
+  // effectiveMode is derived from collaboration + preview toggle in trustInfo
   const effectiveMode = trustInfo?.effectiveMode || 'community';
 
   // Noise overlay — always present, controlled by --effect-noise CSS property
@@ -569,9 +593,10 @@ export default function App() {
         </span>
         <span className="flex items-center gap-2 shrink-0">
           <ModeDropdown
-            availableModes={availableModes.length > 0 ? availableModes : [effectiveMode]}
-            effectiveMode={effectiveMode}
-            onSelectMode={(mode) => { setClientMode(mode); try { localStorage.setItem(`foakloar:mode:${worldTag}`, mode); } catch {} }}
+            collaboration={trustInfo?.collaboration}
+            canPreviewUnvouched={trustInfo?.canPreviewUnvouched}
+            previewUnvouched={previewUnvouched}
+            onTogglePreview={() => setPreviewUnvouched(p => !p)}
             buildMode={buildMode}
             onToggleBuild={() => setBuildMode(!buildMode)}
             showBuildOption={identity.isProperIdentity || drafts.length > 0}
@@ -594,9 +619,9 @@ export default function App() {
           <IdentityButton identity={identity} onClick={() => setShowLogin(!showLogin)} />
         </span>
       </div>
-      {effectiveMode === 'explorer' && (
+      {previewUnvouched && (
         <div className="text-xs mb-1" style={{ color: 'var(--colour-error)' }}>
-          Explorer mode — you are viewing unverified community content.
+          Preview mode — showing unvouched content for review.
         </div>
       )}
 
