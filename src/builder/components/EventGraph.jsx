@@ -407,6 +407,11 @@ function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, 
     if (targetPk === trustSet.genesisPubkey) return false;
     if (trustSet.collaborators?.has(targetPk)) return false;
     if (trustSet.vouched?.has(targetPk)) return false;
+    // Check if current user has permission to vouch
+    const isGenesis = pubkey === trustSet.genesisPubkey;
+    const isCollaborator = trustSet.collaborators?.has(pubkey);
+    const isVoucherWithChain = trustSet.vouched?.get(pubkey)?.canVouch;
+    if (!isGenesis && !isCollaborator && !isVoucherWithChain) return false;
     return true;
   };
 
@@ -446,7 +451,7 @@ function GraphSidebar({ selectedRef, events, onEditEvent, onNewPortal, onVouch, 
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
   const sidebarStyle = {
     position: 'fixed', top: 34, right: 0, bottom: 0,
-    width: isMobile ? '100%' : 260, zIndex: 102,
+    width: isMobile ? '100%' : 260, zIndex: 52, // Z.GRAPH sidebar
     background: 'var(--colour-bg)',
     borderLeft: isMobile ? 'none' : '1px solid var(--colour-dim)',
     overflowY: 'auto',
@@ -586,7 +591,7 @@ let savedViewport = null;
 
 export default function EventGraph({
   events, currentPlace, onEditEvent, onNewEvent, onNewPortal, onClose,
-  pubkey, trustSet, clientMode, onVouch, onOpenDrafts, draftsCount, answers,
+  pubkey, trustSet, clientMode, onVouch, onOpenDrafts, onOpenTrust, draftsCount, answers,
 }) {
   const [showNewMenu, setShowNewMenu] = useState(false);
   const [selectedRef, setSelectedRef] = useState(null);
@@ -654,13 +659,13 @@ export default function EventGraph({
     <div style={{
       position: 'fixed',
       top: 0, left: 0, right: 0, bottom: 0,
-      zIndex: 100,
+      zIndex: 50, // Z.GRAPH
       background: 'var(--colour-bg)',
     }}>
       {/* Header */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0,
-        zIndex: 103,
+        zIndex: 53, // Z.GRAPH_HEADER
         padding: '6px 12px',
         display: 'flex',
         justifyContent: 'space-between',
@@ -700,7 +705,7 @@ export default function EventGraph({
               <div
                 className="font-mono text-xs"
                 style={{
-                  position: 'absolute', right: 0, top: '100%', zIndex: 200,
+                  position: 'absolute', right: 0, top: '100%', zIndex: 60, // Z.GRAPH dropdown
                   border: '1px solid var(--colour-dim)', backgroundColor: 'var(--colour-bg)',
                   boxShadow: '2px 2px 0 var(--colour-dim)',
                   padding: '2px 0', minWidth: 140, maxHeight: 300, overflowY: 'auto',
@@ -718,6 +723,18 @@ export default function EventGraph({
                     >
                       drafts{draftsCount > 0 ? ` (${draftsCount})` : ''}
                     </button>
+                    {onOpenTrust && (
+                      <button
+                        onClick={() => { setShowNewMenu(false); onOpenTrust(); }}
+                        className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                        style={{
+                          color: 'var(--colour-item)', background: 'none', border: 'none',
+                          font: 'inherit',
+                        }}
+                      >
+                        trust
+                      </button>
+                    )}
                     <div style={{ borderTop: '1px solid var(--colour-dim)', margin: '2px 0' }} />
                   </>
                 )}

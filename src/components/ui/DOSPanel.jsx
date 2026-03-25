@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { Z } from '../../constants/zIndex.js';
 
 export default function DOSPanel({
   title,
@@ -17,10 +18,10 @@ export default function DOSPanel({
   zIndex,
   noPadding,
 }) {
-  return (
+  const panel = (
     <div
       className="fixed inset-0"
-      style={{ zIndex: zIndex || 50 }}
+      style={{ zIndex: zIndex || Z.PANEL }}
       onClick={onClose}
       onMouseDown={(e) => {
         // Only close if clicking the backdrop itself, not children
@@ -72,4 +73,6 @@ export default function DOSPanel({
       </div>
     </div>
   );
+
+  return panel;
 }

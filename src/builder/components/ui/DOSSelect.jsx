@@ -90,7 +90,7 @@ export default function DOSSelect({ value, onChange, options: rawOptions }) {
             border: '1px solid var(--colour-dim)',
             maxHeight: '12em',
             overflowY: 'auto',
-            zIndex: 200,
+            zIndex: 600, // Z.DROPDOWN
             boxShadow: '2px -2px 0 var(--colour-dim)',
           }}
         >

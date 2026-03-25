@@ -20,6 +20,7 @@ import DraftListPanel from '../builder/components/DraftListPanel.jsx';
 import ModeDropdown from '../builder/components/ModeDropdown.jsx';
 import WorldCreator from '../builder/components/WorldCreator.jsx';
 import VouchPanel from '../builder/components/VouchPanel.jsx';
+import TrustPanel from '../builder/components/TrustPanel.jsx';
 import EventGraph from '../builder/components/EventGraph.jsx';
 import Lobby from './Lobby.jsx';
 import AuthorProfile from './AuthorProfile.jsx';
@@ -151,6 +152,7 @@ export default function App() {
   const draftAnswers = useMemo(() => loadAnswers(worldTag || ''), [worldTag, drafts]); // eslint-disable-line react-hooks/exhaustive-deps
   const [publishResult, setPublishResult] = useState(null); // { published, failed, errors, details }
   const [showRelaySettings, setShowRelaySettings] = useState(false);
+  const [showTrust, setShowTrust] = useState(false);
   const engineRef = useRef(null);
   const inputRef = useRef(null);
   const logEndRef = useRef(null);
@@ -681,7 +683,22 @@ export default function App() {
           worldSlug={worldTag}
           signer={identity.signer}
           pool={pool}
+          events={mergedEvents}
+          trustSet={trustInfo?.trustSet}
+          clientMode={trustInfo?.effectiveMode}
           onClose={() => setVouchTarget(null)}
+        />
+      )}
+
+      {/* Trust panel */}
+      {showTrust && trustInfo?.trustSet && (
+        <TrustPanel
+          trustSet={trustInfo.trustSet}
+          worldSlug={worldTag}
+          identityPubkey={identity?.pubkey}
+          signer={identity?.signer}
+          pool={pool}
+          onClose={() => setShowTrust(false)}
         />
       )}
 
@@ -702,7 +719,7 @@ export default function App() {
       {publishResult && (
         <PublishProgressPanel
           result={publishResult}
-          zIndex={buildMode ? 120 : undefined}
+          zIndex={undefined}
           onClose={() => setPublishResult(null)}
         />
       )}
@@ -731,8 +748,9 @@ export default function App() {
             if (destRef) initialTags.push(['exit', destRef, '', '']);
             setEditorState({ eventType: 'portal', initialTags });
           }}
-          onVouch={(targetPubkey) => setVouchTarget(targetPubkey)}
+          onVouch={identity?.signer ? (targetPubkey) => setVouchTarget(targetPubkey) : null}
           onOpenDrafts={() => setShowDrafts(true)}
+          onOpenTrust={identity?.pubkey && trustInfo?.trustSet ? () => setShowTrust(true) : null}
           draftsCount={drafts.length}
           onClose={() => setBuildMode(false)}
         />
@@ -744,7 +762,7 @@ export default function App() {
           drafts={drafts}
           events={mergedEvents}
           worldSlug={worldTag}
-          zIndex={buildMode ? 110 : undefined}
+          zIndex={undefined}
           onClose={() => setShowDrafts(false)}
           onEdit={(draft) => {
             const eventType = draft.tags?.find((t) => t[0] === 'type')?.[1] || 'place';
@@ -821,7 +839,7 @@ export default function App() {
           events={mergedEvents}
           eventTemplate={editorState.eventTemplate || null}
           initialTags={editorState.initialTags || []}
-          zIndex={buildMode ? 110 : undefined}
+          zIndex={undefined}
           startInPreview={editorState.showPreview || false}
           onSaveDraft={(eventTemplate) => {
             const draftId = editorState.eventTemplate?._draft?.id;
