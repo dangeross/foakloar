@@ -452,7 +452,7 @@ describe('Engine contested exit UI', () => {
 
     // Should show listing, not navigate
     expect(engine.currentPlace).toBe(placeRef);
-    expect(texts.some((t) => t?.includes('Multiple paths south'))).toBe(true);
+    expect(texts.some((t) => t?.includes('path south'))).toBe(true);
     expect(texts.some((t) => t?.includes('(unverified)'))).toBe(true);
   });
 

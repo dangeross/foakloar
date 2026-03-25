@@ -22,6 +22,7 @@ import WorldCreator from '../builder/components/WorldCreator.jsx';
 import VouchPanel from '../builder/components/VouchPanel.jsx';
 import TrustPanel from '../builder/components/TrustPanel.jsx';
 import EventGraph from '../builder/components/EventGraph.jsx';
+import { publishReport } from '../builder/eventBuilder.js';
 import Lobby from './Lobby.jsx';
 import AuthorProfile from './AuthorProfile.jsx';
 import TipPanel from './TipPanel.jsx';
@@ -382,6 +383,15 @@ export default function App() {
         playOneShotRef(entry.sound, entry.volume);
       } else if (entry.type === 'restart') {
         shouldRestart = true;
+      } else if (entry.type === 'report' && entry.report) {
+        // Publish report event to relays
+        if (identity?.signer && pool) {
+          const slug = worldTag;
+          const r = entry.report;
+          const shortTarget = r.targetRef.split(':').pop().slice(0, 8);
+          const shortReporter = identity.pubkey.slice(0, 8);
+          publishReport({ pool, signer: identity.signer, worldSlug: slug, targetRef: r.targetRef, reason: r.reason, shortTarget, shortReporter });
+        }
       } else {
         logEntries.push(entry);
       }

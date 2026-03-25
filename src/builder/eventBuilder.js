@@ -617,3 +617,21 @@ export async function publishEvent(signer, poolOrRelay, template, options = {}) 
     return { ok: false, error: err.message || 'Publish failed.' };
   }
 }
+
+/**
+ * Publish a report event for open world moderation.
+ */
+export async function publishReport({ pool, signer, worldSlug, targetRef, reason, shortTarget, shortReporter }) {
+  const template = {
+    kind: 30078,
+    tags: [
+      ['d', `${worldSlug}:report:${shortReporter}-${shortTarget}`],
+      ['t', worldSlug],
+      ['type', 'report'],
+      ['target', targetRef],
+      ['reason', reason],
+    ],
+    content: '',
+  };
+  return publishEvent(signer, pool, template);
+}
