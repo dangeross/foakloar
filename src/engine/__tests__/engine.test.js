@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { GameEngine } from '../engine.js';
 import {
   ref, PUBKEY, WORLD,
-  makePlace, makeFeature, makeItem, makePortal, makeClue, makeNPC, makeDialogueNode, makeQuest,
+  makePlace, makeFeature, makeItem, makePortal, makeClue, makeNPC, makeDialogueNode, makeQuest, makeRecipe,
   buildEvents, freshState, makeMutator,
 } from './helpers.js';
 
@@ -471,6 +471,71 @@ describe('examine', () => {
     const output = engine.flush();
     expect(output.some((e) => e.text === 'A brass lantern.')).toBe(true);
     expect(output.some((e) => e.text?.includes('currently on'))).toBe(true);
+  });
+});
+
+// ── Verb collision resolution ────────────────────────────────────────
+
+describe('entity-local verb resolution', () => {
+  it('uses the target entity canonical when verb alias collides across entities', async () => {
+    // Both fence (feature) and recipe have "fix" as a verb alias.
+    // "fix fence" should use the fence's canonical (fix), not the recipe's (assemble).
+    const fence = makeFeature('fence', {
+      verbs: [['fix', 'repair']],
+      nouns: [['fence', 'broken fence']],
+      state: 'broken',
+      transitions: [['broken', 'fixed', 'You fixed the fence.']],
+      onInteract: [['fix', 'set-state', 'fixed']],
+    });
+    const pickHead = makeItem('pick-head', { nouns: [['head', 'pick head']] });
+    const handle = makeItem('handle', { nouns: [['handle']] });
+    const pickaxe = makeItem('pickaxe', { nouns: [['pickaxe']] });
+    const recipe = makeRecipe('assemble-pick', {
+      verbs: [['assemble', 'fix', 'make']],
+      nouns: [['pickaxe']],
+      requires: [[ref(`${WORLD}:item:pick-head`), '', ''], [ref(`${WORLD}:item:handle`), '', '']],
+      onComplete: [['', 'give-item', ref(`${WORLD}:item:pickaxe`)]],
+      content: 'You assemble the pickaxe.',
+    });
+    const place = makePlace('start', { features: [`${WORLD}:feature:fence`], exits: ['north'] });
+    const events = buildEvents(place, fence, pickHead, handle, pickaxe, recipe);
+    const engine = createEngine(events);
+
+    await engine.handleCommand('fix fence');
+    const out = engine.flush();
+    expect(out.some((e) => e.text === 'You fixed the fence.')).toBe(true);
+  });
+
+  it('fix pickaxe resolves to recipe canonical assemble', async () => {
+    const fence = makeFeature('fence', {
+      verbs: [['fix', 'repair']],
+      nouns: [['fence']],
+      state: 'broken',
+      onInteract: [['fix', 'set-state', 'fixed']],
+    });
+    const pickHead = makeItem('pick-head', { nouns: [['head', 'pick head']] });
+    const handle = makeItem('handle', { nouns: [['handle']] });
+    const pickaxe = makeItem('pickaxe', { nouns: [['pickaxe']] });
+    const recipe = makeRecipe('assemble-pick', {
+      verbs: [['assemble', 'fix', 'make']],
+      nouns: [['pickaxe']],
+      requires: [[ref(`${WORLD}:item:pick-head`), '', ''], [ref(`${WORLD}:item:handle`), '', '']],
+      onComplete: [['', 'give-item', ref(`${WORLD}:item:pickaxe`)]],
+      content: 'You assemble the pickaxe.',
+    });
+    const place = makePlace('start', { features: [`${WORLD}:feature:fence`], exits: ['north'] });
+    const events = buildEvents(place, fence, pickHead, handle, pickaxe, recipe);
+    const player = makeMutator();
+    const engine = new GameEngine({ events, player, config: CONFIG });
+
+    // Give player the ingredients
+    player.pickUp(ref(`${WORLD}:item:pick-head`));
+    player.pickUp(ref(`${WORLD}:item:handle`));
+
+    await engine.handleCommand('fix pickaxe');
+    const out = engine.flush();
+    // Recipe should fire (assemble canonical), not "can't do that"
+    expect(out.some((e) => e.text === 'You assemble the pickaxe.' || e.text?.includes('Received'))).toBe(true);
   });
 });
 

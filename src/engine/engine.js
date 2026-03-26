@@ -2798,7 +2798,8 @@ export class GameEngine {
 
   // ── Unified interaction dispatch ──────────────────────────────────────
 
-  handleInteraction(verb, targetNoun, instrumentNoun) {
+  handleInteraction(verb_, targetNoun, instrumentNoun, verbAlias) {
+    let verb = verb_;
     if (!this.place) return;
 
     const target = targetNoun ? this.resolveNoun(targetNoun) : null;
@@ -2808,6 +2809,19 @@ export class GameEngine {
     }
 
     const { event, dtag, type } = target;
+
+    // Re-resolve verb using the target entity's own verb tags.
+    // The global verb map may have mapped an alias to the wrong canonical
+    // when multiple entities share the same alias (e.g. "fix" on fence AND recipe).
+    // Check if the original alias matches this entity's verb tags — if so, use
+    // this entity's canonical instead of the global one.
+    const inputAlias = (verbAlias || verb).toLowerCase();
+    for (const vt of getTags(event, 'verb')) {
+      if (vt.slice(1).some((a) => a.toLowerCase() === inputAlias)) {
+        verb = vt[1]; // use this entity's canonical
+        break;
+      }
+    }
 
     if (type === 'feature') {
       const fDefault = getDefaultState(event);
@@ -3133,12 +3147,12 @@ export class GameEngine {
         // "with" = noun1 is target, noun2 is instrument (attack guard with sword)
         // other prepositions = noun1 is instrument, noun2 is target (use key on door)
         if (parsed.preposition === 'with' || parsed.preposition === 'from') {
-          this.handleInteraction(parsed.verb, parsed.noun1, parsed.noun2);
+          this.handleInteraction(parsed.verb, parsed.noun1, parsed.noun2, parsed.alias);
         } else {
-          this.handleInteraction(parsed.verb, parsed.noun2, parsed.noun1);
+          this.handleInteraction(parsed.verb, parsed.noun2, parsed.noun1, parsed.alias);
         }
       } else {
-        this.handleInteraction(parsed.verb, parsed.noun1, null);
+        this.handleInteraction(parsed.verb, parsed.noun1, null, parsed.alias);
       }
       return;
     }

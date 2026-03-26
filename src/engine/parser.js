@@ -91,7 +91,7 @@ export function parseInput(input, verbMap) {
     }
   }
 
-  return { verb: canonical, noun1: noun1 || null, preposition, noun2: noun2 || null };
+  return { verb: canonical, alias: aliases.find((a) => input === a || input.startsWith(a + ' ')) || canonical, noun1: noun1 || null, preposition, noun2: noun2 || null };
 }
 
 /**
