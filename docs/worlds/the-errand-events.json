@@ -430,12 +430,14 @@
         [
           "on-interact",
           "fill",
+          "",
           "set-state",
           "full"
         ],
         [
           "on-interact",
           "pour",
+          "",
           "set-state",
           "empty"
         ]
@@ -476,6 +478,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:errand:clue:errands-list"
@@ -583,6 +586,7 @@
         [
           "on-interact",
           "light",
+          "",
           "set-state",
           "hot"
         ]

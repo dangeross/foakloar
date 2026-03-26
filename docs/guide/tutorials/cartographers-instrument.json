@@ -902,12 +902,14 @@
         [
           "on-interact",
           "play",
+          "",
           "set-state",
           "active"
         ],
         [
           "on-interact",
           "play",
+          "",
           "set-state",
           "active",
           "30078:<PUBKEY>:cartographers-instrument:feature:lunar-echo"
@@ -915,6 +917,7 @@
         [
           "on-interact",
           "play",
+          "",
           "sound",
           "30078:<PUBKEY>:cartographers-instrument:sound:activation-chime"
         ],
@@ -985,12 +988,14 @@
         [
           "on-interact",
           "play",
+          "",
           "set-state",
           "active"
         ],
         [
           "on-interact",
           "play",
+          "",
           "set-state",
           "active",
           "30078:<PUBKEY>:cartographers-instrument:feature:solar-echo"
@@ -998,6 +1003,7 @@
         [
           "on-interact",
           "play",
+          "",
           "sound",
           "30078:<PUBKEY>:cartographers-instrument:sound:activation-chime"
         ],
@@ -1068,12 +1074,14 @@
         [
           "on-interact",
           "play",
+          "",
           "set-state",
           "active"
         ],
         [
           "on-interact",
           "play",
+          "",
           "set-state",
           "active",
           "30078:<PUBKEY>:cartographers-instrument:feature:stellar-echo"
@@ -1081,6 +1089,7 @@
         [
           "on-interact",
           "play",
+          "",
           "sound",
           "30078:<PUBKEY>:cartographers-instrument:sound:activation-chime"
         ],

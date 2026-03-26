@@ -138,7 +138,7 @@ Riddle puzzles don't activate themselves. A feature in the game world triggers t
     ["type", "feature"],
     ["noun", "board", "notice board"],
     ["verb", "decode", "decipher"],
-    ["on-interact", "decode", "set-state", "active", "30078:<PUBKEY>:my-world:puzzle:gate-riddle"]
+    ["on-interact", "decode", "", "set-state", "active", "30078:<PUBKEY>:my-world:puzzle:gate-riddle"]
   ]
 }
 ```
@@ -273,7 +273,7 @@ The player needs a way to trigger the puzzle. Add a feature with a verb that fir
     ["verb", "decode", "decipher"],
     ["state", "hidden"],
     ["transition", "hidden", "revealed", "The panel slides open, revealing a passage."],
-    ["on-interact", "decode", "set-state", "active", "30078:<PUBKEY>:my-world:puzzle:my-riddle"]
+    ["on-interact", "decode", "", "set-state", "active", "30078:<PUBKEY>:my-world:puzzle:my-riddle"]
   ],
   "content": "A section of the wall looks different from the rest. Strange markings cover its surface."
 }

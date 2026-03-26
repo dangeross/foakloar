@@ -684,9 +684,12 @@ export class GameEngine {
     }
     for (const tag of getTags(event, 'on-interact')) {
       if (tag[1] !== verb) continue;
-      const action = tag[2];
-      const targetState = tag[3];
-      const targetRef = tag[4];
+      // State guard at position 2 — blank = any state, otherwise must match current state
+      const stateGuard = tag[2];
+      if (stateGuard && currentState && stateGuard !== currentState) continue;
+      const action = tag[3];
+      const targetState = tag[4];
+      const targetRef = tag[5];
 
       if (action === 'set-state' && targetRef) {
         const result = applyExternalSetState(
@@ -738,7 +741,7 @@ export class GameEngine {
         this._applyCounterAction(action, dtag, targetState, targetRef, event);
         acted = true;
       } else if (action === 'set-counter') {
-        this._applyCounterAction('set-counter', dtag, targetState, targetRef, event, tag[5]);
+        this._applyCounterAction('set-counter', dtag, targetState, targetRef, event, tag[6]);
         acted = true;
       } else if (action === 'heal') {
         const amount = parseInt(targetState, 10) || 1;
@@ -935,9 +938,12 @@ export class GameEngine {
     let acted = false;
     for (const tag of getTags(event, 'on-interact')) {
       if (tag[1] !== verb) continue;
-      const action = tag[2];
-      const targetState = tag[3];
-      const targetRef = tag[4];
+      // State guard at position 2 — blank = any state, otherwise must match current state
+      const stateGuard = tag[2];
+      if (stateGuard && currentState && stateGuard !== currentState) continue;
+      const action = tag[3];
+      const targetState = tag[4];
+      const targetRef = tag[5];
 
       if (action === 'set-state' && targetRef) {
         const extDTag = targetRef;  // full a-tag
@@ -1002,7 +1008,7 @@ export class GameEngine {
         this._applyCounterAction(action, dtag, targetState, targetRef, event);
         acted = true;
       } else if (action === 'set-counter') {
-        this._applyCounterAction('set-counter', dtag, targetState, targetRef, event, tag[5]);
+        this._applyCounterAction('set-counter', dtag, targetState, targetRef, event, tag[6]);
         acted = true;
       } else if (action === 'consume-item') {
         // consume-item target is an item a-tag (usually self)
@@ -1428,8 +1434,10 @@ export class GameEngine {
     const currentState = this.player.getState(weaponDtag) || getDefaultState(weaponEvent);
     for (const tag of getTags(weaponEvent, 'on-interact')) {
       if (tag[1] !== 'attack') continue;
-      const action = tag[2];
-      const targetState = tag[3];
+      const stateGuard = tag[2];
+      if (stateGuard && currentState && stateGuard !== currentState) continue;
+      const action = tag[3];
+      const targetState = tag[4];
 
       if (action === 'deal-damage-npc') {
         this._dealDamageToNpc(targetState || npcDtag, weaponEvent);

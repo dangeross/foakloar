@@ -524,6 +524,7 @@
         [
           "on-interact",
           "attack",
+          "",
           "deal-damage-npc",
           ""
         ]
@@ -590,12 +591,14 @@
         [
           "on-interact",
           "drink",
+          "",
           "decrement",
           "drinks"
         ],
         [
           "on-interact",
           "drink",
+          "",
           "heal",
           "2"
         ],

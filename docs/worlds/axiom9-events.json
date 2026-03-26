@@ -1487,12 +1487,14 @@
         [
           "on-interact",
           "use",
+          "",
           "set-state",
           "spent"
         ],
         [
           "on-interact",
           "use",
+          "",
           "set-state",
           "disabled",
           "30078:<PUBKEY>:axiom9:feature:main-server"
@@ -1500,6 +1502,7 @@
         [
           "on-interact",
           "use",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:server-fragment"
@@ -1507,6 +1510,7 @@
         [
           "on-interact",
           "use",
+          "",
           "sound",
           "30078:<PUBKEY>:axiom9:sound:emp-burst",
           "0.9"
@@ -1552,12 +1556,14 @@
         [
           "on-interact",
           "apply",
+          "",
           "set-state",
           "applied"
         ],
         [
           "on-interact",
           "apply",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:patch-effect"
@@ -1628,6 +1634,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:lazarus-contents"
@@ -1757,6 +1764,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:departure-board"
@@ -1800,6 +1808,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:headline"
@@ -1843,12 +1852,14 @@
         [
           "on-interact",
           "order",
+          "",
           "heal",
           "5"
         ],
         [
           "on-interact",
           "order",
+          "",
           "sound",
           "30078:<PUBKEY>:axiom9:sound:warm-tone",
           "0.5"
@@ -1856,6 +1867,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:stall-graffiti"
@@ -1909,12 +1921,14 @@
         [
           "on-interact",
           "open",
+          "",
           "set-state",
           "open"
         ],
         [
           "on-interact",
           "search",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:mei-drawer-contents"
@@ -1922,6 +1936,7 @@
         [
           "on-interact",
           "search",
+          "",
           "give-item",
           "30078:<PUBKEY>:axiom9:item:access-chip"
         ]
@@ -1961,6 +1976,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:shrine-photo"
@@ -2003,6 +2019,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:shelf-inventory"
@@ -2045,6 +2062,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:duty-log"
@@ -2087,6 +2105,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:wanted-notice"
@@ -2136,6 +2155,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:machine-readout"
@@ -2143,12 +2163,14 @@
         [
           "on-interact",
           "use",
+          "",
           "set-state",
           "running"
         ],
         [
           "on-interact",
           "take test",
+          "",
           "set-state",
           "running"
         ]
@@ -2190,6 +2212,7 @@
         [
           "on-interact",
           "look",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:glass-reflection"
@@ -2244,12 +2267,14 @@
         [
           "on-interact",
           "query",
+          "",
           "set-state",
           "active"
         ],
         [
           "on-interact",
           "query",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:records-query"
@@ -2257,6 +2282,7 @@
         [
           "on-interact",
           "search",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:records-query"
@@ -2310,18 +2336,21 @@
         [
           "on-interact",
           "open",
+          "",
           "set-state",
           "open"
         ],
         [
           "on-interact",
           "search",
+          "",
           "give-item",
           "30078:<PUBKEY>:axiom9:item:lazarus-file"
         ],
         [
           "on-interact",
           "search",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:drawer-contents"
@@ -2363,6 +2392,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:holt-memo"
@@ -2370,6 +2400,7 @@
         [
           "on-interact",
           "search",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:holt-photo"
@@ -2412,6 +2443,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:missing-photo"
@@ -2459,18 +2491,21 @@
         [
           "on-interact",
           "turn",
+          "",
           "set-state",
           "sealed"
         ],
         [
           "on-interact",
           "close",
+          "",
           "set-state",
           "sealed"
         ],
         [
           "on-interact",
           "turn",
+          "",
           "sound",
           "30078:<PUBKEY>:axiom9:sound:steam-hiss",
           "0.8"
@@ -2478,6 +2513,7 @@
         [
           "on-interact",
           "close",
+          "",
           "sound",
           "30078:<PUBKEY>:axiom9:sound:steam-hiss",
           "0.8"
@@ -2527,6 +2563,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:scratch-message"
@@ -2579,6 +2616,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:server-warning"
@@ -2639,12 +2677,14 @@
         [
           "on-interact",
           "insert",
+          "",
           "set-state",
           "active"
         ],
         [
           "on-interact",
           "insert",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:chip-data"
@@ -2652,6 +2692,7 @@
         [
           "on-interact",
           "insert",
+          "",
           "consume-item",
           "30078:<PUBKEY>:axiom9:item:data-chip"
         ]
@@ -2751,6 +2792,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:wall-names"
@@ -2817,24 +2859,28 @@
         [
           "on-interact",
           "activate",
+          "",
           "set-state",
           "transmitting"
         ],
         [
           "on-interact",
           "broadcast",
+          "",
           "set-state",
           "transmitting"
         ],
         [
           "on-interact",
           "transmit",
+          "",
           "set-state",
           "transmitting"
         ],
         [
           "on-interact",
           "activate",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:broadcast-signal"
@@ -2842,6 +2888,7 @@
         [
           "on-interact",
           "broadcast",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:broadcast-signal"
@@ -2849,6 +2896,7 @@
         [
           "on-interact",
           "transmit",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:broadcast-signal"
@@ -2856,24 +2904,28 @@
         [
           "on-interact",
           "activate",
+          "",
           "puzzle",
           "30078:<PUBKEY>:axiom9:puzzle:final-broadcast"
         ],
         [
           "on-interact",
           "broadcast",
+          "",
           "puzzle",
           "30078:<PUBKEY>:axiom9:puzzle:final-broadcast"
         ],
         [
           "on-interact",
           "transmit",
+          "",
           "puzzle",
           "30078:<PUBKEY>:axiom9:puzzle:final-broadcast"
         ],
         [
           "on-interact",
           "activate",
+          "",
           "sound",
           "30078:<PUBKEY>:axiom9:sound:broadcast-fire",
           "1.0"
@@ -2881,6 +2933,7 @@
         [
           "on-interact",
           "broadcast",
+          "",
           "sound",
           "30078:<PUBKEY>:axiom9:sound:broadcast-fire",
           "1.0"
@@ -2888,6 +2941,7 @@
         [
           "on-interact",
           "transmit",
+          "",
           "sound",
           "30078:<PUBKEY>:axiom9:sound:broadcast-fire",
           "1.0"
@@ -2947,12 +3001,14 @@
         [
           "on-interact",
           "open",
+          "",
           "set-state",
           "open"
         ],
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:archive-contents"
@@ -2996,6 +3052,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:gap-view"
@@ -3933,6 +3990,7 @@
         [
           "on-interact",
           "talk",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:departure-board"
@@ -3974,6 +4032,7 @@
         [
           "on-interact",
           "talk",
+          "",
           "give-item",
           "30078:<PUBKEY>:axiom9:item:recipe-note"
         ],
@@ -4195,6 +4254,7 @@
         [
           "on-interact",
           "talk",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:wall-names"

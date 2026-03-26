@@ -89,7 +89,7 @@ For interactions beyond the built-ins, add a `verb` tag. The first value is the 
 The `on-interact` tag fires an action when the player uses a verb. It always references the canonical verb, never an alias.
 
 ```json
-["on-interact", "<canonical-verb>", "<action-type>", "<action-target>"]
+["on-interact", "<verb>", "<state-guard-or-blank>", "<action-type>", "<action-target>"]
 ```
 
 For example, the notice board in this tutorial has:
@@ -99,7 +99,7 @@ For example, the notice board in this tutorial has:
 ["state", "unread"],
 ["transition", "unread", "read", "You lean in and squint at the faded ink..."],
 ["transition", "read", "read", "You have already read the notice..."],
-["on-interact", "read", "set-state", "read"]
+["on-interact", "read", "", "set-state", "read"]
 ```
 
 When the player types `read board`, the engine fires `on-interact` for the `read` verb, which triggers `set-state` to transition from `unread` to `read`. The `transition` tag provides the message shown to the player.

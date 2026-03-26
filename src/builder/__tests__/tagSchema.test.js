@@ -162,8 +162,8 @@ describe('tag shapes', () => {
     expect(TAG_SCHEMAS.requires.fields).toHaveLength(3);
   });
 
-  it('on-interact has 4 fields (verb, action, target, event-ref)', () => {
-    expect(TAG_SCHEMAS['on-interact'].fields).toHaveLength(4);
+  it('on-interact has 5 fields (verb, state-guard, action, target, event-ref)', () => {
+    expect(TAG_SCHEMAS['on-interact'].fields).toHaveLength(5);
   });
 
   it('on-enter has 4 fields (trigger, action, target, event-ref)', () => {
@@ -249,11 +249,12 @@ describe('valuesToTag', () => {
     const fields = TAG_SCHEMAS['on-interact'].fields;
     const tag = valuesToTag('on-interact', {
       verb: 'insert',
+      'state-guard': '',
       action: 'set-state',
       target: 'amulet-placed',
       'event-ref': '30078:abc:feature:mechanism',
     }, fields);
-    expect(tag).toEqual(['on-interact', 'insert', 'set-state', 'amulet-placed', '30078:abc:feature:mechanism']);
+    expect(tag).toEqual(['on-interact', 'insert', '', 'set-state', 'amulet-placed', '30078:abc:feature:mechanism']);
   });
 
   it('builds content-type with plaintext format', () => {
@@ -293,11 +294,12 @@ describe('tagToValues', () => {
   it('parses on-interact with external event-ref', () => {
     const fields = TAG_SCHEMAS['on-interact'].fields;
     const values = tagToValues(
-      ['on-interact', 'insert', 'set-state', 'amulet-placed', '30078:abc:feature:mechanism'],
+      ['on-interact', 'insert', '', 'set-state', 'amulet-placed', '30078:abc:feature:mechanism'],
       fields
     );
     expect(values).toEqual({
       verb: 'insert',
+      'state-guard': '',
       action: 'set-state',
       target: 'amulet-placed',
       'event-ref': '30078:abc:feature:mechanism',

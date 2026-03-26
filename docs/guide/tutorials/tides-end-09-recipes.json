@@ -433,12 +433,14 @@
         [
           "on-interact",
           "fish",
+          "",
           "set-state",
           "used"
         ],
         [
           "on-interact",
           "fish",
+          "",
           "give-item",
           "30078:<PUBKEY>:tides-end-09-recipes:item:raw-fish"
         ]

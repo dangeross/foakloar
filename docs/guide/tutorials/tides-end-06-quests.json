@@ -570,6 +570,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "searched"
         ],
@@ -625,6 +626,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "read"
         ],

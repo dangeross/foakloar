@@ -520,6 +520,7 @@
         [
           "on-interact",
           "light",
+          "",
           "set-state",
           "lit"
         ],
@@ -669,6 +670,7 @@
         [
           "on-interact",
           "crank",
+          "",
           "increment",
           "cranks"
         ],

@@ -352,8 +352,10 @@ export function validateEvent(template) {
     const triggerPrefixes = ['on-interact', 'on-complete', 'on-fail', 'on-enter', 'on-encounter', 'on-attacked', 'on-health-zero', 'on-player-health-zero', 'on-move'];
     for (const tag of template.tags) {
       if (!triggerPrefixes.includes(tag[0])) continue;
-      const actionType = tag[2]; // ["on-*", "trigger-target", "action", "action-target"]
-      const actionTarget = tag[3];
+      // on-interact has state-guard at [2], action at [3]; others have action at [2]
+      const actionIdx = tag[0] === 'on-interact' ? 3 : 2;
+      const actionType = tag[actionIdx];
+      const actionTarget = tag[actionIdx + 1];
       if (!actionType || actionTarget === undefined || actionTarget === '') continue;
       const targetField = ACTION_TARGET_FIELD[actionType];
       if (!targetField || targetField.type !== 'number') continue;
@@ -438,7 +440,7 @@ export function validateEvent(template) {
           warnings.push(warn(
             'unused-verb',
             `Verb "${verb}" has no matching on-interact — players can type it but nothing happens`,
-            `Add an ["on-interact", "${verb}", "<action>", "<target>"] tag, or remove "${verb}" from the verb tag.`,
+            `Add an ["on-interact", "${verb}", "", "<action>", "<target>"] tag, or remove "${verb}" from the verb tag.`,
           ));
         }
       }
@@ -460,11 +462,11 @@ export function validateEvent(template) {
 
     // on-interact with too many elements
     for (const tag of template.tags) {
-      if (tag[0] === 'on-interact' && tag.length > 5) {
+      if (tag[0] === 'on-interact' && tag.length > 6) {
         warnings.push(warn(
           'extra-fields',
-          `on-interact "${tag[1]}" has ${tag.length - 1} fields (expected max 4) — extra elements are ignored`,
-          `Remove the extra fields from ["on-interact", "${tag[1]}", ...]. The spec defines 4 fields: verb, action, target, ext-ref.`,
+          `on-interact "${tag[1]}" has ${tag.length - 1} fields (expected max 5) — extra elements are ignored`,
+          `Remove the extra fields from ["on-interact", "${tag[1]}", ...]. The spec defines 5 fields: verb, state-guard, action, target, ext-ref.`,
           tag.join(', '),
         ));
       }

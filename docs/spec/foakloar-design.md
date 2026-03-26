@@ -278,8 +278,8 @@ An item with state and verbs:
     ["verb", "turn on", "switch on", "on"],
     ["verb", "turn off", "switch off", "off"],
     ["state",       "off"],
-    ["on-interact", "turn on",  "set-state", "on"],
-    ["on-interact", "turn off", "set-state", "off"]
+    ["on-interact", "turn on",  "", "set-state", "on"],
+    ["on-interact", "turn off", "", "set-state", "off"]
   ],
   "content": "A battery-powered brass lantern."
 }
@@ -380,16 +380,19 @@ Examples:
 
 Hidden portals or features start in `state: hidden` — not rendered until a `set-state visible` action targets them.
 
-Event states are set via `set-state` in `on-interact`. The optional third argument targets another event — omit to apply to self:
+Event states are set via `set-state` in `on-interact`. The state guard (position 2) gates whether the action fires — blank means any state, a value means only when the entity is in that state. The optional final argument targets another event — omit to apply to self:
 
 ```json
-// Transition self to new state
-["on-interact", "open",  "set-state", "open"]
+// Transition self to new state (blank state guard = fires in any state)
+["on-interact", "open",  "", "set-state", "open"]
+
+// State-guarded — only fires when entity is in the specified state
+["on-interact", "open",  "closed", "set-state", "open"]
 
 // Transition another event to a new state
-["on-interact", "press", "set-state", "on",      "30078:<pubkey>:the-lake:feature:control-panel"]
-["on-interact", "pour",  "set-state", "watered",  "30078:<pubkey>:the-lake:feature:altar"]
-["on-interact", "throw", "set-state", "bridged",  "30078:<pubkey>:the-lake:place:east-of-chasm"]
+["on-interact", "press", "", "set-state", "on",      "30078:<pubkey>:the-lake:feature:control-panel"]
+["on-interact", "pour",  "", "set-state", "watered",  "30078:<pubkey>:the-lake:feature:altar"]
+["on-interact", "throw", "", "set-state", "bridged",  "30078:<pubkey>:the-lake:place:east-of-chasm"]
 ```
 
 Item states (client-side only):
@@ -421,7 +424,7 @@ The `verb` tag declares available interactions. The first value is the **canonic
 ["verb", "turn off", "switch off", "off"]
 ```
 
-`on-interact` always references the canonical verb — never an alias.
+`on-interact` always references the canonical verb (position 1) — never an alias. The state guard (position 2) is blank for unconditional firing, or a specific state value to gate the action.
 
 The `noun` tag works the same way — the first value is the **canonical noun** used internally, additional values are aliases the input parser also accepts. `title` is always display-only; `noun` is always parser-facing.
 
@@ -459,6 +462,14 @@ Rooms, items, features, and NPCs can all carry `noun` tags. Exit slots serve as 
 
 `on-interact` lives on the **target** event — the thing being acted upon. The instrument is available as context. If the instrument matters (a locked door that only opens with the right key), express it as a `requires` on the target — the client checks it before firing `on-interact`. This keeps the instrument check in the schema rather than hardcoded in the parser.
 
+The full `on-interact` shape is:
+
+```json
+["on-interact", "<verb>", "<state-guard-or-blank>", "<action>", ...action-args]
+```
+
+The state guard (position 2) gates whether the action fires based on the entity's current state. Blank (`""`) means the action fires regardless of state — this is the common case. A specific state value means the action only fires when the entity is currently in that state. This enables different behaviour per state without needing separate events.
+
 Features can have an initial **state** — a string value declared by the author. The client tracks current state per-feature in local player state. State values are arbitrary strings defined by the feature author. The client renders descriptions and available verbs based on current state.
 
 #### on-* event dispatcher
@@ -473,7 +484,7 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 
 | Tag | Trigger target | Fires when |
 |-----|---------------|------------|
-| `on-interact` | Verb string | Player uses a verb on this feature, item, or NPC |
+| `on-interact` | Verb string + optional state guard | Player uses a verb on this feature, item, or NPC. State guard (position 2) gates firing — blank fires in any state, a value fires only when the entity is in that state. |
 | `on-complete` | `""` (blank) | Player satisfies all `requires` and confirms action (puzzle answered, recipe combined). Trigger-target is always blank — `["on-complete", "", "<action-type>", "<action-target?>"]` |
 | `on-enter` | `player` or place `a`-tag | Player enters this place (arg: `player`), or NPC arrives at a place (arg: place ref). Client dispatches based on event `type`. |
 | `on-encounter` | `""`, `player`, or NPC `a`-tag | NPC is in the same place as target. `""` = any entity. `player` = player only. NPC `a`-tag = that NPC only. Optional external action target. |
@@ -492,7 +503,7 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 | `on-encounter` | Any entity | Player only | — | That NPC only |
 | `on-enter` | — | Player entering | — | — |
 
-`on-encounter` and `on-attacked` both support an optional external action target as the final element — same convention as `on-interact`:
+`on-encounter` and `on-attacked` both support an optional external action target as the final element — same convention across all `on-*` tags:
 
 ```json
 // on-encounter examples
@@ -511,7 +522,7 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 
 | Action | Target | Effect |
 |--------|--------|--------|
-| `set-state` | State string, optional event `a`-tag | Transitions this event (or a referenced event) to a new state. External target on `on-interact`: `["on-interact", "insert", "set-state", "amulet-placed", "30078:<pubkey>:the-lake:feature:mechanism"]` |
+| `set-state` | State string, optional event `a`-tag | Transitions this event (or a referenced event) to a new state. External target on `on-interact`: `["on-interact", "insert", "", "set-state", "amulet-placed", "30078:<pubkey>:the-lake:feature:mechanism"]` |
 | `traverse` | Portal `a`-tag | Sends the player through a portal |
 | `give-item` | Item `a`-tag | Adds an item to player inventory |
 | `consume-item` | Item `a`-tag | Removes an item from player inventory |
@@ -623,17 +634,17 @@ The client tracks threshold crossings per counter per threshold value — multip
 
 **Counter actions — tag positions:**
 
-Counter actions follow the same `on-interact` shape as all other actions. Counter name is always position 3, value (for `set-counter`) is position 4. External target is an optional final element — the `a`-tag of another event whose counter to modify:
+Counter actions follow the same `on-interact` shape as all other actions, with the state guard in position 2. Counter name follows the action type, value (for `set-counter`) follows that. External target is an optional final element — the `a`-tag of another event whose counter to modify:
 
 ```json
 // Self-targeting (counter on this event)
-["on-interact", "use",    "increment",   "hits"],
-["on-interact", "use",    "decrement",   "battery"],
-["on-interact", "refill", "set-counter", "battery", "300"],
+["on-interact", "use",    "", "increment",   "hits"],
+["on-interact", "use",    "", "decrement",   "battery"],
+["on-interact", "refill", "", "set-counter", "battery", "300"],
 
 // External targeting (counter on another event)
-["on-interact", "pump",   "increment",   "heat",    "30078:<PUBKEY>:forge:feature:forge"],
-["on-interact", "use",    "set-counter", "charge",  "50", "30078:<PUBKEY>:forge:item:battery"]
+["on-interact", "pump",   "", "increment",   "heat",    "30078:<PUBKEY>:forge:feature:forge"],
+["on-interact", "use",    "", "set-counter", "charge",  "50", "30078:<PUBKEY>:forge:item:battery"]
 ```
 
 `increment` and `decrement` always change by 1. `set-counter` sets to the exact value in position 4. For external targets, the counter name must exist on the target event — if not, the action is silently ignored.
@@ -744,9 +755,9 @@ The optional fourth element is **transition text** — rendered to the player wh
     ["title",       "Kitchen Window"],
     ["verb", "open", "examine", "enter"],
     ["state",       "ajar"],
-    ["on-interact", "open",  "set-state", "open"],
-    ["on-interact", "open",  "set-state", "open"],
-    ["on-interact", "enter", "traverse",  "30078:<pubkey>:the-lake:portal:window-to-kitchen"]
+    ["on-interact", "open",  "", "set-state", "open"],
+    ["on-interact", "open",  "", "set-state", "open"],
+    ["on-interact", "enter", "", "traverse",  "30078:<pubkey>:the-lake:portal:window-to-kitchen"]
   ],
   "content": "The window is slightly ajar."
 }
@@ -764,7 +775,7 @@ A stateless feature:
     ["type",        "feature"],
     ["title",       "A Bronze Altar"],
     ["verb", "examine", "place"],
-    ["on-interact", "examine", "set-state", "visible", "30078:<pubkey>:the-lake:clue:altar-inscription"]
+    ["on-interact", "examine", "", "set-state", "visible", "30078:<pubkey>:the-lake:clue:altar-inscription"]
   ],
   "content": "A heavy bronze altar, worn smooth by many hands."
 }
@@ -785,7 +796,7 @@ A chest with state, contents, and a lock:
     ["verb",        "open",  "examine"],
     ["state",       "closed"],
     ["requires",    "30078:<pubkey>:the-lake:item:iron-key", "", "The chest is sealed with a serpent-shaped lock."],
-    ["on-interact", "open",  "set-state", "open"],
+    ["on-interact", "open",  "", "set-state", "open"],
     ["contains",    "30078:<pubkey>:the-lake:item:treasure-map", "open", "The chest is closed."],
     ["contains",    "30078:<pubkey>:the-lake:item:gold-coin",    "open", "The chest is closed."]
   ],
@@ -865,7 +876,7 @@ The `on-interact` that fires `set-state visible` on this clue can run unconditio
 
 ```json
 // Feature interaction
-["on-interact", "examine", "set-state", "visible", "30078:<pubkey>:the-lake:clue:altar-inscription"]
+["on-interact", "examine", "", "set-state", "visible", "30078:<pubkey>:the-lake:clue:altar-inscription"]
 
 // Place entry (ambient clue — shown on arrival)
 ["on-enter", "player", "set-state", "visible", "30078:<pubkey>:the-lake:clue:notice-on-wall"]
@@ -1147,8 +1158,8 @@ A static NPC:
     ["type",        "npc"],
     ["title",       "Old Hermit"],
     ["noun",        "hermit", "old man", "man"],
-    ["on-interact", "talk", "give-item", "30078:<pubkey>:the-lake:item:map-fragment"],
-    ["on-interact", "talk", "set-state", "visible", "30078:<pubkey>:the-lake:clue:hermit-warning"],
+    ["on-interact", "talk", "", "give-item", "30078:<pubkey>:the-lake:item:map-fragment"],
+    ["on-interact", "talk", "", "set-state", "visible", "30078:<pubkey>:the-lake:clue:hermit-warning"],
     ["dialogue",    "30078:<pubkey>:the-lake:dialogue:hermit:greeting"]
   ],
   "content": "A weathered old man sits by a dying fire."
@@ -1450,7 +1461,7 @@ Drop before clear, respawn last. The engine uses `currentPlace` at consequence d
 ["on-encounter", "player", "consequence", "30078:<pubkey>:the-lake:consequence:death"]
 
 // From on-interact dispatcher
-["on-interact", "touch", "consequence", "30078:<pubkey>:the-lake:consequence:cursed"]
+["on-interact", "touch", "", "consequence", "30078:<pubkey>:the-lake:consequence:cursed"]
 
 // Room entry triggers a consequence
 ["on-enter", "", "consequence", "30078:<pubkey>:the-lake:consequence:victory"]
@@ -1511,7 +1522,7 @@ Combat is not a separate system — it is the `on-*` dispatcher applied to healt
 
 **`on-attacked` — shape and target**
 
-`on-attacked` follows the same shape as `on-interact` — the trigger-target is the item used to attack (or `""` for any), and an optional external event `a`-tag is the action target:
+`on-attacked` follows the standard `on-*` shape — the trigger-target is the item used to attack (or `""` for any), and an optional external event `a`-tag is the action target:
 
 ```json
 ["on-attacked", "<item-ref-or-blank>", "<action-type>", "<action-arg?>", "<external-target?>"]
@@ -1522,7 +1533,7 @@ Combat is not a separate system — it is the `on-*` dispatcher applied to healt
 | `""` | Fires on any attack |
 | `"30078:...:item:silver-sword"` | Fires only when attacked with that specific item |
 
-The external target (position 4) applies the action to another event — same convention as `on-interact`:
+The external target (final element) applies the action to another event — same convention as other `on-*` tags:
 
 ```json
 // Counter-attack player — any weapon
@@ -1635,7 +1646,7 @@ The consequence also becomes reusable — a silver room, a silver trap, and a si
     ["title",       "Elvish Sword"],
     ["damage",      "4"],
     ["hit-chance",  "0.8"],
-    ["on-interact", "attack", "deal-damage-npc", ""]
+    ["on-interact", "attack", "", "deal-damage-npc", ""]
   ],
   "content": "A blade of elvish steel, glowing faintly blue."
 }
@@ -1664,8 +1675,8 @@ The consequence also becomes reusable — a silver room, a silver trap, and a si
     ["type",        "item"],
     ["title",       "Healing Potion"],
     ["verb", "drink"],
-    ["on-interact", "drink", "heal",         "6"],
-    ["on-interact", "drink", "consume-item", ""]
+    ["on-interact", "drink", "", "heal",         "6"],
+    ["on-interact", "drink", "", "consume-item", ""]
   ],
   "content": "A small vial of healing potion."
 }}
@@ -1689,8 +1700,8 @@ Any item, feature, or NPC can carry a named counter — a numeric value tracked 
     ["transition",      "on",   "off",  "Darkness closes in."],
     ["transition",      "on",   "dead", "The lantern slowly fades out and darkness looms."],
     ["transition",      "dead", "dead", "The lantern is dead. Nothing happens."],
-    ["on-interact",     "turn on",  "set-state",   "on"],
-    ["on-interact",     "turn off", "set-state",   "off"],
+    ["on-interact",     "turn on",  "", "set-state",   "on"],
+    ["on-interact",     "turn off", "", "set-state",   "off"],
     ["on-move",         "on",       "decrement",   "battery"],
     ["on-counter", "down", "battery", "0",  "set-state",   "dead"],
     ["on-counter", "down", "battery", "0",  "consequence", "30078:<pubkey>:the-lake:consequence:lamp-dies"]
@@ -2382,7 +2393,7 @@ Sample libraries load asynchronously on world start. Built-in oscillators and `n
 ```json
 ["on-complete", "", "sound", "30078:<PUBKEY>:the-lake:sound:victory-chord", "0.9"],
 ["on-fail",     "", "sound", "30078:<PUBKEY>:the-lake:sound:wrong-answer",  "0.6"],
-["on-interact", "use", "sound", "30078:<PUBKEY>:the-lake:sound:mechanism-clunk"],
+["on-interact", "use", "", "sound", "30078:<PUBKEY>:the-lake:sound:mechanism-clunk"],
 ["on-health",   "down", "0", "sound", "30078:<PUBKEY>:the-lake:sound:death-jingle"]
 ```
 

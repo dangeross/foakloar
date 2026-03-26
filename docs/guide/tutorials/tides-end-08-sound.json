@@ -556,6 +556,7 @@
         [
           "on-interact",
           "flip",
+          "",
           "sound",
           "30078:<PUBKEY>:tides-end-08-sound:sound:pickup-chime",
           "0.8"

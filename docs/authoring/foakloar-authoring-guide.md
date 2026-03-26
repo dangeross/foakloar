@@ -164,7 +164,7 @@ An entity (item, feature) with multiple states and transitions between them.
 
 - `state` sets the initial state
 - `transition` tags define from/to pairs with feedback text
-- `on-interact` tags bind player verbs to `set-state` actions
+- `on-interact` tags bind player verbs to `set-state` actions — state guard (position 2) can gate which state the entity must be in for the action to fire (blank = any state)
 
 ### Fetch quest
 

@@ -923,6 +923,7 @@
         [
           "on-interact",
           "take",
+          "",
           "sound",
           "30078:<PUBKEY>:the-lake:sound:pickup"
         ]
@@ -1072,12 +1073,14 @@
         [
           "on-interact",
           "turn on",
+          "",
           "set-state",
           "on"
         ],
         [
           "on-interact",
           "turn off",
+          "",
           "set-state",
           "off"
         ],
@@ -1112,6 +1115,7 @@
         [
           "on-interact",
           "take",
+          "",
           "sound",
           "30078:<PUBKEY>:the-lake:sound:pickup"
         ]
@@ -1233,12 +1237,14 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "examined"
         ],
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:the-lake:clue:lake-remembers"
@@ -1246,12 +1252,14 @@
         [
           "on-interact",
           "pray",
+          "",
           "set-state",
           "prayed"
         ],
         [
           "on-interact",
           "pray",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:the-lake:portal:chapel-to-crypt"
@@ -1287,6 +1295,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:the-lake:puzzle:chapel-riddle"
@@ -1338,6 +1347,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:the-lake:clue:journal-entry"
@@ -1389,6 +1399,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "read"
         ]
@@ -1423,6 +1434,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:the-lake:clue:serpent-staff"
@@ -1485,12 +1497,14 @@
         [
           "on-interact",
           "open",
+          "",
           "set-state",
           "open"
         ],
         [
           "on-interact",
           "open",
+          "",
           "give-item",
           "30078:<PUBKEY>:the-lake:item:serpent-amulet"
         ]
@@ -1526,6 +1540,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:the-lake:clue:lake-history"
@@ -1595,6 +1610,7 @@
         [
           "on-interact",
           "open",
+          "",
           "set-state",
           "open"
         ]
@@ -1629,6 +1645,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:the-lake:clue:crypt-carvings"
@@ -1690,12 +1707,14 @@
         [
           "on-interact",
           "open",
+          "",
           "set-state",
           "open"
         ],
         [
           "on-interact",
           "open",
+          "",
           "give-item",
           "30078:<PUBKEY>:the-lake:item:serpent-staff"
         ]
@@ -1770,6 +1789,7 @@
         [
           "on-interact",
           "use",
+          "",
           "activate",
           "30078:<PUBKEY>:the-lake:recipe:activate-mechanism"
         ]
@@ -2533,6 +2553,7 @@
         [
           "on-interact",
           "take",
+          "",
           "sound",
           "30078:<PUBKEY>:the-lake:sound:pickup"
         ]

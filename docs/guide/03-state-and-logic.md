@@ -28,7 +28,7 @@ State values are arbitrary strings chosen by the author. Common patterns:
 State changes happen through the `set-state` action, typically fired by `on-interact`:
 
 ```json
-["on-interact", "light", "set-state", "lit"]
+["on-interact", "light", "", "set-state", "lit"]
 ```
 
 When the player types `light lantern`, the engine finds the `on-interact` tag matching the verb `light`, executes the `set-state` action, and the lantern's state becomes `lit`.
@@ -36,7 +36,7 @@ When the player types `light lantern`, the engine finds the `on-interact` tag ma
 You can also target another event's state from an interaction:
 
 ```json
-["on-interact", "press", "set-state", "open", "30078:<PUBKEY>:my-world:feature:gate"]
+["on-interact", "press", "", "set-state", "open", "30078:<PUBKEY>:my-world:feature:gate"]
 ```
 
 Here, pressing a button changes the gate's state to `open` — the state change happens on the gate, not on the button.
@@ -156,7 +156,7 @@ The first value is the counter name, the second is the initial value. An event c
 Counter values change through actions fired by `on-*` triggers:
 
 ```json
-["on-interact", "crank", "increment", "cranks"]
+["on-interact", "crank", "", "increment", "cranks"]
 ```
 
 Three counter actions exist:
@@ -229,7 +229,7 @@ Create a lantern item with an initial state of `unlit`, a verb to light it, and 
 - **Tags:**
   - `["state", "unlit"]`
   - `["verb", "light", "ignite"]`
-  - `["on-interact", "light", "set-state", "lit"]`
+  - `["on-interact", "light", "", "set-state", "lit"]`
   - `["transition", "unlit", "lit", "The lantern flares to life."]`
 
 ### 2. Add a prerequisite

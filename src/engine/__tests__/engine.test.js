@@ -474,6 +474,86 @@ describe('examine', () => {
   });
 });
 
+// ── on-interact state guard ──────────────────────────────────────────
+
+describe('on-interact state guard', () => {
+  it('blocks action when state guard does not match current state', async () => {
+    const bottle = makeItem('bottle', {
+      state: 'empty',
+      verbs: [['drink']],
+      nouns: [['bottle']],
+      transitions: [['full', 'empty', 'Last sip.'], ['empty', 'empty', 'Empty.']],
+      extraTags: [['on-interact', 'drink', 'full', 'heal', '1']],
+    });
+    const room = makePlace('room', { items: [bottle] });
+    const events = buildEvents(room, bottle);
+    const bottleRef = ref(`${WORLD}:item:bottle`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`), inventory: [bottleRef], states: { [bottleRef]: 'empty' } });
+    engine.flush();
+    await engine.handleCommand('drink bottle');
+    const output = engine.flush();
+    // Heal should NOT fire — bottle is empty, guard requires full
+    expect(output.some((e) => e.text?.includes('Healed'))).toBe(false);
+  });
+
+  it('allows action when state guard matches current state', async () => {
+    const bottle = makeItem('bottle', {
+      state: 'full',
+      verbs: [['drink']],
+      nouns: [['bottle']],
+      transitions: [['full', 'empty', 'Last sip.']],
+      extraTags: [['on-interact', 'drink', 'full', 'heal', '1']],
+    });
+    const room = makePlace('room', { items: [bottle] });
+    const events = buildEvents(room, bottle);
+    const bottleRef = ref(`${WORLD}:item:bottle`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`), inventory: [bottleRef], health: 5, maxHealth: 10 });
+    engine.handleItemInteract('drink', 'bottle');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Healed'))).toBe(true);
+  });
+
+  it('allows action when state guard is blank (any state)', async () => {
+    const bottle = makeItem('bottle', {
+      state: 'empty',
+      verbs: [['drink']],
+      nouns: [['bottle']],
+      transitions: [['empty', 'full', 'Refilled.']],
+      extraTags: [['on-interact', 'drink', '', 'set-state', 'full']],
+    });
+    const room = makePlace('room', { items: [bottle] });
+    const events = buildEvents(room, bottle);
+    const bottleRef = ref(`${WORLD}:item:bottle`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`), inventory: [bottleRef], states: { [bottleRef]: 'empty' } });
+    engine.handleItemInteract('drink', 'bottle');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Refilled'))).toBe(true);
+  });
+
+  it('fires multiple actions with different state guards correctly', async () => {
+    const bottle = makeItem('bottle', {
+      state: 'full',
+      verbs: [['drink']],
+      nouns: [['bottle']],
+      transitions: [['full', 'empty', 'Last sip.'], ['empty', 'empty', 'Empty.']],
+      extraTags: [
+        ['on-interact', 'drink', 'full', 'heal', '1'],
+        ['on-interact', 'drink', 'full', 'set-state', 'empty'],
+        ['on-interact', 'drink', 'empty', 'set-state', 'empty'],
+      ],
+    });
+    const room = makePlace('room', { items: [bottle] });
+    const events = buildEvents(room, bottle);
+    const bottleRef = ref(`${WORLD}:item:bottle`);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`), inventory: [bottleRef], health: 5, maxHealth: 10 });
+    engine.handleItemInteract('drink', 'bottle');
+    const output = engine.flush();
+    // First drink: full → heal fires, set-state empty fires
+    expect(output.some((e) => e.text?.includes('Healed'))).toBe(true);
+    expect(output.some((e) => e.text?.includes('Last sip'))).toBe(true);
+  });
+});
+
 // ── Verb collision resolution ────────────────────────────────────────
 
 describe('entity-local verb resolution', () => {

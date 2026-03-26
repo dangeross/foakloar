@@ -78,6 +78,14 @@ Always uses event refs (a-tag format `30078:<pubkey>:<d-tag>`), never bare flag 
 ["on-<trigger>", "<trigger-target>", "<action-type>", "<action-target?>"]
 ```
 
+`on-interact` has a state guard at position 2:
+
+```
+["on-interact", "<verb>", "<state-guard-or-blank>", "<action>", ...action-args]
+```
+
+State guard blank (`""`) = fires in any state. A specific state value = fires only when the entity is in that state.
+
 Spec-defined triggers: `on-interact`, `on-complete`, `on-enter`, `on-encounter`, `on-attacked`, `on-health-zero`, `on-player-health-zero`, `on-move`, `on-counter`
 
 ### on-counter
@@ -170,7 +178,7 @@ All previously tracked deviations have been fixed:
 
 Combat is data-driven via `on-*` dispatcher:
 
-- **Weapon:** `["damage", "3"]`, `["on-interact", "attack", "deal-damage-npc", ""]` — empty target resolves to combat target NPC
+- **Weapon:** `["damage", "3"]`, `["on-interact", "attack", "", "deal-damage-npc", ""]` — empty target resolves to combat target NPC
 - **NPC:** `["health", "6"]`, `["damage", "2"]`, `["hit-chance", "0.7"]`, `["on-attacked", "", "deal-damage", "2"]`
 - **Player health:** World event `["health", "10"]`, `["max-health", "10"]`, `["on-player-health-zero", "", "consequence", "<ref>"]`
 - **NPC state sync:** NPC `set-state` writes to both `npcStates` and `player.states` so `requires` can check NPC state

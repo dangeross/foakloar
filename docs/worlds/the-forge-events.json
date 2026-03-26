@@ -482,12 +482,14 @@
         [
           "on-interact",
           "light",
+          "",
           "set-state",
           "lit"
         ],
         [
           "on-interact",
           "light",
+          "",
           "set-counter",
           "heat",
           "3"
@@ -495,6 +497,7 @@
         [
           "on-interact",
           "light",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:forge:clue:forge-lit"
@@ -564,12 +567,14 @@
         [
           "on-interact",
           "open",
+          "",
           "set-state",
           "open"
         ],
         [
           "on-interact",
           "open",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:forge:clue:chest-contents"
@@ -577,6 +582,7 @@
         [
           "on-interact",
           "open",
+          "",
           "consume-item",
           "30078:<PUBKEY>:forge:item:iron-key"
         ],
@@ -629,6 +635,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:forge:clue:shelves-note"
@@ -671,6 +678,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:forge:clue:wood-note"
@@ -715,6 +723,7 @@
         [
           "on-interact",
           "pump",
+          "",
           "set-state",
           "lit",
           "30078:<PUBKEY>:forge:feature:forge"

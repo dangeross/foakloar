@@ -86,22 +86,23 @@ describe('parseInput', () => {
 
   it('parses simple verb + noun', () => {
     const result = parseInput('examine lever', verbMap);
-    expect(result).toEqual({ verb: 'examine', noun1: 'lever', preposition: null, noun2: null });
+    expect(result).toMatchObject({ verb: 'examine', noun1: 'lever', preposition: null, noun2: null });
   });
 
   it('matches multi-word aliases', () => {
     const result = parseInput('look at lever', verbMap);
-    expect(result).toEqual({ verb: 'examine', noun1: 'lever', preposition: null, noun2: null });
+    expect(result).toMatchObject({ verb: 'examine', noun1: 'lever', preposition: null, noun2: null });
   });
 
   it('matches short aliases', () => {
     const result = parseInput('x lever', verbMap);
-    expect(result).toEqual({ verb: 'examine', noun1: 'lever', preposition: null, noun2: null });
+    expect(result).toMatchObject({ verb: 'examine', noun1: 'lever', preposition: null, noun2: null });
+    expect(result.alias).toBe('x');
   });
 
   it('parses two-noun with preposition', () => {
     const result = parseInput('use key on door', verbMap);
-    expect(result).toEqual({ verb: 'use', noun1: 'key', preposition: 'on', noun2: 'door' });
+    expect(result).toMatchObject({ verb: 'use', noun1: 'key', preposition: 'on', noun2: 'door' });
   });
 
   it('returns null for unknown verb', () => {
@@ -110,7 +111,7 @@ describe('parseInput', () => {
 
   it('returns verb with null noun1 for bare verb', () => {
     const result = parseInput('examine', verbMap);
-    expect(result).toEqual({ verb: 'examine', noun1: null, preposition: null, noun2: null });
+    expect(result).toMatchObject({ verb: 'examine', noun1: null, preposition: null, noun2: null });
   });
 });
 

@@ -28,6 +28,7 @@ Machine-readable reference for LLM world authoring. All events are `kind: 30078`
 | Missing `content` on place, item, feature, npc, clue | These types **require** a `content` field (the prose description) |
 | Putting `["clue", "<ref>"]` on a feature event | `clue` tag is only valid on **place** events — features cannot hold clues |
 | Putting `["on-enter", ...]` on a feature event | `on-enter` is only valid on **place** and **npc** events |
+| `["on-interact", "open", "set-state", "open"]` without state guard | State guard (position 2) is required: `["on-interact", "open", "", "set-state", "open"]`. Blank = any state. |
 | Using `puzzle-type: cipher` with a `puzzle` tag on a place | Cipher/riddle puzzles need an `on-interact` on a **feature** to activate. Only `sequence` puzzles auto-evaluate from place `puzzle` tags |
 | `answer-hash` without knowing the format | Hash is `SHA256(answer + salt)` as hex. Example: answer `"bottle"`, salt `"my-world:puzzle:riddle:v1"` → `SHA256("bottlemy-world:puzzle:riddle:v1")` |
 
@@ -71,15 +72,15 @@ Direction words (`north`, `south`, `east`, `west`, `up`, `down`, `ne`, `nw`, `se
 ---
 ## Trigger Shapes
 
-All triggers follow: `["on-<trigger>", "<trigger-target>", "<action>", "<action-target>", "<ext-ref?>"]`
+All triggers follow: `["on-<trigger>", "<trigger-target>", ..., "<action>", "<action-target>", "<ext-ref?>"]`
 
-The 5th element (`ext-ref`) is optional — include it to target a different event's state. Omit it to target self.
+The final element (`ext-ref`) is optional — include it to target a different event's state. Omit it to target self.
 
 ### Standard triggers
 
 ```
-["on-interact",  "<verb>",         "<action>", "<target>"]           — self
-["on-interact",  "<verb>",         "<action>", "<target>", "<ref>"]  — external
+["on-interact",  "<verb>", "<state-guard-or-''>", "<action>", "<target>"]           — self
+["on-interact",  "<verb>", "<state-guard-or-''>", "<action>", "<target>", "<ref>"]  — external
 ["on-enter",     "player",         "<action>", "<target>", "<ref?>"]
 ["on-encounter", "<filter-or-''>", "<action>", "<target>", "<ref?>"]
 ["on-attacked",  "<weapon-or-''>", "<action>", "<target>", "<ref?>"]
@@ -114,33 +115,33 @@ The action tail is always: `"<action>", "<target>"` — with an optional `"<ext-
 
 | Action | Target | Full example |
 |--------|--------|-------------|
-| `set-state` | state string | `["on-interact", "light", "set-state", "lit"]` |
-| `set-state` (ext) | state string + ext-ref | `["on-interact", "press", "set-state", "open", "30078:<pk>:...:gate"]` |
+| `set-state` | state string | `["on-interact", "light", "", "set-state", "lit"]` |
+| `set-state` (ext) | state string + ext-ref | `["on-interact", "press", "", "set-state", "open", "30078:<pk>:...:gate"]` |
 | `give-item` | item ref | `["on-complete", "", "give-item", "30078:<pk>:...:item"]` |
 | `consume-item` | item ref | `["on-complete", "", "consume-item", "30078:<pk>:...:item"]` |
-| `traverse` | portal ref | `["on-interact", "enter", "traverse", "30078:<pk>:...:portal"]` |
+| `traverse` | portal ref | `["on-interact", "enter", "", "traverse", "30078:<pk>:...:portal"]` |
 | `deal-damage` | amount | `["on-attacked", "", "deal-damage", "2"]` |
-| `deal-damage-npc` | `""` (blank = combat target) | `["on-interact", "attack", "deal-damage-npc", ""]` |
-| `heal` | amount | `["on-interact", "drink", "heal", "5"]` |
+| `deal-damage-npc` | `""` (blank = combat target) | `["on-interact", "attack", "", "deal-damage-npc", ""]` |
+| `heal` | amount | `["on-interact", "drink", "", "heal", "5"]` |
 | `consequence` | consequence ref | `["on-player-health", "down", "0", "consequence", "30078:<pk>:...:death"]` |
 | `steals-item` | item ref or `"any"` | `["on-encounter", "", "steals-item", "any"]` |
 | `deposits` | `""` | `["on-health", "down", "0", "deposits", ""]` |
 | `flees` | `""` | `["on-health", "down", "3", "flees", ""]` |
-| `sound` | sound ref | `["on-interact", "ring", "sound", "30078:<pk>:...:sound:bell"]` |
-| `activate` | event ref (recipe, puzzle, or payment) | `["on-interact", "use", "activate", "30078:<pk>:...:recipe"]` |
+| `sound` | sound ref | `["on-interact", "ring", "", "sound", "30078:<pk>:...:sound:bell"]` |
+| `activate` | event ref (recipe, puzzle, or payment) | `["on-interact", "use", "", "activate", "30078:<pk>:...:recipe"]` |
 
 ### Counter actions (target = counter name + value)
 
 | Action | Target elements | Full example |
 |--------|----------------|-------------|
 | `decrement` | counter, amount | `["on-move", "on", "decrement", "battery", "1"]` |
-| `increment` | counter, amount | `["on-interact", "crank", "increment", "cranks", "1"]` |
-| `set-counter` | counter, value | `["on-interact", "reset", "set-counter", "cranks", "0"]` |
+| `increment` | counter, amount | `["on-interact", "crank", "", "increment", "cranks", "1"]` |
+| `set-counter` | counter, value | `["on-interact", "reset", "", "set-counter", "cranks", "0"]` |
 
 ### Notes
 
 - `activate` triggers the target event's native mechanic: recipe → crafting prompt, puzzle → puzzle prompt, payment → payment flow.
-- `set-state` is the only action that supports an ext-ref (optional 5th element targeting another event). All other actions act on self or take a ref as the target directly.
+- `set-state` is the only action that supports an ext-ref (optional final element targeting another event). All other actions act on self or take a ref as the target directly.
 - `deposits` and `flees` take a blank target — they have no arguments.
 - `deal-damage-npc` takes a blank target — the combat target NPC is resolved from context.
 - NIP-44 crypto keys are derived automatically when a puzzle with `answer-hash` + `salt` is solved — no action tag needed.
@@ -257,7 +258,7 @@ One-way portal (1 exit tag) or two-way (2 exit tags):
 | `verb` | `["verb", "<canonical>", "<alias>", ...]` (repeatable) | opt | — |
 | `state` | `["state", "<initial>"]` | opt | — |
 | `transition` | `["transition", "<from>", "<to>", "<text?>"]` (repeatable) | opt | — |
-| `on-interact` | `["on-interact", "<verb>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | — |
+| `on-interact` | `["on-interact", "<verb>", "<state-guard-or-''>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | State guard blank = any state |
 | `on-move` | `["on-move", "<state-guard>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | fires each player move |
 | `on-counter` | `["on-counter", "<dir>", "<counter>", "<threshold>", "<action>", "<target?>"]` (repeatable) | opt | — |
 | `counter` | `["counter", "<name>", "<initial>"]` (repeatable) | opt | — |
@@ -285,8 +286,8 @@ One-way portal (1 exit tag) or two-way (2 exit tags):
     ["state", "off"],
     ["transition", "off", "on", "The lantern glows brightly."],
     ["transition", "on", "off", "The lantern goes dark."],
-    ["on-interact", "turn on", "set-state", "on"],
-    ["on-interact", "turn off", "set-state", "off"]
+    ["on-interact", "turn on", "", "set-state", "on"],
+    ["on-interact", "turn off", "", "set-state", "off"]
   ],
   "content": "A battery-powered brass lantern."
 }
@@ -301,7 +302,7 @@ One-way portal (1 exit tag) or two-way (2 exit tags):
 | `verb` | `["verb", "<canonical>", "<alias>", ...]` (repeatable) | opt | — |
 | `state` | `["state", "<initial>"]` | opt | — |
 | `transition` | `["transition", "<from>", "<to>", "<text?>"]` (repeatable) | opt | — |
-| `on-interact` | `["on-interact", "<verb>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | — |
+| `on-interact` | `["on-interact", "<verb>", "<state-guard-or-''>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | State guard blank = any state |
 | `on-counter` | `["on-counter", "<dir>", "<counter>", "<threshold>", "<action>", "<target?>"]` (repeatable) | opt | — |
 | `counter` | `["counter", "<name>", "<initial>"]` (repeatable) | opt | — |
 | `contains` | `["contains", "<item-ref>", "<state>", "<fail-msg>"]` (repeatable) | opt | nested item, revealed at state |
@@ -322,7 +323,7 @@ One-way portal (1 exit tag) or two-way (2 exit tags):
 | `state` | `["state", "<initial>"]` | opt | — |
 | `transition` | `["transition", "<from>", "<to>", "<text?>"]` (repeatable) | opt | — |
 | `dialogue` | `["dialogue", "<dialogue-ref>", "<requires-ref?>", "<state?>"]` (repeatable) | opt | — |
-| `on-interact` | `["on-interact", "<verb>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | — |
+| `on-interact` | `["on-interact", "<verb>", "<state-guard-or-''>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | State guard blank = any state |
 | `on-encounter` | `["on-encounter", "<filter>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | fires when player enters NPC room |
 | `on-attacked` | `["on-attacked", "<weapon-filter>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | fires when NPC takes damage |
 | `on-health` | `["on-health", "<dir>", "<threshold>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | — |
@@ -671,7 +672,7 @@ Player-submitted report for open world moderation. Published by the player, visi
 
 | Trigger | Shape |
 |---------|-------|
-| `on-interact` | `["on-interact", "<verb>", "<action>", "<target>", "<ext-ref?>"]` |
+| `on-interact` | `["on-interact", "<verb>", "<state-guard-or-''>", "<action>", "<target>", "<ext-ref?>"]` |
 | `on-complete` | `["on-complete", "", "<action>", "<target>"]` |
 | `on-fail` | `["on-fail", "", "<action>", "<target>", "<ext-ref?>"]` |
 | `on-enter` | `["on-enter", "<trigger>", "<action>", "<target>", "<ext-ref?>"]` |

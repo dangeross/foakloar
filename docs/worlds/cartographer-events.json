@@ -1610,6 +1610,7 @@
         [
           "on-interact",
           "survey",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:survey-active"
@@ -1719,6 +1720,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:notebook-entry"
@@ -1760,6 +1762,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:first-record-1"
@@ -1801,6 +1804,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:first-record-2"
@@ -1842,6 +1846,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:first-record-3"
@@ -1883,6 +1888,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:first-record-4"
@@ -1924,6 +1930,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:first-record-5"
@@ -1964,6 +1971,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:vael-buyers"
@@ -2004,6 +2012,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:marker-history"
@@ -2045,6 +2054,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:old-marking"
@@ -2086,6 +2096,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:current-map-state"
@@ -2136,6 +2147,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:compass-behaviour"
@@ -2183,12 +2195,14 @@
         [
           "on-interact",
           "search",
+          "",
           "give-item",
           "30078:<PUBKEY>:cartographer:item:vaels-ledger"
         ],
         [
           "on-interact",
           "search",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:vael-equipment"
@@ -2229,6 +2243,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:vael-knowledge"
@@ -2269,6 +2284,7 @@
         [
           "on-interact",
           "survey",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:river-cairn-meaning"
@@ -2276,6 +2292,7 @@
         [
           "on-interact",
           "survey",
+          "",
           "give-item",
           "30078:<PUBKEY>:cartographer:item:first-record-entry-1"
         ],
@@ -2322,6 +2339,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:water-level"
@@ -2364,6 +2382,7 @@
         [
           "on-interact",
           "survey",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:magnetic-anomaly"
@@ -2407,6 +2426,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:root-observation"
@@ -2459,18 +2479,21 @@
         [
           "on-interact",
           "survey",
+          "",
           "set-state",
           "read"
         ],
         [
           "on-interact",
           "survey",
+          "",
           "give-item",
           "30078:<PUBKEY>:cartographer:item:first-record-entry-1"
         ],
         [
           "on-interact",
           "survey",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:central-cairn-decoded"
@@ -2478,6 +2501,7 @@
         [
           "on-interact",
           "survey",
+          "",
           "sound",
           "30078:<PUBKEY>:cartographer:sound:first-record-reveal",
           "0.8"
@@ -2526,6 +2550,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:outer-cairn-pattern"
@@ -2577,12 +2602,14 @@
         [
           "on-interact",
           "survey",
+          "",
           "set-state",
           "active"
         ],
         [
           "on-interact",
           "survey",
+          "",
           "sound",
           "30078:<PUBKEY>:cartographer:sound:first-record-reveal",
           "0.6"
@@ -2636,6 +2663,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:kael-sura-cartography"
@@ -2643,6 +2671,7 @@
         [
           "on-interact",
           "study",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:kael-sura-cartography"
@@ -2680,6 +2709,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:memory-stones-meaning"
@@ -2730,18 +2760,21 @@
         [
           "on-interact",
           "survey",
+          "",
           "set-state",
           "measured"
         ],
         [
           "on-interact",
           "survey",
+          "",
           "give-item",
           "30078:<PUBKEY>:cartographer:item:first-record-entry-2"
         ],
         [
           "on-interact",
           "survey",
+          "",
           "sound",
           "30078:<PUBKEY>:cartographer:sound:first-record-reveal",
           "0.7"
@@ -2788,6 +2821,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:bearing-stone-system"
@@ -2829,12 +2863,14 @@
         [
           "on-interact",
           "search",
+          "",
           "give-item",
           "30078:<PUBKEY>:cartographer:item:first-record-entry-3"
         ],
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:previous-team"
@@ -2875,6 +2911,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:lost-survey-content"
@@ -2916,6 +2953,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:vael-was-here"
@@ -2958,6 +2996,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:cave-notation"
@@ -2965,12 +3004,14 @@
         [
           "on-interact",
           "study",
+          "",
           "give-item",
           "30078:<PUBKEY>:cartographer:item:first-record-entry-4"
         ],
         [
           "on-interact",
           "study",
+          "",
           "sound",
           "30078:<PUBKEY>:cartographer:sound:first-record-reveal",
           "0.75"
@@ -3018,6 +3059,7 @@
         [
           "on-interact",
           "listen",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:acoustic-resonance"
@@ -3066,6 +3108,7 @@
         [
           "on-interact",
           "study",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:gallery-scope"
@@ -3073,6 +3116,7 @@
         [
           "on-interact",
           "study",
+          "",
           "sound",
           "30078:<PUBKEY>:cartographer:sound:first-record-reveal",
           "0.85"
@@ -3123,12 +3167,14 @@
         [
           "on-interact",
           "survey",
+          "",
           "set-state",
           "read"
         ],
         [
           "on-interact",
           "survey",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:pillar-key"
@@ -3177,12 +3223,14 @@
         [
           "on-interact",
           "sample",
+          "",
           "give-item",
           "30078:<PUBKEY>:cartographer:item:water-sample"
         ],
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:spring-geology"
@@ -3234,18 +3282,21 @@
         [
           "on-interact",
           "translate",
+          "",
           "set-state",
           "translated"
         ],
         [
           "on-interact",
           "translate",
+          "",
           "give-item",
           "30078:<PUBKEY>:cartographer:item:first-record-entry-5"
         ],
         [
           "on-interact",
           "translate",
+          "",
           "sound",
           "30078:<PUBKEY>:cartographer:sound:first-record-reveal",
           "1.0"
@@ -3309,6 +3360,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:stones-nature"
@@ -3316,18 +3368,21 @@
         [
           "on-interact",
           "take",
+          "",
           "set-state",
           "disturbed"
         ],
         [
           "on-interact",
           "touch",
+          "",
           "set-state",
           "disturbed"
         ],
         [
           "on-interact",
           "take",
+          "",
           "sound",
           "30078:<PUBKEY>:cartographer:sound:resonance-shift",
           "0.9"
@@ -3335,12 +3390,14 @@
         [
           "on-interact",
           "examine",
+          "",
           "puzzle",
           "30078:<PUBKEY>:cartographer:puzzle:first-record-complete"
         ],
         [
           "on-interact",
           "examine",
+          "",
           "puzzle",
           "30078:<PUBKEY>:cartographer:puzzle:first-record-protect"
         ]
@@ -3381,6 +3438,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:final-inscription"
@@ -3388,6 +3446,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:final-inscription"
@@ -3759,6 +3818,7 @@
         [
           "on-interact",
           "talk",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:asha-observation"

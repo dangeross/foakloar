@@ -5,6 +5,11 @@
 
 ## [Unreleased] — March 2026
 
+### Changed — `on-interact` state guard
+
+**`on-interact` shape updated with state guard field (position 2)**
+New shape: `["on-interact", "<verb>", "<state-guard-or-blank>", "<action>", ...action-args]`. The state guard gates whether the action fires based on the entity's current state. Blank (`""`) fires in any state (backwards compatible). A specific state value fires only when the entity is currently in that state. This enables different behaviour per state on the same verb without separate events. All existing `on-interact` tags gain a blank `""` at position 2.
+
 ### Added — Open World Moderation
 
 **Report command (`type: report`)**
@@ -36,7 +41,7 @@ Recipe `content` field is shown on successful craft (completion text), in additi
 Portal `sound` tags with role `effect` fire as one-shots when the player traverses. Supports door creaks, footsteps, transition sounds.
 
 **`activate` action type**
-New action type that triggers a target event's native mechanic based on its type: recipe → crafting prompt, puzzle → puzzle prompt, payment → payment flow. Used to scope recipes/puzzles to a feature interaction: `["on-interact", "use", "activate", "<event-ref>"]`. Valid on `on-interact` and `on-complete` triggers.
+New action type that triggers a target event's native mechanic based on its type: recipe → crafting prompt, puzzle → puzzle prompt, payment → payment flow. Used to scope recipes/puzzles to a feature interaction: `["on-interact", "use", "", "activate", "<event-ref>"]`. Valid on `on-interact` and `on-complete` triggers.
 
 **Auto crypto-key derivation on puzzle solve**
 When a puzzle with `answer-hash` + `salt` tags is solved, the engine automatically derives and stores the NIP-44 decryption key from the answer. No explicit action tag needed.
@@ -100,7 +105,7 @@ Three fire conditions: threshold crossing, state entry re-evaluation, load recon
 
 **`on-interact` external target**
 Fourth argument targets an external event rather than self:
-`["on-interact", "insert", "set-state", "placed", "30078:<PUBKEY>:the-lake:feature:mechanism"]`
+`["on-interact", "insert", "", "set-state", "placed", "30078:<PUBKEY>:the-lake:feature:mechanism"]`
 
 **`roams-when` tag on NPC**
 NPC only roams when in declared state. Allows movement activation via state transition.
@@ -219,10 +224,10 @@ Teleport player on NPC death — reward chamber, cutscene location. Consistent w
 Shape changed from `["on-counter", "<counter>", "<threshold>", ...]` to `["on-counter", "<direction>", "<counter>", "<threshold>", ...]`. Direction is `down` (fires crossing at-or-below) or `up` (fires crossing at-or-above). All existing `on-counter` tags updated to `"down"`. Enables upward-crossing counters (hit counts, charge accumulation) without new tag names.
 
 **Counter action tag positions documented**
-`["on-interact", "<verb>", "increment"|"decrement", "<counter-name>"]` and `["on-interact", "<verb>", "set-counter", "<counter-name>", "<value>"]`. External target as optional final element — same pattern as external `set-state`.
+`["on-interact", "<verb>", "", "increment"|"decrement", "<counter-name>"]` and `["on-interact", "<verb>", "", "set-counter", "<counter-name>", "<value>"]`. External target as optional final element — same pattern as external `set-state`.
 
 **External counter targeting added**
-Counter actions (`increment`, `decrement`, `set-counter`) support an optional external event `a`-tag as final element, targeting another event's counter. `["on-interact", "pump", "increment", "heat", "30078:<PUBKEY>:forge:feature:forge"]`
+Counter actions (`increment`, `decrement`, `set-counter`) support an optional external event `a`-tag as final element, targeting another event's counter. `["on-interact", "pump", "", "increment", "heat", "30078:<PUBKEY>:forge:feature:forge"]`
 
 **`clears inventory` drop behaviour specified**
 Items dropped to current place before inventory is emptied — never destroyed. Prevents soft-locks. Drop location is `currentPlace` at consequence dispatch time, not the respawn destination.

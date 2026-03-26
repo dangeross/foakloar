@@ -191,10 +191,11 @@ export const TAG_SCHEMAS = {
   // ── Triggers ─────────────────────────────────────────────────────────────
   'on-interact': {
     label: 'On Interact',
-    desc: 'Fires an action when the player uses a verb on this entity',
+    desc: 'Fires an action when the player uses a verb on this entity. State guard gates which actions fire based on the entity\'s current state (blank = any state).',
     repeatable: true,
     fields: [
       { name: 'verb', type: 'text', required: true, placeholder: 'verb (e.g. examine, pull, insert)' },
+      { name: 'state-guard', type: 'text', required: false, placeholder: 'state guard (blank = any)' },
       { name: 'action', type: 'select', required: true, options: TRIGGER_ACTIONS['on-interact'] },
       { name: 'target', type: 'text', required: false, placeholder: 'action target (state, amount, etc.)' },
       { name: 'event-ref', type: 'event-ref', required: false, placeholder: 'target event (blank = self)' },

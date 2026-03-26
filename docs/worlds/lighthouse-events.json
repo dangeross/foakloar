@@ -842,6 +842,7 @@
         [
           "on-interact",
           "use",
+          "",
           "set-state",
           "cranking",
           "30078:<PUBKEY>:lighthouse:feature:mechanism"
@@ -899,12 +900,14 @@
         [
           "on-interact",
           "search",
+          "",
           "set-state",
           "searched"
         ],
         [
           "on-interact",
           "search",
+          "",
           "give-item",
           "30078:<PUBKEY>:lighthouse:item:crank-handle"
         ]
@@ -969,6 +972,7 @@
         [
           "on-interact",
           "use",
+          "",
           "set-state",
           "cranking",
           "30078:<PUBKEY>:lighthouse:feature:lamp"
@@ -976,6 +980,7 @@
         [
           "on-interact",
           "use",
+          "",
           "set-state",
           "running",
           "30078:<PUBKEY>:lighthouse:feature:lamp"
@@ -983,6 +988,7 @@
         [
           "on-interact",
           "use",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:portal:lamp-to-alcove"
@@ -990,12 +996,14 @@
         [
           "on-interact",
           "use",
+          "",
           "consume-item",
           "30078:<PUBKEY>:lighthouse:item:crank-handle"
         ],
         [
           "on-interact",
           "use",
+          "",
           "sound",
           "30078:<PUBKEY>:lighthouse:sound:mechanism-clunk",
           "0.9"
@@ -1047,6 +1055,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:clue:lamp-dark"
@@ -1054,6 +1063,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:clue:lamp-running"
@@ -1074,6 +1084,7 @@
         [
           "on-interact",
           "extinguish",
+          "",
           "set-state",
           "extinguished"
         ],
@@ -1115,6 +1126,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:clue:lamp-dark"
@@ -1165,12 +1177,14 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "read"
         ],
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:clue:logbook-entry"
@@ -1221,12 +1235,14 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "read"
         ],
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:clue:desk-letter"
@@ -1262,6 +1278,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:clue:hearth-ash"
@@ -1320,12 +1337,14 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "lit"
         ],
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:clue:signal-instructions"
@@ -1333,6 +1352,7 @@
         [
           "on-interact",
           "use",
+          "",
           "set-state",
           "active",
           "30078:<PUBKEY>:lighthouse:puzzle:signal-decode"
@@ -1384,12 +1404,14 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "read"
         ],
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:clue:final-entry"
@@ -1397,6 +1419,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:portal:shore-to-bearing"
@@ -1404,6 +1427,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:portal:shore-to-gone"
@@ -1411,6 +1435,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:place:the-bearing"
@@ -1418,6 +1443,7 @@
         [
           "on-interact",
           "read",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:lighthouse:place:gone"

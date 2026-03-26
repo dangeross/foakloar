@@ -54,7 +54,7 @@ export function makeFeature(name, { state, transitions = [], verbs = [], nouns =
     ...transitions.map((t) => ['transition', t[0], t[1], t[2] || '']),
     ...verbs.map((v) => ['verb', ...v]),
     ...nouns.map((n) => ['noun', ...n]),
-    ...onInteract.map((oi) => ['on-interact', ...oi]),
+    ...onInteract.map((oi) => ['on-interact', oi[0], '', ...oi.slice(1)]),
     ...requires.map((r) => ['requires', ...r]),
     ...extraTags,
   ];
@@ -72,7 +72,7 @@ export function makeItem(name, { state, counters = [], verbs = [], nouns = [], o
     ...transitions.map((t) => ['transition', t[0], t[1], t[2] || '']),
     ...verbs.map((v) => ['verb', ...v]),
     ...nouns.map((n) => ['noun', ...n]),
-    ...onInteract.map((oi) => ['on-interact', ...oi]),
+    ...onInteract.map((oi) => ['on-interact', oi[0], '', ...oi.slice(1)]),
     ...onMove.map((om) => ['on-move', ...om]),
     ...onCounter.map((oc) => ['on-counter', ...oc]),
     ...extraTags,

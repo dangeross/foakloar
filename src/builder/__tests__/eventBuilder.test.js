@@ -188,7 +188,7 @@ describe('validateEvent — schema checks', () => {
 
   it('fails when trigger has no action selected', () => {
     const tmpl = makeTemplate();
-    tmpl.tags.push(['on-interact', 'examine', '', '', '']);
+    tmpl.tags.push(['on-interact', 'examine', '', '', '', '']);
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(false);
     expect(hasMessage(result.errors, 'no action type selected')).toBe(true);
@@ -196,7 +196,7 @@ describe('validateEvent — schema checks', () => {
 
   it('passes when trigger has action selected', () => {
     const tmpl = makeTemplate();
-    tmpl.tags.push(['on-interact', 'examine', 'set-state', 'examined', '']);
+    tmpl.tags.push(['on-interact', 'examine', '', 'set-state', 'examined', '']);
     const result = validateEvent(tmpl);
     expect(result.valid).toBe(true);
   });
@@ -313,7 +313,7 @@ describe('validateEvent — warnings', () => {
         ['d', 'x:feature:lamp'], ['t', 'the-lake'], ['type', 'feature'],
         ['title', 'Lamp'], ['noun', 'lamp'],
         ['verb', 'examine'],
-        ['on-interact', 'examine', 'set-state', 'visible', '30078:<PUBKEY>:x:clue:y', 'requires: something'],
+        ['on-interact', 'examine', '', 'set-state', 'visible', '30078:<PUBKEY>:x:clue:y', 'extra-field'],
       ],
       content: 'A lamp.',
     });
@@ -563,7 +563,7 @@ describe('validateEvent — invalid action type', () => {
       tags: [
         ['d', 'x:feature:lever'], ['t', 'x'], ['type', 'feature'], ['title', 'Lever'],
         ['noun', 'lever'], ['verb', 'pull'],
-        ['on-interact', 'pull', 'toggle-state', 'open'],
+        ['on-interact', 'pull', '', 'toggle-state', 'open'],
       ],
       content: 'A rusty lever.',
     });
@@ -578,7 +578,7 @@ describe('validateEvent — invalid action type', () => {
       tags: [
         ['d', 'x:feature:lever'], ['t', 'x'], ['type', 'feature'], ['title', 'Lever'],
         ['noun', 'lever'], ['verb', 'pull'],
-        ['on-interact', 'pull', 'set-state', 'open'],
+        ['on-interact', 'pull', '', 'set-state', 'open'],
       ],
       content: 'A rusty lever.',
     });
@@ -791,7 +791,7 @@ describe('validateEvent — numeric field validation', () => {
       tags: [
         ['d', 'x:feature:trap'], ['t', 'x'], ['type', 'feature'], ['title', 'Trap'],
         ['noun', 'trap'], ['verb', 'touch'],
-        ['on-interact', 'touch', 'deal-damage', 'lots'],
+        ['on-interact', 'touch', '', 'deal-damage', 'lots'],
       ],
       content: 'A trap.',
     });
@@ -806,7 +806,7 @@ describe('validateEvent — numeric field validation', () => {
       tags: [
         ['d', 'x:feature:trap'], ['t', 'x'], ['type', 'feature'], ['title', 'Trap'],
         ['noun', 'trap'], ['verb', 'touch'],
-        ['on-interact', 'touch', 'deal-damage', '5'],
+        ['on-interact', 'touch', '', 'deal-damage', '5'],
       ],
       content: 'A trap.',
     });
@@ -819,7 +819,7 @@ describe('validateEvent — numeric field validation', () => {
       tags: [
         ['d', 'x:item:potion'], ['t', 'x'], ['type', 'item'], ['title', 'Potion'],
         ['noun', 'potion'], ['verb', 'drink'],
-        ['on-interact', 'drink', 'heal', 'full'],
+        ['on-interact', 'drink', '', 'heal', 'full'],
       ],
       content: 'A potion.',
     });

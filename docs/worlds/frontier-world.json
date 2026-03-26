@@ -2755,6 +2755,7 @@
         [
           "on-interact",
           "ask rennick about mark",
+          "",
           "set-state",
           "examined"
         ]
@@ -2871,6 +2872,7 @@
         [
           "on-interact",
           "combine",
+          "",
           "set-state",
           "combined",
           "30078:<PUBKEY>:frontier:item:harlan-account-fragment"
@@ -2928,18 +2930,21 @@
         [
           "on-interact",
           "fix",
+          "",
           "set-state",
           "fixed"
         ],
         [
           "on-interact",
           "fix",
+          "",
           "consume-item",
           "30078:<PUBKEY>:frontier:item:rusty-nails"
         ],
         [
           "on-interact",
           "fix",
+          "",
           "give-item",
           "30078:<PUBKEY>:frontier:item:pickaxe-head"
         ],
@@ -3174,6 +3179,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "examined"
         ]
@@ -3216,6 +3222,7 @@
         [
           "on-interact",
           "read",
+          "",
           "activate",
           "30078:<PUBKEY>:frontier:puzzle:harlan-cipher"
         ]
@@ -3287,6 +3294,7 @@
         [
           "on-interact",
           "combine",
+          "",
           "set-state",
           "combined",
           "30078:<PUBKEY>:frontier:feature:map-fragment"
@@ -3418,6 +3426,14 @@
         [
           "on-interact",
           "drink",
+          "full",
+          "heal",
+          "1"
+        ],
+        [
+          "on-interact",
+          "drink",
+          "full",
           "set-state",
           "empty"
         ],
@@ -3432,6 +3448,13 @@
           "empty",
           "empty",
           "The glass is empty."
+        ],
+        [
+          "on-interact",
+          "drink",
+          "empty",
+          "set-state",
+          "empty"
         ]
       ],
       "content": "Amber, room temperature, probably not the best whiskey in the territory but honestly fine. Cole poured it without being asked. That means something.\n\nYou could *drink* it."
@@ -4750,6 +4773,7 @@
         [
           "on-interact",
           "read plank",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:frontier:clue:sealed-mine-plank"
@@ -4757,6 +4781,7 @@
         [
           "on-interact",
           "read plank",
+          "",
           "set-state",
           "read"
         ]
@@ -4865,12 +4890,14 @@
         [
           "on-interact",
           "smell",
+          "",
           "set-state",
           "smelled"
         ],
         [
           "on-interact",
           "touch",
+          "",
           "set-state",
           "touched"
         ]
@@ -5831,6 +5858,7 @@
         [
           "on-interact",
           "examine",
+          "",
           "set-state",
           "searched"
         ],

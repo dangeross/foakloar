@@ -183,7 +183,7 @@ Full sample listings are in `docs/spec/sample-presets.md`.
 Beyond passive sound tags, the `sound` action type lets you fire a sound at a specific moment via `on-*` triggers:
 
 ```json
-["on-interact", "flip", "sound", "30078:<PUBKEY>:my-world:sound:pickup-chime"]
+["on-interact", "flip", "", "sound", "30078:<PUBKEY>:my-world:sound:pickup-chime"]
 ["on-complete", "",     "sound", "30078:<PUBKEY>:my-world:sound:victory-chord", "0.9"]
 ["on-enter",    "",     "sound", "30078:<PUBKEY>:my-world:sound:door-creak"]
 ```
