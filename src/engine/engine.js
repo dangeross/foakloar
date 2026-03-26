@@ -2134,6 +2134,9 @@ export class GameEngine {
               }
             }
           }
+        } else {
+          // Self-set: set state on the dialogue node itself
+          this.player.setState(nodeDtag, actionTarget);
         }
       }
     }

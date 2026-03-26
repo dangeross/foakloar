@@ -3412,12 +3412,6 @@
           "drink"
         ],
         [
-          "on-interact",
-          "drink",
-          "heal",
-          "1"
-        ],
-        [
           "state",
           "full"
         ],
