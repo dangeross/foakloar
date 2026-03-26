@@ -85,6 +85,11 @@ function PlaceNode({ data }) {
           {data.details.join(' · ')}
         </div>
       )}
+      {data.unclaimedSlots?.length > 0 && (
+        <div style={{ color: 'var(--colour-dim)', fontSize: '0.45rem', marginTop: 2, opacity: 0.5, fontStyle: 'italic' }}>
+          open: {data.unclaimedSlots.join(', ')}
+        </div>
+      )}
       {data.isDraft && (
         <div style={{ color: 'var(--colour-item)', fontSize: '0.4rem', marginTop: 1 }}>DRAFT</div>
       )}
@@ -304,6 +309,26 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode, answers) {
         });
       }
     }
+  }
+
+  // Compute unclaimed exit slots per place (declared but no portal connects)
+  const claimedSlots = new Map(); // placeRef → Set of claimed slots
+  for (const { event } of portals) {
+    for (const exitTag of getTags(event, 'exit')) {
+      const placeRef = exitTag[1];
+      const slot = exitTag[2];
+      if (!placeRef || !slot) continue;
+      if (!claimedSlots.has(placeRef)) claimedSlots.set(placeRef, new Set());
+      claimedSlots.get(placeRef).add(slot);
+    }
+  }
+  for (const node of nodes) {
+    if (node.type !== 'place') continue;
+    const placeEvent = places.get(node.id);
+    if (!placeEvent) continue;
+    const declaredSlots = getTags(placeEvent, 'exit').map((t) => t[1]);
+    const claimed = claimedSlots.get(node.id) || new Set();
+    node.data.unclaimedSlots = declaredSlots.filter((s) => !claimed.has(s));
   }
 
   // Dagre layout

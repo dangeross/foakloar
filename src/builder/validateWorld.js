@@ -187,8 +187,8 @@ export function validateWorld(events, answers = {}) {
 
     // ── 4. on-interact set-state targeting a puzzle without answer ──────────
     for (const tag of getTags(event, 'on-interact')) {
-      const action = tag[2];
-      const extRef = tag[4];
+      const action = tag[3];  // [on-interact, verb, state-guard, action, target, ext-ref]
+      const extRef = tag[5];
       if (action === 'set-state' && extRef && isEventRef(extRef)) {
         const targetDTag = resolveRef(extRef, dTags);
         if (targetDTag) {
@@ -211,7 +211,38 @@ export function validateWorld(events, answers = {}) {
     }
   }
 
-  // ── 5. Verb alias collisions per place ──────────────────────────────────
+  // ── 5. Portal exit slot validation ──────────────────────────────────────
+  // Build a map of place d-tags → declared exit slots
+  const placeExitSlots = new Map();
+  for (const event of events) {
+    if (getTagValue(event, 'type') !== 'place') continue;
+    const placeDTag = getTagValue(event, 'd') || '?';
+    const slots = new Set(getTags(event, 'exit').map((t) => t[1]));
+    placeExitSlots.set(placeDTag, slots);
+  }
+  // Check each portal's exit tags claim slots that exist on the place
+  for (const event of events) {
+    if (getTagValue(event, 'type') !== 'portal') continue;
+    const portalDTag = getTagValue(event, 'd') || '?';
+    for (const exitTag of getTags(event, 'exit')) {
+      const placeRef = exitTag[1];
+      const slot = exitTag[2];
+      if (!placeRef || !slot) continue;
+      const placeDTag = extractDTagFromRef(placeRef) || placeRef;
+      const declaredSlots = placeExitSlots.get(placeDTag);
+      if (declaredSlots && !declaredSlots.has(slot)) {
+        warnings.push({
+          dTag: portalDTag,
+          category: 'undeclared-exit-slot',
+          message: `Portal claims slot "${slot}" on place "${placeDTag}" but that place has no ["exit", "${slot}"] tag`,
+          tag: exitTag.join(', '),
+          fix: `Add ["exit", "${slot}"] to the place event "${placeDTag}", or change the portal's direction to one of: ${[...declaredSlots].join(', ') || '(none declared)'}.`,
+        });
+      }
+    }
+  }
+
+  // ── 6. Verb alias collisions per place ──────────────────────────────────
   for (const event of events) {
     if (getTagValue(event, 'type') !== 'place') continue;
     const placeDTag = getTagValue(event, 'd') || '?';

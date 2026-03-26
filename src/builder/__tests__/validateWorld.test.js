@@ -208,7 +208,7 @@ describe('validateWorld — on-interact puzzle answer', () => {
   it('warns when on-interact targets puzzle with answer-hash but no stored answer', () => {
     const events = [
       makeEvent('test:feature:panel', 'feature', [
-        ['on-interact', 'use', 'set-state', 'active', ref('test:puzzle:riddle')],
+        ['on-interact', 'use', '', 'set-state', 'active', ref('test:puzzle:riddle')],
       ]),
       makeEvent('test:puzzle:riddle', 'puzzle', [
         ['puzzle-type', 'riddle'],
@@ -223,7 +223,7 @@ describe('validateWorld — on-interact puzzle answer', () => {
   it('no warning when answer is stored', () => {
     const events = [
       makeEvent('test:feature:panel', 'feature', [
-        ['on-interact', 'use', 'set-state', 'active', ref('test:puzzle:riddle')],
+        ['on-interact', 'use', '', 'set-state', 'active', ref('test:puzzle:riddle')],
       ]),
       makeEvent('test:puzzle:riddle', 'puzzle', [
         ['puzzle-type', 'riddle'],

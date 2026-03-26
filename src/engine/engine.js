@@ -390,6 +390,20 @@ export class GameEngine {
         }
       }
     }
+
+    // Open exit slots — declared on place but no portal connects
+    const claimedSlots = new Set(Object.keys(slotGroups));
+    const placeEvent = this.events.get(dtag);
+    const declaredSlots = placeEvent ? getTags(placeEvent, 'exit').map((t) => t[1]) : [];
+    const openSlots = declaredSlots.filter((s) => !claimedSlots.has(s));
+    if (openSlots.length > 0) {
+      if (labels.length > 0 || unverifiedOnlySlots.length > 0) {
+        // Append to existing exits line
+        this._emit(`       ${openSlots.join(', ')} (unexplored)`, 'exits-open');
+      } else {
+        this._emit(`Exits: ${openSlots.join(', ')} (unexplored)`, 'exits-open');
+      }
+    }
   }
 
   /**
