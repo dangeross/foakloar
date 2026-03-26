@@ -8,7 +8,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { derivePuzzleKeypair, decryptNip44 } from '../../engine/nip44-client.js';
-import { loadAnswers, resolvePubkeyPlaceholder } from '../draftStore.js';
+import { loadAnswers, PUBKEY_PLACEHOLDER } from '../draftStore.js';
 
 function extractDTag(aTagRef) {
   const parts = aTagRef?.split(':');
@@ -41,7 +41,7 @@ export default function Nip44Preview({ content, tags, events, worldSlug, pubkey 
 
   // Selected puzzle — default to the puzzle tag ref, or first available
   const initialRef = puzzleTagRef
-    ? resolvePubkeyPlaceholder(puzzleTagRef, pubkey)
+    ? puzzleTagRef.replaceAll(PUBKEY_PLACEHOLDER, pubkey)
     : puzzleOptions[0]?.ref || '';
   const [selectedPuzzleRef, setSelectedPuzzleRef] = useState(initialRef);
 
@@ -118,7 +118,7 @@ export default function Nip44Preview({ content, tags, events, worldSlug, pubkey 
   };
   const inputStyle = {
     ...selectStyle,
-    color: 'var(--colour-puzzle, var(--colour-text))',
+    color: 'var(--colour-text)',
     fontSize: '0.6rem',
   };
 

@@ -23,9 +23,13 @@ Machine-readable reference for LLM world authoring. All events are `kind: 30078`
 | Portal exit place-ref is the DESTINATION | Place-ref is the SOURCE — `["exit", "<where-player-is>", "<direction>", "<label>"]` |
 | Putting `noun` or `verb` tags on a portal | Portals have no nouns or verbs |
 | Numeric values as words (`"ten"`, `"high"`) | Always use numeric strings: `"10"`, `"3"` |
-| Adding `title` tag to portal, puzzle, dialogue, or sound | These types have no `title` tag (portal/dialogue/puzzle/sound) |
+| Adding `title` tag to portal, dialogue, or sound | These types have no `title` tag (portal/dialogue/sound). Puzzles DO have `title`. |
 | Content field on portal, dialogue, consequence | `content` is optional/unused on these types; dialogue text goes in `content` |
 | Missing `content` on place, item, feature, npc, clue | These types **require** a `content` field (the prose description) |
+| Putting `["clue", "<ref>"]` on a feature event | `clue` tag is only valid on **place** events — features cannot hold clues |
+| Putting `["on-enter", ...]` on a feature event | `on-enter` is only valid on **place** and **npc** events |
+| Using `puzzle-type: cipher` with a `puzzle` tag on a place | Cipher/riddle puzzles need an `on-interact` on a **feature** to activate. Only `sequence` puzzles auto-evaluate from place `puzzle` tags |
+| `answer-hash` without knowing the format | Hash is `SHA256(answer + salt)` as hex. Example: answer `"bottle"`, salt `"my-world:puzzle:riddle:v1"` → `SHA256("bottlemy-world:puzzle:riddle:v1")` |
 
 ---
 ## Identity Tags (all events)
@@ -161,6 +165,7 @@ D-tag: `<slug>:world`
 | `author` | `["author", "<name>"]` | opt | — |
 | `version` | `["version", "<semver>"]` | opt | — |
 | `lang` | `["lang", "en"\|"es"\|"fr"\|"de"\|"ja"\|"zh"\|"pt"\|"ru"]` | opt | — |
+| `voice` | `["voice", "<tone description>"]` | opt | Writing style guide for contributors (shown in build mode) |
 | `tag` | `["tag", "<genre>"]` (repeatable) | opt | — |
 | `cw` | `["cw", "<warning>"]` (repeatable) | opt | content warning label |
 | `relay` | `["relay", "wss://..."]` (repeatable) | opt | — |

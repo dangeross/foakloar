@@ -2031,6 +2031,7 @@ The world event is a replaceable event (`kind: 30078`). The genesis author can u
     ["author",        "Ross"],
     ["version",       "1.0.0"],
     ["lang",          "en"],
+    ["voice",         "atmospheric, second person, short sentences"],
     ["tag",           "mystery"],
     ["tag",           "ancient"],
     ["tag",           "exploration"],

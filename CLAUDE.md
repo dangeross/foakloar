@@ -233,6 +233,27 @@ Combat is data-driven via `on-*` dispatcher:
 - When adding new engine features, add corresponding tests
 - **Preview testing:** When changes affect UI rendering or depend on live relay events (e.g. new event types, visual styling, trust mode switching), also test with a browser preview before committing
 - **Build mode minimize:** The build overlay has a `[-]` toggle that collapses it to a single-line header. Use this when preview testing gameplay to see more game output. Click `[+]` to restore.
+- **Preview input helper:** To send game commands from preview_eval, use this pattern:
+  ```js
+  // Setup (once per session):
+  window._send = (cmd) => {
+    const input = document.querySelector('input');
+    const nativeSet = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+    nativeSet.call(input, cmd);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    setTimeout(() => {
+      const form = input.closest('form');
+      if (form) form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      else input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true, cancelable: true }));
+    }, 50);
+  };
+  window._read = () => [...document.querySelectorAll('p')].slice(-15).map(p => p.textContent.trim().substring(0, 120)).filter(Boolean);
+
+  // Usage:
+  window._send('look');
+  // Then read output:
+  window._read();
+  ```
 
 ---
 

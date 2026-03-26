@@ -1,0 +1,5513 @@
+{
+  "answers": {
+    "frontier:puzzle:harlan-cipher": "harlan"
+  },
+  "walkthrough": [
+    {
+      "input": "examine harrow",
+      "expect": [
+        "Harrow"
+      ]
+    },
+    {
+      "input": "east",
+      "expect": [
+        "Rennick"
+      ]
+    },
+    {
+      "input": "talk rennick",
+      "expect": [
+        "stranger"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "long time"
+      ]
+    },
+    {
+      "input": "2",
+      "expect": [
+        "Hollow"
+      ]
+    },
+    {
+      "input": "3",
+      "expect": [
+        "careful"
+      ]
+    },
+    {
+      "input": "west",
+      "expect": [
+        "Spur"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Dessa"
+      ]
+    },
+    {
+      "input": "talk dessa",
+      "expect": [
+        "tea"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "archive"
+      ]
+    },
+    {
+      "input": "2",
+      "expect": [
+        "Harlan"
+      ]
+    },
+    {
+      "input": "examine archive",
+      "expect": [
+        "ledger"
+      ]
+    },
+    {
+      "input": "examine map fragment",
+      "expect": [
+        "two hands"
+      ]
+    },
+    {
+      "input": "south",
+      "expect": [
+        "Spur"
+      ]
+    },
+    {
+      "input": "south",
+      "expect": [
+        "livery"
+      ]
+    },
+    {
+      "input": "talk joaquin",
+      "expect": [
+        "careful"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "grandmother"
+      ]
+    },
+    {
+      "input": "help harrow",
+      "expect": [
+        "fence"
+      ]
+    },
+    {
+      "input": "talk joaquin",
+      "expect": [
+        "old stories"
+      ]
+    },
+    {
+      "input": "2",
+      "expect": [
+        "remembers"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Spur"
+      ]
+    },
+    {
+      "input": "east",
+      "expect": [
+        "Rennick"
+      ]
+    },
+    {
+      "input": "talk rennick",
+      "expect": [
+        "ledger"
+      ]
+    },
+    {
+      "input": "examine rennick ledger",
+      "expect": [
+        "mark"
+      ]
+    },
+    {
+      "input": "ask rennick about mark",
+      "expect": [
+        "Voss"
+      ]
+    },
+    {
+      "input": "west",
+      "expect": [
+        "Spur"
+      ]
+    },
+    {
+      "input": "south",
+      "expect": [
+        "livery"
+      ]
+    },
+    {
+      "input": "south",
+      "expect": [
+        "Ruth"
+      ]
+    },
+    {
+      "input": "talk ruth",
+      "expect": [
+        "second cave"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "eight months"
+      ]
+    },
+    {
+      "input": "2",
+      "expect": [
+        "second cave mouth"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "livery"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Spur"
+      ]
+    },
+    {
+      "input": "east",
+      "expect": [
+        "Rennick"
+      ]
+    },
+    {
+      "input": "west",
+      "expect": [
+        "Spur"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Dessa"
+      ]
+    },
+    {
+      "input": "talk dessa",
+      "expect": [
+        "trust"
+      ]
+    },
+    {
+      "input": "3",
+      "expect": [
+        "Harlan account"
+      ]
+    },
+    {
+      "input": "examine harlan account",
+      "expect": [
+        "deep chamber"
+      ]
+    },
+    {
+      "input": "combine map fragment harlan account",
+      "expect": [
+        "aligned"
+      ]
+    },
+    {
+      "input": "south",
+      "expect": [
+        "Spur"
+      ]
+    },
+    {
+      "input": "east",
+      "expect": [
+        "canyon mouth"
+      ]
+    },
+    {
+      "input": "examine hollow",
+      "expect": [
+        "narrows"
+      ]
+    },
+    {
+      "input": "enter",
+      "expect": [
+        "canyon floor"
+      ]
+    },
+    {
+      "input": "examine markings",
+      "expect": [
+        "same hand"
+      ]
+    },
+    {
+      "input": "examine mining remnants",
+      "expect": [
+        "stopped"
+      ]
+    },
+    {
+      "input": "down",
+      "expect": [
+        "first cave"
+      ]
+    },
+    {
+      "input": "examine walls",
+      "expect": [
+        "warmer"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "second cave mouth"
+      ]
+    },
+    {
+      "input": "examine second cave mouth",
+      "expect": [
+        "cold"
+      ]
+    },
+    {
+      "input": "enter second cave",
+      "expect": [
+        "passage narrows"
+      ]
+    },
+    {
+      "input": "examine chamber",
+      "expect": [
+        "silence"
+      ]
+    },
+    {
+      "input": "examine stone ledge",
+      "expect": [
+        "account"
+      ]
+    },
+    {
+      "input": "take harlan final account",
+      "expect": [
+        "Taken"
+      ]
+    },
+    {
+      "input": "examine harlan final account",
+      "expect": [
+        "stayed"
+      ]
+    },
+    {
+      "input": "examine formation",
+      "expect": [
+        "strike"
+      ]
+    },
+    {
+      "input": "answer HARLAN",
+      "expect": [
+        "The lock yields"
+      ]
+    },
+    {
+      "input": "examine sealed chest",
+      "expect": [
+        "gold"
+      ]
+    },
+    {
+      "input": "take gold",
+      "expect": [
+        "Taken"
+      ]
+    },
+    {
+      "input": "up",
+      "expect": [
+        "first cave"
+      ]
+    },
+    {
+      "input": "up",
+      "expect": [
+        "canyon floor"
+      ]
+    },
+    {
+      "input": "out",
+      "expect": [
+        "canyon mouth"
+      ]
+    },
+    {
+      "input": "west",
+      "expect": [
+        "Spur"
+      ]
+    },
+    {
+      "input": "talk rennick",
+      "expect": [
+        "changed"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:world"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "Frontier"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:frontier:place:the-spur"
+        ],
+        [
+          "collaboration",
+          "open"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "health",
+          "6"
+        ],
+        [
+          "max-health",
+          "10"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "0.1.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "western"
+        ],
+        [
+          "tag",
+          "mystery"
+        ],
+        [
+          "tag",
+          "adventure"
+        ],
+        [
+          "theme",
+          "parchment"
+        ],
+        [
+          "effects",
+          "typewriter"
+        ],
+        [
+          "on-player-health",
+          "down",
+          "0",
+          "consequence",
+          "30078:<PUBKEY>:frontier:consequence:player-death"
+        ],
+        [
+          "voice",
+          "Terse. Laconic. Dust in every sentence. Second person present tense. Short sentences. No purple prose — this land does not allow it."
+        ],
+        [
+          "colour",
+          "bg",
+          "#1c1408"
+        ],
+        [
+          "colour",
+          "text",
+          "#c4a882"
+        ],
+        [
+          "colour",
+          "title",
+          "#d4a44b"
+        ],
+        [
+          "colour",
+          "dim",
+          "#7a6548"
+        ],
+        [
+          "colour",
+          "highlight",
+          "#c47040"
+        ],
+        [
+          "colour",
+          "exits",
+          "#8b7355"
+        ],
+        [
+          "font",
+          "ibm-plex-mono"
+        ],
+        [
+          "vignette",
+          "0.3"
+        ],
+        [
+          "colour",
+          "puzzle",
+          "#d4a44b"
+        ],
+        [
+          "colour",
+          "clue",
+          "#8b7355"
+        ]
+      ],
+      "content": "A town at the edge of the mapped world. Something in the hollow draws people. Not all of them come back."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:the-spur"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Spur"
+        ],
+        [
+          "noun",
+          "spur",
+          "trail",
+          "road",
+          "street",
+          "main street"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:frontier:npc:passing-rider"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:ambient-wind",
+          "ambient",
+          "0.5"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:spur-distant-piano",
+          "layer",
+          "0.3"
+        ]
+      ],
+      "content": "The main street of Harrow runs north to south, unpaved and dust-pale in the afternoon light. A handful of buildings face each other across the width of it. To the east, the land rises gently toward canyon country — the direction nobody looks at directly.\n\nWest, the land opens. No fences, no buildings — just the flat expanse of the frontier going on until it becomes sky. The old-timers in Harrow say there are things out there that haven't been named yet. Nobody who has gone far enough west has come back to contradict them.\n\nThe Spur bends both ways from here. South toward settled territory. And back east along the route most travellers came in on — a few days' ride to where the trail joins the main routes, and beyond that the places people came from. Some arrivals look that direction the way people look at things they left behind on purpose.\n\nThis is where everyone arrives. Some pass through. Some don't."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:rennicks-saloon"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Rennick's Saloon"
+        ],
+        [
+          "noun",
+          "saloon",
+          "bar",
+          "store"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:frontier:npc:cole-rennick"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:rennick-ledger"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:notice-board"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:frontier:item:whiskey-glass"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:ambient-saloon",
+          "ambient",
+          "0.25"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visited",
+          "30078:<PUBKEY>:frontier:npc:cole-rennick"
+        ],
+        [
+          "clue",
+          "30078:<PUBKEY>:frontier:clue:trail-conditions-map"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:saloon-murmur",
+          "layer",
+          "0.5"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:saloon-glass",
+          "layer",
+          "0.4"
+        ]
+      ],
+      "content": "Low-ceilinged and amber-lit, Rennick's doubles as general store, post office, and the closest thing Harrow has to a public square. Shelves of dry goods line one wall. The bar runs the length of the other. A notice board near the door is thick with papers — wanted posters, lost notices, a hand-drawn map of trail conditions that someone updates irregularly.\n\nCole Rennick works the bar with the particular economy of someone who has done this for thirty years and doesn't intend to stop."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:dessa-house"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Dessa Vane's House"
+        ],
+        [
+          "noun",
+          "dessa",
+          "house",
+          "archive",
+          "north end"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:frontier:npc:dessa-vane"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:dessa-archive"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:map-fragment"
+        ],
+        [
+          "clue",
+          "30078:<PUBKEY>:frontier:clue:harlan-account-partial"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:ambient-interior",
+          "ambient",
+          "0.15"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:dessa-pen",
+          "layer",
+          "0.4"
+        ]
+      ],
+      "content": "The north end house is older than any other building in Harrow. Inside, it smells of paper and something drier underneath — the particular dust of things that have been kept carefully for a long time. Every surface carries stacks of documents. Four cats navigate them with practiced indifference.\n\nDessa Vane sits at the only clear table, writing. She glances up when you enter. Says nothing yet."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:joaquins-livery"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Joaquin's Livery"
+        ],
+        [
+          "noun",
+          "livery",
+          "joaquin",
+          "stable",
+          "horses"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:frontier:npc:joaquin-serrano"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:broken-fence"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:ambient-livery",
+          "ambient",
+          "0.2"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:livery-horse",
+          "layer",
+          "0.5"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:livery-creak",
+          "layer",
+          "0.4"
+        ]
+      ],
+      "content": "The livery sits between the saloon and the south end of town. Three horses in the stalls, a fourth out back. It smells of hay and worked leather. Joaquin Serrano is replacing a shoe on the grey mare when you come in — he doesn't look up, but he registers you."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:ruth-office"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Ruth Calloway's Office"
+        ],
+        [
+          "noun",
+          "office",
+          "ruth",
+          "lawkeeper",
+          "south end"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:frontier:npc:ruth-calloway"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:ruth-incident-record"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:ambient-interior",
+          "ambient",
+          "0.1"
+        ],
+        [
+          "exit",
+          "south"
+        ]
+      ],
+      "content": "A single room at the south end of town. A desk, two chairs, a rifle propped against the wall. A corkboard with papers pinned to it — dates, names, notes in a tight, purposeful hand. Ruth Calloway sits straight-backed at the desk, reading something she doesn't put down when you enter.\n\nShe finishes the page. Sets it down. Looks at you.\n\nThe south door leads out toward the lower trail — the route toward Obligado and points beyond. Riders coming up from that direction sometimes stop at Ruth's office before they stop anywhere else."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:canyon-mouth"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Mouth of the Hollow"
+        ],
+        [
+          "noun",
+          "hollow",
+          "canyon",
+          "mouth",
+          "entrance"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "exit",
+          "enter"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:canyon-entrance-markings"
+        ],
+        [
+          "clue",
+          "30078:<PUBKEY>:frontier:clue:ruths-warning"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:ambient-wind-canyon",
+          "ambient",
+          "0.4"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:npc:ruth-calloway",
+          "spoken",
+          "Ruth hasn't told you what she knows yet. Go back to Harrow."
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "markings-seen",
+          "30078:<PUBKEY>:frontier:feature:canyon-entrance-markings"
+        ]
+      ],
+      "content": "The canyon opens here — wider than you expected from the trail. Red and ochre walls rise on either side, close enough that the sky above is a stripe of pale blue. The entrance feels almost welcoming. That changes further in.\n\nAt the base of the right-hand wall, someone has scratched something into the stone above the tideline of flood deposits. The scratching is old. It is also, you notice, not the first layer — there are marks beneath it, darker and more deliberate, made with something other than a prospector's tool."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:canyon-floor"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Canyon Floor"
+        ],
+        [
+          "noun",
+          "canyon",
+          "floor",
+          "hollow",
+          "interior"
+        ],
+        [
+          "exit",
+          "out"
+        ],
+        [
+          "exit",
+          "down"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:mining-remnants"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:canyon-wall-markings"
+        ],
+        [
+          "clue",
+          "30078:<PUBKEY>:frontier:clue:sound-anomaly"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:ambient-hollow-floor",
+          "ambient",
+          "0.5"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "entered-hollow",
+          "30078:<PUBKEY>:frontier:place:canyon-floor"
+        ],
+        [
+          "exit",
+          "northwest"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:sealed-mine-shaft"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:oil-seep"
+        ],
+        [
+          "clue",
+          "30078:<PUBKEY>:frontier:clue:sealed-mine-plank"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:canyon-pebbles",
+          "layer",
+          "0.4"
+        ]
+      ],
+      "content": "The canyon floor is wider than the entrance suggested — a broad, flat corridor of packed earth and old gravel. The walls tighten overhead, narrowing the sky to a river of blue. Sound behaves differently here. Your voice comes back a half-beat late, from the wrong direction.\n\nThe remnants of four separate mining operations are visible along the floor — collapsed timber frames, a rusted ore cart, a section of narrow-gauge rail that simply ends. Someone drove a lot of iron in here once and then stopped.\n\nFurther along the north wall, past the main cave entrance, a fifth opening — older and smaller than the others, its mouth sealed with rough-cut stone and a single plank nailed across it. The plank has writing on it. Whatever the miners sealed in there, they didn't want found.\n\nNear the sealed shaft, a dark stain marks the canyon floor — a slow, oily seep from a crack in the rock. It has no smell you recognise. The old ore cart nearby has been discoloured by it, the metal surface dark where the seep has crept over decades.\n\nA northwest trail threads along the base of the canyon wall — a goat path, barely, but passable. It heads deeper into the canyon system, away from the main cave mouths. Nobody from Harrow seems to know where it goes.\n\nThe cave systems begin here. One entrance, broad and dark, opens in the north wall. Further down, past the old rail terminus, a second entrance — smaller, colder, the air around it noticeably still."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:first-cave"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The First Cave System"
+        ],
+        [
+          "noun",
+          "first cave",
+          "cave",
+          "upper cave"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:cave-walls-upper"
+        ],
+        [
+          "clue",
+          "30078:<PUBKEY>:frontier:clue:temperature-drop"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:ambient-cave",
+          "ambient",
+          "0.45"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "cave-entered",
+          "30078:<PUBKEY>:frontier:place:first-cave"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:frontier:item:wooden-handle"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:cave-rumble",
+          "layer",
+          "0.5"
+        ]
+      ],
+      "content": "The cave mouth is wide enough to walk through without ducking. The air inside is cooler by ten degrees — a clean, dry cold, not the wet cold of underground water. The walls are close enough to touch on both sides.\n\nThe cave goes north. The passage is navigable but not comfortable. Whoever built the mining operation used this cave as their primary access route — the walls are scored with tool marks and the floor has been levelled in places. Whatever they were doing, they came through here a lot.\n\nThe same markings from the canyon entrance appear here. More of them. Arranged differently."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:second-cave-mouth"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Second Cave Mouth"
+        ],
+        [
+          "noun",
+          "second cave mouth",
+          "second entrance",
+          "smaller entrance",
+          "cold entrance"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "in"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:second-cave-threshold"
+        ],
+        [
+          "clue",
+          "30078:<PUBKEY>:frontier:clue:joaqin-oral-tradition"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:ambient-deep-threshold",
+          "ambient",
+          "0.5"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:npc:joaquin-serrano",
+          "trusted",
+          "Something Joaquin said is nagging at you. You should talk to him again before going further."
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:cave-rumble",
+          "layer",
+          "0.6"
+        ]
+      ],
+      "content": "The second entrance is smaller and lower — you'd need to duck to enter. The air around it is notably still, not in the way of enclosed spaces but in the way of something held. The sound anomaly is strongest here. Nothing echoes. The quiet has a quality.\n\nAt the threshold, cut into the stone at eye level on the left side, is a symbol you have seen before — in Dessa's copies of the canyon markings, in the margin of the Harlan account. Here it has been cut deeper and more recently than the others. Someone wanted this one to last."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:deep-chamber"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Deep Chamber"
+        ],
+        [
+          "noun",
+          "chamber",
+          "deep chamber",
+          "hollow heart"
+        ],
+        [
+          "exit",
+          "out"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:stone-ledge"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:wall-formation"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:wall-sequence-puzzle"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:frontier:item:harlan-final-account"
+        ],
+        [
+          "clue",
+          "30078:<PUBKEY>:frontier:clue:chamber-quality"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:ambient-deep-chamber",
+          "ambient",
+          "0.6"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "chamber-reached",
+          "30078:<PUBKEY>:frontier:place:deep-chamber"
+        ],
+        [
+          "exit",
+          "enter"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:cave-rumble",
+          "layer",
+          "0.7"
+        ]
+      ],
+      "content": "The passage opens into a chamber large enough that you cannot see the far wall clearly. The silence here is absolute in a way that has nothing to do with the absence of sound — it is a specific, deliberate quiet, like an intake of breath held for a very long time.\n\nThe walls catch what little light you carry and return it differently — warm tones where the stone is smooth, darker where it has been worked. Someone spent considerable time in this chamber. The evidence is everywhere: a low stone ledge along one wall, carefully levelled. A formation at the centre of the floor, natural but arranged around, footpaths worn into the stone from repeated use.\n\nAnd in the far wall, visible now as your eyes adjust, a series of marks. Not scratched. Carved. The same hand as the entrance, but this is the original — everything outside is a copy of what is written here."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:sealed-chamber"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "What Harlan Found"
+        ],
+        [
+          "exit",
+          "back"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:frontier:item:hollow-gold"
+        ],
+        [
+          "clue",
+          "30078:<PUBKEY>:frontier:clue:what-harlan-stayed-for"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:ambient-resolution",
+          "ambient",
+          "0.35"
+        ],
+        [
+          "content-type",
+          "application/nip44"
+        ],
+        [
+          "puzzle",
+          "30078:<PUBKEY>:frontier:puzzle:harlan-cipher"
+        ]
+      ],
+      "content": "Behind the formation, where the cipher directed you, is a natural alcove in the chamber wall. It goes back further than it should.\n\nThe gold is here. Not the vein of a major strike — a deposit, carefully worked over years, with a thoroughness that speaks of patience rather than urgency. Enough. More than enough for the journey here to have been worth it.\n\nBut that is not what Harlan stayed for.\n\nOn the alcove wall, in Harlan's hand — you recognise it from Dessa's archive — is a final entry. Not addressed to anyone. Not meant to be found. Written for the act of writing it.\n\n*I understand now what this place is. Not what it contains. What it is. The canyon is not the location of the thing. The canyon is the thing itself. The markings are not a map to something. They are the something. Every person who has copied them, carried them out, set them on paper — has been carrying part of this out of here without knowing it.*\n\n*I am staying because if I leave, I will have to choose what to do with what I know. Here, I do not have to choose. Here, I am just a man sitting in the oldest room in the territory, keeping it company.*\n\n*The gold is real. Take it. That is not the secret.*\n\nYou stand there for a while. The silence holds.\n\nThe Hollow is still keeping most of what it knows. But you have a piece of it now — the piece Harlan decided not to carry out. Whether to carry it yourself, and what it means, is a question you will be answering for a long time."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:spur-to-east-road"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:effect-door",
+          "effect",
+          "0.4"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:the-spur",
+          "east",
+          "The road east out of town"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:east-road",
+          "west",
+          "Back to The Spur"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:spur-to-dessa"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:the-spur",
+          "north",
+          "The house at the north end"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:dessa-house",
+          "south",
+          "Back to the Spur"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:spur-to-livery"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:the-spur",
+          "south",
+          "The livery, south end of town"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:joaquins-livery",
+          "north",
+          "Back to the Spur"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:livery-to-ruth"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:joaquins-livery",
+          "south",
+          "Ruth's office at the south end"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:ruth-office",
+          "north",
+          "Back toward the livery"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:east-road-to-canyon"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:east-road",
+          "east",
+          "The trail east toward the canyon — toward The Hollow"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:canyon-mouth",
+          "west",
+          "The trail back toward town"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:canyon-mouth-to-floor"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:canyon-mouth",
+          "enter",
+          "Into the Hollow"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:canyon-floor",
+          "out",
+          "Back to the canyon mouth and daylight"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:effect-canyon-enter",
+          "effect",
+          "0.5"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:item:climbing-rope",
+          "",
+          "The ground drops away sharply here. You'd need rope to climb down safely."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:floor-to-first-cave"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:canyon-floor",
+          "down",
+          "The broad cave entrance in the north wall"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:first-cave",
+          "south",
+          "Back up to the canyon floor"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:floor-to-second-cave-mouth"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:canyon-floor",
+          "north",
+          "The smaller, colder entrance further along the canyon floor"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:second-cave-mouth",
+          "south",
+          "Back to the main canyon floor"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:second-cave-to-deep"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:second-cave-mouth",
+          "in",
+          "Through the low threshold — ducking, into the deeper dark"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:deep-chamber",
+          "out",
+          "Back through the passage toward the second cave mouth"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:effect-threshold-cross",
+          "effect",
+          "0.6"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:item:old-pickaxe",
+          "",
+          "A boulder blocks the passage. It looks like it could be broken through with the right tool."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:sealed-back"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:sealed-chamber",
+          "back",
+          "Back to the deep chamber"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:deep-chamber",
+          "enter",
+          "A narrow opening leads deeper into darkness"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:feature:wall-formation",
+          "unlocked",
+          "The wall is solid. There must be a way to open it."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:npc:cole-rennick"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Cole Rennick"
+        ],
+        [
+          "noun",
+          "rennick",
+          "cole",
+          "bartender",
+          "proprietor"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "transition",
+          "default",
+          "visited",
+          ""
+        ],
+        [
+          "transition",
+          "visited",
+          "ledger-marked",
+          "Rennick sets down the glass he's been polishing. He's decided something."
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-greeting",
+          "",
+          ""
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-hollow",
+          "30078:<PUBKEY>:frontier:npc:cole-rennick",
+          "visited"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-ledger",
+          "30078:<PUBKEY>:frontier:feature:rennick-ledger",
+          "examined"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-aftermath",
+          "30078:<PUBKEY>:frontier:place:deep-chamber",
+          "chamber-reached"
+        ]
+      ],
+      "content": "Cole Rennick is somewhere between fifty and sixty, with the particular stillness of someone who has decided that reacting quickly to things is mostly a waste of energy. He keeps the bar and watches the door. He's been doing both for thirty years.\n\nHe polishes the same section of bar when something makes him uncomfortable."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:npc:dessa-vane"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Dessa Vane"
+        ],
+        [
+          "noun",
+          "dessa",
+          "vane",
+          "archivist",
+          "teacher"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "transition",
+          "default",
+          "tea-offered",
+          "Dessa sets down her pen and goes to the stove. She comes back with two cups."
+        ],
+        [
+          "transition",
+          "tea-offered",
+          "trusted",
+          "Dessa pulls a key from around her neck. She unlocks the lower drawer."
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:dessa-greeting",
+          "",
+          ""
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:dessa-archive",
+          "30078:<PUBKEY>:frontier:npc:dessa-vane",
+          "tea-offered"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:dessa-harlan",
+          "30078:<PUBKEY>:frontier:npc:joaquin-serrano",
+          "opened"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:dessa-full-account",
+          "30078:<PUBKEY>:frontier:npc:dessa-vane",
+          "trusted"
+        ]
+      ],
+      "content": "Dessa Vane is older than Cole, sharper than she looks. She has been collecting accounts of The Hollow for forty years — letters, clippings, hand-drawn maps that don't agree with each other. She does not share this collection easily. But she has been keeping it alone for a long time.\n\nShe offers tea to everyone. If she sits down with her own cup, something has changed."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:npc:joaquin-serrano"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Joaquin Serrano"
+        ],
+        [
+          "noun",
+          "joaquin",
+          "serrano",
+          "farrier",
+          "livery keeper"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "transition",
+          "default",
+          "opened",
+          "Joaquin sets down his tools. He looks at you directly for the first time."
+        ],
+        [
+          "transition",
+          "opened",
+          "trusted",
+          "Joaquin nods once, slowly. He's made a decision."
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:joaquin-greeting",
+          "",
+          ""
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:joaquin-hollow",
+          "30078:<PUBKEY>:frontier:npc:joaquin-serrano",
+          "opened"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:joaquin-old-stories",
+          "30078:<PUBKEY>:frontier:feature:broken-fence",
+          "fixed"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:joaquin-grandmother",
+          "30078:<PUBKEY>:frontier:npc:joaquin-serrano",
+          "trusted"
+        ]
+      ],
+      "content": "Joaquin Serrano came up from the south following The Spur five years ago. He intended to keep moving. He didn't. He works with his hands while he talks. When he stops working and looks at someone directly, he means what he says."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:npc:ruth-calloway"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Ruth Calloway"
+        ],
+        [
+          "noun",
+          "ruth",
+          "calloway",
+          "lawkeeper"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "transition",
+          "default",
+          "spoken",
+          "Ruth nods. She's said what she needed to say."
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:ruth-greeting",
+          "",
+          ""
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:ruth-incident",
+          "30078:<PUBKEY>:frontier:npc:cole-rennick",
+          "visited"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:ruth-aftermath",
+          "30078:<PUBKEY>:frontier:place:deep-chamber",
+          "chamber-reached"
+        ]
+      ],
+      "content": "Ruth Calloway keeps order in Harrow because nobody else was going to. She carries a rifle as a matter of course. She does not believe The Hollow is supernatural. She believes it is dangerous terrain with a mythology that makes people careless. Three sentences from Ruth carry the weight of a speech from anyone else."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:npc:passing-rider"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "A Passing Rider"
+        ],
+        [
+          "noun",
+          "rider",
+          "stranger",
+          "traveller"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:rider-rumour"
+        ]
+      ],
+      "content": "A rider you don't recognise, trail-dusty and moving with purpose. They've stopped at the Spur long enough to water the horse. They have the look of someone who came through from the east — from canyon country — and decided not to stay.\n\nThey glance at you and make a small calculation."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rennick-greeting"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "How long have you been here?",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-history"
+        ],
+        [
+          "option",
+          "Tell me about The Hollow.",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-hollow-deflect"
+        ],
+        [
+          "option",
+          "Anything going on in town?",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-town"
+        ]
+      ],
+      "content": "Rennick sets a glass on the bar without being asked. Pours something amber. Doesn't say anything until he's put the bottle back.\n\n\"You look like someone who came off The Spur with a question.\" A pause. \"Most do.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rennick-history"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visited",
+          "30078:<PUBKEY>:frontier:npc:cole-rennick"
+        ]
+      ],
+      "content": "\"Long time.\" He refills the glass without being asked. \"Came here following a strike that didn't pan out. Figured I'd move on when the next thing came along. Nothing came along that felt like a reason.\" \n\nHe polishes the bar. \"Harrow has a way of keeping people who came through meaning to leave.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rennick-hollow-deflect"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "He doesn't stop polishing. \"Canyon country east of town. People go in. Some come out. Some don't. It's terrain.\" \n\nA beat. \"That's all I've got for you today.\"\n\nThe bar gets polished more carefully."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rennick-town"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "\"Dessa Vane at the north end knows more about this territory than anyone living. Joaquin at the livery knows the terrain better than most who've tried the canyon. Ruth keeps the peace, such as it is.\" He sets the glass down. \"You want to know something about Harrow, those three between them have most of it.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rennick-hollow"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:npc:cole-rennick",
+          "visited",
+          ""
+        ],
+        [
+          "option",
+          "Who has gone in and not come back?",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-names"
+        ],
+        [
+          "option",
+          "What do you know about the Harlan expedition?",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-harlan"
+        ],
+        [
+          "option",
+          "What did you see?",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-personal"
+        ]
+      ],
+      "content": "You've been here long enough that Rennick has made a decision about you. He leans on the bar. Speaks quietly.\n\n\"You're going in. I can tell. Most people who ask about The Hollow are going in. So let me tell you what I know.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rennick-names"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "examined",
+          "30078:<PUBKEY>:frontier:feature:rennick-ledger"
+        ]
+      ],
+      "content": "He goes under the bar. Comes up with a ledger — not the accounts ledger, a different one, slimmer and older. He sets it on the bar and opens it to a page near the middle.\n\nNames. Dates. Brief notes. Some have a single line after them: *returned*. Most don't. At the bottom of one column, a name with a different mark next to it — not the cross he uses for the others. Something else. He closes the ledger before you can read which name it is.\n\n\"That's thirty years of records. Make of it what you want.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rennick-harlan"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "\"Eighteen sixty-three. Seven men went in. Three came out. The gold they brought out was real — I've held two of the coins. Dessa has the full account if she'll show you. She has most things.\" \n\nHe pauses. \"Harlan didn't come back. The three who did couldn't agree on what happened. That's the part nobody talks about — not that he died in there, but that they couldn't explain why he stayed.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rennick-personal"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "He's quiet for a long time. The bar gets polished.\n\n\"I was seventeen. Followed some men out to the canyon on a dare. Didn't go past the entrance. Didn't need to.\" Another pause. \"The entrance is fine. It's just a canyon mouth. But there was a moment — standing at the threshold — when I had the very clear sense that something was paying attention to the fact that I was there.\"\n\n\"I've never mentioned that to anyone in thirty years. Don't repeat it.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rennick-ledger"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:feature:rennick-ledger",
+          "examined",
+          ""
+        ],
+        [
+          "option",
+          "What is that mark?",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-mark"
+        ]
+      ],
+      "content": "You mention the ledger — the mark next to one of the names. Rennick goes very still for a moment.\n\n\"You've got sharp eyes.\" He sets down the cloth."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rennick-mark"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "ledger-marked",
+          "30078:<PUBKEY>:frontier:npc:cole-rennick"
+        ]
+      ],
+      "content": "\"Name of Voss. Came through eleven years ago. Didn't ask about The Hollow — just asked about the eastern trail. Left the next morning.\" He's choosing his words. \"Came back two weeks later. Alone. Left a pouch of gold on the bar. Said it came from inside. Said nothing else and left heading north.\"\n\n\"The mark means: I don't know what to make of this one. There are three of them in thirty years.\" He looks at you. \"You might be the fourth.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rennick-aftermath"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:place:deep-chamber",
+          "chamber-reached",
+          ""
+        ]
+      ],
+      "content": "Rennick looks at you the way he looked at the ledger name — carefully, assessing the mark you've become.\n\n\"You came back.\" He pours without being asked. \"Most who go that far in don't, or don't come back the same. You look—\" He considers. \"Changed. But present.\"\n\nHe pushes the glass toward you. \"Don't tell me what's in there. I've got another thirty years of keeping this bar, and I'd like to keep not knowing.\"\n\nA pause. \"But I'm glad you're back.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:dessa-greeting"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "What is all this?",
+          "30078:<PUBKEY>:frontier:dialogue:dessa-collection"
+        ],
+        [
+          "option",
+          "I'm looking for information about The Hollow.",
+          "30078:<PUBKEY>:frontier:dialogue:dessa-hollow-first"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "tea-offered",
+          "30078:<PUBKEY>:frontier:npc:dessa-vane"
+        ]
+      ],
+      "content": "Dessa sets her pen down and looks at you for a measured moment. Then she goes to the stove and comes back with two cups of tea. She sits down with her own — which is when you understand something has shifted.\n\n\"You're not the first person to come to Harrow looking for The Hollow,\" she says. \"But you have the look of someone who might be worth talking to. Sit down.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:dessa-collection"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "\"Forty years of accounts,\" she says. \"Letters, affidavits, newspaper records, three surveys that don't agree with each other. Everyone who came through Harrow and had something to say about The Hollow — I took it down or found a copy.\" She sips her tea. \"Most people who collect things like this are looking for the answer. I stopped looking for the answer twenty years ago. Now I'm just keeping the record.\"\n\nShe says this without sadness. It is a statement of fact about what she has decided to be."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:dessa-hollow-first"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "\"Then you want the archive.\" She glances at a locked cabinet against the far wall. \"The question is whether you're the kind of person who should have access to it.\" \n\nShe studies you. \"Talk to Joaquin Serrano at the livery. He'll form an opinion of you faster than I will, and I trust his opinions. If he thinks well of you, come back.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:dessa-archive"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:npc:dessa-vane",
+          "tea-offered",
+          ""
+        ],
+        [
+          "option",
+          "Tell me about the Harlan expedition.",
+          "30078:<PUBKEY>:frontier:dialogue:dessa-harlan-account"
+        ],
+        [
+          "option",
+          "What do the canyon wall markings mean?",
+          "30078:<PUBKEY>:frontier:dialogue:dessa-markings"
+        ]
+      ],
+      "content": "She unlocks the cabinet. Inside are stacks of paper, carefully ordered, some in folders, some loose. She pulls a folder from near the top.\n\n\"The archive is yours to read. But I'll tell you where to start.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:dessa-harlan-account"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "\"The most complete account of the 1863 expedition. I have accounts from two of the three survivors, and several secondary sources. There is a gap.\" She opens the folder and spreads several pages on the table. \"The accounts agree up to the second cave system. After that, they diverge — not in contradiction, but in incompleteness. As if each man is describing a different part of the same thing.\"\n\n\"The only account that might cover the gap is Harlan's own — and no one has found it. If he wrote anything down, it's still in there.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:dessa-markings"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "\"I have copies of every marking visible in the canyon from the entrance to the first cave system.\" She pulls out a sheet of careful line drawings. \"They predate the mining operations by a long time — the style and tool marks are consistent with work from at least two centuries prior. Possibly more.\"\n\nShe sets her finger on one symbol. \"This one appears at every threshold. Entrances, transitions, the points where one space becomes another. I believe it means something like *attention* or *awareness*. As in: this place is paying attention.\" She lifts her finger. \"I cannot prove that.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:dessa-harlan"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:npc:joaquin-serrano",
+          "opened",
+          ""
+        ],
+        [
+          "option",
+          "Will you show me the full Harlan account?",
+          "30078:<PUBKEY>:frontier:dialogue:dessa-unlock"
+        ]
+      ],
+      "content": "Dessa looks up from the archive. \"Joaquin talked to you,\" she says. It isn't a question. \"He doesn't do that with most people who come through.\"\n\nShe is quiet for a moment. \"There is more in the archive than I've shown you.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:dessa-unlock"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "trusted",
+          "30078:<PUBKEY>:frontier:npc:dessa-vane"
+        ]
+      ],
+      "content": "She pulls a key from around her neck and unlocks the lower drawer of the cabinet. Inside is a single folder, older than the others, wrapped in oilcloth.\n\n\"The partial Harlan account. What the survivors gave. And a map — drawn in two different hands, which I believe means it was begun by the expedition and continued by someone else, later, who had been inside.\" She sets it on the table. \"The second hand stops at the deep chamber. Whatever is beyond it, they either couldn't map or chose not to.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:dessa-full-account"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:npc:dessa-vane",
+          "trusted",
+          ""
+        ],
+        [
+          "on-enter",
+          "player",
+          "give-item",
+          "30078:<PUBKEY>:frontier:item:harlan-account-fragment"
+        ]
+      ],
+      "content": "She hands you the oilcloth folder.\n\n\"Take it. Copy what you need. Return it when you come back.\" A pause. \"I said *when*. Not if. Come back, and tell me what you found that I couldn't find by staying here.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:joaquin-greeting"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Do you know the canyon country east of town?",
+          "30078:<PUBKEY>:frontier:dialogue:joaquin-hollow-plain"
+        ],
+        [
+          "option",
+          "Can I help with anything?",
+          "30078:<PUBKEY>:frontier:dialogue:joaquin-help"
+        ]
+      ],
+      "content": "Joaquin doesn't stop working when you come in. He's replacing a shoe on the grey mare — methodical, unhurried. He glances up once to place you, then goes back to the hoof.\n\n\"You're off the Spur.\" Not unfriendly. Observational. \"Looking for something, or running from it?\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:joaquin-hollow-plain"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "give-item",
+          "30078:<PUBKEY>:frontier:item:pickaxe-head"
+        ]
+      ],
+      "content": "\"The Hollow.\" He says it matter-of-factly, still working. \"You mean The Hollow. People call it canyon country when they don't want to say the name.\"\n\n\"Yes, I know it. Better than most who've tried it and came back. The practical answer is: it's navigable if you're careful and you understand what careful means out there. The other answer—\" He sets down the rasp. \"The other answer takes longer. Give me a reason to trust you with it.\"\n\nHe reaches behind the workbench and tosses you something heavy. An iron pickaxe head, rusted but solid. \"Old Emmett's. Left the handle down in the first shaft when the company folded. Head's no use without it, but if you find the rest...\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:joaquin-help"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "He looks up from the hoof. A beat. \"The fence on the south side is rotting out. I've been meaning to get to it for three weeks. You want to be useful, that's useful.\" He goes back to the mare. \"Tools are on the south wall.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:joaquin-hollow"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:npc:joaquin-serrano",
+          "opened",
+          ""
+        ],
+        [
+          "option",
+          "What do you know practically about the canyon?",
+          "30078:<PUBKEY>:frontier:dialogue:joaquin-practical"
+        ],
+        [
+          "option",
+          "Tell me the other answer.",
+          "30078:<PUBKEY>:frontier:dialogue:joaquin-other-answer"
+        ]
+      ],
+      "content": "Joaquin sets down his tools and looks at you directly. He's made a decision.\n\n\"Alright. Both answers. What do you want first?\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:joaquin-practical"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "\"Two cave systems. The north entrance is the one the miners used — it goes in far but it's safe enough if you watch the walls. The south entrance is the one nobody uses.\" A pause. \"Don't go past the second cave mouth after dark. I don't know what happens if you do. I know people who tried it and what they looked like when they came back, and I'd rather not find out myself.\"\n\n\"The air changes past the second entrance. Colder, stiller. If you have something that compass, it'll behave wrong. Go slow and pay attention.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:joaquin-other-answer"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "\"My grandmother's people had a name for The Hollow that doesn't translate well into English. The closest is *the place that remembers*. Not the place where things are remembered. The place that is itself doing the remembering.\" He picks up a tool and turns it in his hands. \"She said it had been paying attention to what happened near it for longer than anyone's been here to notice. That the markings on the walls aren't descriptions of the place — they're the place describing itself.\"\n\n\"She also said: if it lets you in, that means something. If you go in and come out, you owe it something in return. She wasn't sure what. Just that the debt exists.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:joaquin-old-stories"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:feature:broken-fence",
+          "fixed",
+          ""
+        ]
+      ],
+      "content": "Joaquin looks at the fence. Nods once.\n\n\"There's something else my grandmother said. About the deep chamber.\" He's quiet for a moment. \"She said there's something left there. Not by accident — deliberately, by the people who made the markings. She didn't know what it was. She said: whatever it is, it's been waiting to be found by someone who understood what the markings were telling them.\"\n\n\"Dessa has copies of those markings. She's been trying to read them for forty years. Maybe you'll see something she missed.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:joaquin-grandmother"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:npc:joaquin-serrano",
+          "trusted",
+          ""
+        ],
+        [
+          "on-enter",
+          "player",
+          "give-item",
+          "30078:<PUBKEY>:frontier:item:oral-account"
+        ]
+      ],
+      "content": "\"One more thing.\" He goes to a shelf at the back of the livery and comes back with a folded paper — dense handwriting, two pages.\n\n\"I wrote it down last year. Her words, as close as I could get them in translation. It's about the deep chamber specifically — what she said was in there and what it means if you find it.\" He hands it over. \"Don't lose it. It's the only copy.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:ruth-greeting"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "I'm heading into The Hollow.",
+          "30078:<PUBKEY>:frontier:dialogue:ruth-going-in"
+        ],
+        [
+          "option",
+          "What do you know about The Hollow?",
+          "30078:<PUBKEY>:frontier:dialogue:ruth-assessment"
+        ]
+      ],
+      "content": "Ruth sets down what she's reading. She gives you the same look she's given every stranger who's walked in here — measuring, unsentimental.\n\n\"You're heading to The Hollow,\" she says. \"I can tell. What do you want from me?\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:ruth-going-in"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "give-item",
+          "30078:<PUBKEY>:frontier:item:climbing-rope"
+        ]
+      ],
+      "content": "\"Then listen.\" She stands up and points at a spot on her corkboard — a date, eight months back, a name, two lines of notes. \"Man came through heading for The Hollow. Didn't ask for much. Left the next day. Three weeks later he came back, alone, twenty pounds lighter, wouldn't say where his partner was. Stayed two days. Said one coherent thing the entire time.\"\n\n\"*Don't go past the second cave mouth after dark.*\" She sits back down. \"I don't know what he meant. I wrote it down. Pass it on.\"\n\nShe reaches under the desk and pulls out a coil of rope. \"Take this. The drop into the canyon is steep. You'll need it.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:ruth-assessment"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "spoken",
+          "30078:<PUBKEY>:frontier:npc:ruth-calloway"
+        ]
+      ],
+      "content": "\"It's terrain with a mythology. People go in underprepared because the stories make them feel like knowing the legend is the same as knowing the canyon. It isn't.\" She leans back. \"I've looked at the records. The ones who came out intact went in slowly, paid attention, and didn't push past what they understood. The ones who didn't come out were in a hurry.\"\n\n\"Desta knows the history. Joaquin knows the practical. Between them you've got most of what you need.\" She looks at you steadily. \"Don't waste it.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:ruth-aftermath"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:place:deep-chamber",
+          "chamber-reached",
+          ""
+        ]
+      ],
+      "content": "Ruth looks you over the way she checks everything — for structural damage, for what might fail next.\n\n\"You went in. You came back.\" A pause. \"Canyon structurally stable? Any collapse risk I should know about for the next person who goes?\"\n\nShe's asking the practical question on purpose, you realise. Giving you space to answer at whatever depth you choose. You don't have to say what you found. Just what the next person needs to know to be safe.\n\nThat's Ruth Calloway's version of care."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rider-rumour"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "The rider eyes you. Makes the calculation. Decides you're worth a word.\n\n\"Just came off the eastern trail. Canyon country.\" They don't say the name. \"Didn't go far in — just far enough to see the entrance markings and decide I had better things to do with my life.\" A half-smile. \"There's a man in the canyon. Or there was — saw a campfire two nights ago, inside, past the first turn. Didn't investigate. If you're heading that way, worth knowing you might not be alone.\"\n\nThey water the horse and move on. A planted seed — a campfire nobody accounts for. *Someone is already in The Hollow.*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:rennick-ledger"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Rennick's Ledger"
+        ],
+        [
+          "noun",
+          "ledger",
+          "rennick ledger",
+          "book"
+        ],
+        [
+          "verb",
+          "ask rennick about mark",
+          "ask about mark",
+          "ask about name"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "transition",
+          "default",
+          "examined",
+          "You've seen the mark. One name, different from the others."
+        ],
+        [
+          "on-interact",
+          "ask rennick about mark",
+          "set-state",
+          "examined"
+        ]
+      ],
+      "content": "A slim ledger, separate from the accounts book. Cole keeps it under the bar. Names in a careful hand, dates, one-line notes. Most have a small cross. Some don't. One has a mark you don't recognise — different from all the others.\n\nYou could *ask rennick about mark* if you wanted to know what it means."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:notice-board"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Notice Board"
+        ],
+        [
+          "noun",
+          "notice board",
+          "board",
+          "notices",
+          "map"
+        ]
+      ],
+      "content": "A board near the saloon door, dense with papers. Wanted posters — two of them, neither face familiar. A list of trail conditions, updated in pencil by someone who travels The Spur regularly. A hand-drawn map of the territory that someone has been adding to over time.\n\nOn the map, the canyon country east of Harrow is labelled in small, careful letters: *The Hollow*. Below that, in different ink: *Do not camp near the south entrance.*\n\nIn the margin, a newer addition in a different hand: *V. Voss — last seen heading north from Harrow, eleven years ago.*\n\nThe map also shows the western expanse — blank, deliberately. Someone has written *unmapped* across it in letters that take up most of the space. To the south: *Obligado, 4 days*. To the north, a trail marked only as far as a creek crossing and then a question mark."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:dessa-archive"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Archive"
+        ],
+        [
+          "noun",
+          "archive",
+          "papers",
+          "collection",
+          "cabinet",
+          "documents"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:npc:dessa-vane",
+          "tea-offered",
+          "Dessa hasn't decided to trust you with the archive yet."
+        ]
+      ],
+      "content": "Forty years of collected accounts, filed and carefully maintained. Letters from people who went into The Hollow and came back changed. Newspaper clippings describing the Harlan expedition and its aftermath. Three separate survey maps of the canyon that disagree with each other in ways that suggest the surveyors were not looking at quite the same place.\n\nAnd in the locked lower drawer, something older and more carefully kept than the rest."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:map-fragment"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Map Fragment"
+        ],
+        [
+          "noun",
+          "map fragment",
+          "map",
+          "fragment",
+          "partial map"
+        ],
+        [
+          "state",
+          "separate"
+        ],
+        [
+          "transition",
+          "separate",
+          "combined",
+          "The two halves align. The canyon resolves into something coherent — a route, a sequence, a destination."
+        ],
+        [
+          "verb",
+          "combine",
+          "align",
+          "match"
+        ],
+        [
+          "on-interact",
+          "combine",
+          "set-state",
+          "combined",
+          "30078:<PUBKEY>:frontier:item:harlan-account-fragment"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:npc:dessa-vane",
+          "tea-offered",
+          "Dessa hasn't shown you the full archive yet."
+        ]
+      ],
+      "content": "A partial map of The Hollow, drawn in two distinctly different hands. The first hand — precise, professional — covers the canyon entrance and the main floor as far as the two cave mouths. The second hand — smaller, less certain — picks up inside the first cave and descends. It stops at the deep chamber.\n\nIn the deep chamber position, the second hand has drawn a symbol that also appears in the entrance markings. Below it, in pencil: *the answer is the name.*\n\nThe right edge is ragged — it was torn from something larger. If you had the other half, you could *combine* them."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:broken-fence"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Broken Fence"
+        ],
+        [
+          "noun",
+          "fence",
+          "broken fence",
+          "south fence"
+        ],
+        [
+          "verb",
+          "fix",
+          "repair",
+          "fix fence",
+          "mend"
+        ],
+        [
+          "state",
+          "broken"
+        ],
+        [
+          "transition",
+          "broken",
+          "fixed",
+          "The fence holds. Joaquin gives you a look worth having."
+        ],
+        [
+          "on-interact",
+          "fix",
+          "set-state",
+          "fixed"
+        ],
+        [
+          "on-interact",
+          "fix",
+          "set-state",
+          "opened",
+          "30078:<PUBKEY>:frontier:npc:joaquin-serrano"
+        ]
+      ],
+      "content": "The south fence of the livery is rotting out — three posts loose, two rails down. Joaquin mentioned it. The tools to fix it are on the south wall."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:canyon-entrance-markings"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Canyon Entrance Markings"
+        ],
+        [
+          "noun",
+          "markings",
+          "entrance markings",
+          "symbols",
+          "carvings",
+          "stone"
+        ]
+      ],
+      "content": "Cut into the stone at the canyon entrance, above the tideline of old flood deposits. The surface layer — tool-scratched, relatively recent — looks like prospector records: dates, depths, a name or two. Below it, the original layer, made with something more patient and precise.\n\nSymbols. Not letters, not pictograms. A visual language you have no key for. One appears at the upper-right corner of the composition — the same one Dessa identified in her notes as the *threshold* symbol. The one that means, she believed: *this place is paying attention.*\n\nDessa has copies of these. You have seen them. Standing here before the originals is different."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:mining-remnants"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Mining Remnants"
+        ],
+        [
+          "noun",
+          "mining remnants",
+          "remnants",
+          "ruins",
+          "ore cart",
+          "rail",
+          "timber"
+        ]
+      ],
+      "content": "Four separate operations — you can tell by the different vintages of the equipment. The oldest timber frames are barely recognisable, collapsed into the canyon floor. The newest has a rusted ore cart still upright, a section of narrow-gauge rail leading nowhere. A coffee tin. A bent surveying rod.\n\nThey stopped at different times and for different reasons — one shows signs of a cave-in, one simply runs out of evidence mid-operation as though the crew walked away in the middle of a shift. The newest stop is the most unsettling: the equipment is in good condition. Whatever ended this one, it wasn't mechanical failure."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:canyon-wall-markings"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Canyon Wall Markings"
+        ],
+        [
+          "noun",
+          "canyon wall markings",
+          "wall markings",
+          "markings",
+          "symbols"
+        ]
+      ],
+      "content": "The same visual language from the entrance, more extensive here. The canyon walls are covered in a band roughly two metres up from the floor — continuous, unbroken except where the mining operations disturbed the rock.\n\nExamining them with Dessa's notes in mind, you start to pick out patterns. Repetitions. The threshold symbol appears at the mouth of each cave entrance, larger than the surrounding marks. Between the cave mouths, the composition changes register — less formal, more narrative. Something is being described. You cannot read it, but you feel the presence of sequence: beginning, middle, something unresolved."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:cave-walls-upper"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Cave Walls"
+        ],
+        [
+          "noun",
+          "cave walls",
+          "walls",
+          "markings",
+          "upper cave walls"
+        ]
+      ],
+      "content": "The markings continue inside the first cave — denser than outside, better preserved from weather. This is where the visual language becomes clearest. Whatever was carved here was meant to be read in sequence, moving inward.\n\nThe tool marks change partway through. The earlier marks are confident, practiced. Then a gap — a section of plain wall, worked smooth but empty. Then the marks resume, slightly different in character: same language, same symbols, but the hand is less certain. As if someone continued a text after a long gap, doing their best to match what came before.\n\nThe wall feels warmer here than it should."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:second-cave-threshold"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Threshold Carving"
+        ],
+        [
+          "noun",
+          "threshold",
+          "threshold carving",
+          "symbol",
+          "carving",
+          "low stone"
+        ]
+      ],
+      "content": "Cut into the stone at eye level on the left side of the second cave entrance, deeper and more deliberate than any of the other markings. The same symbol from the entrance — the threshold symbol, *attention*, *awareness*. But here it has been cut with particular care.\n\nBelow it, partially worn, two lines of what might be text in the same script. The second line is clear. Dessa's translation attempt, in her notes, suggests the symbol grouping means something like *the one who enters knowing is responsible for what they find*.\n\nThe cold from inside the cave is very still."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:stone-ledge"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Stone Ledge"
+        ],
+        [
+          "noun",
+          "stone ledge",
+          "ledge",
+          "shelf"
+        ]
+      ],
+      "content": "A long, low ledge running along the chamber's north wall — natural stone, but levelled and smoothed by hand. It has been used as a work surface, a resting place, a writing desk. The surface is worn in the pattern of long occupation.\n\nOn it, placed with care, is a journal. Old. The cover is cracked but the pages are dry."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:wall-formation"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Formation"
+        ],
+        [
+          "noun",
+          "formation",
+          "central formation",
+          "rock formation",
+          "centre"
+        ],
+        [
+          "state",
+          "unexamined"
+        ],
+        [
+          "transition",
+          "unexamined",
+          "examined",
+          "There is something behind the formation that the angle obscures."
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "examined"
+        ]
+      ],
+      "content": "A natural formation at the centre of the chamber floor — a column of rock, roughly chest-high, around which the worn paths in the floor describe a clear orbit. People have circled this many times.\n\nThe formation itself is unremarkable. But examining it from the right angle reveals that it is not quite standing alone — there is an alcove in the chamber wall directly behind it that the formation's position partially conceals. The opening is narrow. The space behind it goes back further than it should."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:wall-sequence-puzzle"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Chamber Wall Inscription"
+        ],
+        [
+          "noun",
+          "chamber wall",
+          "far wall",
+          "inscription",
+          "cipher",
+          "carved text"
+        ],
+        [
+          "verb",
+          "read",
+          "decipher",
+          "study"
+        ],
+        [
+          "on-interact",
+          "read",
+          "activate",
+          "30078:<PUBKEY>:frontier:puzzle:harlan-cipher"
+        ]
+      ],
+      "content": "The far wall of the chamber carries the most extensive inscription in The Hollow — a complete composition, floor to ceiling in the tallest section, carved with precision that suggests years of work.\n\nIt is a cipher. Not encoded to hide — encoded to select. The symbols describe a sequence of things encountered on the path from Harrow to this room, rendered in the visual language of The Hollow.\n\nAt the bottom, below the main composition, a single line in English — different from everything above. A different hand. Older.\n\n*\"Say the name of the one who chose to stay.\"*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:ruth-incident-record"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Ruth's Incident Record"
+        ],
+        [
+          "noun",
+          "incident record",
+          "corkboard",
+          "record",
+          "notes"
+        ]
+      ],
+      "content": "A corkboard with papers pinned to it. Most are practical records: trail incidents, disputes, a horse theft from three years ago. One entry, eight months back, is different in character. Ruth's hand, but more words than usual, and a date circled.\n\nThe notes describe a man, unnamed, who came through heading east. Returned alone three weeks later. Notes on his condition: significant weight loss, non-communicative, no visible injury. One recorded statement, underlined: *Don't go past the second cave mouth after dark.* \n\nBelow that, in smaller writing: *Partner unaccounted for. No report filed. Decision: insufficient information.*\n\nThe name of the missing partner has been partially obscured. You can make out the first letter: V."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:item:harlan-account-fragment"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "The Harlan Account (Partial)"
+        ],
+        [
+          "noun",
+          "harlan account",
+          "account",
+          "partial account",
+          "folder",
+          "oilcloth"
+        ],
+        [
+          "verb",
+          "combine",
+          "align",
+          "match"
+        ],
+        [
+          "on-interact",
+          "combine",
+          "set-state",
+          "combined",
+          "30078:<PUBKEY>:frontier:feature:map-fragment"
+        ]
+      ],
+      "content": "A folder of papers, wrapped in oilcloth, from Dessa's archive. Three separate accounts of the 1863 Harlan expedition — two from survivors, one reconstructed from letters. They agree on approach, entry, and the first cave system. After that, each account becomes partial. The gap where the most important part should be is visible between pages.\n\nAlso inside: the partial map, drawn in two hands. When held next to the map fragment from Dessa's archive, the edges align — they are two halves of a single document. Combined, they describe a route from the canyon mouth to the deep chamber. The second hand's annotation remains: *the answer is the name.*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:item:oral-account"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Joaquin's Written Account"
+        ],
+        [
+          "noun",
+          "oral account",
+          "joaquin account",
+          "written account",
+          "paper",
+          "translation"
+        ]
+      ],
+      "content": "Two pages in Joaquin's hand — dense, careful, clearly revised more than once. His grandmother's account of The Hollow, translated as faithfully as he could manage from a language that doesn't map exactly to English.\n\nThe relevant passage, near the end: *In the deepest room, there is something left by the first people who understood what the place was. It is not treasure. It is a key. The key opens the room where the honest answer to an honest question has been waiting. The question: what did you come here for? The key is the name of the last man who asked it and didn't leave.*\n\nBelow that, a note in pencil, added later: *I think Harlan is the name. I think he knew what he was doing when he stayed.*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:item:harlan-final-account"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Harlan's Final Account"
+        ],
+        [
+          "noun",
+          "harlan final account",
+          "final account",
+          "journal",
+          "harlan journal"
+        ]
+      ],
+      "content": "A journal left on the stone ledge in the deep chamber. The first sixty pages cover the expedition's approach — professional, meticulous, the handwriting of a man accustomed to keeping records in the field. Then a gap of blank pages. Then, near the end, a single entry in a different register — quieter, more deliberate. The handwriting of someone who has decided what he wants to say and is saying it carefully.\n\nThe final entry is addressed to no one. It explains why he stayed. Not what he found — what he *understood*, which is different. And at the very end, a cipher note: *the word that opens the alcove is the word I gave the canyon by staying. The canyon accepted it. You'll know it if you've understood the path here.*\n\nThe word is his name."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:item:hollow-gold"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Gold from the Hollow"
+        ],
+        [
+          "noun",
+          "gold",
+          "hollow gold",
+          "strike",
+          "coins"
+        ]
+      ],
+      "content": "A modest deposit — carefully worked, not rushed. The gold is real, the quantity substantial enough to matter. It has the particular quality of things that have been kept in the dark for a long time: heavier than it looks, warm to the touch despite the cold of the chamber.\n\nThis is what people came here for. Some of them. You hold it and understand why Harlan's final note mentioned it almost as an afterthought: *the gold is real. Take it. That is not the secret.*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:item:whiskey-glass"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "A Glass of Whiskey"
+        ],
+        [
+          "noun",
+          "whiskey",
+          "glass",
+          "drink"
+        ],
+        [
+          "verb",
+          "drink"
+        ],
+        [
+          "on-interact",
+          "drink",
+          "heal",
+          "1"
+        ]
+      ],
+      "content": "Amber, room temperature, probably not the best whiskey in the territory but honestly fine. Cole poured it without being asked. That means something.\n\nYou could *drink* it."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:clue:harlan-account-partial"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Archive Entry: The Harlan Expedition"
+        ],
+        [
+          "noun",
+          "archive entry",
+          "clipping",
+          "expedition notes"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:npc:dessa-vane",
+          "tea-offered",
+          ""
+        ]
+      ],
+      "content": "A newspaper clipping from 1863, and two handwritten accounts. The clipping reports seven men entering The Hollow under Elias Harlan, four days of no news, three men emerging without Harlan. The accounts diverge after the first cave — not contradicting each other but becoming increasingly partial, as though each man is describing a different room. The gap between them is where the most important part of the story should be."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:clue:ruths-warning"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "A Scratched Warning"
+        ],
+        [
+          "noun",
+          "warning",
+          "scratching",
+          "carved words"
+        ]
+      ],
+      "content": "Scratched into the canyon entrance rock, at about shoulder height, in what looks like a knife point: *second cave mouth — not after dark*. Below it, a date — eight months ago. Below that, initials: *R.C.*\n\nRuth Calloway was here. She passed on the warning, personally."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:clue:sound-anomaly"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "The Sound Anomaly"
+        ],
+        [
+          "noun",
+          "sound",
+          "echo",
+          "voice",
+          "anomaly"
+        ]
+      ],
+      "content": "You say something — anything — and your voice comes back wrong. Not just delayed, not just echoed: it comes from the wrong direction, at the wrong volume, with a half-beat gap that suggests the canyon is processing it before returning it.\n\nJoaqin mentioned this. Said it was the canyon paying attention. Said it in a way that was both a metaphor and, he thought, not a metaphor."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:clue:temperature-drop"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Temperature Change"
+        ],
+        [
+          "noun",
+          "cold",
+          "air",
+          "temperature",
+          "chill"
+        ]
+      ],
+      "content": "The temperature dropped when you entered the first cave. Expected. But the second cave mouth — still twenty feet away — has a different quality: not colder, but stiller. The air near it doesn't move. You hold your hand up and feel nothing, in the specific way of absence rather than calm.\n\nRuth said go slow and pay attention. Joaquin said the old stories described the deeper areas as *held*. This is what held feels like."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:clue:joaqin-oral-tradition"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "What Joaquin Said"
+        ],
+        [
+          "noun",
+          "joaquin words",
+          "old stories",
+          "tradition",
+          "remembered"
+        ]
+      ],
+      "content": "Standing at the second cave mouth, Joaquin's words come back clearly: *if it lets you in, that means something. If you go in and come out, you owe it something in return.*\n\nAnd his grandmother's account: *in the deepest room, there is something left by the first people who understood what the place was. The key is the name of the last man who asked an honest question and didn't leave.*\n\nYou are at the threshold. You have been let in this far. The debt, whatever it is, begins here."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:clue:chamber-quality"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "The Silence of the Chamber"
+        ],
+        [
+          "noun",
+          "silence",
+          "quiet",
+          "chamber quality",
+          "stillness"
+        ]
+      ],
+      "content": "The silence in the deep chamber is different from the sound anomaly on the canyon floor. That was presence — the canyon returning your voice in its own time. This is something else. An attentiveness that has nothing to do with sound.\n\nYou have the distinct and unscientific impression that you are being assessed. Not judged — assessed. The way you might assess someone who has arrived where you are after a long journey, to determine whether the journey has taught them anything.\n\nThe impression fades when you move. Returns when you stand still."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:clue:what-harlan-stayed-for"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "What Harlan Understood"
+        ],
+        [
+          "noun",
+          "harlan understanding",
+          "what harlan found",
+          "the secret"
+        ],
+        [
+          "state",
+          "sealed"
+        ],
+        [
+          "transition",
+          "sealed",
+          "revealed",
+          ""
+        ],
+        [
+          "content-type",
+          "application/nip44"
+        ],
+        [
+          "puzzle",
+          "30078:<PUBKEY>:frontier:puzzle:harlan-cipher"
+        ]
+      ],
+      "content": "The canyon is not a location. It is a process. Every person who has come here and copied the markings, carried them out, set them on paper and shown them to others, has been extending the canyon's reach without knowing it.\n\nHarlan understood this. He stayed because leaving would have required him to decide what to do with that knowledge. Here, he didn't have to decide. He could simply be present with the thing he had understood, in the place that had taught him.\n\nThe Hollow is patient. It has been waiting a long time for people who understand the path, not just travel it. You are one of them. What you do with that is yours to determine."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:clue:trail-conditions-map"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Trail Conditions Map"
+        ],
+        [
+          "noun",
+          "trail map",
+          "territory map",
+          "conditions map"
+        ]
+      ],
+      "content": "A hand-drawn map of the territory around Harrow, added to irregularly over several years. The main Spur route is marked. A branch trail leads north — labelled *three days, unreliable water*. Another heads south-southwest — labelled *Obligado, four days*.\n\nThe canyon country to the east is labelled *The Hollow* in small, careful letters. Below that: *Do not camp near the south entrance.* In the margin, in pencil, a newer addition: *V. Voss — last seen heading north from here, eleven years ago.*\n\nVoss again. The name from Cole's ledger. Something to follow, someday, if someone chooses to."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:puzzle:harlan-cipher"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "title",
+          "The Chamber Cipher"
+        ],
+        [
+          "puzzle-type",
+          "cipher"
+        ],
+        [
+          "answer-hash",
+          "84f85eaa65b23c67f1c2544a3f447e9aab890bd76dd6deedb8b1a22324f19f38"
+        ],
+        [
+          "salt",
+          "hollow-remembers-1863"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "unlocked",
+          "30078:<PUBKEY>:frontier:feature:wall-formation"
+        ],
+        [
+          "on-complete",
+          "",
+          "traverse",
+          "30078:<PUBKEY>:frontier:portal:sealed-back"
+        ],
+        [
+          "on-fail",
+          "",
+          "deal-damage",
+          "0"
+        ]
+      ],
+      "content": "The inscription demands a name. Someone came here before you. Someone who understood what the canyon was. Someone who chose to stay.\n\nThe clues are scattered through Harrow — in the ledger, the archive, the things people say when they think about the past. One name keeps coming up.\n\nWho stayed?"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:quest:the-hollow"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "What The Hollow Keeps"
+        ],
+        [
+          "quest-type",
+          "open"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:frontier:npc:cole-rennick"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:frontier:npc:dessa-vane"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:frontier:npc:joaquin-serrano"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:frontier:npc:ruth-calloway"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:frontier:place:deep-chamber"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "complete",
+          "30078:<PUBKEY>:frontier:quest:the-hollow"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:ambient-resolution",
+          "effect",
+          "0.5"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:item:hollow-gold",
+          "",
+          ""
+        ]
+      ],
+      "content": "Harrow knows something about The Hollow that it doesn't freely tell. Earn the trust of the people who hold the pieces, assemble what they know, and go into the canyon to find what Harlan found — and what he chose to stay for.\n\nThe gold is real. It is not the only thing the Hollow keeps."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:consequence:player-death"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "consequence"
+        ],
+        [
+          "respawn",
+          "30078:<PUBKEY>:frontier:place:the-spur"
+        ],
+        [
+          "clears",
+          "inventory"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:effect-death",
+          "effect",
+          "0.6"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:ambient-wind"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "white"
+        ],
+        [
+          "lpf",
+          "400"
+        ],
+        [
+          "hpf",
+          "80"
+        ],
+        [
+          "gain",
+          "0.5"
+        ],
+        [
+          "attack",
+          "0.5"
+        ],
+        [
+          "sustain",
+          "1"
+        ],
+        [
+          "release",
+          "1.5"
+        ],
+        [
+          "slow",
+          "3"
+        ],
+        [
+          "degrade-by",
+          "0.3"
+        ],
+        [
+          "room",
+          "0.4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:ambient-saloon"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c4 e4 g4 c5 a4 e4 g4 a4 c5 g4 e4 c4"
+        ],
+        [
+          "s",
+          "square"
+        ],
+        [
+          "lpf",
+          "1400"
+        ],
+        [
+          "gain",
+          "0.15"
+        ],
+        [
+          "sustain",
+          "0.08"
+        ],
+        [
+          "release",
+          "0.15"
+        ],
+        [
+          "room",
+          "0.2"
+        ],
+        [
+          "slow",
+          "1"
+        ],
+        [
+          "degrade-by",
+          "0.15"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:ambient-interior"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "b3 c3 b3 c3 ~ ~ ~ ~"
+        ],
+        [
+          "s",
+          "brown"
+        ],
+        [
+          "sustain",
+          "0.6"
+        ],
+        [
+          "release",
+          "0.2"
+        ],
+        [
+          "lpf",
+          "200"
+        ],
+        [
+          "slow",
+          "1"
+        ],
+        [
+          "degrade-by",
+          "0.5"
+        ],
+        [
+          "attack",
+          "0.7"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:ambient-livery"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c7 ~ e7 ~ g6 ~ ~ ~"
+        ],
+        [
+          "s",
+          "triangle"
+        ],
+        [
+          "gain",
+          "0.08"
+        ],
+        [
+          "sustain",
+          "0.01"
+        ],
+        [
+          "release",
+          "0.04"
+        ],
+        [
+          "lpf",
+          "4000"
+        ],
+        [
+          "hpf",
+          "1500"
+        ],
+        [
+          "slow",
+          "5"
+        ],
+        [
+          "degrade-by",
+          "0.5"
+        ],
+        [
+          "room",
+          "0.1"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:ambient-wind-canyon"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "white"
+        ],
+        [
+          "lpf",
+          "500"
+        ],
+        [
+          "hpf",
+          "100"
+        ],
+        [
+          "gain",
+          "0.6"
+        ],
+        [
+          "attack",
+          "0.8"
+        ],
+        [
+          "sustain",
+          "1.5"
+        ],
+        [
+          "release",
+          "2"
+        ],
+        [
+          "slow",
+          "2"
+        ],
+        [
+          "room",
+          "0.7"
+        ],
+        [
+          "roomsize",
+          "9"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:ambient-hollow-floor"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "a1 ~ ~ ~"
+        ],
+        [
+          "s",
+          "sawtooth"
+        ],
+        [
+          "lpf",
+          "150"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "attack",
+          "2"
+        ],
+        [
+          "sustain",
+          "4"
+        ],
+        [
+          "release",
+          "3"
+        ],
+        [
+          "slow",
+          "6"
+        ],
+        [
+          "room",
+          "0.8"
+        ],
+        [
+          "roomsize",
+          "10"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:ambient-cave"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "e5 ~ ~ ~ c5 ~ ~ ~"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "gain",
+          "0.15"
+        ],
+        [
+          "sustain",
+          "0.02"
+        ],
+        [
+          "release",
+          "0.1"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "degrade-by",
+          "0.5"
+        ],
+        [
+          "room",
+          "0.9"
+        ],
+        [
+          "roomsize",
+          "10"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:ambient-deep-threshold"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c4 ~ ~ ~ a3 ~ ~ ~"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "gain",
+          "0.12"
+        ],
+        [
+          "sustain",
+          "0.03"
+        ],
+        [
+          "release",
+          "0.15"
+        ],
+        [
+          "slow",
+          "5"
+        ],
+        [
+          "degrade-by",
+          "0.4"
+        ],
+        [
+          "room",
+          "0.95"
+        ],
+        [
+          "roomsize",
+          "10"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:ambient-deep-chamber"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c2 ~ g1 ~"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "gain",
+          "0.25"
+        ],
+        [
+          "attack",
+          "2"
+        ],
+        [
+          "sustain",
+          "6"
+        ],
+        [
+          "release",
+          "4"
+        ],
+        [
+          "lpf",
+          "200"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "room",
+          "0.95"
+        ],
+        [
+          "roomsize",
+          "10"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:ambient-resolution"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "e3 g3 b3 e4"
+        ],
+        [
+          "s",
+          "triangle"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "attack",
+          "1"
+        ],
+        [
+          "sustain",
+          "3"
+        ],
+        [
+          "release",
+          "4"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "room",
+          "0.6"
+        ],
+        [
+          "roomsize",
+          "7"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:effect-door"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "a2"
+        ],
+        [
+          "s",
+          "pink"
+        ],
+        [
+          "lpf",
+          "500"
+        ],
+        [
+          "gain",
+          "0.4"
+        ],
+        [
+          "sustain",
+          "0.15"
+        ],
+        [
+          "release",
+          "0.3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:effect-canyon-enter"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "white"
+        ],
+        [
+          "lpf",
+          "600"
+        ],
+        [
+          "hpf",
+          "150"
+        ],
+        [
+          "gain",
+          "0.5"
+        ],
+        [
+          "sustain",
+          "0.3"
+        ],
+        [
+          "release",
+          "1.5"
+        ],
+        [
+          "room",
+          "0.7"
+        ],
+        [
+          "roomsize",
+          "8"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:effect-threshold-cross"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c2"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "lpf",
+          "300"
+        ],
+        [
+          "gain",
+          "0.4"
+        ],
+        [
+          "attack",
+          "0.3"
+        ],
+        [
+          "sustain",
+          "0.5"
+        ],
+        [
+          "release",
+          "2"
+        ],
+        [
+          "room",
+          "0.85"
+        ],
+        [
+          "roomsize",
+          "10"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:effect-death"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "white"
+        ],
+        [
+          "lpf",
+          "300"
+        ],
+        [
+          "gain",
+          "0.5"
+        ],
+        [
+          "sustain",
+          "0.1"
+        ],
+        [
+          "release",
+          "2"
+        ],
+        [
+          "room",
+          "0.3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:ruth-incident"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:npc:cole-rennick",
+          "visited",
+          ""
+        ],
+        [
+          "option",
+          "What happened to the man who came back?",
+          "30078:<PUBKEY>:frontier:dialogue:ruth-going-in"
+        ],
+        [
+          "option",
+          "What's your read on The Hollow?",
+          "30078:<PUBKEY>:frontier:dialogue:ruth-assessment"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "spoken",
+          "30078:<PUBKEY>:frontier:npc:ruth-calloway"
+        ]
+      ],
+      "content": "Ruth reads you for a moment. Then she gets up and points at her corkboard — a date circled eight months back, a name, two lines of tight handwriting.\n\n\"Man came through heading east. Didn't say much. Left the next morning. Three weeks later he came back alone, twenty pounds lighter, wouldn't say where his partner was.\" She sits. \"Stayed two days. Said one coherent thing the whole time.\" She pauses. \"What do you want to know?\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:spur-to-west-expanse"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:the-spur",
+          "west",
+          "The open frontier — west, into the unmapped expanse"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:ruth-to-south-trail"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:ruth-office",
+          "south",
+          "The south trail — four days to Obligado, further beyond"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:canyon-to-northwest-trail"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:canyon-floor",
+          "northwest",
+          "A narrow trail along the canyon base — northwest, into territory no map covers"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:sealed-mine-shaft"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Sealed Mine Shaft"
+        ],
+        [
+          "noun",
+          "sealed mine",
+          "shaft",
+          "sealed shaft",
+          "plank",
+          "old shaft"
+        ],
+        [
+          "verb",
+          "read plank",
+          "read"
+        ],
+        [
+          "state",
+          "sealed"
+        ],
+        [
+          "transition",
+          "sealed",
+          "read",
+          "The words are still legible."
+        ],
+        [
+          "on-interact",
+          "read plank",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:frontier:clue:sealed-mine-plank"
+        ],
+        [
+          "on-interact",
+          "read plank",
+          "set-state",
+          "read"
+        ]
+      ],
+      "content": "A mine opening, smaller than the main cave entrances, its mouth blocked with rough-cut stone and a single weathered plank nailed across the top. The plank is older than the other mining remnants — whatever this shaft was, it predates the main Harlan-era operations.\n\nWords have been burned into the plank with a hot iron. They are still legible. *Read plank* to see them.\n\nThe sealed stone has a dark residue around the edges — the same oily colour as the seep nearby. Whatever is in there has been in there a long time, and whoever sealed it wanted it to stay sealed."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:clue:sealed-mine-plank"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "Words on the Plank"
+        ],
+        [
+          "noun",
+          "plank words",
+          "burned words",
+          "inscription",
+          "plank text"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "Burned into the plank in uneven letters, the hand of someone working quickly or working scared:\n\n*SEALED 1871 — DO NOT OPEN — THE GROUND HERE IS WRONG — WE FOUND THE BLACK SEEP AT 40FT AND THE MEN WHO WENT DEEPER DID NOT COME BACK THE SAME — GOD HELP ANYONE WHO READS THIS*\n\nBelow that, in different handwriting, added later:\n\n*1879 — Still sealed. Still wrong. — R.*\n\nR. Nobody in Dessa's archive has a name starting with R connected to the canyon, except Ruth's initials on the warning scratched near the entrance. But Ruth would have been a child in 1879.\n\nThis R is someone else."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:oil-seep"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Black Seep"
+        ],
+        [
+          "noun",
+          "oil seep",
+          "seep",
+          "black seep",
+          "stain",
+          "dark stain"
+        ],
+        [
+          "verb",
+          "smell",
+          "sniff"
+        ],
+        [
+          "verb",
+          "touch",
+          "dip",
+          "press"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "transition",
+          "default",
+          "smelled",
+          "You crouch and breathe in. Nothing. No petroleum smell, no mineral tang, no sulphur. Just the dry canyon air. Something that seeps from the ground should smell of something."
+        ],
+        [
+          "transition",
+          "smelled",
+          "touched",
+          "The fluid is thicker than it looks. It comes off your fingers slowly, leaving a faint dark stain that doesn't wipe clean."
+        ],
+        [
+          "transition",
+          "default",
+          "touched",
+          "The fluid is thicker than it looks. It comes off your fingers slowly, leaving a faint dark stain that doesn't wipe clean."
+        ],
+        [
+          "on-interact",
+          "smell",
+          "set-state",
+          "smelled"
+        ],
+        [
+          "on-interact",
+          "touch",
+          "set-state",
+          "touched"
+        ]
+      ],
+      "content": "A slow, dark seep from a crack in the canyon floor, spreading outward in a thin film that catches the light with a faint iridescence. It has no smell, which is more unsettling than if it smelled of anything. Oil has a smell. This doesn't.\n\nThe ore cart nearby has been sitting in the seep's path long enough that the metal is discoloured — a deep, permanent black where the fluid has crept over decades. The rock around the seep is similarly stained, going back further than the mining era.\n\nWhatever this is, the ground here has been producing it for a long time. The sealed mine shaft nearby was dug into the same section of canyon floor.\n\nSomeone, someday, will know what this is worth — or what it means. That someone has not arrived yet."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:east-road"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "East Road"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:ambient-wind",
+          "ambient",
+          "0.6"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:spur-distant-piano",
+          "layer",
+          "0.2"
+        ]
+      ],
+      "content": "The road out of town forks here. Rennick's Saloon sits to the north, lamplight spilling through its windows. To the east, the road narrows into a trail that winds toward the canyon country. West leads back to The Spur."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:east-road-to-saloon"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:east-road",
+          "north",
+          "Rennick's Saloon — lamplight and the murmur of voices"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:rennicks-saloon",
+          "south",
+          "Back to the fork in the road"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:item:climbing-rope"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Climbing Rope"
+        ],
+        [
+          "noun",
+          "rope",
+          "climbing rope",
+          "coil"
+        ],
+        [
+          "state",
+          "hidden"
+        ]
+      ],
+      "content": "A thirty-foot coil of good hemp rope, weathered but strong. Someone who knew what they were doing tied the loops."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:item:pickaxe-head"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Iron Pickaxe Head"
+        ],
+        [
+          "noun",
+          "pickaxe head",
+          "head",
+          "iron head"
+        ]
+      ],
+      "content": "A heavy iron pickaxe head, rusted at the edges but still sound. The socket is empty — it needs a handle."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:item:wooden-handle"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Wooden Handle"
+        ],
+        [
+          "noun",
+          "handle",
+          "wooden handle",
+          "shaft",
+          "wooden shaft"
+        ]
+      ],
+      "content": "A length of hardwood, smooth from years of grip. One end is shaped to fit a tool head. Left here by someone who didn't come back for it."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:recipe:pickaxe"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "recipe"
+        ],
+        [
+          "title",
+          "Assemble Pickaxe"
+        ],
+        [
+          "verb",
+          "assemble",
+          "fix",
+          "make",
+          "fit"
+        ],
+        [
+          "noun",
+          "pickaxe",
+          "pick"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:item:pickaxe-head",
+          "",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:item:wooden-handle",
+          "",
+          ""
+        ],
+        [
+          "on-complete",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:frontier:item:old-pickaxe"
+        ],
+        [
+          "on-complete",
+          "",
+          "consume-item",
+          "30078:<PUBKEY>:frontier:item:pickaxe-head"
+        ],
+        [
+          "on-complete",
+          "",
+          "consume-item",
+          "30078:<PUBKEY>:frontier:item:wooden-handle"
+        ]
+      ],
+      "content": "You fit the iron head onto the wooden handle. It seats with a satisfying click — the socket was made for this shaft. The pickaxe is heavy but balanced."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:item:old-pickaxe"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Old Pickaxe"
+        ],
+        [
+          "noun",
+          "pickaxe",
+          "pick",
+          "old pickaxe"
+        ]
+      ],
+      "content": "A reassembled miner's pickaxe. The iron head is rusted but solid, the wooden handle worn smooth by years of use. Good enough to break rock."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:saloon-murmur"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "brown"
+        ],
+        [
+          "lpf",
+          "600"
+        ],
+        [
+          "hpf",
+          "200"
+        ],
+        [
+          "gain",
+          "0.12"
+        ],
+        [
+          "sustain",
+          "2"
+        ],
+        [
+          "release",
+          "1"
+        ],
+        [
+          "attack",
+          "0.5"
+        ],
+        [
+          "slow",
+          "3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:saloon-glass"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "e6 ~ ~ g6 ~ ~ c7 ~"
+        ],
+        [
+          "s",
+          "triangle"
+        ],
+        [
+          "gain",
+          "0.06"
+        ],
+        [
+          "sustain",
+          "0.01"
+        ],
+        [
+          "release",
+          "0.05"
+        ],
+        [
+          "lpf",
+          "5000"
+        ],
+        [
+          "hpf",
+          "2000"
+        ],
+        [
+          "slow",
+          "5"
+        ],
+        [
+          "degrade-by",
+          "0.6"
+        ],
+        [
+          "room",
+          "0.15"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:livery-horse"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "pink"
+        ],
+        [
+          "lpf",
+          "300"
+        ],
+        [
+          "hpf",
+          "60"
+        ],
+        [
+          "gain",
+          "0.1"
+        ],
+        [
+          "sustain",
+          "0.3"
+        ],
+        [
+          "release",
+          "0.5"
+        ],
+        [
+          "attack",
+          "0.2"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "degrade-by",
+          "0.6"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:livery-creak"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "d2 ~ ~ e2 ~ ~ ~"
+        ],
+        [
+          "s",
+          "sawtooth"
+        ],
+        [
+          "lpf",
+          "200"
+        ],
+        [
+          "gain",
+          "0.05"
+        ],
+        [
+          "sustain",
+          "0.4"
+        ],
+        [
+          "release",
+          "0.3"
+        ],
+        [
+          "slow",
+          "7"
+        ],
+        [
+          "degrade-by",
+          "0.5"
+        ],
+        [
+          "room",
+          "0.1"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:dessa-pen"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "white"
+        ],
+        [
+          "lpf",
+          "3000"
+        ],
+        [
+          "hpf",
+          "1500"
+        ],
+        [
+          "gain",
+          "0.04"
+        ],
+        [
+          "sustain",
+          "0.02"
+        ],
+        [
+          "release",
+          "0.03"
+        ],
+        [
+          "slow",
+          "2"
+        ],
+        [
+          "degrade-by",
+          "0.4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:spur-distant-piano"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c4 e4 g4 c5"
+        ],
+        [
+          "s",
+          "square"
+        ],
+        [
+          "lpf",
+          "400"
+        ],
+        [
+          "gain",
+          "0.04"
+        ],
+        [
+          "sustain",
+          "0.08"
+        ],
+        [
+          "release",
+          "0.1"
+        ],
+        [
+          "room",
+          "0.4"
+        ],
+        [
+          "slow",
+          "3"
+        ],
+        [
+          "degrade-by",
+          "0.3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:canyon-pebbles"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "a6 ~ ~ c7 ~ ~ ~ ~"
+        ],
+        [
+          "s",
+          "triangle"
+        ],
+        [
+          "gain",
+          "0.05"
+        ],
+        [
+          "sustain",
+          "0.005"
+        ],
+        [
+          "release",
+          "0.02"
+        ],
+        [
+          "slow",
+          "6"
+        ],
+        [
+          "degrade-by",
+          "0.6"
+        ],
+        [
+          "room",
+          "0.6"
+        ],
+        [
+          "roomsize",
+          "8"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:cave-rumble"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c1"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "lpf",
+          "80"
+        ],
+        [
+          "gain",
+          "0.15"
+        ],
+        [
+          "attack",
+          "3"
+        ],
+        [
+          "sustain",
+          "5"
+        ],
+        [
+          "release",
+          "4"
+        ],
+        [
+          "slow",
+          "12"
+        ],
+        [
+          "degrade-by",
+          "0.4"
+        ],
+        [
+          "room",
+          "0.9"
+        ],
+        [
+          "roomsize",
+          "10"
+        ]
+      ],
+      "content": ""
+    }
+  ]
+}

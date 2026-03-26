@@ -126,6 +126,9 @@ export function renderRoomContent(room, cryptoKeys) {
       } else {
         entries.push({ html: renderMarkdown(decrypted), type: 'markdown' });
       }
+    } else if (room._isDraft && room.content) {
+      // Draft content is plaintext (not yet encrypted) — show as preview
+      entries.push({ html: renderMarkdown(room.content), type: 'markdown' });
     } else {
       entries.push({ text: 'The air hums with sealed energy. You lack the key to read what is written here.', type: 'sealed' });
     }

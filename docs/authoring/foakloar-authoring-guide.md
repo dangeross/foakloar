@@ -204,8 +204,19 @@ For sealed win content (decrypted only when the player solves a puzzle):
 2. The same answer is key material for NIP-44 decryption of the win place content
 3. The publishing tool handles encryption — you provide plaintext in the `content` field
 
+**Hash format:** The hash is computed as `SHA256(answer + salt)` where `+` means string concatenation (no separator). Both `answer` and `salt` are treated as literal strings. The result is a lowercase hex digest (64 characters).
+
+**Example:**
+```
+answer: "bottle"
+salt:   "the-lake:puzzle:chapel-riddle:v1"
+input:  "bottlethe-lake:puzzle:chapel-riddle:v1"
+hash:   "cc421c90e82bd9b59dd998b616f8cb2f35270149388e2e042b9151d64a4e34b8"
+```
+
 **LLM authors must:**
 - Compute the real SHA-256 hex digest for `answer-hash` — a placeholder publishes a permanently unsolvable puzzle
+- The `salt` tag should be unique per puzzle (convention: `<world-slug>:puzzle:<name>:v1`)
 - Write the plaintext win prose in the `content` field, clearly labelled — the publishing tool encrypts it
 
 ---

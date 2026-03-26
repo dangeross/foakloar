@@ -13,7 +13,7 @@
  */
 
 const STORAGE_PREFIX = 'drafts:';
-const PUBKEY_PLACEHOLDER = '<PUBKEY>';
+export const PUBKEY_PLACEHOLDER = '<PUBKEY>';
 
 /**
  * Parse JSON with lenient handling — strips // comments and trailing commas.

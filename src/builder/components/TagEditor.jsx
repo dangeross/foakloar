@@ -217,7 +217,7 @@ function DOSSelect({ value, onChange, options, placeholder }) {
             border: '1px solid var(--colour-dim)',
             maxHeight: '12em',
             overflowY: 'auto',
-            zIndex: 200,
+            zIndex: 1200,
             boxShadow: '2px -2px 0 var(--colour-dim)',
           }}
         >
@@ -363,7 +363,7 @@ function EventRefSelect({ value, onChange, events, eventTypeFilter, placeholder:
             border: '1px solid var(--colour-dim)',
             maxHeight: '12em',
             overflowY: 'auto',
-            zIndex: 200,
+            zIndex: 1200,
             boxShadow: '2px -2px 0 var(--colour-dim)',
           }}
         >
@@ -679,7 +679,7 @@ function AddTagDropdown({ options, onSelect }) {
             border: '1px solid var(--colour-dim)',
             maxHeight: '16em',
             overflowY: 'auto',
-            zIndex: 200,
+            zIndex: 1200,
             boxShadow: '2px -2px 0 var(--colour-dim)',
           }}
         >

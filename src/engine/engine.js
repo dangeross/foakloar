@@ -2135,6 +2135,12 @@ export class GameEngine {
     const options = getTags(node, 'option');
     const visibleOptions = this._getVisibleOptions(options);
 
+    if (visibleOptions.length === 0) {
+      // Leaf node — auto-exit dialogue
+      this.dialogueActive = null;
+      return;
+    }
+
     for (let i = 0; i < visibleOptions.length; i++) {
       this._emit(`  ${i + 1}. ${visibleOptions[i].label}`, 'dialogue-option');
     }
@@ -2284,6 +2290,40 @@ export class GameEngine {
 
   // ── Resolve noun ──────────────────────────────────────────────────────
 
+  /** Find an NPC by noun — checks static NPCs on the place and roaming NPCs. */
+  _findNpcByNoun(noun) {
+    if (!this.currentPlace) return null;
+    const room = this.events.get(this.currentPlace);
+    if (!room) return null;
+    // Static NPCs
+    for (const ref of getTags(room, 'npc')) {
+      const npc = this.events.get(ref[1]);
+      if (!npc) continue;
+      const title = getTag(npc, 'title')?.toLowerCase() || '';
+      if (title.includes(noun)) return { event: npc, dtag: ref[1], type: 'npc' };
+      for (const nt of getTags(npc, 'noun')) {
+        for (let i = 1; i < nt.length; i++) {
+          if (nt[i].toLowerCase() === noun) return { event: npc, dtag: ref[1], type: 'npc' };
+        }
+      }
+    }
+    // Roaming NPCs
+    const roaming = findRoamingNpcsAtPlace(
+      this.events, this.currentPlace, this.player.getMoveCount(),
+      (npcDtag) => this.player.getNpcState(npcDtag),
+    );
+    for (const { npcEvent, npcDtag } of roaming) {
+      const title = getTag(npcEvent, 'title')?.toLowerCase() || '';
+      if (title.includes(noun)) return { event: npcEvent, dtag: npcDtag, type: 'npc' };
+      for (const nt of getTags(npcEvent, 'noun')) {
+        for (let i = 1; i < nt.length; i++) {
+          if (nt[i].toLowerCase() === noun) return { event: npcEvent, dtag: npcDtag, type: 'npc' };
+        }
+      }
+    }
+    return null;
+  }
+
   resolveNoun(rawNoun) {
     if (!rawNoun) return null;
     const noun = stripArticles(rawNoun);
@@ -2306,12 +2346,13 @@ export class GameEngine {
         }
       }
     }
-    const invMatch = findInventoryItem(this.events, this.player.state.inventory, noun);
-    if (invMatch) return { ...invMatch, type: 'item' };
-
-    // Check recipes (not place-scoped)
+    // Check recipes before inventory (recipe nouns like "pickaxe" would otherwise
+    // match inventory items like "Iron Pickaxe Head" via title.includes())
     const recipeMatch = this._findRecipeByNoun(noun);
     if (recipeMatch) return recipeMatch;
+
+    const invMatch = findInventoryItem(this.events, this.player.state.inventory, noun);
+    if (invMatch) return { ...invMatch, type: 'item' };
 
     return null;
   }
@@ -3030,9 +3071,18 @@ export class GameEngine {
     const pickupMatch = trimmed.match(/^(?:pick up|take|get|grab)\s+(.+)$/);
     if (pickupMatch) { this.handlePickup(pickupMatch[1]); return; }
 
-    // Built-in: talk / speak
+    // Built-in: talk / speak — prioritise NPC matches
     const talkMatch = trimmed.match(/^(?:talk to|talk|speak with|speak to|speak)\s+(.+)$/);
-    if (talkMatch) { this.handleInteraction('talk', talkMatch[1], null); return; }
+    if (talkMatch) {
+      const noun = stripArticles(talkMatch[1]);
+      const npcMatch = this._findNpcByNoun(noun);
+      if (npcMatch) {
+        this.startDialogue(npcMatch.dtag);
+      } else {
+        this.handleInteraction('talk', talkMatch[1], null);
+      }
+      return;
+    }
 
     // Built-in: report [noun] — only in open collaboration worlds
     const reportMatch = trimmed.match(/^report(?:\s+(.+))?$/);
