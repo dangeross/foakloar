@@ -2101,6 +2101,13 @@ export class GameEngine {
 
       if (action === 'give-item' && actionTarget) {
         giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+      } else if (action === 'consume-item' && actionTarget) {
+        if (this.player.hasItem(actionTarget)) {
+          this.player.removeItem(actionTarget);
+          const consumeEvent = this.events.get(actionTarget);
+          const consumeTitle = consumeEvent ? getTag(consumeEvent, 'title') : actionTarget;
+          this._emit(`${consumeTitle} is consumed.`, 'item');
+        }
       } else if (action === 'set-state' && actionTarget) {
         const extRef = tag[4];  // full a-tag
         if (extRef) {
@@ -2961,8 +2968,21 @@ export class GameEngine {
       if (this._handleCraftStep(trimmed)) return;
     }
 
-    // Dialogue mode
-    if (this.dialogueActive) { this.handleDialogueChoice(trimmed); return; }
+    // Dialogue mode — allow back/leave to exit, restart to bypass
+    if (this.dialogueActive) {
+      if (/^(back|leave|cancel|quit|exit)$/i.test(trimmed)) {
+        this.dialogueActive = null;
+        this._emit('You end the conversation.', 'narrative');
+        return;
+      }
+      if (trimmed === 'restart') {
+        this.dialogueActive = null;
+        // fall through to restart handler below
+      } else {
+        this.handleDialogueChoice(trimmed);
+        return;
+      }
+    }
 
     // Puzzle mode
     if (this.puzzleActive) { await this.handlePuzzleAnswer(input.trim()); return; }

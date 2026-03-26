@@ -25,7 +25,7 @@ const ACTION_TYPES = [
 export const TRIGGER_ACTIONS = {
   'on-interact':           ['set-state', 'give-item', 'consume-item', 'traverse', 'deal-damage', 'deal-damage-npc', 'heal', 'consequence', 'decrement', 'increment', 'set-counter', 'sound', 'activate'],
   'on-complete':           ['set-state', 'give-item', 'consume-item', 'traverse', 'heal', 'consequence', 'decrement', 'increment', 'set-counter', 'sound', 'activate'],
-  'on-enter':              ['set-state', 'give-item', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter', 'sound'],
+  'on-enter':              ['set-state', 'give-item', 'consume-item', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter', 'sound'],
   'on-encounter':          ['set-state', 'deal-damage', 'consequence', 'steals-item', 'deposits', 'flees', 'decrement', 'sound'],
   'on-attacked':           ['set-state', 'deal-damage', 'deal-damage-npc', 'consequence', 'steals-item', 'flees', 'decrement', 'increment', 'set-counter', 'sound'],
   'on-fail':               ['set-state', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter', 'sound'],

@@ -781,6 +781,10 @@
           "30078:<PUBKEY>:frontier:sound:livery-creak",
           "layer",
           "0.4"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:carved-initials"
         ]
       ],
       "content": "The livery sits between the saloon and the south end of town. Three horses in the stalls, a fourth out back. It smells of hay and worked leather. Joaquin Serrano is replacing a shoe on the grey mare when you come in — he doesn't look up, but he registers you."
@@ -832,6 +836,10 @@
         [
           "exit",
           "south"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:unmarked-grave"
         ]
       ],
       "content": "A single room at the south end of town. A desk, two chairs, a rifle propped against the wall. A corkboard with papers pinned to it — dates, names, notes in a tight, purposeful hand. Ruth Calloway sits straight-backed at the desk, reading something she doesn't put down when you enter.\n\nShe finishes the page. Sets it down. Looks at you.\n\nThe south door leads out toward the lower trail — the route toward Obligado and points beyond. Riders coming up from that direction sometimes stop at Ruth's office before they stop anywhere else."
@@ -984,6 +992,14 @@
           "30078:<PUBKEY>:frontier:sound:canyon-pebbles",
           "layer",
           "0.4"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:canyon-wall-crack"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:frontier:item:torn-pages"
         ]
       ],
       "content": "The canyon floor is wider than the entrance suggested — a broad, flat corridor of packed earth and old gravel. The walls tighten overhead, narrowing the sky to a river of blue. Sound behaves differently here. Your voice comes back a half-beat late, from the wrong direction.\n\nThe remnants of four separate mining operations are visible along the floor — collapsed timber frames, a rusted ore cart, a section of narrow-gauge rail that simply ends. Someone drove a lot of iron in here once and then stopped.\n\nFurther along the north wall, past the main cave entrance, a fifth opening — older and smaller than the others, its mouth sealed with rough-cut stone and a single plank nailed across it. The plank has writing on it. Whatever the miners sealed in there, they didn't want found.\n\nNear the sealed shaft, a dark stain marks the canyon floor — a slow, oily seep from a crack in the rock. It has no smell you recognise. The old ore cart nearby has been discoloured by it, the metal surface dark where the seep has crept over decades.\n\nA northwest trail threads along the base of the canyon wall — a goat path, barely, but passable. It heads deeper into the canyon system, away from the main cave mouths. Nobody from Harrow seems to know where it goes.\n\nThe cave systems begin here. One entrance, broad and dark, opens in the north wall. Further down, past the old rail terminus, a second entrance — smaller, colder, the air around it noticeably still."
@@ -1051,6 +1067,10 @@
           "30078:<PUBKEY>:frontier:sound:cave-rumble",
           "layer",
           "0.5"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:frontier:item:rusty-nails"
         ]
       ],
       "content": "The cave mouth is wide enough to walk through without ducking. The air inside is cooler by ten degrees — a clean, dry cold, not the wet cold of underground water. The walls are close enough to touch on both sides.\n\nThe cave goes north. The passage is navigable but not comfortable. Whoever built the mining operation used this cave as their primary access route — the walls are scored with tool marks and the floor has been levelled in places. Whatever they were doing, they came through here a lot.\n\nThe same markings from the canyon entrance appear here. More of them. Arranged differently."
@@ -1901,6 +1921,11 @@
           "option",
           "Anything going on in town?",
           "30078:<PUBKEY>:frontier:dialogue:rennick-town"
+        ],
+        [
+          "option",
+          "I have a letter for you.",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-letter"
         ]
       ],
       "content": "Rennick sets a glass on the bar without being asked. Pours something amber. Doesn't say anything until he's put the bottle back.\n\n\"You look like someone who came off The Spur with a question.\" A pause. \"Most do.\""
@@ -2175,6 +2200,11 @@
           "set-state",
           "tea-offered",
           "30078:<PUBKEY>:frontier:npc:dessa-vane"
+        ],
+        [
+          "option",
+          "I found some pages that might be yours.",
+          "30078:<PUBKEY>:frontier:dialogue:dessa-pages"
         ]
       ],
       "content": "Dessa sets her pen down and looks at you for a measured moment. Then she goes to the stove and comes back with two cups of tea. She sits down with her own — which is when you understand something has shifted.\n\n\"You're not the first person to come to Harrow looking for The Hollow,\" she says. \"But you have the look of someone who might be worth talking to. Sit down.\""
@@ -2411,15 +2441,9 @@
         [
           "type",
           "dialogue"
-        ],
-        [
-          "on-enter",
-          "player",
-          "give-item",
-          "30078:<PUBKEY>:frontier:item:pickaxe-head"
         ]
       ],
-      "content": "\"The Hollow.\" He says it matter-of-factly, still working. \"You mean The Hollow. People call it canyon country when they don't want to say the name.\"\n\n\"Yes, I know it. Better than most who've tried it and came back. The practical answer is: it's navigable if you're careful and you understand what careful means out there. The other answer—\" He sets down the rasp. \"The other answer takes longer. Give me a reason to trust you with it.\"\n\nHe reaches behind the workbench and tosses you something heavy. An iron pickaxe head, rusted but solid. \"Old Emmett's. Left the handle down in the first shaft when the company folded. Head's no use without it, but if you find the rest...\""
+      "content": "\"The Hollow.\" He says it matter-of-factly, still working. \"You mean The Hollow. People call it canyon country when they don't want to say the name.\"\n\n\"Yes, I know it. Better than most who've tried it and came back. The practical answer is: it's navigable if you're careful and you understand what careful means out there. The other answer—\" He sets down the rasp. \"The other answer takes longer. Give me a reason to trust you with it.\""
     },
     {
       "kind": 30078,
@@ -2678,6 +2702,11 @@
         [
           "type",
           "dialogue"
+        ],
+        [
+          "option",
+          "You carrying anything for anyone?",
+          "30078:<PUBKEY>:frontier:dialogue:rider-letter"
         ]
       ],
       "content": "The rider eyes you. Makes the calculation. Decides you're worth a word.\n\n\"Just came off the eastern trail. Canyon country.\" They don't say the name. \"Didn't go far in — just far enough to see the entrance markings and decide I had better things to do with my life.\" A half-smile. \"There's a man in the canyon. Or there was — saw a campfire two nights ago, inside, past the first turn. Didn't investigate. If you're heading that way, worth knowing you might not be alone.\"\n\nThey water the horse and move on. A planted seed — a campfire nobody accounts for. *Someone is already in The Hollow.*"
@@ -2884,7 +2913,6 @@
           "verb",
           "fix",
           "repair",
-          "fix fence",
           "mend"
         ],
         [
@@ -2892,10 +2920,10 @@
           "broken"
         ],
         [
-          "transition",
-          "broken",
-          "fixed",
-          "The fence holds. Joaquin gives you a look worth having."
+          "requires",
+          "30078:<PUBKEY>:frontier:item:rusty-nails",
+          "",
+          "You'd need some nails to fix this."
         ],
         [
           "on-interact",
@@ -2906,9 +2934,26 @@
         [
           "on-interact",
           "fix",
-          "set-state",
-          "opened",
-          "30078:<PUBKEY>:frontier:npc:joaquin-serrano"
+          "consume-item",
+          "30078:<PUBKEY>:frontier:item:rusty-nails"
+        ],
+        [
+          "on-interact",
+          "fix",
+          "give-item",
+          "30078:<PUBKEY>:frontier:item:pickaxe-head"
+        ],
+        [
+          "transition",
+          "broken",
+          "fixed",
+          "You hammer the nails in with a rock, bracing the worst of the rotten posts. It won't win any prizes, but it'll hold.\n\nJoaquin watches from across the livery and nods once. He reaches behind the workbench and tosses you something heavy. An iron pickaxe head, rusted but solid. \"Old Emmett's. You earned it.\""
+        ],
+        [
+          "transition",
+          "fixed",
+          "fixed",
+          "The fence is mended. It'll hold for now."
         ]
       ],
       "content": "The south fence of the livery is rotting out — three posts loose, two rails down. Joaquin mentioned it. The tools to fix it are on the south wall."
@@ -3371,6 +3416,28 @@
           "drink",
           "heal",
           "1"
+        ],
+        [
+          "state",
+          "full"
+        ],
+        [
+          "on-interact",
+          "drink",
+          "set-state",
+          "empty"
+        ],
+        [
+          "transition",
+          "full",
+          "empty",
+          "You drink the whiskey. It burns clean.\n\nRennick watches. \"Last man who sat there and drank that was a man named Harlan. Eight months ago. He didn't finish his.\" A beat. \"You did.\""
+        ],
+        [
+          "transition",
+          "empty",
+          "empty",
+          "The glass is empty."
         ]
       ],
       "content": "Amber, room temperature, probably not the best whiskey in the territory but honestly fine. Cole poured it without being asked. That means something.\n\nYou could *drink* it."
@@ -5508,6 +5575,412 @@
         ]
       ],
       "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:item:riders-letter"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Sealed Letter"
+        ],
+        [
+          "noun",
+          "letter",
+          "sealed letter",
+          "envelope"
+        ]
+      ],
+      "content": "A sealed envelope, travel-worn and creased. The name on the front reads simply: *Rennick.*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rider-letter"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "give-item",
+          "30078:<PUBKEY>:frontier:item:riders-letter"
+        ]
+      ],
+      "content": "The rider pats a pocket and pulls out an envelope. \"Almost forgot. Someone on the trail asked me to bring this to the saloon. For Rennick.\" He hands it over without ceremony. \"I'm not a mail service, but the man looked like he needed the favour.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:rennick-letter"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:item:riders-letter",
+          "",
+          ""
+        ],
+        [
+          "on-enter",
+          "player",
+          "consume-item",
+          "30078:<PUBKEY>:frontier:item:riders-letter"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visited"
+        ]
+      ],
+      "content": "Rennick takes the letter. Reads it standing up. His face doesn't change, but something behind his eyes does.\n\nA long silence. He folds the letter and puts it under the bar.\n\n\"Harlan wrote that,\" he says quietly. \"I know his hand. He wrote it before he went in the last time. Said if he didn't come back, someone would bring it eventually.\"\n\nAnother pause. \"He said the canyon isn't what people think it is. Said it's not a place you find things. It's a place that finds you.\"\n\nHe pours himself a drink for the first time since you've been here. \"That's all I've got.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:quest:the-letter"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Letter"
+        ],
+        [
+          "quest-type",
+          "hidden"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:frontier:item:riders-letter"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-letter"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:dialogue:rennick-letter",
+          "visited",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:item:rusty-nails"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Rusty Nails"
+        ],
+        [
+          "noun",
+          "nails",
+          "rusty nails"
+        ]
+      ],
+      "content": "A handful of square-cut nails, rusted but still usable. The kind they used in the old mining operations."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:quest:the-fence"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Fence"
+        ],
+        [
+          "quest-type",
+          "hidden"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:frontier:feature:broken-fence"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:feature:broken-fence",
+          "fixed",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:item:torn-pages"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Torn Archive Pages"
+        ],
+        [
+          "noun",
+          "pages",
+          "torn pages",
+          "papers"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:feature:canyon-wall-crack",
+          "searched",
+          ""
+        ]
+      ],
+      "content": "Pages torn from Dessa's archive. The handwriting is older than Dessa's — these are original expedition notes from the first survey team. They describe the canyon markings as *\"a language that is also a map.\"*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:canyon-wall-crack"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Wall Crack"
+        ],
+        [
+          "noun",
+          "crack",
+          "wall crack",
+          "crevice"
+        ],
+        [
+          "state",
+          "sealed"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "set-state",
+          "searched"
+        ],
+        [
+          "transition",
+          "sealed",
+          "searched",
+          "You peer into the crack in the canyon wall. Wedged deep inside, protected from weather, are several folded pages. You ease them out carefully."
+        ]
+      ],
+      "content": "A narrow crack in the canyon wall, just wide enough to fit a hand into. Something pale is visible deep inside — paper?"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:dessa-pages"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:item:torn-pages",
+          "",
+          ""
+        ],
+        [
+          "on-enter",
+          "player",
+          "consume-item",
+          "30078:<PUBKEY>:frontier:item:torn-pages"
+        ],
+        [
+          "on-enter",
+          "player",
+          "set-state",
+          "visited"
+        ]
+      ],
+      "content": "Dessa takes the pages. Her hands are steady but her eyes aren't.\n\n\"These are from the Whitfield survey. 1861. I've been looking for these for two years.\" She reads in silence for a full minute.\n\n\"They understood the markings. Not all of them, but enough. The canyon wall language isn't directions. It's a record. A record of everyone who entered and what happened to them.\"\n\nShe looks up. \"Harlan figured that out too. That's why he stayed. He wanted to add his own entry.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:quest:missing-pages"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Missing Pages"
+        ],
+        [
+          "quest-type",
+          "mystery"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:frontier:item:torn-pages"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:frontier:dialogue:dessa-pages"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:frontier:dialogue:dessa-pages",
+          "visited",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:carved-initials"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Carved Initials"
+        ],
+        [
+          "noun",
+          "initials",
+          "carving",
+          "carved initials",
+          "post"
+        ]
+      ],
+      "content": "Carved into the livery post at waist height: *H.W. — 1863*. The cuts are deep and deliberate. Someone stood here and took their time."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:unmarked-grave"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Unmarked Grave"
+        ],
+        [
+          "noun",
+          "grave",
+          "mound",
+          "unmarked grave"
+        ]
+      ],
+      "content": "A low mound of stones behind the office, unmarked. Ruth doesn't mention it. The stones are arranged with care — someone who knew the person did this. No name. No date."
     }
   ]
 }
