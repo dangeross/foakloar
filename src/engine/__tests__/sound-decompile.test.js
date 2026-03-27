@@ -2,7 +2,7 @@
  * Tests for sound decompile — Strudel code → tag arrays.
  */
 import { describe, it, expect } from 'vitest';
-import { decompileStrudelCode, buildStrudelCodeFromTags } from '../../services/sound.js';
+import { decompileStrudelCode, buildStrudelCodeFromTags } from '../../services/sound-builder.js';
 
 describe('decompileStrudelCode', () => {
   it('extracts note pattern', () => {
