@@ -5,6 +5,11 @@
 
 ## [Unreleased] — March 2026
 
+### Added — HUD display
+
+**`hud` tag on world event**
+`["hud", "<template>"]` — persistent client display with `{{counter-name}}` interpolation for player counters. Multiple tags render multiple lines. Repeatable.
+
 ### Added — World-scoped counters
 
 **`counter` and `on-counter` valid on world event**

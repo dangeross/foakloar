@@ -525,6 +525,15 @@
           "",
           "traverse",
           "30078:<PUBKEY>:frontier:portal:xyzzy"
+        ],
+        [
+          "counter",
+          "discoveries",
+          "0"
+        ],
+        [
+          "hud",
+          "Discoveries: {{discoveries}}"
         ]
       ],
       "content": "A town at the edge of the mapped world. Something in the hollow draws people. Not all of them come back."
@@ -901,18 +910,36 @@
           "0.4"
         ],
         [
-          "requires",
-          "30078:<PUBKEY>:frontier:npc:ruth-calloway",
-          "spoken",
-          "Ruth hasn't told you what she knows yet. Go back to Harrow."
-        ],
-        [
           "on-enter",
           "player",
           "",
           "set-state",
           "markings-seen",
           "30078:<PUBKEY>:frontier:feature:canyon-entrance-markings"
+        ],
+        [
+          "state",
+          "unvisited"
+        ],
+        [
+          "transition",
+          "unvisited",
+          "visited",
+          ""
+        ],
+        [
+          "on-enter",
+          "player",
+          "unvisited",
+          "increment",
+          "discoveries"
+        ],
+        [
+          "on-enter",
+          "player",
+          "unvisited",
+          "set-state",
+          "visited"
         ]
       ],
       "content": "The canyon opens here — wider than you expected from the trail. Red and ochre walls rise on either side, close enough that the sky above is a stripe of pale blue. The entrance feels almost welcoming. That changes further in.\n\nAt the base of the right-hand wall, someone has scratched something into the stone above the tideline of flood deposits. The scratching is old. It is also, you notice, not the first layer — there are marks beneath it, darker and more deliberate, made with something other than a prospector's tool."
@@ -1010,6 +1037,30 @@
         [
           "item",
           "30078:<PUBKEY>:frontier:item:torn-pages"
+        ],
+        [
+          "state",
+          "unvisited"
+        ],
+        [
+          "transition",
+          "unvisited",
+          "visited",
+          ""
+        ],
+        [
+          "on-enter",
+          "player",
+          "unvisited",
+          "increment",
+          "discoveries"
+        ],
+        [
+          "on-enter",
+          "player",
+          "unvisited",
+          "set-state",
+          "visited"
         ]
       ],
       "content": "The canyon floor is wider than the entrance suggested — a broad, flat corridor of packed earth and old gravel. The walls tighten overhead, narrowing the sky to a river of blue. Sound behaves differently here. Your voice comes back a half-beat late, from the wrong direction.\n\nThe remnants of four separate mining operations are visible along the floor — collapsed timber frames, a rusted ore cart, a section of narrow-gauge rail that simply ends. Someone drove a lot of iron in here once and then stopped.\n\nFurther along the north wall, past the main cave entrance, a fifth opening — older and smaller than the others, its mouth sealed with rough-cut stone and a single plank nailed across it. The plank has writing on it. Whatever the miners sealed in there, they didn't want found.\n\nNear the sealed shaft, a dark stain marks the canyon floor — a slow, oily seep from a crack in the rock. It has no smell you recognise. The old ore cart nearby has been discoloured by it, the metal surface dark where the seep has crept over decades.\n\nA northwest trail threads along the base of the canyon wall — a goat path, barely, but passable. It heads deeper into the canyon system, away from the main cave mouths. Nobody from Harrow seems to know where it goes.\n\nThe cave systems begin here. One entrance, broad and dark, opens in the north wall. Further down, past the old rail terminus, a second entrance — smaller, colder, the air around it noticeably still."
@@ -1082,6 +1133,30 @@
         [
           "item",
           "30078:<PUBKEY>:frontier:item:rusty-nails"
+        ],
+        [
+          "state",
+          "unvisited"
+        ],
+        [
+          "transition",
+          "unvisited",
+          "visited",
+          ""
+        ],
+        [
+          "on-enter",
+          "player",
+          "unvisited",
+          "increment",
+          "discoveries"
+        ],
+        [
+          "on-enter",
+          "player",
+          "unvisited",
+          "set-state",
+          "visited"
         ]
       ],
       "content": "The cave mouth is wide enough to walk through without ducking. The air inside is cooler by ten degrees — a clean, dry cold, not the wet cold of underground water. The walls are close enough to touch on both sides.\n\nThe cave goes north. The passage is navigable but not comfortable. Whoever built the mining operation used this cave as their primary access route — the walls are scored with tool marks and the floor has been levelled in places. Whatever they were doing, they came through here a lot.\n\nThe same markings from the canyon entrance appear here. More of them. Arranged differently."
@@ -1221,6 +1296,30 @@
           "30078:<PUBKEY>:frontier:sound:cave-rumble",
           "layer",
           "0.7"
+        ],
+        [
+          "state",
+          "unvisited"
+        ],
+        [
+          "transition",
+          "unvisited",
+          "visited",
+          ""
+        ],
+        [
+          "on-enter",
+          "player",
+          "unvisited",
+          "increment",
+          "discoveries"
+        ],
+        [
+          "on-enter",
+          "player",
+          "unvisited",
+          "set-state",
+          "visited"
         ]
       ],
       "content": "The passage opens into a chamber large enough that you cannot see the far wall clearly. The silence here is absolute in a way that has nothing to do with the absence of sound — it is a specific, deliberate quiet, like an intake of breath held for a very long time.\n\nThe walls catch what little light you carry and return it differently — warm tones where the stone is smooth, darker where it has been worked. Someone spent considerable time in this chamber. The evidence is everywhere: a low stone ledge along one wall, carefully levelled. A formation at the centre of the floor, natural but arranged around, footpaths worn into the stone from repeated use.\n\nAnd in the far wall, visible now as your eyes adjust, a series of marks. Not scratched. Carved. The same hand as the entrance, but this is the original — everything outside is a copy of what is written here."
@@ -1269,6 +1368,30 @@
         [
           "puzzle",
           "30078:<PUBKEY>:frontier:puzzle:harlan-cipher"
+        ],
+        [
+          "state",
+          "unvisited"
+        ],
+        [
+          "transition",
+          "unvisited",
+          "visited",
+          ""
+        ],
+        [
+          "on-enter",
+          "player",
+          "unvisited",
+          "increment",
+          "discoveries"
+        ],
+        [
+          "on-enter",
+          "player",
+          "unvisited",
+          "set-state",
+          "visited"
         ]
       ],
       "content": "Behind the formation, where the cipher directed you, is a natural alcove in the chamber wall. It goes back further than it should.\n\nThe gold is here. Not the vein of a major strike — a deposit, carefully worked over years, with a thoroughness that speaks of patience rather than urgency. Enough. More than enough for the journey here to have been worth it.\n\nBut that is not what Harlan stayed for.\n\nOn the alcove wall, in Harlan's hand — you recognise it from Dessa's archive — is a final entry. Not addressed to anyone. Not meant to be found. Written for the act of writing it.\n\n*I understand now what this place is. Not what it contains. What it is. The canyon is not the location of the thing. The canyon is the thing itself. The markings are not a map to something. They are the something. Every person who has copied them, carried them out, set them on paper — has been carrying part of this out of here without knowing it.*\n\n*I am staying because if I leave, I will have to choose what to do with what I know. Here, I do not have to choose. Here, I am just a man sitting in the oldest room in the territory, keeping it company.*\n\n*The gold is real. Take it. That is not the secret.*\n\nYou stand there for a while. The silence holds.\n\nThe Hollow is still keeping most of what it knows. But you have a piece of it now — the piece Harlan decided not to carry out. Whether to carry it yourself, and what it means, is a question you will be answering for a long time."

@@ -9,6 +9,7 @@ import { PlayerStateMutator } from '../engine/player-state.js';
 import { getTag, getTags } from '../engine/world.js';
 import { resolveTheme, applyTheme, resetTheme, resolveEffects, applyEffects, resolveFont, resolveFontSize, resolveFontSizePanel, resolveCursor, applyFontAndCursor, loadFont } from '../services/theme.js';
 import { buildTrustSet } from '../engine/trust.js';
+import { interpolateHud } from '../engine/hud.js';
 import { useStateBackup } from '../hooks/useStateBackup.js';
 import { useNip65 } from '../hooks/useNip65.js';
 import PaymentPanel from './PaymentPanel.jsx';
@@ -672,6 +673,19 @@ export default function App() {
           Preview mode — showing unvouched content for review.
         </div>
       )}
+      {/* HUD — persistent counter display from world event */}
+      {worldConfig?.worldEvent && (() => {
+        const hudTags = (worldConfig.worldEvent.tags || []).filter(t => t[0] === 'hud');
+        if (hudTags.length === 0) return null;
+        const worldDtag = worldConfig.worldEvent.tags.find(t => t[0] === 'd')?.[1];
+        return (
+          <div className="text-xs mb-1 font-mono" style={{ color: 'var(--colour-dim)' }}>
+            {hudTags.map((tag, i) => (
+              <div key={i}>{interpolateHud(tag[1] || '', worldDtag, player?.state)}</div>
+            ))}
+          </div>
+        );
+      })()}
 
       {showLogin && (
         <LoginPanel identity={identity} onClose={() => setShowLogin(false)}>

@@ -719,6 +719,21 @@ Health triggers mirror the `on-counter` system — same direction model, same cr
 
 `max-inventory` enforces a hard cap on `player.inventory` length. When a pickup or `give-item` would exceed it, the blocked-message is shown and the item is not added. `on-inventory-full` fires when a pickup is blocked — trigger-target is always blank, supports all standard actions (repeatable). Both are optional independently.
 
+**HUD** — persistent counter display on the world event:
+
+```json
+["hud", "Score: {{score}} | Moves: {{moves}}"]
+```
+
+`hud` declares a persistent client display. Multiple `hud` tags render multiple lines. Visual placement is a client concern. Template variables:
+
+| Variable | Source |
+|---|---|
+| `{{counter-name}}` | Player counter (world-scoped) |
+| `{{health}}` | Current player health |
+| `{{max-health}}` | Maximum player health |
+| `{{inventory-count}}` | Number of items carried |
+
 #### state & transition
 
 `state` declares the initial state of an event. `transition` defines the legal edges of the state graph — the client only executes a `set-state` action if a matching transition exists. If no `transition` tags are present, any state change is permitted (opt-in enforcement).

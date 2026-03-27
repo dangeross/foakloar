@@ -168,6 +168,7 @@ D-tag: `<slug>:world`
 | `on-inventory-full` | `["on-inventory-full", "", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | fires when pickup blocked by `max-inventory`; trigger-target always blank |
 | `counter` | `["counter", "<name>", "<initial>"]` (repeatable) | opt | player-owned counter (score, moves, etc.); stored in `player.counters` |
 | `on-counter` | `["on-counter", "<dir>", "<counter>", "<threshold>", "<action>", "<target?>"]` (repeatable) | opt | fires when a player counter crosses a threshold |
+| `hud` | `["hud", "<template>"]` (repeatable) | opt | persistent display; `{{counter-name}}` for player counters, `{{health}}`, `{{max-health}}`, `{{inventory-count}}` |
 | `author` | `["author", "<name>"]` | opt | — |
 | `version` | `["version", "<semver>"]` | opt | — |
 | `lang` | `["lang", "en"\|"es"\|"fr"\|"de"\|"ja"\|"zh"\|"pt"\|"ru"]` | opt | — |
