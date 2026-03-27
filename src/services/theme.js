@@ -239,6 +239,11 @@ export function applyTheme(colours) {
   for (const [slot, value] of Object.entries(colours)) {
     root.style.setProperty(`--colour-${slot}`, value);
   }
+  // Update mobile chrome colour to match background
+  if (colours.bg) {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', colours.bg);
+  }
 }
 
 /**
@@ -253,6 +258,9 @@ export function resetTheme() {
   for (const e of effects) root.style.removeProperty(`--effect-${e}`);
   root.style.removeProperty('--font-family');
   root.style.removeProperty('--cursor-style');
+  // Reset mobile chrome colour to Tide's End default
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', '#1a1a2e');
 }
 
 /**

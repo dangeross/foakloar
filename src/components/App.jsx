@@ -1007,6 +1007,10 @@ export default function App() {
             placeholder={dialogueActive ? 'Choose an option...' : puzzleActive ? 'Enter your answer...' : craftingActive ? 'Select an item...' : ''}
             onKeyDown={onKeyDown}
             autoFocus={!isTouchDevice}
+            autoCapitalize="off"
+            autoCorrect="off"
+            autoComplete="off"
+            spellCheck="false"
           />
         </form>
       )}
