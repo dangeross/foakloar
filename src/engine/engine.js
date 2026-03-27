@@ -88,21 +88,15 @@ export class GameEngine {
     this._emit(message, 'error');
 
     // Fire on-inventory-full triggers
+    const worldDtag = getTag(worldEvent, 'd');
     for (const tag of getTags(worldEvent, 'on-inventory-full')) {
       const action = tag[2];
       const actionTarget = tag[3];
       const extRef = tag[4];
-      if (action === 'set-state' && actionTarget) {
-        if (extRef) {
-          applyExternalSetState(extRef, actionTarget, this.events, this.player,
-            (t, ty) => this._emit(t, ty), (h, ty) => this._emitHtml(h, ty),
-            this.config.trustSet, this.config.clientMode);
-        }
-      } else if (action === 'consequence' && actionTarget) {
-        this._executeConsequence(actionTarget);
-      } else if (action === 'sound' && actionTarget) {
-        this._emitSound(actionTarget, extRef);
-      }
+      this._dispatchAction({
+        action, target: actionTarget, extRef,
+        selfDtag: worldDtag, selfEvent: worldEvent,
+      });
     }
     return true;
   }
@@ -150,6 +144,178 @@ export class GameEngine {
     this.output.push({ sound: pattern, volume: parseFloat(volume) || 1.0, type: 'sound' });
   }
 
+
+  // ── Unified action dispatcher ───────────────────────────────────────
+
+  /**
+   * Dispatch a single action from an on-* trigger tag.
+   *
+   * @param {Object} params
+   * @param {string} params.action — action type (set-state, give-item, etc.)
+   * @param {string} [params.target] — primary action argument (state value, item ref, damage amount, counter name, etc.)
+   * @param {string} [params.extRef] — secondary argument (external event ref, counter value, etc.)
+   * @param {string} params.selfDtag — d-tag of the event declaring this trigger
+   * @param {Object} params.selfEvent — the event declaring this trigger
+   * @param {Object} [params.opts] — extra context from the call site
+   * @param {Object} [params.opts.sourceNpc] — NPC event for deal-damage source
+   * @param {string} [params.opts.sourceNpcDtag] — NPC d-tag for deal-damage source
+   * @param {boolean} [params.opts.isNpcSelf] — true when set-state self means NPC state
+   * @param {string} [params.opts.extraRef] — extra arg (e.g. tag[6] for set-counter)
+   * @returns {boolean} true if an action was dispatched
+   */
+  _dispatchAction({ action, target, extRef, selfDtag, selfEvent, opts = {} }) {
+    if (!action) return false;
+
+    switch (action) {
+      case 'set-state': {
+        if (!target) return false;
+        if (extRef) {
+          // External target
+          const result = applyExternalSetState(
+            extRef, target, this.events, this.player,
+            (t, ty) => this._emit(t, ty),
+            (h, ty) => this._emitHtml(h, ty),
+            this.config.trustSet, this.config.clientMode,
+          );
+          if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
+          return result.acted;
+        }
+        // Self — NPC or regular entity
+        if (opts.isNpcSelf && selfDtag) {
+          const ns = this.player.getNpcState(selfDtag);
+          if (ns && ns.state !== target) {
+            const transition = findTransition(selfEvent, ns.state, target);
+            this.player.setNpcState(selfDtag, { ...ns, state: target });
+            this.player.setState(selfDtag, target);
+            if (transition?.text) this._emit(transition.text, 'narrative');
+          }
+          return true;
+        }
+        // Regular self set-state
+        const currentState = this.player.getState(selfDtag) ?? getDefaultState(selfEvent);
+        const transition = findTransition(selfEvent, currentState, target);
+        if (transition) {
+          if (transition.from !== transition.to) {
+            this.player.setState(selfDtag, transition.to);
+          }
+          if (transition.text) this._emit(transition.text, 'narrative');
+          return true;
+        }
+        return false;
+      }
+
+      case 'give-item': {
+        const itemRef = target || extRef;
+        if (!itemRef) return false;
+        if (!this.player.hasItem(itemRef)) {
+          this._giveItemChecked(itemRef);
+        }
+        return true;
+      }
+
+      case 'consume-item': {
+        const consumeDtag = target || extRef || selfDtag;
+        if (consumeDtag && this.player.hasItem(consumeDtag)) {
+          this.player.removeItem(consumeDtag);
+          const consumeEvent = this.events.get(consumeDtag);
+          const consumeTitle = consumeEvent ? getTag(consumeEvent, 'title') : consumeDtag;
+          this._emit(`${consumeTitle} is consumed.`, 'item');
+        }
+        return true;
+      }
+
+      case 'deal-damage': {
+        const amount = parseInt(target, 10) || 1;
+        this._dealDamageToPlayer(amount, opts.sourceNpc || null, opts.sourceNpcDtag || null);
+        return true;
+      }
+
+      case 'deal-damage-npc': {
+        // target is NPC dtag or "" (resolve to combatTarget)
+        // Weapon event comes from opts or selfEvent
+        const weaponEvent = opts.weaponEvent || selfEvent;
+        this._dealDamageToNpc(target || '', weaponEvent);
+        return true;
+      }
+
+      case 'heal': {
+        const amount = parseInt(target, 10) || 1;
+        this._healPlayer(amount);
+        return true;
+      }
+
+      case 'consequence': {
+        const cRef = target || extRef;
+        if (cRef) this._executeConsequence(cRef);
+        return true;
+      }
+
+      case 'traverse': {
+        const pRef = target || extRef;
+        if (pRef) this._traverse(pRef);
+        return true;
+      }
+
+      case 'sound': {
+        if (!target) return false;
+        // Trust check on sound ref
+        if (this.config.trustSet && target.startsWith('30078:')) {
+          if (isRefTrusted(target, this.events, this.config.trustSet, this.config.clientMode) === 'hidden') return false;
+        }
+        this._emitSound(target, extRef);
+        return true;
+      }
+
+      case 'activate': {
+        const activateRef = target;
+        if (!activateRef) return false;
+        if (this.config.trustSet && isRefTrusted(activateRef, this.events, this.config.trustSet, this.config.clientMode) === 'hidden') return false;
+        const activateEvent = this.events.get(activateRef);
+        if (!activateEvent) return false;
+        const activateType = getTag(activateEvent, 'type');
+        if (activateType === 'recipe') {
+          this._attemptCraft(activateEvent, activateRef);
+        } else if (activateType === 'puzzle') {
+          if (this.player.isPuzzleSolved(activateRef)) {
+            this._emit('You have already solved this.', 'narrative');
+          } else {
+            this._emit(`\nA riddle appears:`, 'puzzle-title');
+            this._emit(activateEvent.content, 'puzzle');
+            this._emit('Type your answer (or "back" to leave)...', 'hint');
+            this.puzzleActive = activateRef;
+          }
+        } else if (activateType === 'payment') {
+          this._activatePayment(activateRef, activateEvent);
+        }
+        return true;
+      }
+
+      case 'increment':
+      case 'decrement':
+      case 'set-counter': {
+        this._applyCounterAction(action, selfDtag, target, extRef, selfEvent, opts.extraRef);
+        return true;
+      }
+
+      case 'steals-item': {
+        if (selfDtag) this._npcStealsItem(selfDtag, target);
+        return true;
+      }
+
+      case 'deposits': {
+        if (selfDtag) this._npcDeposits(selfDtag, opts.placeDtag || this.currentPlace);
+        return true;
+      }
+
+      case 'flees': {
+        if (selfEvent && selfDtag) this._npcFlees(selfEvent, selfDtag);
+        return true;
+      }
+
+      default:
+        return false;
+    }
+  }
 
   /**
    * Return and clear the output buffer.
@@ -224,6 +390,18 @@ export class GameEngine {
 
     // Seed place items on first visit (from room's item tags)
     this._seedPlaceItems(dtag, room);
+
+    // Initialize feature counters on first visit
+    for (const ref of getTags(room, 'feature')) {
+      const feature = this.events.get(ref[1]);
+      if (!feature) continue;
+      for (const ct of getTags(feature, 'counter')) {
+        const key = `${ref[1]}:${ct[1]}`;
+        if (this.player.getCounter(key) === undefined) {
+          this.player.setCounter(key, parseInt(ct[2], 10) || 0);
+        }
+      }
+    }
 
     // Items — show what's on the ground at this place (skip if requires not met)
     const placeItems = this.player.getPlaceItems(dtag) || [];
@@ -301,29 +479,13 @@ export class GameEngine {
         const actionTarget = tag[4];
         const extTarget = tag[5];
 
-        if (action === 'set-state' && actionTarget) {
-          if (extTarget) {
-            applyExternalSetState(
-              extTarget, actionTarget, this.events, this.player,
-              (t, ty) => this._emit(t, ty),
-              (h, ty) => this._emitHtml(h, ty),
-              this.config.trustSet, this.config.clientMode,
-            );
-          }
-        } else if (action === 'give-item' && actionTarget) {
-          this._giveItemChecked(actionTarget);
-        } else if (action === 'deal-damage') {
-          const dmg = parseInt(actionTarget, 10) || 1;
-          this._dealDamageToPlayer(dmg, null, null);
-        } else if (action === 'consequence' && actionTarget) {
-          this._executeConsequence(actionTarget);
-        } else if (action === 'sound') {
-          if (this.config.trustSet && isRefTrusted(actionTarget, this.events, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
-          this._emitSound(actionTarget, extTarget);
-        } else if (action === 'increment' || action === 'decrement' || action === 'set-counter') {
-          // Counter actions on the place event
-          this._applyCounterAction(action, dtag, actionTarget, extTarget, room);
-        }
+        this._dispatchAction({
+          action,
+          target: actionTarget,
+          extRef: extTarget,
+          selfDtag: dtag,
+          selfEvent: room,
+        });
       }
     }
 
@@ -773,18 +935,8 @@ export class GameEngine {
       const targetState = tag[4];
       const targetRef = tag[5];
 
-      if (action === 'set-state' && targetRef) {
-        const result = applyExternalSetState(
-          targetRef, targetState, this.events, this.player,
-          (t, ty) => this._emit(t, ty),
-          (h, ty) => this._emitHtml(h, ty),
-          this.config.trustSet, this.config.clientMode,
-        );
-        if (result.puzzleActivated) {
-          this.puzzleActive = result.puzzleActivated;
-        }
-        if (result.acted) acted = true;
-      } else if (action === 'set-state' && !targetRef && currentState) {
+      if (action === 'set-state' && !targetRef && currentState) {
+        // Self set-state — special: must update local currentState for subsequent tags
         const transition = findTransition(event, currentState, targetState);
         if (transition) {
           if (transition.from === transition.to) {
@@ -796,68 +948,16 @@ export class GameEngine {
           }
           acted = true;
         }
-      } else if (action === 'give-item') {
-        const itemDTag = targetState;  // targetState is the item a-tag ref
-        if (!this.player.hasItem(itemDTag)) {
-          this._giveItemChecked(targetState);
-        }
-        acted = true;
-      } else if (action === 'consume-item') {
-        const consumeDtag = targetState || targetRef;  // item a-tag ref
-        if (consumeDtag && this.player.hasItem(consumeDtag)) {
-          this.player.removeItem(consumeDtag);
-          const consumeEvent = this.events.get(consumeDtag);
-          const consumeTitle = consumeEvent ? getTag(consumeEvent, 'title') : consumeDtag;
-          this._emit(`${consumeTitle} is consumed.`, 'item');
-        }
-        acted = true;
-      } else if (action === 'consequence') {
-        const cRef = targetState || targetRef;
-        if (cRef) this._executeConsequence(cRef);
-        acted = true;
-      } else if (action === 'traverse') {
-        const pRef = targetState || targetRef;
-        if (pRef) this._traverse(pRef);
-        acted = true;
-      } else if (action === 'decrement' || action === 'increment') {
-        this._applyCounterAction(action, dtag, targetState, targetRef, event);
-        acted = true;
-      } else if (action === 'set-counter') {
-        this._applyCounterAction('set-counter', dtag, targetState, targetRef, event, tag[6]);
-        acted = true;
-      } else if (action === 'heal') {
-        const amount = parseInt(targetState, 10) || 1;
-        this._healPlayer(amount);
-        acted = true;
-      } else if (action === 'deal-damage') {
-        const amount = parseInt(targetState, 10) || 1;
-        this._dealDamageToPlayer(amount, null, null);
-        acted = true;
-      } else if (action === 'sound') {
-        this._emitSound(targetState, targetRef);
-        acted = true;
-      } else if (action === 'activate') {
-        const activateRef = targetState;  // event ref to activate
-        if (this.config.trustSet && isRefTrusted(activateRef, this.events, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
-        const activateEvent = this.events.get(activateRef);
-        if (activateEvent) {
-          const activateType = getTag(activateEvent, 'type');
-          if (activateType === 'recipe') {
-            this._attemptCraft(activateEvent, activateRef);
-          } else if (activateType === 'puzzle') {
-            if (this.player.isPuzzleSolved(activateRef)) {
-              this._emit('You have already solved this.', 'narrative');
-            } else {
-              this._emit(`\nA riddle appears:`, 'puzzle-title');
-              this._emit(activateEvent.content, 'puzzle');
-              this._emit('Type your answer (or "back" to leave)...', 'hint');
-              this.puzzleActive = activateRef;
-            }
-          } else if (activateType === 'payment') {
-            this._activatePayment(activateRef, activateEvent);
-          }
-          acted = true;
-        }
+      } else {
+        const dispatched = this._dispatchAction({
+          action,
+          target: targetState,
+          extRef: targetRef,
+          selfDtag: dtag,
+          selfEvent: event,
+          opts: { extraRef: tag[6] },
+        });
+        if (dispatched) acted = true;
       }
     }
     if (acted) {
@@ -1047,72 +1147,34 @@ export class GameEngine {
       const targetRef = tag[5];
 
       if (action === 'set-state' && targetRef) {
-        const extDTag = targetRef;  // full a-tag
-        const extEvent = this.events.get(extDTag);
-        if (!extEvent) continue;
-        if (this.config.trustSet && isEventTrusted(extEvent, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
-
-        const extType = getTag(extEvent, 'type');
-        if (extType === 'feature') {
-          const extCurrentState = this.player.getState(extDTag) ?? getDefaultState(extEvent);
-          const transition = findTransition(extEvent, extCurrentState, targetState);
-          if (transition) {
-            if (transition.from !== transition.to) {
-              this.player.setState(extDTag, transition.to);
-            }
-            if (transition.text) this._emit(transition.text, 'narrative');
-            acted = true;
+        // External set-state — use dispatcher, then check for sequence puzzles
+        const dispatched = this._dispatchAction({
+          action, target: targetState, extRef: targetRef,
+          selfDtag: dtag, selfEvent: event,
+        });
+        if (dispatched) {
+          acted = true;
+          // Feature external set-state may trigger sequence puzzles
+          const extEvent = this.events.get(targetRef);
+          if (extEvent && getTag(extEvent, 'type') === 'feature') {
             evalSequencePuzzles(this.place, this.events, this.player, (t, ty) => this._emit(t, ty), (p, v) => this._emitSound(p, v), this.config.trustSet, this.config.clientMode);
           }
-        } else if (extType === 'portal') {
-          const extCurrentState = this.player.getState(extDTag) ?? getDefaultState(extEvent);
-          if (extCurrentState !== targetState) {
-            this.player.setState(extDTag, targetState);
-            const transition = findTransition(extEvent, extCurrentState, targetState);
-            if (transition?.text) this._emit(transition.text, 'narrative');
-          }
-          acted = true;
         }
       } else if (action === 'set-state' && !targetRef) {
-        const transition = findTransition(event, currentState, targetState);
-        if (transition) {
-          if (transition.from !== transition.to) {
-            this.player.setState(dtag, transition.to);
-          }
-          if (transition.text) this._emit(transition.text, 'narrative');
-          if (transition.from !== transition.to) {
-            evalCounterLow(event, dtag, transition.to, this.player, (t, ty) => this._emit(t, ty));
-          }
+        // Self set-state — use dispatcher, then eval counter thresholds
+        const dispatched = this._dispatchAction({
+          action, target: targetState,
+          selfDtag: dtag, selfEvent: event,
+        });
+        if (dispatched) {
           acted = true;
+          const newState = this.player.getState(dtag);
+          if (newState && newState !== currentState) {
+            evalCounterLow(event, dtag, newState, this.player, (t, ty) => this._emit(t, ty));
+          }
         }
-      } else if (action === 'give-item' && targetState) {
-        if (!this.player.hasItem(targetState)) {
-          this._giveItemChecked(targetState);
-        }
-        acted = true;
-      } else if (action === 'sound') {
-        this._emitSound(targetState, targetRef);
-        acted = true;
-      } else if (action === 'deal-damage') {
-        const amount = parseInt(targetState, 10) || 1;
-        this._dealDamageToPlayer(amount, null, null);
-        acted = true;
-      } else if (action === 'heal') {
-        const amount = parseInt(targetState, 10) || 1;
-        this._healPlayer(amount);
-        acted = true;
-      } else if (action === 'consequence') {
-        const cRef = targetState || targetRef;
-        if (cRef) this._executeConsequence(cRef);
-        acted = true;
-      } else if (action === 'decrement' || action === 'increment') {
-        this._applyCounterAction(action, dtag, targetState, targetRef, event);
-        acted = true;
-      } else if (action === 'set-counter') {
-        this._applyCounterAction('set-counter', dtag, targetState, targetRef, event, tag[6]);
-        acted = true;
       } else if (action === 'consume-item') {
-        // consume-item target is an item a-tag (usually self)
+        // consume-item on inventory items defaults target to self
         const consumeDtag = targetState || dtag;
         if (this.player.hasItem(consumeDtag)) {
           this.player.removeItem(consumeDtag);
@@ -1121,6 +1183,13 @@ export class GameEngine {
           this._emit(`${consumeTitle} is consumed.`, 'item');
         }
         acted = true;
+      } else {
+        const dispatched = this._dispatchAction({
+          action, target: targetState, extRef: targetRef,
+          selfDtag: dtag, selfEvent: event,
+          opts: { extraRef: tag[6] },
+        });
+        if (dispatched) acted = true;
       }
     }
 
@@ -1138,9 +1207,10 @@ export class GameEngine {
       for (const tag of getTags(item, 'on-move')) {
         if (tag[1] !== currentState) continue;
 
-        if (tag[2] === 'decrement') {
-          this._applyCounterAction('decrement', dtag, tag[3], tag[4], item);
-        }
+        this._dispatchAction({
+          action: tag[2], target: tag[3], extRef: tag[4],
+          selfDtag: dtag, selfEvent: item,
+        });
       }
     }
   }
@@ -1482,32 +1552,21 @@ export class GameEngine {
    */
   _fireHealthAction(action, target, extRef, sourceEvent, npcDtag) {
     if (action === 'set-state' && npcDtag) {
-      const ns = this.player.getNpcState(npcDtag);
-      if (ns && ns.state !== target) {
-        const transition = findTransition(sourceEvent, ns.state, target);
-        this.player.setNpcState(npcDtag, { ...ns, state: target });
-        this.player.setState(npcDtag, target);
-        if (transition?.text) this._emit(transition.text, 'narrative');
-      }
+      // NPC health trigger: set NPC self state, then optionally external
+      this._dispatchAction({
+        action, target, selfDtag: npcDtag, selfEvent: sourceEvent,
+        opts: { isNpcSelf: true },
+      });
       if (extRef) {
-        const result = applyExternalSetState(
-          extRef, target, this.events, this.player,
-          (t, ty) => this._emit(t, ty),
-          (h, ty) => this._emitHtml(h, ty),
-          this.config.trustSet, this.config.clientMode,
-        );
-        if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
+        this._dispatchAction({
+          action, target, extRef, selfDtag: npcDtag, selfEvent: sourceEvent,
+        });
       }
-    } else if (action === 'consequence' && target) {
-      this._executeConsequence(target);
-    } else if (action === 'traverse' && target) {
-      this._traverse(target);
-    } else if (action === 'flees' && npcDtag) {
-      this._npcFlees(sourceEvent, npcDtag);
-    } else if (action === 'give-item' && target) {
-      this._giveItemChecked(target);
-    } else if (action === 'sound' && target) {
-      this._emitSound(target, extRef);
+    } else {
+      this._dispatchAction({
+        action, target, extRef,
+        selfDtag: npcDtag || null, selfEvent: sourceEvent,
+      });
     }
   }
 
@@ -1540,9 +1599,11 @@ export class GameEngine {
       const action = tag[3];
       const targetState = tag[4];
 
-      if (action === 'deal-damage-npc') {
-        this._dealDamageToNpc(targetState || npcDtag, weaponEvent);
-      }
+      this._dispatchAction({
+        action, target: targetState || npcDtag,
+        selfDtag: weaponDtag, selfEvent: weaponEvent,
+        opts: { weaponEvent },
+      });
     }
 
     // If weapon has no on-interact attack, use damage tag directly
@@ -1565,38 +1626,21 @@ export class GameEngine {
         const extTarget = tag[4];
 
         if (action === 'deal-damage') {
+          // NPC counterattack: fall back to NPC's own damage tag
           const dmg = parseInt(actionTarget, 10) || parseInt(getTag(npcEvent, 'damage') || '1', 10);
           this._dealDamageToPlayer(dmg, npcEvent, npcDtag);
-        } else if (action === 'increment' || action === 'decrement' || action === 'set-counter') {
-          this._applyCounterAction(action, npcDtag, actionTarget, extTarget, npcEvent);
-        } else if (action === 'set-state') {
-          if (extTarget) {
-            // External target — set state on another event
-            const result = applyExternalSetState(
-              extTarget, actionTarget, this.events, this.player,
-              (t, ty) => this._emit(t, ty),
-              (h, ty) => this._emitHtml(h, ty),
-              this.config.trustSet, this.config.clientMode,
-            );
-            if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
-          } else {
-            // Self — set NPC state
-            const ns2 = this.player.getNpcState(npcDtag);
-            if (ns2 && actionTarget && ns2.state !== actionTarget) {
-              const transition = findTransition(npcEvent, ns2.state, actionTarget);
-              this.player.setNpcState(npcDtag, { ...ns2, state: actionTarget });
-              this.player.setState(npcDtag, actionTarget);
-              if (transition?.text) this._emit(transition.text, 'narrative');
-            }
-          }
-        } else if (action === 'consequence' && actionTarget) {
-          this._executeConsequence(actionTarget);
-        } else if (action === 'flees') {
-          this._npcFlees(npcEvent, npcDtag);
-        } else if (action === 'steals-item') {
-          this._npcStealsItem(npcDtag, actionTarget);
-        } else if (action === 'sound') {
-          this._emitSound(actionTarget, extTarget);
+        } else if (action === 'set-state' && !extTarget) {
+          // Self — set NPC state
+          this._dispatchAction({
+            action, target: actionTarget,
+            selfDtag: npcDtag, selfEvent: npcEvent,
+            opts: { isNpcSelf: true },
+          });
+        } else {
+          this._dispatchAction({
+            action, target: actionTarget, extRef: extTarget,
+            selfDtag: npcDtag, selfEvent: npcEvent,
+          });
         }
       }
     }
@@ -1717,21 +1761,20 @@ export class GameEngine {
 
       if (crossed) {
         if (ctAction === 'set-state' && ctTarget) {
+          // Counter threshold set-state: set directly if no transition
           const currentState = this.player.getState(targetDtag);
           const transition = findTransition(targetEvent, currentState, ctTarget);
           if (transition) {
             this.player.setState(targetDtag, transition.to);
             if (transition.text) this._emit(transition.text, 'narrative');
           } else {
-            // No transition defined — set state directly (opt-in enforcement)
             this.player.setState(targetDtag, ctTarget);
           }
-        } else if (ctAction === 'consequence' && ctTarget) {
-          this._executeConsequence(ctTarget);
-        } else if (ctAction === 'traverse' && ctTarget) {
-          this._traverse(ctTarget);
-        } else if (ctAction === 'sound' && ctTarget) {
-          this._emitSound(ctTarget);
+        } else {
+          this._dispatchAction({
+            action: ctAction, target: ctTarget,
+            selfDtag: targetDtag, selfEvent: targetEvent,
+          });
         }
       }
     }
@@ -1849,41 +1892,22 @@ export class GameEngine {
       const actionTarget = tag[3];
       const extTarget = tag[4];
 
-      if (action === 'set-state') {
-        if (extTarget) {
-          // External target
-          const result = applyExternalSetState(
-            extTarget, actionTarget, this.events, this.player,
-            (t, ty) => this._emit(t, ty),
-            (h, ty) => this._emitHtml(h, ty),
-            this.config.trustSet, this.config.clientMode,
-          );
-          if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
-        } else {
-          // Self — update NPC's own state
-          const npcState = this.player.getNpcState(npcDtag);
-          if (npcState && npcState.state !== actionTarget) {
-            this.player.setNpcState(npcDtag, { ...npcState, state: actionTarget });
-            this.player.setState(npcDtag, actionTarget);
-            const transition = findTransition(npcEvent, npcState.state, actionTarget);
-            if (transition?.text) this._emit(transition.text, 'narrative');
-          }
-        }
-      } else if (action === 'steals-item') {
-        this._npcStealsItem(npcDtag, actionTarget);
-      } else if (action === 'deal-damage') {
+      if (action === 'deal-damage') {
+        // NPC encounter damage: fall back to NPC's own damage tag
         const dmg = parseInt(actionTarget, 10) || parseInt(getTag(npcEvent, 'damage') || '1', 10);
         this._dealDamageToPlayer(dmg, npcEvent, npcDtag);
-      } else if (action === 'consequence') {
-        if (actionTarget) this._executeConsequence(actionTarget);
-      } else if (action === 'traverse') {
-        if (actionTarget) this._traverse(actionTarget);
-      } else if (action === 'increment' || action === 'decrement' || action === 'set-counter') {
-        this._applyCounterAction(action, npcDtag, actionTarget, extTarget, npcEvent);
-      } else if (action === 'flees') {
-        this._npcFlees(npcEvent, npcDtag);
-      } else if (action === 'sound') {
-        this._emitSound(actionTarget, extTarget);
+      } else if (action === 'set-state' && !extTarget) {
+        // Self — update NPC's own state
+        this._dispatchAction({
+          action, target: actionTarget,
+          selfDtag: npcDtag, selfEvent: npcEvent,
+          opts: { isNpcSelf: true },
+        });
+      } else {
+        this._dispatchAction({
+          action, target: actionTarget, extRef: extTarget,
+          selfDtag: npcDtag, selfEvent: npcEvent,
+        });
       }
     }
   }
@@ -1971,11 +1995,11 @@ export class GameEngine {
         const action = tag[2];
         const actionTarget = tag[3];
         const extTarget = tag[4];
-        if (action === 'deposits') {
-          this._npcDeposits(dtag, npcPlace);
-        } else if (action === 'sound') {
-          this._emitSound(actionTarget, extTarget);
-        }
+        this._dispatchAction({
+          action, target: actionTarget, extRef: extTarget,
+          selfDtag: dtag, selfEvent: event,
+          opts: { placeDtag: npcPlace },
+        });
       }
     }
 
@@ -1997,29 +2021,18 @@ export class GameEngine {
           const actionTarget = tag[3];
           const extTarget = tag[4];
 
-          if (action === 'steals-item') {
-            this._npcStealsItem(npc.dtag, actionTarget);
-          } else if (action === 'set-state') {
-            if (extTarget) {
-              applyExternalSetState(
-                extTarget, actionTarget, this.events, this.player,
-                (t, ty) => this._emit(t, ty),
-                (h, ty) => this._emitHtml(h, ty),
-                this.config.trustSet, this.config.clientMode,
-              );
-            } else {
-              const ns = this.player.getNpcState(npc.dtag);
-              if (ns && ns.state !== actionTarget) {
-                this.player.setNpcState(npc.dtag, { ...ns, state: actionTarget });
-                this.player.setState(npc.dtag, actionTarget);
-                const transition = findTransition(npc.event, ns.state, actionTarget);
-                if (transition?.text) this._emit(transition.text, 'narrative');
-              }
-            }
-          } else if (action === 'consequence' && actionTarget) {
-            this._executeConsequence(actionTarget);
-          } else if (action === 'flees') {
-            this._npcFlees(npc.event, npc.dtag);
+          if (action === 'set-state' && !extTarget) {
+            // Self — update NPC's own state
+            this._dispatchAction({
+              action, target: actionTarget,
+              selfDtag: npc.dtag, selfEvent: npc.event,
+              opts: { isNpcSelf: true },
+            });
+          } else {
+            this._dispatchAction({
+              action, target: actionTarget, extRef: extTarget,
+              selfDtag: npc.dtag, selfEvent: npc.event,
+            });
           }
         }
       }
@@ -2085,32 +2098,10 @@ export class GameEngine {
       const value = tag[3];
       const extRef = tag[4];
 
-      if (action === 'consequence' && (value || extRef)) {
-        this._executeConsequence(extRef || value);
-      } else if (action === 'traverse' && (value || extRef)) {
-        this._traverse(extRef || value);
-      } else if (action === 'increment' || action === 'decrement' || action === 'set-counter') {
-        // Counter actions on puzzle — counterName in value, amount/val in extRef
-        const puzzleDtag = this.puzzleActive;
-        if (puzzleDtag) {
-          const puzzleEvt = this.events.get(puzzleDtag);
-          this._applyCounterAction(action, puzzleDtag, value, extRef, puzzleEvt);
-        }
-      } else if (action === 'set-state' && extRef) {
-        const targetEvent = this.events.get(extRef);
-        if (!targetEvent) continue;
-        const targetType = getTag(targetEvent, 'type');
-        if (targetType === 'portal' || targetType === 'feature') {
-          const currentState = this.player.getState(extRef) ?? getDefaultState(targetEvent);
-          if (currentState !== value) {
-            this.player.setState(extRef, value);
-            const transition = findTransition(targetEvent, currentState, value);
-            if (transition?.text) this._emit(transition.text, 'narrative');
-          }
-        }
-      } else if (action === 'sound') {
-        this._emitSound(value, extRef);
-      }
+      this._dispatchAction({
+        action, target: value, extRef,
+        selfDtag: this.puzzleActive, selfEvent: puzzleEvent,
+      });
     }
 
     this.puzzleActive = null;
@@ -2128,6 +2119,7 @@ export class GameEngine {
       const extRef = tag[4];
 
       if (action === 'deal-damage') {
+        // Puzzle damage uses distinct message format ("You take X damage")
         const amount = parseInt(value, 10) || 1;
         const prevHealth = this.player.getHealth();
         if (prevHealth != null) {
@@ -2135,26 +2127,11 @@ export class GameEngine {
           this._emit(`You take ${amount} damage. (HP: ${this.player.getHealth()})`, 'error');
           this._evalPlayerHealthTriggers(prevHealth, this.player.getHealth());
         }
-      } else if (action === 'set-state' && extRef) {
-        const result = applyExternalSetState(
-          extRef, value, this.events, this.player,
-          (t, ty) => this._emit(t, ty),
-          (h, ty) => this._emitHtml(h, ty),
-          this.config.trustSet, this.config.clientMode,
-        );
-        if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
-      } else if (action === 'consequence' && value) {
-        this._executeConsequence(value);
-      } else if (action === 'traverse' && value) {
-        this._traverse(value);
-      } else if (action === 'decrement') {
-        this._applyCounterAction('decrement', puzzleDtag, value, extRef, puzzleEvent);
-      } else if (action === 'increment') {
-        this._applyCounterAction('increment', puzzleDtag, value, extRef, puzzleEvent);
-      } else if (action === 'set-counter') {
-        this._applyCounterAction('set-counter', puzzleDtag, value, extRef, puzzleEvent);
-      } else if (action === 'sound') {
-        this._emitSound(value, extRef);
+      } else {
+        this._dispatchAction({
+          action, target: value, extRef,
+          selfDtag: puzzleDtag, selfEvent: puzzleEvent,
+        });
       }
     }
   }
@@ -2234,45 +2211,15 @@ export class GameEngine {
       const action = tag[3];
       const actionTarget = tag[4];
 
-      if (action === 'give-item' && actionTarget) {
-        this._giveItemChecked(actionTarget);
-      } else if (action === 'consume-item' && actionTarget) {
-        if (this.player.hasItem(actionTarget)) {
-          this.player.removeItem(actionTarget);
-          const consumeEvent = this.events.get(actionTarget);
-          const consumeTitle = consumeEvent ? getTag(consumeEvent, 'title') : actionTarget;
-          this._emit(`${consumeTitle} is consumed.`, 'item');
-        }
-      } else if (action === 'set-state' && actionTarget) {
+      if (action === 'set-state' && actionTarget && !tag[5]) {
+        // Self-set: set state on the dialogue node itself (no transition)
+        this.player.setState(nodeDtag, actionTarget);
+      } else {
         const extRef = tag[5];  // full a-tag (shifted by state guard)
-        if (extRef) {
-          const targetEvent = this.events.get(extRef);
-          if (targetEvent) {
-            const targetType = getTag(targetEvent, 'type');
-            if (targetType === 'clue') {
-              this.player.markClueSeen(extRef);
-              this._emit(`\n${getTag(targetEvent, 'title')}:`, 'clue-title');
-              this._emit(targetEvent.content, 'clue');
-            } else if (targetType === 'portal') {
-              const portalCurrentState = this.player.getState(extRef) ?? getDefaultState(targetEvent);
-              if (portalCurrentState !== actionTarget) {
-                this.player.setState(extRef, actionTarget);
-                const transition = findTransition(targetEvent, portalCurrentState, actionTarget);
-                if (transition?.text) this._emit(transition.text, 'narrative');
-              }
-            } else if (targetType === 'feature') {
-              const featCurrentState = this.player.getState(extRef) ?? getDefaultState(targetEvent);
-              if (featCurrentState !== actionTarget) {
-                this.player.setState(extRef, actionTarget);
-                const transition = findTransition(targetEvent, featCurrentState, actionTarget);
-                if (transition?.text) this._emit(transition.text, 'narrative');
-              }
-            }
-          }
-        } else {
-          // Self-set: set state on the dialogue node itself
-          this.player.setState(nodeDtag, actionTarget);
-        }
+        this._dispatchAction({
+          action, target: actionTarget, extRef,
+          selfDtag: nodeDtag, selfEvent: node,
+        });
       }
     }
 
@@ -2420,13 +2367,16 @@ export class GameEngine {
     for (const tag of getTags(paymentEvent, 'on-complete')) {
       const action = tag[2];
       const actionTarget = tag[3];
+      const extRef = tag[4];
 
-      if (action === 'give-item' && actionTarget) {
-        this._giveItemChecked(actionTarget);
-      } else if (action === 'set-state') {
-        if (actionTarget) {
-          this.player.setState(dtag, actionTarget);
-        }
+      if (action === 'set-state' && actionTarget && !extRef) {
+        // Payment self-set: direct state set (no transition)
+        this.player.setState(dtag, actionTarget);
+      } else {
+        this._dispatchAction({
+          action, target: actionTarget, extRef,
+          selfDtag: dtag, selfEvent: paymentEvent,
+        });
       }
     }
 
@@ -2694,24 +2644,16 @@ export class GameEngine {
       const value = tag[3];
       const extRef = tag[4];
 
-      if (action === 'give-item') {
-        this._giveItemChecked(value);
-      } else if (action === 'consume-item') {
+      if (action === 'consume-item') {
+        // Craft consume-item: silently remove (no "consumed" message)
         if (this.player.hasItem(value)) {
           this.player.removeItem(value);
         }
-      } else if (action === 'set-state' && extRef) {
-        const result = applyExternalSetState(
-          extRef, value, this.events, this.player,
-          (t, ty) => this._emit(t, ty),
-          (h, ty) => this._emitHtml(h, ty),
-          this.config.trustSet, this.config.clientMode,
-        );
-        if (result.puzzleActivated) this.puzzleActive = result.puzzleActivated;
-      } else if (action === 'consequence' && (value || extRef)) {
-        this._executeConsequence(extRef || value);
-      } else if (action === 'traverse' && (value || extRef)) {
-        this._traverse(extRef || value);
+      } else {
+        this._dispatchAction({
+          action, target: value, extRef,
+          selfDtag: dtag, selfEvent: event,
+        });
       }
     }
 
@@ -2785,26 +2727,10 @@ export class GameEngine {
         const value = tag[3];
         const extRef = tag[4];
 
-        if (action === 'set-state' && extRef) {
-          const targetEvent = this.events.get(extRef);
-          if (!targetEvent) continue;
-          if (this.config.trustSet && isEventTrusted(targetEvent, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
-          const targetType = getTag(targetEvent, 'type');
-          if (targetType === 'portal' || targetType === 'feature') {
-            const currentState = this.player.getState(extRef) ?? getDefaultState(targetEvent);
-            if (currentState !== value) {
-              this.player.setState(extRef, value);
-              const transition = findTransition(targetEvent, currentState, value);
-              if (transition?.text) this._emit(transition.text, 'narrative');
-            }
-          }
-        } else if (action === 'give-item' && (value || extRef)) {
-          this._giveItemChecked(extRef || value);
-        } else if (action === 'consequence' && (value || extRef)) {
-          this._executeConsequence(extRef || value);
-        } else if (action === 'sound') {
-          this._emitSound(value, extRef);
-        }
+        this._dispatchAction({
+          action, target: value, extRef,
+          selfDtag: dtag, selfEvent: event,
+        });
       }
     }
 
@@ -3356,15 +3282,14 @@ export class GameEngine {
       const extRef = tag[5];
 
       if (action === 'traverse' && actionTarget) {
+        // World traverse: custom portal resolution with "Nothing happens" fallback
         const portal = this.events.get(actionTarget);
         if (!portal) { this._emit('Nothing happens.', 'narrative'); return true; }
-        // Let requires on the portal handle conditions
         const req = checkRequires(portal, this.player.state, this.events);
         if (!req.allowed) {
           this._emit(req.reason || 'Nothing happens.', 'narrative');
           return true;
         }
-        // Find the exit that leads away from the current place
         const exitTags = getTags(portal, 'exit');
         const dest = exitTags.find((e) => e[1] !== this.currentPlace);
         if (dest) {
@@ -3376,23 +3301,15 @@ export class GameEngine {
           this._emit('Nothing happens.', 'narrative');
         }
         return true;
-      } else if (action === 'set-state' && actionTarget) {
-        if (extRef) {
-          applyExternalSetState(extRef, actionTarget, this.events, this.player,
-            (t, ty) => this._emit(t, ty), (h, ty) => this._emitHtml(h, ty),
-            this.config.trustSet, this.config.clientMode);
-        } else {
-          this.player.setState(worldDtag, actionTarget);
-        }
+      } else if (action === 'set-state' && actionTarget && !extRef) {
+        // World self set-state: direct set (no transitions)
+        this.player.setState(worldDtag, actionTarget);
         return true;
-      } else if (action === 'sound' && actionTarget) {
-        this._emitSound(actionTarget, extRef);
-        return true;
-      } else if (action === 'consequence' && actionTarget) {
-        this._executeConsequence(actionTarget);
-        return true;
-      } else if (action === 'give-item' && actionTarget) {
-        this._giveItemChecked(actionTarget);
+      } else {
+        this._dispatchAction({
+          action, target: actionTarget, extRef,
+          selfDtag: worldDtag, selfEvent: worldEvent,
+        });
         return true;
       }
     }

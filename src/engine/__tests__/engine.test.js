@@ -9,7 +9,8 @@ import {
 const CONFIG = { GENESIS_PLACE: ref(`${WORLD}:place:start`), AUTHOR_PUBKEY: PUBKEY };
 
 function createEngine(events, playerOverrides = {}) {
-  const player = makeMutator(playerOverrides);
+  const { npcStates, ...stateOverrides } = playerOverrides;
+  const player = makeMutator(stateOverrides, npcStates || {});
   return new GameEngine({ events, player, config: CONFIG });
 }
 
