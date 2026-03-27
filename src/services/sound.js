@@ -34,6 +34,8 @@ let strudelModule = null; // cached @strudel/web module
 
 // Currently playing pattern id (for skip-if-unchanged)
 let activePatternId = null;
+// Crossfade gap between ambient transitions (ms)
+const CROSSFADE_MS = 150;
 // Set of effect IDs that have already fired (to detect new ones)
 let firedEffects = new Set();
 // First evaluation flag — suppress effect one-shots on initial load
@@ -260,12 +262,13 @@ export function evaluateSoundTags(events, currentPlace, playerState, npcStates =
 
   firstEval = false;
 
-  // Stop current patterns then immediately start new stack
-  _stopPatterns();
+  if (layers.length === 0) {
+    _stopPatterns();
+    return;
+  }
 
-  if (layers.length === 0) return;
-
-  playLayers(layers);
+  // Crossfade: ramp down old, start new, ramp up
+  _crossfadeTransition(layers);
 }
 
 /**
@@ -435,6 +438,24 @@ export async function playOneShotFromTags(tags, volume = 1.0) {
     }
   } catch (e) {
     console.warn('One-shot preview error:', e.message || e);
+  }
+}
+
+/**
+ * Crossfade transition: stop old patterns, brief gap for reverb tail, start new.
+ * The gap lets the old pattern's reverb/release decay naturally before the new
+ * pattern starts, creating a smooth transition between rooms.
+ */
+function _crossfadeTransition(layers) {
+  if (state === State.AMBIENT) {
+    _stopPatterns();
+    setTimeout(() => {
+      if (state === State.MUTED || state === State.PREVIEW) return;
+      playLayers(layers);
+    }, CROSSFADE_MS);
+  } else {
+    _stopPatterns();
+    playLayers(layers);
   }
 }
 
