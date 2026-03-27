@@ -56,6 +56,54 @@ export class GameEngine {
     this.output = [];
   }
 
+  /**
+   * Check if inventory is full (max-inventory on world event).
+   * If full, shows blocked message and fires on-inventory-full triggers.
+   * Returns true if blocked.
+   */
+  _checkInventoryFull() {
+    const worldEvent = this._findWorldEvent();
+    if (!worldEvent) return false;
+    const maxTag = getTags(worldEvent, 'max-inventory')[0];
+    if (!maxTag) return false;
+    const maxItems = parseInt(maxTag[1], 10);
+    if (isNaN(maxItems) || this.player.state.inventory.length < maxItems) return false;
+
+    // Inventory full — block and show message
+    const message = maxTag[2] || "You're carrying too much.";
+    this._emit(message, 'error');
+
+    // Fire on-inventory-full triggers
+    for (const tag of getTags(worldEvent, 'on-inventory-full')) {
+      const action = tag[2];
+      const actionTarget = tag[3];
+      const extRef = tag[4];
+      if (action === 'set-state' && actionTarget) {
+        if (extRef) {
+          applyExternalSetState(extRef, actionTarget, this.events, this.player,
+            (t, ty) => this._emit(t, ty), (h, ty) => this._emitHtml(h, ty),
+            this.config.trustSet, this.config.clientMode);
+        }
+      } else if (action === 'consequence' && actionTarget) {
+        this._executeConsequence(actionTarget);
+      } else if (action === 'sound' && actionTarget) {
+        this._emitSound(actionTarget, extRef);
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Give item with inventory cap check.
+   * Returns true if item was given, false if blocked by cap.
+   */
+  _giveItemChecked(itemRef) {
+    if (this.player.hasItem(itemRef)) return true; // already has it
+    if (this._checkInventoryFull()) return false;
+    giveItem(itemRef, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+    return true;
+  }
+
   /** Find the world event in the events map. */
   _findWorldEvent(evts) {
     for (const [, event] of (evts || this.events)) {
@@ -249,7 +297,7 @@ export class GameEngine {
             );
           }
         } else if (action === 'give-item' && actionTarget) {
-          giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+          this._giveItemChecked(actionTarget);
         } else if (action === 'deal-damage') {
           const dmg = parseInt(actionTarget, 10) || 1;
           this._dealDamageToPlayer(dmg, null, null);
@@ -737,7 +785,7 @@ export class GameEngine {
       } else if (action === 'give-item') {
         const itemDTag = targetState;  // targetState is the item a-tag ref
         if (!this.player.hasItem(itemDTag)) {
-          giveItem(targetState, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+          this._giveItemChecked(targetState);
         }
         acted = true;
       } else if (action === 'consume-item') {
@@ -928,6 +976,7 @@ export class GameEngine {
     const pickupReq = checkRequires(match.event, this.player.state, this.events);
     if (!pickupReq.allowed) { this._emit(pickupReq.reason || "You don't see that here.", 'error'); return; }
     if (this.player.hasItem(match.dtag)) { this._emit('You already have that.', 'error'); return; }
+    if (this._checkInventoryFull()) return;
 
     this.player.pickUp(match.dtag);
     this.player.removePlaceItem(this.currentPlace, match.dtag);
@@ -1006,7 +1055,7 @@ export class GameEngine {
         }
       } else if (action === 'give-item' && targetState) {
         if (!this.player.hasItem(targetState)) {
-          giveItem(targetState, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+          this._giveItemChecked(targetState);
         }
         acted = true;
       } else if (action === 'sound') {
@@ -1424,7 +1473,7 @@ export class GameEngine {
     } else if (action === 'flees' && npcDtag) {
       this._npcFlees(sourceEvent, npcDtag);
     } else if (action === 'give-item' && target) {
-      giveItem(target, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+      this._giveItemChecked(target);
     } else if (action === 'sound' && target) {
       this._emitSound(target, extRef);
     }
@@ -1654,7 +1703,7 @@ export class GameEngine {
 
     // 1. give-item
     for (const tag of tags.filter((t) => t[0] === 'give-item')) {
-      giveItem(tag[1], this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+      this._giveItemChecked(tag[1]);
     }
 
     // 2. consume-item
@@ -2134,7 +2183,7 @@ export class GameEngine {
       const actionTarget = tag[4];
 
       if (action === 'give-item' && actionTarget) {
-        giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+        this._giveItemChecked(actionTarget);
       } else if (action === 'consume-item' && actionTarget) {
         if (this.player.hasItem(actionTarget)) {
           this.player.removeItem(actionTarget);
@@ -2321,7 +2370,7 @@ export class GameEngine {
       const actionTarget = tag[3];
 
       if (action === 'give-item' && actionTarget) {
-        giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+        this._giveItemChecked(actionTarget);
       } else if (action === 'set-state') {
         if (actionTarget) {
           this.player.setState(dtag, actionTarget);
@@ -2594,7 +2643,7 @@ export class GameEngine {
       const extRef = tag[4];
 
       if (action === 'give-item') {
-        giveItem(value, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+        this._giveItemChecked(value);
       } else if (action === 'consume-item') {
         if (this.player.hasItem(value)) {
           this.player.removeItem(value);
@@ -2698,7 +2747,7 @@ export class GameEngine {
             }
           }
         } else if (action === 'give-item' && (value || extRef)) {
-          giveItem(extRef || value, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+          this._giveItemChecked(extRef || value);
         } else if (action === 'consequence' && (value || extRef)) {
           this._executeConsequence(extRef || value);
         } else if (action === 'sound') {
@@ -3291,7 +3340,7 @@ export class GameEngine {
         this._executeConsequence(actionTarget);
         return true;
       } else if (action === 'give-item' && actionTarget) {
-        giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+        this._giveItemChecked(actionTarget);
         return true;
       }
     }

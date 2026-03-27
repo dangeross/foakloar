@@ -708,6 +708,15 @@ Health triggers mirror the `on-counter` system — same direction model, same cr
 ["max-health", "10"]   // maximum health ceiling
 ```
 
+**Inventory cap** — optional carry limit on the world event:
+
+```json
+["max-inventory",     "6",  "You're carrying too much."]
+["on-inventory-full", "",   "consequence", "30078:<PUBKEY>:world:consequence:overloaded"]
+```
+
+`max-inventory` enforces a hard cap on `player.inventory` length. When a pickup or `give-item` would exceed it, the blocked-message is shown and the item is not added. `on-inventory-full` fires when a pickup is blocked — trigger-target is always blank, supports all standard actions (repeatable). Both are optional independently.
+
 #### state & transition
 
 `state` declares the initial state of an event. `transition` defines the legal edges of the state graph — the client only executes a `set-state` action if a matching transition exists. If no `transition` tags are present, any state change is permitted (opt-in enforcement).

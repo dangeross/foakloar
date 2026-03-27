@@ -162,7 +162,12 @@ D-tag: `<slug>:world`
 | `w` | `["w", "foakloar"]` | yes | protocol identifier |
 | `health` | `["health", "<number>"]` | opt | — |
 | `max-health` | `["max-health", "<number>"]` | opt | — |
+| `max-inventory` | `["max-inventory", "<number>", "<blocked-message>"]` | opt | carry cap; blocks pickup when inventory exceeds `<number>` |
 | `on-player-health` | `["on-player-health", "<dir>", "<threshold>", "<action>", "<target>"]` | opt | — |
+| `on-interact` | `["on-interact", "<verb>", "<state-guard-or-''>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | global verb dispatcher — fires only if no local handler matches |
+| `on-inventory-full` | `["on-inventory-full", "", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | fires when pickup blocked by `max-inventory`; trigger-target always blank |
+| `counter` | `["counter", "<name>", "<initial>"]` (repeatable) | opt | player-owned counter (score, moves, etc.); stored in `player.counters` |
+| `on-counter` | `["on-counter", "<dir>", "<counter>", "<threshold>", "<action>", "<target?>"]` (repeatable) | opt | fires when a player counter crosses a threshold |
 | `author` | `["author", "<name>"]` | opt | — |
 | `version` | `["version", "<semver>"]` | opt | — |
 | `lang` | `["lang", "en"\|"es"\|"fr"\|"de"\|"ja"\|"zh"\|"pt"\|"ru"]` | opt | — |
@@ -188,7 +193,7 @@ D-tag: `<slug>:world`
 | `content-type` | `["content-type", "application/nip44"\|"text/plain"]` | opt | Default is markdown. Use `application/nip44` for sealed content or `text/plain` to disable formatting |
 | `media` | `["media", "<mime>", "<value>"]` (repeatable) | opt | — |
 
-**NOT valid on world:** `noun`, `verb`, `exit`, `item`, `feature`, `npc`, `clue`, `requires`, `on-interact`, `damage`, `dialogue`, `counter`
+**NOT valid on world:** `noun`, `verb`, `exit`, `item`, `feature`, `npc`, `clue`, `requires`, `damage`, `dialogue`, `on-enter`, `on-encounter`, `on-attacked`, `on-health`, `on-move`
 
 ### place
 
@@ -682,6 +687,8 @@ Player-submitted report for open world moderation. Published by the player, visi
 | `on-health` | `["on-health", "<dir>", "<threshold>", "<action>", "<target>", "<ext-ref?>"]` |
 | `on-player-health` | `["on-player-health", "<dir>", "<threshold>", "<action>", "<target>"]` |
 | `on-counter` | `["on-counter", "<dir>", "<counter>", "<threshold>", "<action>", "<target?>"]` |
+
+| `on-inventory-full` | `["on-inventory-full", "", "<action>", "<target>", "<ext-ref?>"]` — world event only |
 
 `<dir>` = `"down"` or `"up"` (REQUIRED on `on-counter`, `on-health`, `on-player-health`). `on-complete`/`on-fail` trigger-target is ALWAYS `""`. `on-enter` state guard (position 2) is blank for unconditional firing. `<ext-ref?>` = optional event ref to apply action to a different event.
 

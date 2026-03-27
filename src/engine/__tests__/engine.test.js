@@ -1050,3 +1050,107 @@ describe('world on-interact', () => {
     expect(output.some((e) => e.text?.includes('Secret'))).toBe(false);
   });
 });
+
+// ── Inventory cap ────────────────────────────────────────────────────────
+
+describe('inventory cap', () => {
+  it('blocks pickup when inventory is full', async () => {
+    const world = makeWorldEvent({
+      start: ref(`${WORLD}:place:start`),
+      extraTags: [['max-inventory', '2', 'Hands are full.']],
+    });
+    const events = buildEvents(
+      makePlace('start', { items: [`${WORLD}:item:c`] }),
+      makeItem('a'),
+      makeItem('b'),
+      makeItem('c'),
+      world,
+    );
+    const engine = createEngine(events, {
+      place: ref(`${WORLD}:place:start`),
+      inventory: [ref(`${WORLD}:item:a`), ref(`${WORLD}:item:b`)],
+    });
+    engine.flush();
+    await engine.handleCommand('take c');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Hands are full'))).toBe(true);
+    expect(engine.player.hasItem(ref(`${WORLD}:item:c`))).toBe(false);
+  });
+
+  it('allows pickup when under cap', async () => {
+    const world = makeWorldEvent({
+      start: ref(`${WORLD}:place:start`),
+      extraTags: [['max-inventory', '3', 'Hands are full.']],
+    });
+    const events = buildEvents(
+      makePlace('start', { items: [`${WORLD}:item:c`] }),
+      makeItem('a'),
+      makeItem('b'),
+      makeItem('c'),
+      world,
+    );
+    const engine = createEngine(events, {
+      place: ref(`${WORLD}:place:start`),
+      inventory: [ref(`${WORLD}:item:a`), ref(`${WORLD}:item:b`)],
+    });
+    engine.flush();
+    await engine.handleCommand('take c');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Taken'))).toBe(true);
+    expect(engine.player.hasItem(ref(`${WORLD}:item:c`))).toBe(true);
+  });
+
+  it('blocks give-item when inventory is full', async () => {
+    const world = makeWorldEvent({
+      start: ref(`${WORLD}:place:start`),
+      extraTags: [['max-inventory', '1', 'Too much.']],
+    });
+    const events = buildEvents(
+      makePlace('start', { features: [`${WORLD}:feature:chest`] }),
+      makeFeature('chest', {
+        verbs: [['open']],
+        nouns: [['chest']],
+        onInteract: [['open', 'give-item', ref(`${WORLD}:item:gem`)]],
+      }),
+      makeItem('a'),
+      makeItem('gem'),
+      world,
+    );
+    const engine = createEngine(events, {
+      place: ref(`${WORLD}:place:start`),
+      inventory: [ref(`${WORLD}:item:a`)],
+    });
+    engine.flush();
+    await engine.handleCommand('open chest');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Too much'))).toBe(true);
+    expect(engine.player.hasItem(ref(`${WORLD}:item:gem`))).toBe(false);
+  });
+
+  it('fires on-inventory-full trigger when pickup blocked', async () => {
+    const world = makeWorldEvent({
+      start: ref(`${WORLD}:place:start`),
+      extraTags: [
+        ['max-inventory', '1', 'Hands full.'],
+        ['on-inventory-full', '', 'set-state', 'annoyed', ref(`${WORLD}:feature:sign`)],
+      ],
+    });
+    const sign = makeFeature('sign', { nouns: [['sign']], state: 'normal' });
+    const events = buildEvents(
+      makePlace('start', { items: [`${WORLD}:item:b`], features: [`${WORLD}:feature:sign`] }),
+      makeItem('a'),
+      makeItem('b'),
+      sign,
+      world,
+    );
+    const engine = createEngine(events, {
+      place: ref(`${WORLD}:place:start`),
+      inventory: [ref(`${WORLD}:item:a`)],
+    });
+    engine.flush();
+    await engine.handleCommand('take b');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Hands full'))).toBe(true);
+    expect(engine.player.getState(ref(`${WORLD}:feature:sign`))).toBe('annoyed');
+  });
+});

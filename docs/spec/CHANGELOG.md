@@ -5,6 +5,11 @@
 
 ## [Unreleased] — March 2026
 
+### Added — Inventory cap
+
+**`max-inventory` and `on-inventory-full` on world event**
+`["max-inventory", "<n>", "<blocked-message>"]` enforces a carry cap. `["on-inventory-full", "", "<action>", "<target>", "<ext-ref?>"]` fires when pickup is blocked (repeatable, trigger-target always blank).
+
 ### Changed — `on-interact` state guard
 
 **`on-interact` shape updated with state guard field (position 2)**
