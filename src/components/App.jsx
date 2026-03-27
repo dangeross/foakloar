@@ -34,7 +34,7 @@ import { validateWorld, verifyPuzzleHashes } from '../builder/validateWorld.js';
 import RelaySettingsPanel from './RelaySettingsPanel.jsx';
 import PublishProgressPanel from '../builder/components/PublishProgressPanel.jsx';
 import SoundToggle from './SoundToggle.jsx';
-import { evaluateSoundTags, isAudioReady, playOneShotRef, loadSamples, hush as hushSound, stopPreview } from '../services/sound.js';
+import { evaluateSoundTags, isAudioReady, playOneShotRef, loadSamples, hush as hushSound, stopPreview, setEventsMap } from '../services/sound.js';
 
 /** Map entry types to colour slots */
 const TYPE_COLOUR = {
@@ -116,6 +116,7 @@ export default function App() {
   useEffect(() => {
     if (route.page !== 'game') {
       resetTheme();
+      hushSound();
       if (route.page === 'guide') {
         // Disable CRT effects entirely on guide pages
         const root = document.documentElement;
@@ -270,6 +271,9 @@ export default function App() {
     }
     return merged;
   }, [events, drafts, identity.pubkey]);
+
+  // Keep sound service events map in sync for one-shot resolution
+  useEffect(() => { setEventsMap(mergedEvents); }, [mergedEvents]);
 
   // Resolve world event config by scanning events for type=world
   const worldConfig = useMemo(() => {

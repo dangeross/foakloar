@@ -21,24 +21,25 @@ import {
 // Re-export pure functions so existing importers don't break
 export { buildStrudelCodeFromTags, decompileStrudelCode };
 
-let audioReady = false;
-let muted = false;
+// ── State machine ────────────────────────────────────────────────────
+// States: UNINIT → IDLE → AMBIENT → PREVIEW
+//                    ↓       ↓
+//                  MUTED   MUTED
+const State = { UNINIT: 'uninit', IDLE: 'idle', AMBIENT: 'ambient', PREVIEW: 'preview', MUTED: 'muted' };
+let state = State.UNINIT;
+
 let currentBpm = 120;
 let strudelReady = null; // promise from initStrudel
 let strudelModule = null; // cached @strudel/web module
 
-// Currently playing pattern id
+// Currently playing pattern id (for skip-if-unchanged)
 let activePatternId = null;
 // Set of effect IDs that have already fired (to detect new ones)
 let firedEffects = new Set();
 // First evaluation flag — suppress effect one-shots on initial load
 let firstEval = true;
-// Track last active layers for restoring after one-shot
-let lastLayers = [];
 // Reference to events map (set on each evaluateSoundTags call)
 let eventsMap = null;
-// Preview mode — when true, evaluateSoundTags skips ambient playback
-let previewActive = false;
 
 const MUTE_KEY = 'foakloar:sound-muted';
 
@@ -46,15 +47,14 @@ const MUTE_KEY = 'foakloar:sound-muted';
  * Initialize Strudel. Must be called from a user gesture (click).
  */
 export async function initAudio() {
-  if (audioReady) return true;
+  if (state !== State.UNINIT) return true;
   try {
     strudelModule = await import('@strudel/web');
     strudelReady = strudelModule.initStrudel();
     await strudelReady;
     // Expose evaluate for dev testing
     if (import.meta.env.DEV) window.__strudelEval = strudelModule.evaluate;
-    audioReady = true;
-    muted = false;
+    state = State.IDLE;
     localStorage.setItem(MUTE_KEY, 'false');
     return true;
   } catch (e) {
@@ -63,8 +63,11 @@ export async function initAudio() {
   }
 }
 
-export function isAudioReady() { return audioReady; }
-export function isMuted() { return muted; }
+export function isAudioReady() { return state !== State.UNINIT; }
+export function isMuted() { return state === State.MUTED; }
+
+/** Set the events map for one-shot sound resolution (called from App on events change). */
+export function setEventsMap(events) { eventsMap = events; }
 
 /**
  * Load all samples from sound events on world init.
@@ -77,7 +80,7 @@ const SAMPLE_PRESETS = {
 };
 
 export async function loadSamples(events) {
-  if (!audioReady || !strudelModule) return;
+  if (state === State.UNINIT || !strudelModule) return;
 
   // 1. Load preset sample libraries from world event ["samples", "<preset-or-url>"]
   for (const [, event] of events) {
@@ -114,22 +117,27 @@ export async function loadSamples(events) {
 }
 
 export function setMuted(val) {
-  muted = val;
+  if (state === State.UNINIT) return;
   localStorage.setItem(MUTE_KEY, String(val));
-  if (muted) hush();
+  if (val) {
+    _stopPatterns();
+    state = State.MUTED;
+  } else {
+    state = State.IDLE;
+  }
 }
 
 export function toggleMute() {
-  setMuted(!muted);
-  return muted;
+  setMuted(state !== State.MUTED);
+  return state === State.MUTED;
 }
 
 /**
  * Stop all sound and suspend audio (for mute).
  */
 export function hush() {
-  previewActive = false;
   _stopPatterns();
+  if (state !== State.UNINIT) state = State.IDLE;
 }
 
 /**
@@ -137,7 +145,7 @@ export function hush() {
  * Used internally when switching layers.
  */
 function _stopPatterns() {
-  try { strudelModule?.hush(); } catch { /* ignore */ }
+  try { strudelModule?.hush(); } catch (e) { if (import.meta.env.DEV) console.warn('[sound] hush error:', e.message); }
   activePatternId = null;
 }
 
@@ -146,16 +154,14 @@ function _stopPatterns() {
  * Sound tags now reference `type: sound` events by a-tag.
  */
 export function evaluateSoundTags(events, currentPlace, playerState, npcStates = {}) {
-  if (!audioReady || muted) return;
+  if (state === State.UNINIT || state === State.MUTED || state === State.PREVIEW) return;
   eventsMap = events;
-  // Don't re-evaluate ambient while previewing a sound in the editor
-  if (previewActive) return;
 
   // Ensure AudioContext is running
   try {
     const ctx = strudelModule?.getAudioContext?.();
     if (ctx?.state === 'suspended') ctx.resume();
-  } catch { /* ignore */ }
+  } catch (e) { if (import.meta.env.DEV) console.warn('[sound] AudioContext resume error:', e.message); }
 
   const placeEvent = events.get(currentPlace);
   if (!placeEvent) return;
@@ -263,12 +269,11 @@ export function evaluateSoundTags(events, currentPlace, playerState, npcStates =
 }
 
 /**
- * Play a one-shot sound via superdough, with Web Audio fallback.
- * superdough fires individual notes/samples without interfering with ambient.
- * Falls back to raw Web Audio API if superdough is unavailable.
+ * Play a one-shot sound via superdough.
+ * Fires individual notes/samples without interfering with ambient.
  */
 export async function playOneShotRef(soundRef, volume = 1.0) {
-  if (!audioReady || muted || !soundRef) return;
+  if (state === State.UNINIT || state === State.MUTED || !soundRef) return;
 
   if (!eventsMap) return;
   const soundEvent = eventsMap.get(soundRef);
@@ -279,93 +284,32 @@ export async function playOneShotRef(soundRef, volume = 1.0) {
   const { params, notePattern, sample, noise, oscillator } = parsed;
   const duration = (params.sustain || 0.3) + (params.release || 0.2);
 
-  // Try superdough first (full Strudel engine — samples, effects, filters)
   const superdough = window.strudelScope?.superdough;
   const getCtx = strudelModule?.getAudioContext || window.strudelScope?.getAudioContext;
   const ctx = getCtx?.();
-
-  if (superdough && ctx) {
-    try {
-      if (ctx.state === 'suspended') await ctx.resume();
-      const now = ctx.currentTime;
-      if (sample) {
-        await superdough({ ...params, s: sample }, now, duration);
-      } else if (noise) {
-        await superdough({ ...params, s: 'white' }, now, duration);
-      } else if (oscillator && !notePattern) {
-        // Oscillator-only (e.g. white noise effect) — no note needed
-        await superdough({ ...params }, now, duration);
-      } else if (notePattern) {
-        const notes = notePattern.trim().split(/\s+/).filter((n) => n !== '~');
-        const spacing = duration + 0.05;
-        for (let i = 0; i < notes.length; i++) {
-          await superdough({ ...params, note: notes[i] }, now + i * spacing, duration);
-        }
-      }
-      return; // superdough succeeded
-    } catch (e) {
-      // Fall through to Web Audio
-    }
+  if (!superdough || !ctx) {
+    if (import.meta.env.DEV) console.warn('[sound] superdough not available for one-shot');
+    return;
   }
 
-  // Fallback: raw Web Audio API (oscillator notes only, no samples)
   try {
-    const fallbackCtx = ctx || new AudioContext();
-    if (fallbackCtx.state === 'suspended') await fallbackCtx.resume();
-    const now = fallbackCtx.currentTime;
-
-    if (noise) {
-      // Noise burst
-      const bufLen = fallbackCtx.sampleRate * duration;
-      const buf = fallbackCtx.createBuffer(1, bufLen, fallbackCtx.sampleRate);
-      const data = buf.getChannelData(0);
-      for (let j = 0; j < bufLen; j++) {
-        const pos = j / bufLen;
-        const cluster = Math.sin(j * 0.02) > 0 ? 1 : 0.2;
-        const env = pos < 0.15 ? Math.pow(pos / 0.15, 2) : Math.exp(-(pos - 0.15) * 4);
-        data[j] = (Math.random() * 2 - 1) * cluster * env;
-      }
-      const src = fallbackCtx.createBufferSource();
-      src.buffer = buf;
-      const gainNode = fallbackCtx.createGain();
-      gainNode.gain.value = params.gain || 0.1;
-      const lo = fallbackCtx.createBiquadFilter();
-      lo.type = 'lowpass';
-      lo.frequency.value = params.lpf || 1000;
-      const hi = fallbackCtx.createBiquadFilter();
-      hi.type = 'highpass';
-      hi.frequency.value = params.hpf || 100;
-      src.connect(hi); hi.connect(lo); lo.connect(gainNode); gainNode.connect(fallbackCtx.destination);
-      src.start(now); src.stop(now + duration + 0.05);
+    if (ctx.state === 'suspended') await ctx.resume();
+    const now = ctx.currentTime;
+    if (sample) {
+      await superdough({ ...params, s: sample }, now, duration);
+    } else if (noise) {
+      await superdough({ ...params, s: 'white' }, now, duration);
+    } else if (oscillator && !notePattern) {
+      await superdough({ ...params }, now, duration);
     } else if (notePattern) {
-      // Oscillator notes
-      const oscType = params.s || 'sine';
-      const noteToFreq = (name) => {
-        const match = name.match(/^([a-g]#?)(\d)$/i);
-        if (!match) return 440;
-        const semitones = { c: -9, d: -7, e: -5, f: -4, g: -2, a: 0, b: 2,
-          'c#': -8, 'd#': -6, 'f#': -3, 'g#': -1, 'a#': 1 };
-        const semi = semitones[match[1].toLowerCase()] ?? 0;
-        const octave = parseInt(match[2], 10);
-        return 440 * Math.pow(2, (semi + (octave - 4) * 12) / 12);
-      };
       const notes = notePattern.trim().split(/\s+/).filter((n) => n !== '~');
       const spacing = duration + 0.05;
       for (let i = 0; i < notes.length; i++) {
-        const freq = noteToFreq(notes[i]);
-        const t = now + i * spacing;
-        const osc = fallbackCtx.createOscillator();
-        const gainNode = fallbackCtx.createGain();
-        osc.type = oscType;
-        osc.frequency.value = freq;
-        gainNode.gain.setValueAtTime(params.gain || 0.3, t);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, t + duration);
-        osc.connect(gainNode); gainNode.connect(fallbackCtx.destination);
-        osc.start(t); osc.stop(t + duration + 0.05);
+        await superdough({ ...params, note: notes[i] }, now + i * spacing, duration);
       }
     }
   } catch (e) {
-    console.warn('Sound one-shot fallback error:', e.message || e);
+    if (import.meta.env.DEV) console.warn('[sound] one-shot error:', e.message || e);
   }
 }
 
@@ -427,7 +371,7 @@ function buildStrudelCodeFromRef(soundRef, volume) {
  */
 export async function previewSound(tags, rawCode = null) {
   // Auto-init audio if not ready (preview button counts as user gesture)
-  if (!audioReady) {
+  if (state === State.UNINIT) {
     const ok = await initAudio();
     if (!ok) return false;
   }
@@ -438,12 +382,12 @@ export async function previewSound(tags, rawCode = null) {
     const code = rawCode || (tags ? buildStrudelCodeFromTags(tags) : null);
     if (!code) return false;
     // Stop ambient and prevent re-evaluation during preview
-    previewActive = true;
     _stopPatterns();
+    state = State.PREVIEW;
     await strudelModule.evaluate(code);
     return true;
   } catch (e) {
-    console.warn('Sound preview error:', e.message || e);
+    if (import.meta.env.DEV) console.warn('[sound] preview error:', e.message || e);
     return false;
   }
 }
@@ -452,8 +396,8 @@ export async function previewSound(tags, rawCode = null) {
  * Stop sound preview. Ambient resumes on next evaluateSoundTags call.
  */
 export function stopPreview() {
-  previewActive = false;
   _stopPatterns();
+  if (state === State.PREVIEW) state = State.IDLE;
 }
 
 /**
@@ -461,7 +405,7 @@ export function stopPreview() {
  * Uses superdough directly — doesn't interfere with ambient.
  */
 export async function playOneShotFromTags(tags, volume = 1.0) {
-  if (!audioReady || muted) return;
+  if (state === State.UNINIT || state === State.MUTED) return;
   const fakeEvent = { tags: tags.map((t) => [...t]) };
   const parsed = parseSoundEventParams(fakeEvent, volume);
   if (!parsed) return;
@@ -498,7 +442,6 @@ export async function playOneShotFromTags(tags, volume = 1.0) {
  * Build and play combined pattern using stack().
  */
 async function playLayers(layers) {
-  lastLayers = layers;
   try {
     await strudelReady;
 
@@ -512,7 +455,8 @@ async function playLayers(layers) {
       : `stack(${expressions.join(', ')})`;
 
     await strudelModule.evaluate(code);
+    state = State.AMBIENT;
   } catch (e) {
-    console.warn('Sound play error:', e.message || e);
+    if (import.meta.env.DEV) console.warn('[sound] play error:', e.message || e);
   }
 }
