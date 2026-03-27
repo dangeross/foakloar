@@ -705,6 +705,10 @@
           "30078:<PUBKEY>:frontier:sound:saloon-piano",
           "layer",
           "0.5"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:frontier:feature:old-photograph"
         ]
       ],
       "content": "Low-ceilinged and amber-lit, Rennick's doubles as general store, post office, and the closest thing Harrow has to a public square. Shelves of dry goods line one wall. The bar runs the length of the other. A notice board near the door is thick with papers — wanted posters, lost notices, a hand-drawn map of trail conditions that someone updates irregularly.\n\nCole Rennick works the bar with the particular economy of someone who has done this for thirty years and doesn't intend to stop."
@@ -6269,6 +6273,259 @@
         ]
       ],
       "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:feature:old-photograph"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Old Photograph"
+        ],
+        [
+          "noun",
+          "photograph",
+          "photo",
+          "picture"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "",
+          "traverse",
+          "30078:<PUBKEY>:frontier:portal:flashback-enter"
+        ]
+      ],
+      "content": "A faded photograph behind the bar, half-hidden by bottles. Two young men sitting where you are sitting now. One of them is unmistakably Rennick — thirty years younger, same jaw. The other man is laughing. On the back, in pencil: *H & C, the night before.*\n\nThe room seems to shift..."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:flashback-enter"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "transition-effect",
+          "fade"
+        ],
+        [
+          "transition-duration",
+          "1200"
+        ],
+        [
+          "transition-clear",
+          "true"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:rennicks-saloon",
+          "remember",
+          ""
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:saloon-1863",
+          "arrive",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:saloon-1863"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Rennick's Saloon — 1863"
+        ],
+        [
+          "exit",
+          "back"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:frontier:npc:young-rennick"
+        ],
+        [
+          "colour",
+          "bg",
+          "#1a1610"
+        ],
+        [
+          "colour",
+          "text",
+          "#b8a878"
+        ],
+        [
+          "colour",
+          "title",
+          "#d4c088"
+        ],
+        [
+          "colour",
+          "dim",
+          "#786840"
+        ],
+        [
+          "colour",
+          "exits",
+          "#786840"
+        ],
+        [
+          "colour",
+          "npc",
+          "#d4c088"
+        ]
+      ],
+      "content": "The same saloon, but everything is new. The wood isn't stained yet. The bar gleams. The air smells of fresh pine and tobacco, not age and dust.\n\nTwo men sit at the bar. One of them is Cole Rennick — young, unlined, laughing at something. The other man sits with his back to you."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:flashback-exit"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "transition-effect",
+          "fade"
+        ],
+        [
+          "transition-duration",
+          "1200"
+        ],
+        [
+          "transition-clear",
+          "true"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:saloon-1863",
+          "back",
+          "The memory fades..."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:rennicks-saloon",
+          "return",
+          ""
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:npc:young-rennick"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Young Rennick"
+        ],
+        [
+          "noun",
+          "rennick",
+          "cole",
+          "young rennick",
+          "young man"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:frontier:dialogue:young-rennick-greeting"
+        ]
+      ],
+      "content": "Cole Rennick, thirty years younger. The same steady eyes, but they haven't seen what they're going to see yet."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:young-rennick-greeting"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Who's your friend?",
+          "30078:<PUBKEY>:frontier:dialogue:young-rennick-friend"
+        ]
+      ],
+      "content": "Young Rennick glances over like you've always been there. \"Pull up a chair. Harlan's buying.\" He grins. The other man turns slightly — you can't see his face, but you see his hands. Calloused. A geologist's hands."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:dialogue:young-rennick-friend"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "\"Harlan Whitfield.\" Rennick says the name like it's obvious. \"Only man I know who came to Harrow on purpose. Everyone else washes up. Harlan *chose* it.\"\n\nThe other man raises his glass without turning around. You notice his initials on the cuff — *H.W.*\n\n\"He's going into The Hollow tomorrow,\" Rennick says, quieter now. \"Says he found something down there that changes what the canyon means. Won't say what.\"\n\nThe memory begins to dissolve at the edges."
     }
   ]
 }
