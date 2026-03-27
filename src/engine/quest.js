@@ -1,0 +1,152 @@
+/**
+ * Quest mixin — adds quest tracking methods to GameEngine prototype.
+ */
+
+import { getTag, getTags, getDefaultState, checkRequires } from './world.js';
+import { getTrustLevel, isEventTrusted } from './trust.js';
+import { renderMarkdown } from './content.js';
+
+export function mixQuest(Engine) {
+  /** Find all quest events in the world. */
+  Engine.prototype._findQuests = function() {
+    const quests = [];
+    for (const [dtag, event] of this.events) {
+      if (getTag(event, 'type') === 'quest') {
+        // Skip hidden quest events (untrusted authors in closed/vouched modes)
+        if (this.config.trustSet) {
+          const level = getTrustLevel(this.config.trustSet, event.pubkey, 'all', this.config.clientMode || 'community');
+          if (level === 'hidden') continue;
+        }
+        quests.push({ event, dtag });
+      }
+    }
+    return quests;
+  };
+
+  /** Evaluate all quests and mark newly completed ones. */
+  Engine.prototype._evalQuests = function(depth = 0) {
+    let anyCompleted = false;
+    for (const { event, dtag } of this._findQuests()) {
+      if (this.player.getState(dtag) === 'complete') continue;
+      const req = checkRequires(event, this.player.state, this.events);
+      if (!req.allowed) continue;
+
+      this.player.setState(dtag, 'complete');
+      anyCompleted = true;
+
+      const questType = getTag(event, 'quest-type') || 'open';
+      const isEndgame = questType === 'endgame';
+
+      if (isEndgame) {
+        // Endgame quest — render closing prose with distinct styling
+        this._emit('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'endgame-separator');
+        if (event.content) {
+          this._emitHtml(renderMarkdown(event.content), 'endgame');
+        }
+        this._emit('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'endgame-separator');
+        // Check mode: ["quest-type", "endgame", "open"] = soft end
+        const modeTag = event.tags.find((t) => t[0] === 'quest-type');
+        const mode = modeTag?.[2] === 'open' ? 'soft' : 'hard';
+        this.gameOver = mode;
+        if (mode === 'hard') {
+          this._emit('Type "restart" to play again.', 'endgame-prompt');
+        } else {
+          this._emit('The story continues. You may keep exploring, or type "restart" to play again.', 'endgame-prompt');
+        }
+      } else {
+        const title = getTag(event, 'title') || 'Quest';
+        this._emit(`Quest complete: ${title}`, 'success');
+      }
+
+      // Fire on-complete actions (set-state, give-item, consequence, sound)
+      for (const tag of getTags(event, 'on-complete')) {
+        const action = tag[2];
+        const value = tag[3];
+        const extRef = tag[4];
+
+        this._dispatchAction({
+          action, target: value, extRef,
+          selfDtag: dtag, selfEvent: event,
+        });
+      }
+    }
+
+    // Cascade: quest completion may satisfy other quests' requires
+    if (anyCompleted && depth < 10) {
+      this._evalQuests(depth + 1);
+    }
+  };
+
+  /** Show quest log — active and completed quests. */
+  Engine.prototype._showQuestLog = function() {
+    // Filter out endgame quests — they're internal win-state detectors
+    const quests = this._findQuests().filter(({ event }) => getTag(event, 'quest-type') !== 'endgame');
+    if (quests.length === 0) {
+      this._emit('No quests.', 'narrative');
+      return;
+    }
+
+    const active = [];
+    const completed = [];
+    for (const { event, dtag } of quests) {
+      const title = getTag(event, 'title') || dtag;
+      if (this.player.getState(dtag) === 'complete') {
+        completed.push({ title, event, dtag });
+      } else {
+        active.push({ title, event, dtag });
+      }
+    }
+
+    if (active.length > 0) {
+      this._emit('Active quests:', 'narrative');
+      for (const q of active) {
+        this._emit(`  \u25cb ${q.title}`, 'puzzle');
+        // Build step completion list
+        const questType = getTag(q.event, 'quest-type') || 'open';
+        const steps = getTags(q.event, 'involves').map((inv) => {
+          const invRef = inv[1];
+          const invEvent = this.events.get(invRef);
+          if (!invEvent) return null;
+          // Security: skip involves refs whose author is untrusted
+          if (this.config.trustSet && isEventTrusted(invEvent, this.config.trustSet, this.config.clientMode) === 'hidden') return null;
+          const invTitle = getTag(invEvent, 'title') || invRef.split(':').pop();
+          const state = this.player.getState(invRef);
+          const solved = this.player.isPuzzleSolved(invRef);
+          const held = this.player.hasItem(invRef);
+          const done = solved || held || (state && state !== getDefaultState(invEvent));
+          return { invTitle, done };
+        }).filter(Boolean);
+        // Display steps according to quest-type
+        let foundNextUndone = false;
+        for (const step of steps) {
+          if (step.done) {
+            this._emit(`    \u2713 ${step.invTitle}`, 'item');
+          } else {
+            switch (questType) {
+              case 'hidden':
+                this._emit('    \u2717 ???', 'dim');
+                break;
+              case 'mystery':
+                break; // don't show undone steps
+              case 'sequential':
+                if (!foundNextUndone) {
+                  this._emit(`    \u2717 ${step.invTitle}`, 'dim');
+                  foundNextUndone = true;
+                }
+                break; // remaining undone steps hidden
+              default: // 'open'
+                this._emit(`    \u2717 ${step.invTitle}`, 'dim');
+            }
+          }
+        }
+      }
+    }
+
+    if (completed.length > 0) {
+      this._emit('Completed:', 'narrative');
+      for (const q of completed) {
+        this._emit(`  \u2713 ${q.title}`, 'dim');
+      }
+    }
+  };
+}

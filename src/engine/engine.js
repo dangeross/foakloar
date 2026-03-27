@@ -15,6 +15,12 @@ import {
   applyExternalSetState, giveItem, evalCounterLow, evalSequencePuzzles,
 } from './actions.js';
 import { calculateNpcPlace, initNpcState, findRoamingNpcsAtPlace } from './npc.js';
+import { mixCombat } from './combat.js';
+import { mixDialogue } from './dialogue.js';
+import { mixCrafting } from './crafting.js';
+import { mixQuest } from './quest.js';
+import { mixPuzzle } from './puzzle.js';
+import { mixNpcEncounter } from './npc-encounter.js';
 
 export class GameEngine {
   /**
@@ -1196,24 +1202,7 @@ export class GameEngine {
     if (!acted) this._emit('Nothing happens.', 'narrative');
   }
 
-  // ── On-move processing ────────────────────────────────────────────────
-
-  processOnMove() {
-    for (const dtag of this.player.state.inventory) {
-      const item = this.events.get(dtag);
-      if (!item) continue;
-      const currentState = this.player.getState(dtag);
-
-      for (const tag of getTags(item, 'on-move')) {
-        if (tag[1] !== currentState) continue;
-
-        this._dispatchAction({
-          action: tag[2], target: tag[3], extRef: tag[4],
-          selfDtag: dtag, selfEvent: item,
-        });
-      }
-    }
-  }
+  // ── On-move processing (see puzzle.js mixin) ────────────────────────
 
   // ── Movement ──────────────────────────────────────────────────────────
 
@@ -1372,72 +1361,7 @@ export class GameEngine {
     this.enterRoom(destinationDTag, { isMoving: true });
   }
 
-  // ── Combat actions ───────────────────────────────────────────────────
-
-  /**
-   * Deal damage to player. Rolls NPC hit-chance. Fires on-player-health-zero.
-   * @param {number} amount — damage to deal
-   * @param {Object} [sourceNpc] — NPC event (for hit-chance and on-player-health-zero)
-   * @param {string} [sourceNpcDtag] — NPC dtag
-   */
-  _dealDamageToPlayer(amount, sourceNpc, sourceNpcDtag) {
-    if (this.player.getHealth() == null) return;
-
-    // Roll NPC hit-chance
-    if (sourceNpc) {
-      const hitChance = parseFloat(getTag(sourceNpc, 'hit-chance') || '1.0');
-      if (Math.random() > hitChance) {
-        const npcTitle = getTag(sourceNpc, 'title') || 'Enemy';
-        this._emit(`${npcTitle} misses!`, 'narrative');
-        return;
-      }
-    }
-
-    const prevHealth = this.player.getHealth();
-    this.player.dealDamage(amount);
-    const npcTitle = sourceNpc ? getTag(sourceNpc, 'title') : 'Something';
-    this._emit(`${npcTitle} hits you for ${amount} damage. (HP: ${this.player.getHealth()})`, 'error');
-
-    // Evaluate on-player-health triggers (threshold crossing)
-    this._evalPlayerHealthTriggers(prevHealth, this.player.getHealth());
-  }
-
-  /**
-   * Deal damage to an NPC. Rolls weapon hit-chance. Fires on-health-zero.
-   * @param {string} npcDtag — target NPC (or "" to use combatTarget)
-   * @param {Object} weaponEvent — the weapon item event (for damage + hit-chance)
-   */
-  _dealDamageToNpc(npcDtag, weaponEvent) {
-    const targetDtag = npcDtag || this.combatTarget;
-    if (!targetDtag) return;
-
-    const npcEvent = this.events.get(targetDtag);
-    if (!npcEvent) return;
-
-    const npcState = this.player.getNpcState(targetDtag);
-    if (!npcState || npcState.health == null || npcState.health <= 0) return;
-
-    // Resolve weapon damage
-    const weaponDamage = parseInt(getTag(weaponEvent, 'damage') || '1', 10);
-    const hitChance = parseFloat(getTag(weaponEvent, 'hit-chance') || '1.0');
-
-    // Roll hit
-    if (Math.random() > hitChance) {
-      this._emit('You miss!', 'narrative');
-      return;
-    }
-
-    // Apply damage
-    const prevHealth = npcState.health;
-    npcState.health = Math.max(0, npcState.health - weaponDamage);
-    this.player.setNpcState(targetDtag, npcState);
-
-    const npcTitle = getTag(npcEvent, 'title') || 'Enemy';
-    this._emit(`You hit ${npcTitle} for ${weaponDamage} damage. (HP: ${npcState.health})`, 'item');
-
-    // Evaluate on-health triggers (threshold crossing)
-    this._evalNpcHealthTriggers(npcEvent, targetDtag, prevHealth, npcState.health);
-  }
+  // ── Combat actions (see combat.js mixin) ────────────────────────────
 
   /**
    * Resolve a health threshold — supports absolute integers and "N%" percentages.
@@ -1547,106 +1471,6 @@ export class GameEngine {
     }
   }
 
-  /**
-   * Fire a single health trigger action.
-   */
-  _fireHealthAction(action, target, extRef, sourceEvent, npcDtag) {
-    if (action === 'set-state' && npcDtag) {
-      // NPC health trigger: set NPC self state, then optionally external
-      this._dispatchAction({
-        action, target, selfDtag: npcDtag, selfEvent: sourceEvent,
-        opts: { isNpcSelf: true },
-      });
-      if (extRef) {
-        this._dispatchAction({
-          action, target, extRef, selfDtag: npcDtag, selfEvent: sourceEvent,
-        });
-      }
-    } else {
-      this._dispatchAction({
-        action, target, extRef,
-        selfDtag: npcDtag || null, selfEvent: sourceEvent,
-      });
-    }
-  }
-
-  /**
-   * Handle `attack <npc> [with <weapon>]` combat flow.
-   */
-  _handleAttack(npcEvent, npcDtag, weaponEvent, weaponDtag) {
-    const npcTitle = getTag(npcEvent, 'title') || 'Enemy';
-
-    // Check NPC has health
-    const npcState = this.player.getNpcState(npcDtag);
-    if (!npcState) {
-      this.player.ensureNpcState(npcDtag, initNpcState(npcEvent));
-    }
-    const ns = this.player.getNpcState(npcDtag);
-    if (ns.health == null || ns.health <= 0) {
-      this._emit(`${npcTitle} is already defeated.`, 'narrative');
-      return;
-    }
-
-    // Set combat target for deal-damage-npc resolution
-    this.combatTarget = npcDtag;
-
-    // 1. Player attacks — fire weapon on-interact "attack" tags
-    const currentState = this.player.getState(weaponDtag) || getDefaultState(weaponEvent);
-    for (const tag of getTags(weaponEvent, 'on-interact')) {
-      if (tag[1] !== 'attack') continue;
-      const stateGuard = tag[2];
-      if (stateGuard && currentState && stateGuard !== currentState) continue;
-      const action = tag[3];
-      const targetState = tag[4];
-
-      this._dispatchAction({
-        action, target: targetState || npcDtag,
-        selfDtag: weaponDtag, selfEvent: weaponEvent,
-        opts: { weaponEvent },
-      });
-    }
-
-    // If weapon has no on-interact attack, use damage tag directly
-    const hasAttackInteract = getTags(weaponEvent, 'on-interact').some((t) => t[1] === 'attack');
-    if (!hasAttackInteract) {
-      this._dealDamageToNpc(npcDtag, weaponEvent);
-    }
-
-    // 2. NPC counterattack — fire on-attacked tags (if NPC still alive)
-    // Shape: ["on-attacked", "<item-ref-or-blank>", "<action>", "<arg?>", "<ext-target?>"]
-    const nsAfter = this.player.getNpcState(npcDtag);
-    if (nsAfter && nsAfter.health > 0) {
-      for (const tag of getTags(npcEvent, 'on-attacked')) {
-        const weaponFilter = tag[1];
-        // Skip if weapon-specific and doesn't match
-        if (weaponFilter && weaponFilter !== weaponDtag) continue;
-
-        const action = tag[2];
-        const actionTarget = tag[3];
-        const extTarget = tag[4];
-
-        if (action === 'deal-damage') {
-          // NPC counterattack: fall back to NPC's own damage tag
-          const dmg = parseInt(actionTarget, 10) || parseInt(getTag(npcEvent, 'damage') || '1', 10);
-          this._dealDamageToPlayer(dmg, npcEvent, npcDtag);
-        } else if (action === 'set-state' && !extTarget) {
-          // Self — set NPC state
-          this._dispatchAction({
-            action, target: actionTarget,
-            selfDtag: npcDtag, selfEvent: npcEvent,
-            opts: { isNpcSelf: true },
-          });
-        } else {
-          this._dispatchAction({
-            action, target: actionTarget, extRef: extTarget,
-            selfDtag: npcDtag, selfEvent: npcEvent,
-          });
-        }
-      }
-    }
-
-    this.combatTarget = null;
-  }
 
   /**
    * Heal the player.
@@ -1665,120 +1489,7 @@ export class GameEngine {
     }
   }
 
-  // ── Counter actions ──────────────────────────────────────────────────
-
-  /**
-   * Apply a counter action (decrement, increment, set-counter) on an event.
-   *
-   * On-interact positions:
-   *   increment/decrement: ["on-interact", verb, action, counterName, externalRef?]
-   *   set-counter:         ["on-interact", verb, "set-counter", counterName, value, externalRef?]
-   *
-   * @param {string} action — 'decrement', 'increment', or 'set-counter'
-   * @param {string} eventDtag — the event this tag is declared on (self)
-   * @param {string} counterName — counter name (position 3)
-   * @param {string} valueOrRef — position 4: value for set-counter, or external ref for inc/dec
-   * @param {Object} event — the event object (for on-counter evaluation)
-   * @param {string} [externalRef] — position 5: external ref for set-counter
-   */
-  _applyCounterAction(action, eventDtag, counterName, valueOrRef, event, externalRef) {
-    if (!counterName) return;
-
-    // Resolve target: external ref overrides self
-    let targetDtag = eventDtag;
-    let targetEvent = event;
-
-    // Check local counter first, then fall back to world-scoped counter
-    if (!externalRef) {
-      const localKey = `${eventDtag}:${counterName}`;
-      if (this.player.getCounter(localKey) === undefined) {
-        // No local counter — check world event for player-owned counter
-        const worldEvent = this._findWorldEvent();
-        if (worldEvent) {
-          const worldDtag = getTag(worldEvent, 'd');
-          const worldKey = `${worldDtag}:${counterName}`;
-          if (this.player.getCounter(worldKey) !== undefined) {
-            targetDtag = worldDtag;
-            targetEvent = worldEvent;
-          }
-        }
-      }
-    }
-    if (action === 'set-counter' && externalRef) {
-      // set-counter: position 4 = value, position 5 = external ref
-      targetDtag = externalRef;
-      targetEvent = this.events.get(externalRef);
-      // Security: verify external target author is trusted
-      if (this.config.trustSet && targetEvent && isEventTrusted(targetEvent, this.config.trustSet, this.config.clientMode) === 'hidden') return;
-    } else if ((action === 'increment' || action === 'decrement') && valueOrRef && this.events.has(valueOrRef)) {
-      // increment/decrement: position 4 = external ref (if it resolves to an event)
-      targetDtag = valueOrRef;
-      targetEvent = this.events.get(valueOrRef);
-      // Security: verify external target author is trusted
-      if (this.config.trustSet && targetEvent && isEventTrusted(targetEvent, this.config.trustSet, this.config.clientMode) === 'hidden') return;
-      valueOrRef = null; // not a numeric value
-    }
-
-    const key = `${targetDtag}:${counterName}`;
-    const current = this.player.getCounter(key);
-    if (current === undefined && action !== 'set-counter') return;
-
-    let newVal;
-    if (action === 'decrement') {
-      if (current <= 0) return;
-      newVal = Math.max(0, current - 1);
-    } else if (action === 'increment') {
-      newVal = (current || 0) + 1;
-    } else if (action === 'set-counter') {
-      newVal = parseInt(valueOrRef, 10) || 0;
-    }
-
-    this.player.setCounter(key, newVal);
-
-    // Evaluate on-counter threshold crossing
-    if (!targetEvent || current === undefined) return;
-
-    for (const ct of getTags(targetEvent, 'on-counter')) {
-      // Support both new shape (with direction) and legacy (without)
-      // New:    ["on-counter", "down", "battery", "20", "set-state", "flickering"]
-      // Legacy: ["on-counter", "battery", "20", "set-state", "flickering"]
-      const hasDirection = ct[1] === 'down' || ct[1] === 'up';
-      const direction = hasDirection ? ct[1] : 'down';
-      const ctCounter = hasDirection ? ct[2] : ct[1];
-      if (ctCounter !== counterName) continue;
-      const threshold = parseInt(hasDirection ? ct[3] : ct[2], 10);
-      const ctAction = hasDirection ? ct[4] : ct[3];
-      const ctTarget = hasDirection ? ct[5] : ct[4];
-
-      let crossed = false;
-      if (direction === 'down' && newVal < current) {
-        // Downward: was above threshold, now at-or-below
-        crossed = current > threshold && newVal <= threshold;
-      } else if (direction === 'up' && newVal > current) {
-        // Upward: was below threshold, now at-or-above
-        crossed = current < threshold && newVal >= threshold;
-      }
-
-      if (crossed) {
-        if (ctAction === 'set-state' && ctTarget) {
-          // Counter threshold set-state: set directly if no transition
-          const currentState = this.player.getState(targetDtag);
-          const transition = findTransition(targetEvent, currentState, ctTarget);
-          if (transition) {
-            this.player.setState(targetDtag, transition.to);
-            if (transition.text) this._emit(transition.text, 'narrative');
-          } else {
-            this.player.setState(targetDtag, ctTarget);
-          }
-        } else {
-          this._dispatchAction({
-            action: ctAction, target: ctTarget,
-            selfDtag: targetDtag, selfEvent: targetEvent,
-          });
-        }
-      }
-    }
-  }
+  // ── Counter actions (see puzzle.js mixin) ───────────────────────────
 
   // ── Consequence execution ────────────────────────────────────────────
 
@@ -1878,39 +1589,7 @@ export class GameEngine {
     }
   }
 
-  // ── NPC encounter ──────────────────────────────────────────────────────
-
-  _fireNpcEncounter(npcEvent, npcDtag) {
-    // Shape: ["on-encounter", "<filter>", "<action>", "<arg?>", "<ext-target?>"]
-    // Filter: "" = any entity, "player" = player only, NPC a-tag = that NPC only
-    for (const tag of getTags(npcEvent, 'on-encounter')) {
-      const filter = tag[1];
-      // Currently only player encounters are implemented
-      if (filter && filter !== 'player') continue;
-
-      const action = tag[2];
-      const actionTarget = tag[3];
-      const extTarget = tag[4];
-
-      if (action === 'deal-damage') {
-        // NPC encounter damage: fall back to NPC's own damage tag
-        const dmg = parseInt(actionTarget, 10) || parseInt(getTag(npcEvent, 'damage') || '1', 10);
-        this._dealDamageToPlayer(dmg, npcEvent, npcDtag);
-      } else if (action === 'set-state' && !extTarget) {
-        // Self — update NPC's own state
-        this._dispatchAction({
-          action, target: actionTarget,
-          selfDtag: npcDtag, selfEvent: npcEvent,
-          opts: { isNpcSelf: true },
-        });
-      } else {
-        this._dispatchAction({
-          action, target: actionTarget, extRef: extTarget,
-          selfDtag: npcDtag, selfEvent: npcEvent,
-        });
-      }
-    }
-  }
+  // ── NPC encounter (see npc-encounter.js mixin) ─────────────────────
 
   /**
    * NPC flees — emits flee message.
@@ -1926,215 +1605,7 @@ export class GameEngine {
     this._emit(`${npcTitle} flees!`, 'npc');
   }
 
-  /**
-   * NPC steals an item from the player.
-   * target is 'any' (steal first stealable item) or an item a-tag.
-   */
-  _npcStealsItem(npcDtag, target) {
-    const npcEvent = this.events.get(npcDtag);
-    const npcTitle = npcEvent ? getTag(npcEvent, 'title') : 'Someone';
-    // Ensure NPC state exists so it can carry stolen items
-    this.player.ensureNpcState(npcDtag, { state: getDefaultState(npcEvent) || 'default', inventory: [] });
-
-    if (!target || target === 'any') {
-      // Steal the most recently acquired item
-      if (this.player.state.inventory.length === 0) return;
-      const stolenDtag = this.player.state.inventory[this.player.state.inventory.length - 1];
-      const stolenEvent = this.events.get(stolenDtag);
-      const stolenTitle = stolenEvent ? getTag(stolenEvent, 'title') : stolenDtag;
-      this.player.removeItem(stolenDtag);
-      this.player.npcPickUp(npcDtag, stolenDtag);
-      this._emit(`${npcTitle} snatches your ${stolenTitle}!`, 'error');
-    } else if (target) {
-      if (!this.player.hasItem(target)) return;
-      const stolenEvent = this.events.get(target);
-      const stolenTitle = stolenEvent ? getTag(stolenEvent, 'title') : target;
-      this.player.removeItem(target);
-      this.player.npcPickUp(npcDtag, target);
-      this._emit(`${npcTitle} snatches your ${stolenTitle}!`, 'error');
-    }
-  }
-
-  /**
-   * Process NPC on-enter triggers after movement.
-   * Check if any roaming NPC has arrived at its stash place.
-   */
-  _processNpcOnMove() {
-    const moveCount = this.player.getMoveCount();
-
-    // Build a map of place → NPCs at that place (for NPC-on-NPC encounters)
-    const npcsByPlace = new Map();
-    for (const [dtag, event] of this.events) {
-      if (getTag(event, 'type') !== 'npc') continue;
-      if (getTags(event, 'route').length === 0) continue;
-
-      const npcState = this.player.getNpcState(dtag);
-      if (!npcState) continue;
-
-      const npcPlace = calculateNpcPlace(event, moveCount, npcState.state);
-      if (!npcPlace) continue;
-
-      if (!npcsByPlace.has(npcPlace)) npcsByPlace.set(npcPlace, []);
-      npcsByPlace.get(npcPlace).push({ dtag, event, state: npcState });
-
-      // Auto-deposit: if NPC has a stash tag and is at the stash place, deposit items
-      const stashRef = getTag(event, 'stash');
-      if (stashRef && npcPlace === stashRef) {
-        // Security: verify stash place author is trusted
-        const stashEvent = this.events.get(stashRef);
-        if (this.config.trustSet && stashEvent && isEventTrusted(stashEvent, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
-        this._npcDeposits(dtag, npcPlace);
-      }
-
-      // Fire on-enter triggers for the NPC's current place
-      for (const tag of getTags(event, 'on-enter')) {
-        const placeRef = tag[1];
-        if (placeRef === 'player') continue;
-        if (placeRef !== npcPlace) continue;
-
-        const action = tag[2];
-        const actionTarget = tag[3];
-        const extTarget = tag[4];
-        this._dispatchAction({
-          action, target: actionTarget, extRef: extTarget,
-          selfDtag: dtag, selfEvent: event,
-          opts: { placeDtag: npcPlace },
-        });
-      }
-    }
-
-    // NPC-on-NPC encounters — check on-encounter tags with NPC ref filters
-    for (const [, npcsHere] of npcsByPlace) {
-      if (npcsHere.length < 2) continue;
-      for (const npc of npcsHere) {
-        for (const tag of getTags(npc.event, 'on-encounter')) {
-          const filter = tag[1];
-          if (filter === 'player') continue; // player-only — skip for NPC encounters
-          // "" = any entity (fires for NPC encounters too)
-          // NPC a-tag = specific NPC only
-          if (filter) {
-            const targetHere = npcsHere.find((other) => other.dtag === filter && other.dtag !== npc.dtag);
-            if (!targetHere) continue;
-          }
-
-          const action = tag[2];
-          const actionTarget = tag[3];
-          const extTarget = tag[4];
-
-          if (action === 'set-state' && !extTarget) {
-            // Self — update NPC's own state
-            this._dispatchAction({
-              action, target: actionTarget,
-              selfDtag: npc.dtag, selfEvent: npc.event,
-              opts: { isNpcSelf: true },
-            });
-          } else {
-            this._dispatchAction({
-              action, target: actionTarget, extRef: extTarget,
-              selfDtag: npc.dtag, selfEvent: npc.event,
-            });
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * NPC deposits all carried items at its current place.
-   */
-  _npcDeposits(npcDtag, placeDtag) {
-    const dropped = this.player.npcDropAll(npcDtag);
-    if (dropped.length === 0) return;
-    // Add each item to the place's inventory
-    for (const itemDtag of dropped) {
-      this.player.addPlaceItem(placeDtag, itemDtag);
-    }
-  }
-
-  // ── Puzzle answer ─────────────────────────────────────────────────────
-
-  async handlePuzzleAnswer(answer) {
-    if (!this.puzzleActive) return;
-
-    // Allow the player to leave the puzzle
-    const trimmed = answer.trim().toLowerCase();
-    if (['back', 'leave', 'cancel', 'quit', 'exit'].includes(trimmed)) {
-      this.puzzleActive = null;
-      this._emit('You pause and step back.', 'narrative');
-      return;
-    }
-
-    const puzzleEvent = this.events.get(this.puzzleActive);
-    if (!puzzleEvent) return;
-
-    const expectedHash = getTag(puzzleEvent, 'answer-hash');
-    const salt = getTag(puzzleEvent, 'salt');
-
-    const data = new TextEncoder().encode(answer.trim() + salt);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashHex = Array.from(new Uint8Array(hashBuffer))
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('');
-
-    if (hashHex !== expectedHash) {
-      this._emit('That is not the answer.', 'error');
-      // Fire on-fail tags (riddle/cipher only)
-      this._firePuzzleOnFail(puzzleEvent, this.puzzleActive);
-      return;
-    }
-
-    this._emit('Correct!', 'success');
-    this.player.markPuzzleSolved(this.puzzleActive);
-
-    // Auto-derive and store NIP-44 crypto key from puzzle answer + salt
-    const derivedPrivKey = await derivePrivateKey(
-      answer.trim(),
-      salt
-    );
-    this.player.addCryptoKey(derivedPrivKey);
-
-    for (const tag of getTags(puzzleEvent, 'on-complete')) {
-      const action = tag[2];
-      const value = tag[3];
-      const extRef = tag[4];
-
-      this._dispatchAction({
-        action, target: value, extRef,
-        selfDtag: this.puzzleActive, selfEvent: puzzleEvent,
-      });
-    }
-
-    this.puzzleActive = null;
-  }
-
-  /**
-   * Fire on-fail tags on a puzzle after a wrong answer.
-   * Shape: ["on-fail", "", "<action>", "<target?>", "<ext-ref?>"]
-   * Only valid on riddle and cipher puzzle types.
-   */
-  _firePuzzleOnFail(puzzleEvent, puzzleDtag) {
-    for (const tag of getTags(puzzleEvent, 'on-fail')) {
-      const action = tag[2];
-      const value = tag[3];
-      const extRef = tag[4];
-
-      if (action === 'deal-damage') {
-        // Puzzle damage uses distinct message format ("You take X damage")
-        const amount = parseInt(value, 10) || 1;
-        const prevHealth = this.player.getHealth();
-        if (prevHealth != null) {
-          this.player.dealDamage(amount);
-          this._emit(`You take ${amount} damage. (HP: ${this.player.getHealth()})`, 'error');
-          this._evalPlayerHealthTriggers(prevHealth, this.player.getHealth());
-        }
-      } else {
-        this._dispatchAction({
-          action, target: value, extRef,
-          selfDtag: puzzleDtag, selfEvent: puzzleEvent,
-        });
-      }
-    }
-  }
+  // ── Puzzle answer (see puzzle.js mixin) ──────────────────────────────
 
   // ── Dialogue system ───────────────────────────────────────────────────
 
@@ -2178,145 +1649,7 @@ export class GameEngine {
     return entryRef || null;  // entryRef is already a full a-tag
   }
 
-  enterDialogueNode(npcDtag, nodeDtag) {
-    const node = this.events.get(nodeDtag);
-    if (!node) {
-      this._emit('The conversation ends.', 'narrative');
-      this.dialogueActive = null;
-      return;
-    }
-
-    // Security: verify dialogue node author is trusted
-    if (this.config.trustSet && isEventTrusted(node, this.config.trustSet, this.config.clientMode) === 'hidden') {
-      this._emit('The conversation ends.', 'narrative');
-      this.dialogueActive = null;
-      return;
-    }
-
-    this.player.markDialogueVisited(nodeDtag);
-    this.dialogueActive = { npcDtag, nodeDtag };
-
-    const text = node.content || getTag(node, 'text'); // prefer content, fall back to text tag
-    if (text) this._emit(text, 'dialogue');
-
-    // Fire on-enter actions
-    for (const tag of getTags(node, 'on-enter')) {
-      if (tag[1] && tag[1] !== 'player') continue;
-      // State guard at position 2 (blank = any state)
-      const stateGuard = tag[2] || '';
-      if (stateGuard) {
-        const nodeState = this.player.getState(nodeDtag);
-        if (nodeState !== stateGuard) continue;
-      }
-      const action = tag[3];
-      const actionTarget = tag[4];
-
-      if (action === 'set-state' && actionTarget && !tag[5]) {
-        // Self-set: set state on the dialogue node itself (no transition)
-        this.player.setState(nodeDtag, actionTarget);
-      } else {
-        const extRef = tag[5];  // full a-tag (shifted by state guard)
-        this._dispatchAction({
-          action, target: actionTarget, extRef,
-          selfDtag: nodeDtag, selfEvent: node,
-        });
-      }
-    }
-
-    // Show options (filter by destination requires)
-    const options = getTags(node, 'option');
-    const visibleOptions = this._getVisibleOptions(options);
-
-    if (visibleOptions.length === 0) {
-      // Leaf node — auto-exit dialogue
-      this.dialogueActive = null;
-      return;
-    }
-
-    for (let i = 0; i < visibleOptions.length; i++) {
-      this._emit(`  ${i + 1}. ${visibleOptions[i].label}`, 'dialogue-option');
-    }
-  }
-
-  _getVisibleOptions(options) {
-    const visibleOptions = [];
-    for (const opt of options) {
-      const label = opt[1];
-      const nextRef = opt[2];
-
-      if (!nextRef) {
-        visibleOptions.push({ label, nextDtag: null });
-      } else {
-        const nextDtag = nextRef;  // full a-tag
-        const destNode = this.events.get(nextDtag);
-        if (destNode) {
-          // Security: skip options whose destination author is untrusted
-          if (this.config.trustSet && isEventTrusted(destNode, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
-          const destReq = checkRequires(destNode, this.player.state, this.events);
-          if (destReq.allowed) {
-            visibleOptions.push({ label, nextDtag });
-          }
-        } else {
-          visibleOptions.push({ label, nextDtag });
-        }
-      }
-    }
-    return visibleOptions;
-  }
-
-  handleDialogueChoice(input) {
-    if (!this.dialogueActive) return;
-    const node = this.events.get(this.dialogueActive.nodeDtag);
-    if (!node) { this.dialogueActive = null; return; }
-
-    const options = getTags(node, 'option');
-    const visibleOptions = this._getVisibleOptions(options);
-
-    const choice = parseInt(input, 10);
-    if (isNaN(choice) || choice < 1 || choice > visibleOptions.length) {
-      this._emit(`Choose 1-${visibleOptions.length}.`, 'error');
-      return;
-    }
-
-    const selected = visibleOptions[choice - 1];
-    this._emit(`> ${selected.label}`, 'command');
-
-    if (!selected.nextDtag) {
-      this._emit('The conversation ends.', 'narrative');
-      this.dialogueActive = null;
-    } else {
-      // Check if the target is a payment event
-      const targetEvent = this.events.get(selected.nextDtag);
-      if (this.config.trustSet && targetEvent && isEventTrusted(targetEvent, this.config.trustSet, this.config.clientMode) === 'hidden') {
-        this._emit('The conversation ends.', 'narrative');
-        this.dialogueActive = null;
-        return;
-      }
-      const targetType = targetEvent ? getTag(targetEvent, 'type') : null;
-
-      if (targetType === 'payment') {
-        this._activatePayment(selected.nextDtag, targetEvent);
-        this.dialogueActive = null;
-      } else {
-        this.enterDialogueNode(this.dialogueActive.npcDtag, selected.nextDtag);
-      }
-    }
-  }
-
-  startDialogue(npcDtag) {
-    const npc = this.events.get(npcDtag);
-    if (!npc) { this._emit("They don't seem interested in talking.", 'error'); return; }
-
-    const entryDtag = this.resolveDialogueEntry(npc);
-    if (!entryDtag) {
-      this._emit("They don't seem interested in talking.", 'error');
-      return;
-    }
-
-    const npcTitle = getTag(npc, 'title');
-    this._emit(`\n— ${npcTitle} —`, 'npc-title');
-    this.enterDialogueNode(npcDtag, entryDtag);
-  }
+  // ── Dialogue (see dialogue.js mixin) ────────────────────────────────
 
   // ── Payment ─────────────────────────────────────────────────────────
 
@@ -2452,33 +1785,7 @@ export class GameEngine {
     return null;
   }
 
-  // ── Recipe helpers ──────────────────────────────────────────────────
-
-  /** Find all recipe events in the world. */
-  _findRecipes() {
-    const recipes = [];
-    for (const [dtag, event] of this.events) {
-      if (getTag(event, 'type') === 'recipe') {
-        recipes.push({ event, dtag });
-      }
-    }
-    return recipes;
-  }
-
-  /** Find a recipe by noun/title match. */
-  _findRecipeByNoun(noun) {
-    for (const [dtag, event] of this.events) {
-      if (getTag(event, 'type') !== 'recipe') continue;
-      const title = getTag(event, 'title')?.toLowerCase() || '';
-      if (title.includes(noun)) return { event, dtag, type: 'recipe' };
-      for (const nt of getTags(event, 'noun')) {
-        for (let i = 1; i < nt.length; i++) {
-          if (nt[i].toLowerCase() === noun) return { event, dtag, type: 'recipe' };
-        }
-      }
-    }
-    return null;
-  }
+  // ── Recipe helpers (see crafting.js mixin) ──────────────────────────
 
   /** Find a recipe whose verb tag matches the given verb (canonical). */
   _findRecipeByVerb(verb) {
@@ -2489,27 +1796,6 @@ export class GameEngine {
       }
     }
     return null;
-  }
-
-  /** Examine a recipe — show content + shuffled ingredient list. */
-  _examineRecipe(event, dtag) {
-    if (event.content) this._emit(event.content, 'narrative');
-    const requires = getTags(event, 'requires');
-    if (requires.length > 0) {
-      this._emit('Requires:', 'narrative');
-      // Shuffle the requires list so ordered recipes don't reveal the sequence
-      const shuffled = [...requires].sort(() => Math.random() - 0.5);
-      for (const req of shuffled) {
-        const refEvent = this.events.get(req[1]);
-        const name = refEvent ? getTag(refEvent, 'title') : req[1];
-        const stateReq = req[2] ? ` (${req[2]})` : '';
-        const has = this._checkSingleRequire(req) ? '\u2713' : '\u2717';
-        this._emit(`  ${has} ${name}${stateReq}`, 'item');
-      }
-    }
-    if (this.player.isPuzzleSolved(dtag)) {
-      this._emit('You aleady did that.', 'narrative');
-    }
   }
 
   /** Check a single requires tag against player state. */
@@ -2531,54 +1817,6 @@ export class GameEngine {
     const currentState = this.player.getState(ref) ?? getDefaultState(refEvent);
     if (reqState && currentState !== reqState) return false;
     return !reqState || currentState === reqState;
-  }
-
-  /** Attempt to craft a recipe. */
-  _attemptCraft(event, dtag) {
-    if (this.player.isPuzzleSolved(dtag)) {
-      this._emit('You already did that.', 'narrative');
-      return;
-    }
-
-    const ordered = getTag(event, 'ordered') === 'true';
-
-    if (ordered) {
-      // Check non-item requires first (feature states) — fail early
-      const requires = getTags(event, 'requires');
-      for (const req of requires) {
-        const refEvent = this.events.get(req[1]);
-        if (!refEvent) continue;
-        const type = getTag(refEvent, 'type');
-        if (type !== 'item' && !this._checkSingleRequire(req)) {
-          const desc = req[3] || "You're missing something.";
-          this._emit(desc, 'error');
-          return;
-        }
-      }
-
-      // Collect item requires in order
-      const itemRequires = requires.filter((req) => {
-        const refEvent = this.events.get(req[1]);
-        return refEvent && getTag(refEvent, 'type') === 'item';
-      });
-
-      if (itemRequires.length === 0) {
-        // No item requires — just fire on-complete
-        this._fireCraftComplete(event, dtag);
-        return;
-      }
-
-      this.craftingActive = { recipeDtag: dtag, step: 0, itemRequires };
-      this._emit('Combine items in order.', 'puzzle');
-    } else {
-      // Unordered — check all requires at once
-      const reqResult = checkRequires(event, this.player.state, this.events);
-      if (!reqResult.allowed) {
-        this._emit(reqResult.reason, 'error');
-        return;
-      }
-      this._fireCraftComplete(event, dtag);
-    }
   }
 
   /** Handle ordered crafting step — player typed an item name. */
@@ -2631,187 +1869,7 @@ export class GameEngine {
     return true;
   }
 
-  /** Fire on-complete actions for a successfully crafted recipe. */
-  _fireCraftComplete(event, dtag) {
-    this.player.markPuzzleSolved(dtag);
-
-    // Emit recipe content as crafting prose
-    if (event.content) this._emit(event.content, 'narrative');
-
-    // Fire on-complete actions
-    for (const tag of getTags(event, 'on-complete')) {
-      const action = tag[2];
-      const value = tag[3];
-      const extRef = tag[4];
-
-      if (action === 'consume-item') {
-        // Craft consume-item: silently remove (no "consumed" message)
-        if (this.player.hasItem(value)) {
-          this.player.removeItem(value);
-        }
-      } else {
-        this._dispatchAction({
-          action, target: value, extRef,
-          selfDtag: dtag, selfEvent: event,
-        });
-      }
-    }
-
-    // Fire transition if recipe has state
-    const recipeState = this.player.getState(dtag) ?? getDefaultState(event);
-    const transition = findTransition(event, recipeState, 'known');
-    if (transition) {
-      this.player.setState(dtag, transition.to);
-      if (transition.text) this._emit(transition.text, 'narrative');
-    }
-
-    this._evalQuests();
-  }
-
-  // ── Quest tracking ──────────────────────────────────────────────────
-
-  /** Find all quest events in the world. */
-  _findQuests() {
-    const quests = [];
-    for (const [dtag, event] of this.events) {
-      if (getTag(event, 'type') === 'quest') {
-        // Skip hidden quest events (untrusted authors in closed/vouched modes)
-        if (this.config.trustSet) {
-          const level = getTrustLevel(this.config.trustSet, event.pubkey, 'all', this.config.clientMode || 'community');
-          if (level === 'hidden') continue;
-        }
-        quests.push({ event, dtag });
-      }
-    }
-    return quests;
-  }
-
-  /** Evaluate all quests and mark newly completed ones. */
-  _evalQuests(depth = 0) {
-    let anyCompleted = false;
-    for (const { event, dtag } of this._findQuests()) {
-      if (this.player.getState(dtag) === 'complete') continue;
-      const req = checkRequires(event, this.player.state, this.events);
-      if (!req.allowed) continue;
-
-      this.player.setState(dtag, 'complete');
-      anyCompleted = true;
-
-      const questType = getTag(event, 'quest-type') || 'open';
-      const isEndgame = questType === 'endgame';
-
-      if (isEndgame) {
-        // Endgame quest — render closing prose with distinct styling
-        this._emit('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'endgame-separator');
-        if (event.content) {
-          this._emitHtml(renderMarkdown(event.content), 'endgame');
-        }
-        this._emit('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'endgame-separator');
-        // Check mode: ["quest-type", "endgame", "open"] = soft end
-        const modeTag = event.tags.find((t) => t[0] === 'quest-type');
-        const mode = modeTag?.[2] === 'open' ? 'soft' : 'hard';
-        this.gameOver = mode;
-        if (mode === 'hard') {
-          this._emit('Type "restart" to play again.', 'endgame-prompt');
-        } else {
-          this._emit('The story continues. You may keep exploring, or type "restart" to play again.', 'endgame-prompt');
-        }
-      } else {
-        const title = getTag(event, 'title') || 'Quest';
-        this._emit(`Quest complete: ${title}`, 'success');
-      }
-
-      // Fire on-complete actions (set-state, give-item, consequence, sound)
-      for (const tag of getTags(event, 'on-complete')) {
-        const action = tag[2];
-        const value = tag[3];
-        const extRef = tag[4];
-
-        this._dispatchAction({
-          action, target: value, extRef,
-          selfDtag: dtag, selfEvent: event,
-        });
-      }
-    }
-
-    // Cascade: quest completion may satisfy other quests' requires
-    if (anyCompleted && depth < 10) {
-      this._evalQuests(depth + 1);
-    }
-  }
-
-  /** Show quest log — active and completed quests. */
-  _showQuestLog() {
-    // Filter out endgame quests — they're internal win-state detectors
-    const quests = this._findQuests().filter(({ event }) => getTag(event, 'quest-type') !== 'endgame');
-    if (quests.length === 0) {
-      this._emit('No quests.', 'narrative');
-      return;
-    }
-
-    const active = [];
-    const completed = [];
-    for (const { event, dtag } of quests) {
-      const title = getTag(event, 'title') || dtag;
-      if (this.player.getState(dtag) === 'complete') {
-        completed.push({ title, event, dtag });
-      } else {
-        active.push({ title, event, dtag });
-      }
-    }
-
-    if (active.length > 0) {
-      this._emit('Active quests:', 'narrative');
-      for (const q of active) {
-        this._emit(`  \u25cb ${q.title}`, 'puzzle');
-        // Build step completion list
-        const questType = getTag(q.event, 'quest-type') || 'open';
-        const steps = getTags(q.event, 'involves').map((inv) => {
-          const invRef = inv[1];
-          const invEvent = this.events.get(invRef);
-          if (!invEvent) return null;
-          // Security: skip involves refs whose author is untrusted
-          if (this.config.trustSet && isEventTrusted(invEvent, this.config.trustSet, this.config.clientMode) === 'hidden') return null;
-          const invTitle = getTag(invEvent, 'title') || invRef.split(':').pop();
-          const state = this.player.getState(invRef);
-          const solved = this.player.isPuzzleSolved(invRef);
-          const held = this.player.hasItem(invRef);
-          const done = solved || held || (state && state !== getDefaultState(invEvent));
-          return { invTitle, done };
-        }).filter(Boolean);
-        // Display steps according to quest-type
-        let foundNextUndone = false;
-        for (const step of steps) {
-          if (step.done) {
-            this._emit(`    \u2713 ${step.invTitle}`, 'item');
-          } else {
-            switch (questType) {
-              case 'hidden':
-                this._emit('    \u2717 ???', 'dim');
-                break;
-              case 'mystery':
-                break; // don't show undone steps
-              case 'sequential':
-                if (!foundNextUndone) {
-                  this._emit(`    \u2717 ${step.invTitle}`, 'dim');
-                  foundNextUndone = true;
-                }
-                break; // remaining undone steps hidden
-              default: // 'open'
-                this._emit(`    \u2717 ${step.invTitle}`, 'dim');
-            }
-          }
-        }
-      }
-    }
-
-    if (completed.length > 0) {
-      this._emit('Completed:', 'narrative');
-      for (const q of completed) {
-        this._emit(`  \u2713 ${q.title}`, 'dim');
-      }
-    }
-  }
+  // ── Quest tracking (see quest.js mixin) ─────────────────────────────
 
   // ── Help ─────────────────────────────────────────────────────────────
 
@@ -3415,3 +2473,11 @@ export class GameEngine {
     this.pendingReport = { targetRef, title, author };
   }
 }
+
+// Apply mixins
+mixCombat(GameEngine);
+mixDialogue(GameEngine);
+mixCrafting(GameEngine);
+mixQuest(GameEngine);
+mixPuzzle(GameEngine);
+mixNpcEncounter(GameEngine);
