@@ -343,7 +343,7 @@ One-way portal (1 exit tag) or two-way (2 exit tags):
 | `damage` | `["damage", "<number>"]` | opt (combat) | — |
 | `hit-chance` | `["hit-chance", "0.0-1.0"]` | opt (combat) | probability 0.0-1.0 |
 | `speed` | `["speed", "<number>"]` | opt (roaming) | moves every N player moves |
-| `order` | `["order", "sequential"\|"random"]` | opt (roaming) | — |
+| `roam-type` | `["roam-type", "route"\|"random"]` | opt (roaming) | `route` = sequential waypoints (default), `random` = pick randomly from routes. `order` is a deprecated alias. |
 | `route` | `["route", "<place-ref>"]` (repeatable) | opt (roaming) | roaming waypoint |
 | `stash` | `["stash", "<place-ref>"]` | opt (roaming) | where NPC drops stolen items |
 | `roams-when` | `["roams-when", "<state>"]` | opt (roaming) | only roams in this state |
