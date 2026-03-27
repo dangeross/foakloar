@@ -699,6 +699,12 @@
           "colour",
           "exits",
           "#aa6622"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:frontier:sound:saloon-piano",
+          "layer",
+          "0.5"
         ]
       ],
       "content": "Low-ceilinged and amber-lit, Rennick's doubles as general store, post office, and the closest thing Harrow has to a public square. Shelves of dry goods line one wall. The bar runs the length of the other. A notice board near the door is thick with papers — wanted posters, lost notices, a hand-drawn map of trail conditions that someone updates irregularly.\n\nCole Rennick works the bar with the particular economy of someone who has done this for thirty years and doesn't intend to stop."
@@ -6206,6 +6212,60 @@
           "30078:<PUBKEY>:frontier:place:xyzzy-room",
           "back",
           "Back to The Spur"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:sound:saloon-piano"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "note",
+          "c4 e4 g4 c5 a4 e4 g4 a4 c5 g4 e4 c4"
+        ],
+        [
+          "s",
+          "square"
+        ],
+        [
+          "lpf",
+          "1400"
+        ],
+        [
+          "gain",
+          "0.12"
+        ],
+        [
+          "sustain",
+          "0.08"
+        ],
+        [
+          "release",
+          "0.15"
+        ],
+        [
+          "room",
+          "0.2"
+        ],
+        [
+          "slow",
+          "1.5"
+        ],
+        [
+          "degrade-by",
+          "0.15"
         ]
       ],
       "content": ""
