@@ -3206,6 +3206,8 @@ export class GameEngine {
         this._attemptCraft(recipeByVerb.event, recipeByVerb.dtag);
         return;
       }
+      // Try world on-interact for no-noun verbs (e.g. "xyzzy")
+      if (this._tryWorldInteract(parsed.verb)) return;
       this._emit(`${parsed.verb} what?`, 'error');
       return;
     }
@@ -3223,7 +3225,77 @@ export class GameEngine {
       }
     }
 
+    // World on-interact — global verb dispatcher (fallback after local + direction)
+    if (this._tryWorldInteract(trimmed)) return;
+
     this._emit("I don't understand that.", 'error');
+  }
+
+  /**
+   * Try world event on-interact as global verb dispatcher.
+   * Fires only if the verb matches and no local handler caught it.
+   * Returns true if handled.
+   */
+  _tryWorldInteract(input) {
+    const worldEvent = this._findWorldEvent();
+    if (!worldEvent) return false;
+    const worldDtag = getTag(worldEvent, 'd');
+
+    const verb = input.toLowerCase().trim();
+    for (const tag of getTags(worldEvent, 'on-interact')) {
+      if (tag[1] !== verb) continue;
+      // State guard at position 2
+      const stateGuard = tag[2] || '';
+      if (stateGuard) {
+        const worldState = this.player.getState(worldDtag) ?? getDefaultState(worldEvent);
+        if (worldState !== stateGuard) continue;
+      }
+      const action = tag[3];
+      const actionTarget = tag[4];
+      const extRef = tag[5];
+
+      if (action === 'traverse' && actionTarget) {
+        const portal = this.events.get(actionTarget);
+        if (!portal) { this._emit('Nothing happens.', 'narrative'); return true; }
+        // Let requires on the portal handle conditions
+        const req = checkRequires(portal, this.player.state, this.events);
+        if (!req.allowed) {
+          this._emit(req.reason || 'Nothing happens.', 'narrative');
+          return true;
+        }
+        // Find the exit that leads away from the current place
+        const exitTags = getTags(portal, 'exit');
+        const dest = exitTags.find((e) => e[1] !== this.currentPlace);
+        if (dest) {
+          const destRef = dest[1];
+          this.currentPlace = destRef;
+          this.player.setPlace(destRef);
+          this.enterRoom(destRef);
+        } else {
+          this._emit('Nothing happens.', 'narrative');
+        }
+        return true;
+      } else if (action === 'set-state' && actionTarget) {
+        if (extRef) {
+          applyExternalSetState(extRef, actionTarget, this.events, this.player,
+            (t, ty) => this._emit(t, ty), (h, ty) => this._emitHtml(h, ty),
+            this.config.trustSet, this.config.clientMode);
+        } else {
+          this.player.setState(worldDtag, actionTarget);
+        }
+        return true;
+      } else if (action === 'sound' && actionTarget) {
+        this._emitSound(actionTarget, extRef);
+        return true;
+      } else if (action === 'consequence' && actionTarget) {
+        this._executeConsequence(actionTarget);
+        return true;
+      } else if (action === 'give-item' && actionTarget) {
+        giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+        return true;
+      }
+    }
+    return false;
   }
 
   // ── Report command ──────────────────────────────────────────────────────

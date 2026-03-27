@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { GameEngine } from '../engine.js';
 import {
   ref, PUBKEY, WORLD,
-  makePlace, makeFeature, makeItem, makePortal, makeClue, makeNPC, makeDialogueNode, makeQuest, makeRecipe,
+  makePlace, makeFeature, makeItem, makePortal, makeClue, makeNPC, makeDialogueNode, makeQuest, makeRecipe, makeWorldEvent,
   buildEvents, freshState, makeMutator,
 } from './helpers.js';
 
@@ -949,5 +949,104 @@ describe('quest display types', () => {
     const output = engine.flush();
     expect(output.some((e) => e.text?.includes('Quest complete'))).toBe(true);
     expect(player.hasItem(ref(`${WORLD}:item:reward`))).toBe(true);
+  });
+});
+
+// ── World on-interact (global verb dispatcher) ───────────────────────────
+
+describe('world on-interact', () => {
+  it('fires world on-interact when no local handler matches', async () => {
+    const world = makeWorldEvent({
+      start: ref(`${WORLD}:place:start`),
+      extraTags: [
+        ['on-interact', 'xyzzy', '', 'traverse', ref(`${WORLD}:portal:magic`)],
+      ],
+    });
+    const events = buildEvents(
+      makePlace('start', { exits: ['north'] }),
+      makePlace('secret', { exits: ['south'] }),
+      makePortal('magic', [['test-world:place:start', 'north'], ['test-world:place:secret', 'south']]),
+      world,
+    );
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:start`) });
+    engine.flush();
+    await engine.handleCommand('xyzzy');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Secret'))).toBe(true);
+  });
+
+  it('local handler takes priority over world on-interact', async () => {
+    const world = makeWorldEvent({
+      start: ref(`${WORLD}:place:start`),
+      extraTags: [
+        ['on-interact', 'pull', '', 'traverse', ref(`${WORLD}:portal:magic`)],
+      ],
+    });
+    const events = buildEvents(
+      makePlace('start', { features: [`${WORLD}:feature:lever`], exits: ['north'] }),
+      makeFeature('lever', {
+        verbs: [['pull']],
+        nouns: [['lever']],
+        state: 'off',
+        transitions: [['off', 'on', 'You pull the lever.']],
+        onInteract: [['pull', 'set-state', 'on']],
+      }),
+      makePlace('secret', { exits: ['south'] }),
+      makePortal('magic', [['test-world:place:start', 'north'], ['test-world:place:secret', 'south']]),
+      world,
+    );
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:start`) });
+    engine.flush();
+    await engine.handleCommand('pull lever');
+    const output = engine.flush();
+    // Local handler fired — lever pulled, NOT traversed to secret
+    expect(output.some((e) => e.text?.includes('pull the lever'))).toBe(true);
+    expect(output.some((e) => e.text?.includes('Secret'))).toBe(false);
+  });
+
+  it('respects requires on target portal', async () => {
+    const world = makeWorldEvent({
+      start: ref(`${WORLD}:place:start`),
+      extraTags: [
+        ['on-interact', 'xyzzy', '', 'traverse', ref(`${WORLD}:portal:magic`)],
+      ],
+    });
+    const events = buildEvents(
+      makePlace('start', { exits: ['north'] }),
+      makePlace('secret', { exits: ['south'] }),
+      makePortal('magic', [['test-world:place:start', 'north'], ['test-world:place:secret', 'south']], {
+        requires: [[ref(`${WORLD}:place:start`), 'visited', 'Nothing happens.']],
+      }),
+      world,
+    );
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:start`) });
+    engine.flush();
+    // Start place not in 'visited' state — requires should fail
+    await engine.handleCommand('xyzzy');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Nothing happens'))).toBe(true);
+    expect(output.some((e) => e.text?.includes('Secret'))).toBe(false);
+  });
+
+  it('world on-interact with state guard', async () => {
+    const world = makeWorldEvent({
+      start: ref(`${WORLD}:place:start`),
+      extraTags: [
+        ['state', 'normal'],
+        ['on-interact', 'xyzzy', 'enchanted', 'traverse', ref(`${WORLD}:portal:magic`)],
+      ],
+    });
+    const events = buildEvents(
+      makePlace('start', { exits: ['north'] }),
+      makePlace('secret', { exits: ['south'] }),
+      makePortal('magic', [['test-world:place:start', 'north'], ['test-world:place:secret', 'south']]),
+      world,
+    );
+    // World is in 'normal' state, guard requires 'enchanted' — should not fire
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:start`) });
+    engine.flush();
+    await engine.handleCommand('xyzzy');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Secret'))).toBe(false);
   });
 });

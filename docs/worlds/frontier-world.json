@@ -518,6 +518,13 @@
           "colour",
           "clue",
           "#8b7355"
+        ],
+        [
+          "on-interact",
+          "xyzzy",
+          "",
+          "traverse",
+          "30078:<PUBKEY>:frontier:portal:xyzzy"
         ]
       ],
       "content": "A town at the edge of the mapped world. Something in the hollow draws people. Not all of them come back."
@@ -5951,6 +5958,62 @@
         ]
       ],
       "content": "A low mound of stones behind the office, unmarked. Ruth doesn't mention it. The stones are arranged with care — someone who knew the person did this. No name. No date."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:place:xyzzy-room"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Somewhere Else"
+        ],
+        [
+          "exit",
+          "back"
+        ]
+      ],
+      "content": "You blink and find yourself somewhere that shouldn't exist. The air smells of old code and forgotten magic words. A faded sign reads: *\"Congratulations. You found the easter egg.\"*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "frontier:portal:xyzzy"
+        ],
+        [
+          "t",
+          "frontier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:the-spur",
+          "back",
+          "Back to reality"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:frontier:place:xyzzy-room",
+          "back",
+          "Back to The Spur"
+        ]
+      ],
+      "content": ""
     }
   ]
 }
