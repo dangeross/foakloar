@@ -1154,3 +1154,99 @@ describe('inventory cap', () => {
     expect(engine.player.getState(ref(`${WORLD}:feature:sign`))).toBe('annoyed');
   });
 });
+
+// ── World counters ───────────────────────────────────────────────────────
+
+describe('world counters', () => {
+  it('initializes world counters from world event', () => {
+    const world = makeWorldEvent({
+      start: ref(`${WORLD}:place:start`),
+      extraTags: [['counter', 'score', '0'], ['counter', 'moves', '10']],
+    });
+    const events = buildEvents(
+      makePlace('start'),
+      world,
+    );
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:start`) });
+    expect(engine.player.getCounter(`${WORLD}:world:score`)).toBe(0);
+    expect(engine.player.getCounter(`${WORLD}:world:moves`)).toBe(10);
+  });
+
+  it('on-enter increment targets world counter', async () => {
+    const world = makeWorldEvent({
+      start: ref(`${WORLD}:place:start`),
+      extraTags: [['counter', 'score', '0']],
+    });
+    const events = buildEvents(
+      makePlace('start', { exits: ['north'] }),
+      makePlace('room2', { exits: ['south'], extraTags: [
+        ['on-enter', 'player', '', 'increment', 'score', '1'],
+      ] }),
+      makePortal('p1', [['test-world:place:start', 'north'], ['test-world:place:room2', 'south']]),
+      world,
+    );
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:start`) });
+    engine.flush();
+    await engine.handleCommand('north');
+    engine.flush();
+    expect(engine.player.getCounter(`${WORLD}:world:score`)).toBe(1);
+  });
+
+  it('on-counter fires on world counter threshold', async () => {
+    const world = makeWorldEvent({
+      start: ref(`${WORLD}:place:start`),
+      extraTags: [
+        ['counter', 'score', '0'],
+        ['on-counter', 'up', 'score', '2', 'set-state', 'won'],
+      ],
+    });
+    const events = buildEvents(
+      makePlace('start', { features: [`${WORLD}:feature:btn`] }),
+      makeFeature('btn', {
+        verbs: [['press']],
+        nouns: [['button']],
+        onInteract: [['press', 'increment', 'score']],
+      }),
+      world,
+    );
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:start`) });
+    engine.flush();
+    await engine.handleCommand('press button');
+    engine.flush();
+    expect(engine.player.getCounter(`${WORLD}:world:score`)).toBe(1);
+    // Second press crosses threshold
+    await engine.handleCommand('press button');
+    engine.flush();
+    expect(engine.player.getCounter(`${WORLD}:world:score`)).toBe(2);
+    expect(engine.player.getState(`${WORLD}:world`)).toBe('won');
+  });
+
+  it('local counter takes priority over world counter with same name', async () => {
+    const world = makeWorldEvent({
+      start: ref(`${WORLD}:place:start`),
+      extraTags: [['counter', 'charge', '0']],
+    });
+    const events = buildEvents(
+      makePlace('start', { features: [`${WORLD}:feature:device`] }),
+      makeFeature('device', {
+        verbs: [['zap']],
+        nouns: [['device']],
+        onInteract: [['zap', 'increment', 'charge']],
+        extraTags: [['counter', 'charge', '5']],
+      }),
+      world,
+    );
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:start`) });
+    engine.flush();
+    // Both device and world have counter 'charge'
+    const deviceRef = ref(`${WORLD}:feature:device`);
+    expect(engine.player.getCounter(`${deviceRef}:charge`)).toBe(5);
+    expect(engine.player.getCounter(`${WORLD}:world:charge`)).toBe(0);
+
+    await engine.handleCommand('zap device');
+    engine.flush();
+    // Local counter should increment, world counter untouched
+    expect(engine.player.getCounter(`${deviceRef}:charge`)).toBe(6);
+    expect(engine.player.getCounter(`${WORLD}:world:charge`)).toBe(0);
+  });
+});

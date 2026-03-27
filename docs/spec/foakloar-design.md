@@ -584,7 +584,9 @@ New action types can be added without changing the tag structure — the dispatc
 
 #### counter
 
-A named numeric value tracked in player state. Declared on any event type — item, feature, NPC, place. Decrements or increments via `on-*` handlers. Two triggers fire based on counter value:
+A named numeric value tracked in player state. Declared on any event type — item, feature, NPC, place, **world**. Decrements or increments via `on-*` handlers. Two triggers fire based on counter value:
+
+World-scoped counters are player-owned (stored in `player.counters` as `<world-d-tag>:<name>`). Any trigger from any event can increment/decrement them by referencing the counter name — the engine resolves world counters automatically when the name matches a counter declared on the world event.
 
 - `on-counter` — fires when the counter reaches or crosses a threshold. `0` is just another threshold value — no special case needed.
 

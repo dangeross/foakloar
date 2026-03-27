@@ -52,6 +52,20 @@ export class GameEngine {
       }
     }
 
+    // Initialize world-scoped counters (player-owned)
+    {
+      const worldEvent = this._findWorldEvent(events);
+      if (worldEvent) {
+        const worldDtag = getTag(worldEvent, 'd');
+        for (const ct of getTags(worldEvent, 'counter')) {
+          const key = `${worldDtag}:${ct[1]}`;
+          if (player.getCounter(key) === undefined) {
+            player.setCounter(key, parseInt(ct[2], 10) || 0);
+          }
+        }
+      }
+    }
+
     /** @type {Array<{text?: string, html?: string, type: string}>} */
     this.output = [];
   }
@@ -1611,6 +1625,23 @@ export class GameEngine {
     // Resolve target: external ref overrides self
     let targetDtag = eventDtag;
     let targetEvent = event;
+
+    // Check local counter first, then fall back to world-scoped counter
+    if (!externalRef) {
+      const localKey = `${eventDtag}:${counterName}`;
+      if (this.player.getCounter(localKey) === undefined) {
+        // No local counter — check world event for player-owned counter
+        const worldEvent = this._findWorldEvent();
+        if (worldEvent) {
+          const worldDtag = getTag(worldEvent, 'd');
+          const worldKey = `${worldDtag}:${counterName}`;
+          if (this.player.getCounter(worldKey) !== undefined) {
+            targetDtag = worldDtag;
+            targetEvent = worldEvent;
+          }
+        }
+      }
+    }
     if (action === 'set-counter' && externalRef) {
       // set-counter: position 4 = value, position 5 = external ref
       targetDtag = externalRef;
@@ -1673,6 +1704,9 @@ export class GameEngine {
           if (transition) {
             this.player.setState(targetDtag, transition.to);
             if (transition.text) this._emit(transition.text, 'narrative');
+          } else {
+            // No transition defined — set state directly (opt-in enforcement)
+            this.player.setState(targetDtag, ctTarget);
           }
         } else if (ctAction === 'consequence' && ctTarget) {
           this._executeConsequence(ctTarget);

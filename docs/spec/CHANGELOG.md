@@ -5,6 +5,11 @@
 
 ## [Unreleased] — March 2026
 
+### Added — World-scoped counters
+
+**`counter` and `on-counter` valid on world event**
+World counters are player-owned, stored in `player.counters` as `<world-d-tag>:<name>`. Any trigger can increment/decrement them by counter name — the engine resolves world counters automatically. `on-counter` on the world event fires when a player counter crosses a threshold.
+
 ### Added — Inventory cap
 
 **`max-inventory` and `on-inventory-full` on world event**
