@@ -452,6 +452,27 @@ describe('examine', () => {
     expect(output.some((e) => e.text === 'An ancient stone altar covered in runes.')).toBe(true);
   });
 
+  it('shows description of item on the ground (dropped)', async () => {
+    const vial = makeItem('vial', {
+      nouns: [['vial', 'glass vial']],
+      content: 'A small glass vial of clear liquid.',
+    });
+    const place = makePlace('room');
+    const events = buildEvents(place, vial);
+    const roomRef = ref(`${WORLD}:place:room`);
+    const vialRef = ref(`${WORLD}:item:vial`);
+    const engine = createEngine(events, {
+      place: roomRef,
+      npcStates: { [roomRef]: { inventory: [vialRef] } },
+    });
+    engine.enterRoom(roomRef);
+    engine.flush();
+
+    await engine.handleCommand('examine vial');
+    const output = engine.flush();
+    expect(output.some((e) => (e.text || e.html || '').includes('glass vial of clear liquid'))).toBe(true);
+  });
+
   it('shows inventory item description and state', async () => {
     const lantern = makeItem('lantern', {
       nouns: [['lantern']],
@@ -1237,6 +1258,7 @@ describe('world counters', () => {
       world,
     );
     const engine = createEngine(events, { place: ref(`${WORLD}:place:start`) });
+    engine.enterRoom(ref(`${WORLD}:place:start`));
     engine.flush();
     // Both device and world have counter 'charge'
     const deviceRef = ref(`${WORLD}:feature:device`);

@@ -31,6 +31,7 @@ Machine-readable reference for LLM world authoring. All events are `kind: 30078`
 | `["on-interact", "open", "set-state", "open"]` without state guard | State guard (position 2) is required: `["on-interact", "open", "", "set-state", "open"]`. Blank = any state. |
 | Using `puzzle-type: cipher` with a `puzzle` tag on a place | Cipher/riddle puzzles need an `on-interact` on a **feature** to activate. Only `sequence` puzzles auto-evaluate from place `puzzle` tags |
 | `answer-hash` without knowing the format | Hash is `SHA256(answer + salt)` as hex. Example: answer `"bottle"`, salt `"my-world:puzzle:riddle:v1"` → `SHA256("bottlemy-world:puzzle:riddle:v1")` |
+| `set-state` before `consume-item`/`increment` on same verb+guard | State guard is checked per-tag. If `set-state` fires first, the state changes and subsequent tags with the old guard are skipped. Put `set-state` **last**: `consume-item` → `increment` → `set-state` |
 
 ---
 ## Identity Tags (all events)

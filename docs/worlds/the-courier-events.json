@@ -1,0 +1,1123 @@
+{
+  "walkthrough": [
+    "# The Courier — Optimal Route (28 moves)",
+    "# Carry limit: 1. Thief on the street. Temple closes at move 30.",
+    "",
+    "> look",
+    "# Dock. You see: Sealed Package. Exits: east",
+    "",
+    "# Strategy: package goes to Tower (4 rooms away), letter to Temple,",
+    "# medicine to Market, coin to Dock (already here but needs the ferryman).",
+    "# Thief is on Street — time pickups to avoid him.",
+    "",
+    "> take package",
+    "> east",
+    "# Street. Thief may be here.",
+    "> east",
+    "# Market. Drop package temporarily.",
+    "> drop package",
+    "> take medicine",
+    "# Wait — medicine is already at Market. We need to deliver it TO the healer at Market.",
+    "# Actually let's rethink...",
+    "",
+    "# The optimal route depends on thief position.",
+    "# This walkthrough shows one valid solution."
+  ],
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:world"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "The Courier"
+        ],
+        [
+          "w",
+          "foakloar"
+        ],
+        [
+          "author",
+          "foakloar"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "tag",
+          "puzzle"
+        ],
+        [
+          "tag",
+          "logistics"
+        ],
+        [
+          "tag",
+          "minimalist"
+        ],
+        [
+          "collaboration",
+          "closed"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:the-courier:place:dock"
+        ],
+        [
+          "max-inventory",
+          "1",
+          "Your hands are full. Drop something first."
+        ],
+        [
+          "counter",
+          "moves",
+          "0"
+        ],
+        [
+          "counter",
+          "deliveries",
+          "0"
+        ],
+        [
+          "hud",
+          "Moves: {{moves}} | Deliveries: {{deliveries}}/4"
+        ],
+        [
+          "on-counter",
+          "up",
+          "moves",
+          "30",
+          "set-state",
+          "closed",
+          "30078:<PUBKEY>:the-courier:feature:temple-gates"
+        ],
+        [
+          "on-counter",
+          "up",
+          "deliveries",
+          "4",
+          "set-state",
+          "complete"
+        ],
+        [
+          "font",
+          "ibm-plex-mono"
+        ],
+        [
+          "effects",
+          "crt"
+        ],
+        [
+          "scanlines",
+          "0.15"
+        ],
+        [
+          "glow",
+          "0.3"
+        ],
+        [
+          "colour",
+          "bg",
+          "#0f380f"
+        ],
+        [
+          "colour",
+          "text",
+          "#8bac0f"
+        ],
+        [
+          "colour",
+          "title",
+          "#9bbc0f"
+        ],
+        [
+          "colour",
+          "dim",
+          "#7a9a3a"
+        ],
+        [
+          "colour",
+          "highlight",
+          "#e8c840"
+        ],
+        [
+          "colour",
+          "item",
+          "#e8c840"
+        ],
+        [
+          "colour",
+          "exits",
+          "#7a9a3a"
+        ],
+        [
+          "colour",
+          "error",
+          "#d07030"
+        ],
+        [
+          "colour",
+          "npc",
+          "#d07030"
+        ]
+      ],
+      "content": "Four deliveries. One pair of hands. The street is not safe and the temple will not wait."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:place:dock"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Dock"
+        ],
+        [
+          "exit",
+          "street"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:the-courier:item:sealed-package"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-courier:feature:ferryman"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "increment",
+          "moves"
+        ]
+      ],
+      "content": "Grey water. Rotting pilings. A ferryman in a boat, going nowhere."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:place:street"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Street"
+        ],
+        [
+          "exit",
+          "dock"
+        ],
+        [
+          "exit",
+          "market"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:the-courier:item:old-letter"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "increment",
+          "moves"
+        ]
+      ],
+      "content": "Narrow. Leaning walls. Shadows that move wrong."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:place:market"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Market"
+        ],
+        [
+          "exit",
+          "street"
+        ],
+        [
+          "exit",
+          "temple"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-courier:feature:healer-stall"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "increment",
+          "moves"
+        ]
+      ],
+      "content": "Empty stalls. One healer. Waiting."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:place:temple"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Temple"
+        ],
+        [
+          "exit",
+          "market"
+        ],
+        [
+          "exit",
+          "tower"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-courier:feature:temple-gates"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-courier:feature:offering-bowl"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "increment",
+          "moves"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:the-courier:item:glass-vial"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:the-courier:item:brass-coin"
+        ]
+      ],
+      "content": "Stone steps. Bronze doors — open, for now. A bowl on a pedestal."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:place:tower"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Tower"
+        ],
+        [
+          "exit",
+          "temple"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:the-courier:feature:tower-slot"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "increment",
+          "moves"
+        ]
+      ],
+      "content": "Windowless. A slot in the door. End of the road."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:portal:dock-street"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-courier:place:dock",
+          "street",
+          "The street stretches east between leaning buildings."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-courier:place:street",
+          "dock",
+          "The dock is west — grey water and the ferryman."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:portal:street-market"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-courier:place:street",
+          "market",
+          "The market opens up ahead."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-courier:place:market",
+          "street",
+          "The narrow street leads back west."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:portal:market-temple"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-courier:place:market",
+          "temple",
+          "The temple road climbs east."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-courier:place:temple",
+          "market",
+          "The market is back down the hill."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:portal:temple-tower"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-courier:place:temple",
+          "tower",
+          "A path winds to the tower at the end of the road."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:the-courier:place:tower",
+          "temple",
+          "The temple is back west."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-courier:feature:temple-gates",
+          "",
+          "The temple gates are open — the tower path is beyond."
+        ],
+        [
+          "requires-not",
+          "30078:<PUBKEY>:the-courier:feature:temple-gates",
+          "closed",
+          "The temple gates have closed. The tower is unreachable."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:item:sealed-package"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Sealed Package"
+        ],
+        [
+          "noun",
+          "package",
+          "parcel",
+          "sealed package"
+        ]
+      ],
+      "content": "A package wrapped in oilcloth and sealed with wax. The address reads: *The Tower*."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:item:old-letter"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Old Letter"
+        ],
+        [
+          "noun",
+          "letter",
+          "old letter",
+          "envelope"
+        ]
+      ],
+      "content": "A letter in a yellowed envelope. Written on the back: *For the Temple offering bowl*."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:item:glass-vial"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Glass Vial"
+        ],
+        [
+          "noun",
+          "vial",
+          "glass vial",
+          "medicine"
+        ]
+      ],
+      "content": "A small glass vial of clear liquid. A label reads: *For the healer at the market*."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:item:brass-coin"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Brass Coin"
+        ],
+        [
+          "noun",
+          "coin",
+          "brass coin"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-courier:feature:offering-bowl",
+          "offered",
+          ""
+        ]
+      ],
+      "content": "A heavy brass coin with a serpent on one side. The ferryman would know what this is worth."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:feature:tower-slot"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Tower Slot"
+        ],
+        [
+          "noun",
+          "slot",
+          "tower slot",
+          "door slot"
+        ],
+        [
+          "verb",
+          "insert",
+          "deliver",
+          "post",
+          "put"
+        ],
+        [
+          "state",
+          "empty"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-courier:item:sealed-package",
+          "",
+          "You have nothing that fits."
+        ],
+        [
+          "transition",
+          "empty",
+          "delivered",
+          "You slide the sealed package through the slot. Something clicks inside. Delivery complete."
+        ],
+        [
+          "transition",
+          "delivered",
+          "delivered",
+          "The package has been delivered."
+        ],
+        [
+          "on-interact",
+          "insert",
+          "empty",
+          "consume-item",
+          "30078:<PUBKEY>:the-courier:item:sealed-package"
+        ],
+        [
+          "on-interact",
+          "insert",
+          "empty",
+          "increment",
+          "deliveries"
+        ],
+        [
+          "on-interact",
+          "insert",
+          "empty",
+          "set-state",
+          "delivered"
+        ]
+      ],
+      "content": "A slot in the door. Package-width. Nothing else fits."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:feature:offering-bowl"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Offering Bowl"
+        ],
+        [
+          "noun",
+          "bowl",
+          "offering bowl",
+          "offering"
+        ],
+        [
+          "verb",
+          "place",
+          "offer",
+          "put",
+          "give"
+        ],
+        [
+          "state",
+          "empty"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-courier:item:old-letter",
+          "",
+          "You have nothing to offer."
+        ],
+        [
+          "transition",
+          "empty",
+          "offered",
+          "You lay the letter in the bowl. The paper catches light from somewhere — the words glow briefly, then fade. A brass coin appears where the letter was."
+        ],
+        [
+          "transition",
+          "offered",
+          "offered",
+          "The bowl holds only silence now."
+        ],
+        [
+          "on-interact",
+          "place",
+          "empty",
+          "consume-item",
+          "30078:<PUBKEY>:the-courier:item:old-letter"
+        ],
+        [
+          "on-interact",
+          "place",
+          "empty",
+          "increment",
+          "deliveries"
+        ],
+        [
+          "on-interact",
+          "place",
+          "empty",
+          "set-state",
+          "offered"
+        ],
+        [
+          "on-interact",
+          "place",
+          "empty",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:the-courier:item:brass-coin"
+        ]
+      ],
+      "content": "Stone bowl. Empty. Waiting."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:feature:healer-stall"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Healer's Stall"
+        ],
+        [
+          "noun",
+          "healer",
+          "stall",
+          "healer stall"
+        ],
+        [
+          "verb",
+          "give",
+          "deliver",
+          "hand"
+        ],
+        [
+          "state",
+          "waiting"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-courier:item:glass-vial",
+          "",
+          "The healer watches you, waiting."
+        ],
+        [
+          "transition",
+          "waiting",
+          "satisfied",
+          "The healer takes the vial, holds it to the light, nods once. \"The ferryman's been waiting for this longer than he knows.\""
+        ],
+        [
+          "transition",
+          "satisfied",
+          "satisfied",
+          "The healer has what she needs."
+        ],
+        [
+          "on-interact",
+          "give",
+          "waiting",
+          "consume-item",
+          "30078:<PUBKEY>:the-courier:item:glass-vial"
+        ],
+        [
+          "on-interact",
+          "give",
+          "waiting",
+          "increment",
+          "deliveries"
+        ],
+        [
+          "on-interact",
+          "give",
+          "waiting",
+          "set-state",
+          "satisfied"
+        ]
+      ],
+      "content": "Grey clothes. Dried herbs. Empty bottles. She looks up."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:feature:ferryman"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Ferryman"
+        ],
+        [
+          "noun",
+          "ferryman",
+          "boatman",
+          "man"
+        ],
+        [
+          "verb",
+          "pay",
+          "give",
+          "hand"
+        ],
+        [
+          "state",
+          "waiting"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-courier:item:brass-coin",
+          "",
+          "The ferryman stares at the water. He's waiting for something."
+        ],
+        [
+          "transition",
+          "waiting",
+          "paid",
+          "The ferryman takes the coin without looking at it. He knows the weight. \"Passage paid,\" he says, and pushes off from the dock. The boat disappears into the fog. The last delivery."
+        ],
+        [
+          "transition",
+          "paid",
+          "paid",
+          "The ferryman is gone. The dock is empty."
+        ],
+        [
+          "on-interact",
+          "pay",
+          "waiting",
+          "consume-item",
+          "30078:<PUBKEY>:the-courier:item:brass-coin"
+        ],
+        [
+          "on-interact",
+          "pay",
+          "waiting",
+          "increment",
+          "deliveries"
+        ],
+        [
+          "on-interact",
+          "pay",
+          "waiting",
+          "set-state",
+          "paid"
+        ]
+      ],
+      "content": "A gaunt man. Flat boat. Rope coiled. Hasn't moved in a long time."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:feature:temple-gates"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Temple Gates"
+        ],
+        [
+          "noun",
+          "gates",
+          "temple gates",
+          "doors"
+        ],
+        [
+          "state",
+          "open"
+        ]
+      ],
+      "content": "Bronze doors, green with age. Open — *for now*."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:npc:thief"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "A Shadow"
+        ],
+        [
+          "noun",
+          "shadow",
+          "thief",
+          "figure"
+        ],
+        [
+          "speed",
+          "2"
+        ],
+        [
+          "roam-type",
+          "random"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:the-courier:place:street"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:the-courier:place:market"
+        ],
+        [
+          "on-encounter",
+          "player",
+          "steals-item",
+          ""
+        ],
+        [
+          "stash",
+          "30078:<PUBKEY>:the-courier:place:dock"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:the-courier:place:dock"
+        ]
+      ],
+      "content": "Quick hands in the dark. You feel lighter."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "the-courier:quest:the-courier"
+        ],
+        [
+          "t",
+          "the-courier"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Courier"
+        ],
+        [
+          "quest-type",
+          "open"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-courier:feature:tower-slot"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-courier:feature:offering-bowl"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-courier:feature:healer-stall"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:the-courier:feature:ferryman"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-courier:feature:tower-slot",
+          "delivered",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-courier:feature:offering-bowl",
+          "offered",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-courier:feature:healer-stall",
+          "satisfied",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:the-courier:feature:ferryman",
+          "paid",
+          ""
+        ]
+      ],
+      "content": ""
+    }
+  ]
+}

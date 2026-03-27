@@ -922,6 +922,24 @@ export class GameEngine {
     let match = findByNoun(this.events, this.place, noun);
 
     if (!match) {
+      // Check items on the ground at this place
+      const placeItems = this.player.getPlaceItems(this.currentPlace) || [];
+      for (const itemDtag of placeItems) {
+        const item = this.events.get(itemDtag);
+        if (!item) continue;
+        const title = getTag(item, 'title')?.toLowerCase() || '';
+        if (title.includes(noun)) { match = { event: item, dtag: itemDtag, type: 'item' }; break; }
+        for (const nt of getTags(item, 'noun')) {
+          for (let i = 1; i < nt.length; i++) {
+            if (nt[i].toLowerCase() === noun) { match = { event: item, dtag: itemDtag, type: 'item' }; break; }
+          }
+          if (match) break;
+        }
+        if (match) break;
+      }
+    }
+
+    if (!match) {
       const invMatch = findInventoryItem(this.events, this.player.state.inventory, noun);
       if (invMatch) { this.examineInventoryItem(invMatch); return; }
       this._emit("You don't see that here.", 'error');
@@ -1894,7 +1912,7 @@ export class GameEngine {
     // Ensure NPC state exists so it can carry stolen items
     this.player.ensureNpcState(npcDtag, { state: getDefaultState(npcEvent) || 'default', inventory: [] });
 
-    if (target === 'any') {
+    if (!target || target === 'any') {
       // Steal the most recently acquired item
       if (this.player.state.inventory.length === 0) return;
       const stolenDtag = this.player.state.inventory[this.player.state.inventory.length - 1];

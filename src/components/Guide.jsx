@@ -40,6 +40,7 @@ const AUTHORING = [
 
 const SHOWCASES = [
   { id: 'cartographers-instrument', title: "The Cartographer's Instrument", subtitle: 'A musical puzzle world' },
+  { id: 'the-courier', title: 'The Courier', subtitle: 'A logistics puzzle in five rooms' },
 ];
 
 const PAGES = [...TUTORIALS, ...SHOWCASES, ...AUTHORING];
@@ -618,7 +619,7 @@ function GuidePage({ pageId }) {
     );
     // Convert standalone page ID references to links (not inside tags or filenames)
     for (const p of PAGES) {
-      const re = new RegExp(`(?<![/\\w.-])(${p.id})(?![/\\w."<])`, 'g');
+      const re = new RegExp(`(?<![/\\w.-])(${p.id})(?![/\\w.\\-"<])`, 'g');
       rendered = rendered.replace(re, `<a href="/guide/${p.id}" style="color:${THEME.highlight};text-decoration:underline">${p.id}</a>`);
     }
     // Convert "02: Items and Features" style bold references to links
