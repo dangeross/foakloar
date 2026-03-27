@@ -352,8 +352,8 @@ export function validateEvent(template) {
     const triggerPrefixes = ['on-interact', 'on-complete', 'on-fail', 'on-enter', 'on-encounter', 'on-attacked', 'on-health-zero', 'on-player-health-zero', 'on-move'];
     for (const tag of template.tags) {
       if (!triggerPrefixes.includes(tag[0])) continue;
-      // on-interact has state-guard at [2], action at [3]; others have action at [2]
-      const actionIdx = tag[0] === 'on-interact' ? 3 : 2;
+      // on-interact and on-enter have state-guard at [2], action at [3]; others have action at [2]
+      const actionIdx = (tag[0] === 'on-interact' || tag[0] === 'on-enter') ? 3 : 2;
       const actionType = tag[actionIdx];
       const actionTarget = tag[actionIdx + 1];
       if (!actionType || actionTarget === undefined || actionTarget === '') continue;
@@ -460,13 +460,21 @@ export function validateEvent(template) {
       }
     }
 
-    // on-interact with too many elements
+    // on-interact / on-enter with too many elements
     for (const tag of template.tags) {
       if (tag[0] === 'on-interact' && tag.length > 6) {
         warnings.push(warn(
           'extra-fields',
           `on-interact "${tag[1]}" has ${tag.length - 1} fields (expected max 5) — extra elements are ignored`,
           `Remove the extra fields from ["on-interact", "${tag[1]}", ...]. The spec defines 5 fields: verb, state-guard, action, target, ext-ref.`,
+          tag.join(', '),
+        ));
+      }
+      if (tag[0] === 'on-enter' && tag.length > 6) {
+        warnings.push(warn(
+          'extra-fields',
+          `on-enter has ${tag.length - 1} fields (expected max 5) — extra elements are ignored`,
+          `Remove the extra fields from ["on-enter", ...]. The spec defines 5 fields: filter, state-guard, action, target, ext-ref.`,
           tag.join(', '),
         ));
       }

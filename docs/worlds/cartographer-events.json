@@ -195,6 +195,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:cartographer:place:valley-entrance"
@@ -317,6 +318,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:vael-is-close"
@@ -380,6 +382,7 @@
         [
           "on-enter",
           "player",
+          "",
           "deal-damage",
           "3"
         ],
@@ -711,6 +714,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:cartographer:place:drowned-survey"
@@ -4030,6 +4034,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "cautious",
           "30078:<PUBKEY>:cartographer:npc:asha"
@@ -4100,6 +4105,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "cautious",
           "30078:<PUBKEY>:cartographer:npc:asha"
@@ -4476,6 +4482,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "trusting",
           "30078:<PUBKEY>:cartographer:npc:asha"
@@ -4823,6 +4830,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "negotiated",
           "30078:<PUBKEY>:cartographer:npc:vael-final"
@@ -4883,6 +4891,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "negotiated",
           "30078:<PUBKEY>:cartographer:npc:vael-final"

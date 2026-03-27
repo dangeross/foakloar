@@ -279,6 +279,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:tides-end-11-endgame:feature:landmark-departure"

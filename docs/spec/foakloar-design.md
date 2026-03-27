@@ -177,9 +177,9 @@ The client renders exit slot names as available movement options. Custom exit na
 - Rooms can carry `on-enter` handlers — fired when the player enters the place. NPCs use the same tag with a place reference as the first argument — fired when the NPC arrives at that place. Same tag, different first argument, dispatched by event `type`.
 
 ```json
-["on-enter", "player", "consequence", "30078:<pubkey>:the-lake:consequence:trap-fires"]
-["on-enter", "player", "set-state", "visited", "30078:<pubkey>:the-lake:place:sanctum"],
-["on-enter", "player", "set-state", "visible", "30078:<pubkey>:the-lake:clue:ambient-note"]
+["on-enter", "player", "", "consequence", "30078:<pubkey>:the-lake:consequence:trap-fires"]
+["on-enter", "player", "", "set-state", "visited", "30078:<pubkey>:the-lake:place:sanctum"],
+["on-enter", "player", "", "set-state", "visible", "30078:<pubkey>:the-lake:clue:ambient-note"]
 ```
 
 ```json
@@ -879,10 +879,10 @@ The `on-interact` that fires `set-state visible` on this clue can run unconditio
 ["on-interact", "examine", "", "set-state", "visible", "30078:<pubkey>:the-lake:clue:altar-inscription"]
 
 // Place entry (ambient clue — shown on arrival)
-["on-enter", "player", "set-state", "visible", "30078:<pubkey>:the-lake:clue:notice-on-wall"]
+["on-enter", "player", "", "set-state", "visible", "30078:<pubkey>:the-lake:clue:notice-on-wall"]
 
 // NPC dialogue node
-["on-enter", "player", "set-state", "visible", "30078:<pubkey>:the-lake:clue:hermit-hint"]
+["on-enter", "player", "", "set-state", "visible", "30078:<pubkey>:the-lake:clue:hermit-hint"]
 ```
 
 **Sealed clue** — content encrypted, key found elsewhere in the world:
@@ -1464,7 +1464,7 @@ Drop before clear, respawn last. The engine uses `currentPlace` at consequence d
 ["on-interact", "touch", "", "consequence", "30078:<pubkey>:the-lake:consequence:cursed"]
 
 // Room entry triggers a consequence
-["on-enter", "", "consequence", "30078:<pubkey>:the-lake:consequence:victory"]
+["on-enter", "", "", "consequence", "30078:<pubkey>:the-lake:consequence:victory"]
 ```
 
 A lethal portal fires its consequence on traversal attempt when `requires` conditions are not met:

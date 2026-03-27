@@ -81,7 +81,7 @@ The final element (`ext-ref`) is optional — include it to target a different e
 ```
 ["on-interact",  "<verb>", "<state-guard-or-''>", "<action>", "<target>"]           — self
 ["on-interact",  "<verb>", "<state-guard-or-''>", "<action>", "<target>", "<ref>"]  — external
-["on-enter",     "player",         "<action>", "<target>", "<ref?>"]
+["on-enter",     "player", "<state-guard-or-''>", "<action>", "<target>", "<ref?>"]
 ["on-encounter", "<filter-or-''>", "<action>", "<target>", "<ref?>"]
 ["on-attacked",  "<weapon-or-''>", "<action>", "<target>", "<ref?>"]
 ["on-move",      "<state-guard>",  "<action>", "<target>", "<ref?>"]
@@ -205,7 +205,7 @@ D-tag: `<slug>:world`
 | `transition` | `["transition", "<from>", "<to>", "<text?>"]` (repeatable) | opt | — |
 | `requires` | `["requires", "<ref>", "<state>", "<desc>"]` (repeatable) | opt | — |
 | `requires-not` | `["requires-not", "<ref>", "<state>", "<desc>"]` (repeatable) | opt | — |
-| `on-enter` | `["on-enter", "player", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | — |
+| `on-enter` | `["on-enter", "player", "<state-guard-or-''\>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | — |
 | `on-player-health` | `["on-player-health", "<dir>", "<threshold>", "<action>", "<target>"]` (repeatable) | opt | — |
 | `media` | `["media", "<mime>", "<value>"]` (repeatable) | opt | — |
 | `sound` | `["sound", "<sound-ref>", "<role>", "<volume>", "<state?>"]` (repeatable) | opt | — |
@@ -354,7 +354,7 @@ One-way portal (1 exit tag) or two-way (2 exit tags):
 | `option` | `["option", "<label>", "<next-dialogue-ref?>"]` (repeatable) | opt | — |
 | `requires` | `["requires", "<ref>", "<state>", "<desc>"]` (repeatable) | opt | — |
 | `requires-not` | `["requires-not", "<ref>", "<state>", "<desc>"]` (repeatable) | opt | — |
-| `on-enter` | `["on-enter", "player", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | — |
+| `on-enter` | `["on-enter", "player", "<state-guard-or-''\>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | — |
 | `sound` | `["sound", "<sound-ref>", "<role>", "<volume>", "<state?>"]` (repeatable) | opt | — |
 
 **NOT valid on dialogue:** `title`, `noun`, `verb`, `exit`, `item`, `feature`, `npc`, `state`, `transition`, `on-interact`, `counter`, `damage`, `health`, `media`
@@ -683,7 +683,7 @@ Player-submitted report for open world moderation. Published by the player, visi
 | `on-player-health` | `["on-player-health", "<dir>", "<threshold>", "<action>", "<target>"]` |
 | `on-counter` | `["on-counter", "<dir>", "<counter>", "<threshold>", "<action>", "<target?>"]` |
 
-`<dir>` = `"down"` or `"up"` (REQUIRED on `on-counter`, `on-health`, `on-player-health`). `on-complete`/`on-fail` trigger-target is ALWAYS `""`. `<ext-ref?>` = optional event ref to apply action to a different event.
+`<dir>` = `"down"` or `"up"` (REQUIRED on `on-counter`, `on-health`, `on-player-health`). `on-complete`/`on-fail` trigger-target is ALWAYS `""`. `on-enter` state guard (position 2) is blank for unconditional firing. `<ext-ref?>` = optional event ref to apply action to a different event.
 
 ---
 ## Requires Shape

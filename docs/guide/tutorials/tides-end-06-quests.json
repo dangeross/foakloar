@@ -203,6 +203,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-dock"
@@ -252,6 +253,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-square"
@@ -289,6 +291,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-tavern"
@@ -330,6 +333,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:tides-end-06-quests:feature:landmark-beach"

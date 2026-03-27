@@ -207,6 +207,7 @@ export const TAG_SCHEMAS = {
     repeatable: true,
     fields: [
       { name: 'trigger', type: 'text', required: false, placeholder: 'blank = any player' },
+      { name: 'state-guard', type: 'text', required: false, placeholder: 'state guard (blank = any state)' },
       { name: 'action', type: 'select', required: true, options: TRIGGER_ACTIONS['on-enter'] },
       { name: 'target', type: 'text', required: false, placeholder: 'action target' },
       { name: 'event-ref', type: 'event-ref', required: false, placeholder: 'target event (blank = self)' },

@@ -229,9 +229,15 @@ export class GameEngine {
     if (isMoving) {
       for (const tag of getTags(room, 'on-enter')) {
         if (tag[1] && tag[1] !== 'player') continue;
-        const action = tag[2];
-        const actionTarget = tag[3];
-        const extTarget = tag[4];
+        // State guard at position 2 (blank = any state)
+        const stateGuard = tag[2] || '';
+        if (stateGuard) {
+          const placeState = this.player.getState(dtag) ?? getDefaultState(room);
+          if (placeState !== stateGuard) continue;
+        }
+        const action = tag[3];
+        const actionTarget = tag[4];
+        const extTarget = tag[5];
 
         if (action === 'set-state' && actionTarget) {
           if (extTarget) {
@@ -2117,9 +2123,15 @@ export class GameEngine {
 
     // Fire on-enter actions
     for (const tag of getTags(node, 'on-enter')) {
-      if (tag[1] !== 'player') continue;
-      const action = tag[2];
-      const actionTarget = tag[3];
+      if (tag[1] && tag[1] !== 'player') continue;
+      // State guard at position 2 (blank = any state)
+      const stateGuard = tag[2] || '';
+      if (stateGuard) {
+        const nodeState = this.player.getState(nodeDtag);
+        if (nodeState !== stateGuard) continue;
+      }
+      const action = tag[3];
+      const actionTarget = tag[4];
 
       if (action === 'give-item' && actionTarget) {
         giveItem(actionTarget, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
@@ -2131,7 +2143,7 @@ export class GameEngine {
           this._emit(`${consumeTitle} is consumed.`, 'item');
         }
       } else if (action === 'set-state' && actionTarget) {
-        const extRef = tag[4];  // full a-tag
+        const extRef = tag[5];  // full a-tag (shifted by state guard)
         if (extRef) {
           const targetEvent = this.events.get(extRef);
           if (targetEvent) {

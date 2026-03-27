@@ -188,6 +188,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:axiom9:place:undercity-transit"
@@ -263,6 +264,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:transit-notice"
@@ -552,6 +554,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:axiom9:place:precinct-records"
@@ -680,6 +683,7 @@
         [
           "on-enter",
           "player",
+          "",
           "deal-damage",
           "2"
         ],
@@ -924,6 +928,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:axiom9:place:condemned-sector"
@@ -4554,6 +4559,7 @@
         [
           "on-enter",
           "player",
+          "",
           "give-item",
           "30078:<PUBKEY>:axiom9:item:transit-pass"
         ],
@@ -4786,6 +4792,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:stall-graffiti"
@@ -4968,6 +4975,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "trusting",
           "30078:<PUBKEY>:axiom9:npc:mei-ling"
@@ -5003,6 +5011,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "trusting",
           "30078:<PUBKEY>:axiom9:npc:mei-ling"
@@ -5486,12 +5495,14 @@
         [
           "on-enter",
           "player",
+          "",
           "give-item",
           "30078:<PUBKEY>:axiom9:item:broadcast-key"
         ],
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "trusting",
           "30078:<PUBKEY>:axiom9:npc:replicant-kael"
@@ -5698,6 +5709,7 @@
         [
           "on-enter",
           "player",
+          "",
           "give-item",
           "30078:<PUBKEY>:axiom9:item:broadcast-key"
         ],
@@ -5859,6 +5871,7 @@
         [
           "on-enter",
           "player",
+          "",
           "give-item",
           "30078:<PUBKEY>:axiom9:item:broadcast-key"
         ],

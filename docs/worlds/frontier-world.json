@@ -634,6 +634,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:frontier:npc:cole-rennick"
@@ -901,6 +902,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "markings-seen",
           "30078:<PUBKEY>:frontier:feature:canyon-entrance-markings"
@@ -963,6 +965,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "entered-hollow",
           "30078:<PUBKEY>:frontier:place:canyon-floor"
@@ -1054,6 +1057,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "cave-entered",
           "30078:<PUBKEY>:frontier:place:first-cave"
@@ -1196,6 +1200,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "chamber-reached",
           "30078:<PUBKEY>:frontier:place:deep-chamber"
@@ -1948,6 +1953,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:frontier:npc:cole-rennick"
@@ -2048,6 +2054,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "examined",
           "30078:<PUBKEY>:frontier:feature:rennick-ledger"
@@ -2138,6 +2145,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "ledger-marked",
           "30078:<PUBKEY>:frontier:npc:cole-rennick"
@@ -2197,6 +2205,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "tea-offered",
           "30078:<PUBKEY>:frontier:npc:dessa-vane"
@@ -2362,6 +2371,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "trusted",
           "30078:<PUBKEY>:frontier:npc:dessa-vane"
@@ -2393,6 +2403,7 @@
         [
           "on-enter",
           "player",
+          "",
           "give-item",
           "30078:<PUBKEY>:frontier:item:harlan-account-fragment"
         ]
@@ -2581,6 +2592,7 @@
         [
           "on-enter",
           "player",
+          "",
           "give-item",
           "30078:<PUBKEY>:frontier:item:oral-account"
         ]
@@ -2633,6 +2645,7 @@
         [
           "on-enter",
           "player",
+          "",
           "give-item",
           "30078:<PUBKEY>:frontier:item:climbing-rope"
         ]
@@ -2657,6 +2670,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "spoken",
           "30078:<PUBKEY>:frontier:npc:ruth-calloway"
@@ -4649,6 +4663,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "spoken",
           "30078:<PUBKEY>:frontier:npc:ruth-calloway"
@@ -5571,6 +5586,7 @@
         [
           "on-enter",
           "player",
+          "",
           "give-item",
           "30078:<PUBKEY>:frontier:item:riders-letter"
         ]
@@ -5601,12 +5617,14 @@
         [
           "on-enter",
           "player",
+          "",
           "consume-item",
           "30078:<PUBKEY>:frontier:item:riders-letter"
         ],
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited"
         ]
@@ -5823,12 +5841,14 @@
         [
           "on-enter",
           "player",
+          "",
           "consume-item",
           "30078:<PUBKEY>:frontier:item:torn-pages"
         ],
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited"
         ]

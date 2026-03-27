@@ -393,6 +393,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:voidrun:clue:uplink-blinking"
@@ -568,6 +569,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:voidrun:clue:storage-log"
@@ -2618,6 +2620,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "wiped",
           "30078:<PUBKEY>:voidrun:item:case-file"
@@ -2881,12 +2884,14 @@
         [
           "on-enter",
           "player",
+          "",
           "consequence",
           "30078:<PUBKEY>:voidrun:consequence:mira-trade"
         ],
         [
           "on-enter",
           "player",
+          "",
           "consequence",
           "30078:<PUBKEY>:voidrun:consequence:mira-trade"
         ]
@@ -3144,6 +3149,7 @@
         [
           "on-enter",
           "player",
+          "",
           "give-item",
           "30078:<PUBKEY>:voidrun:item:relay-coil"
         ]

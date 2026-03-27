@@ -803,6 +803,7 @@
         [
           "on-enter",
           "player",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:cartographers-instrument:feature:landmark-star-chamber"

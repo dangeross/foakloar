@@ -166,8 +166,8 @@ describe('tag shapes', () => {
     expect(TAG_SCHEMAS['on-interact'].fields).toHaveLength(5);
   });
 
-  it('on-enter has 4 fields (trigger, action, target, event-ref)', () => {
-    expect(TAG_SCHEMAS['on-enter'].fields).toHaveLength(4);
+  it('on-enter has 5 fields (trigger, state-guard, action, target, event-ref)', () => {
+    expect(TAG_SCHEMAS['on-enter'].fields).toHaveLength(5);
   });
 
   it('on-counter has 5 fields (direction, counter, threshold, action, target)', () => {

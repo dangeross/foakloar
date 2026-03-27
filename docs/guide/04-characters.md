@@ -171,7 +171,7 @@ The client evaluates these in order and uses the **last one whose condition pass
 Dialogue nodes can trigger actions when visited, using the same `on-enter` dispatcher as places:
 
 ```json
-["on-enter", "player", "give-item", "30078:<PUBKEY>:my-world:item:map-fragment"]
+["on-enter", "player", "", "give-item", "30078:<PUBKEY>:my-world:item:map-fragment"]
 ```
 
 This lets NPCs hand over items, change world state, or trigger other effects as part of the conversation.

@@ -200,7 +200,7 @@ Add a place that serves as the story's conclusion point. Gate access behind the 
     ["d",    "my-world:place:departure-pier"],
     ["type", "place"],
     ["title", "Departure Pier"],
-    ["on-enter", "player", "set-state", "visited", "30078:<PUBKEY>:my-world:feature:landmark-pier"]
+    ["on-enter", "player", "", "set-state", "visited", "30078:<PUBKEY>:my-world:feature:landmark-pier"]
   ],
   "content": "A stone pier stretching into open water. A boat waits at the end."
 }

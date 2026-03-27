@@ -567,6 +567,7 @@
         [
           "on-enter",
           "",
+          "",
           "set-state",
           "visited",
           "30078:<PUBKEY>:the-lake:feature:sanctum-landmark"
