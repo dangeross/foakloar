@@ -30,7 +30,7 @@ export function calculateNpcPlace(npcEvent, moveCount, npcState) {
   if (routeTags.length === 0) return null;
 
   const speed = parseInt(getTag(npcEvent, 'speed') || '1', 10);
-  const order = getTag(npcEvent, 'order') || 'sequential';
+  const order = getTag(npcEvent, 'roam-type') || getTag(npcEvent, 'order') || 'route';
   const roamsWhen = getTag(npcEvent, 'roams-when');
 
   // If roams-when is set and NPC is not in that state, stay at first route place (spawn)
@@ -42,7 +42,7 @@ export function calculateNpcPlace(npcEvent, moveCount, npcState) {
   const npcDtag = getTag(npcEvent, 'd');
   const npcMoves = Math.floor(moveCount / speed);
 
-  if (order === 'random') {
+  if (order === 'random') {  // roam-type: random
     // Deterministic pseudo-random: seed from NPC d-tag + move step
     const seed = hashSeed(npcDtag + ':' + npcMoves);
     return routes[seed % routes.length];
