@@ -1273,3 +1273,112 @@ describe('world counters', () => {
     expect(engine.player.getCounter(`${WORLD}:world:charge`)).toBe(0);
   });
 });
+
+// ── Portal transitions ───────────────────────────────────────────────
+
+describe('portal transitions', () => {
+  it('portal with transition-effect emits transition output entry', async () => {
+    const room1 = makePlace('room1', { exits: ['north'] });
+    const room2 = makePlace('room2', { exits: ['south'] });
+    const portal = makePortal('p1', [
+      [`${WORLD}:place:room1`, 'north'],
+      [`${WORLD}:place:room2`, 'south'],
+    ], {
+      extraTags: [
+        ['transition-effect', 'blackout'],
+        ['transition-duration', '1200'],
+      ],
+    });
+    const events = buildEvents(room1, room2, portal);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room1`) });
+    engine.enterRoom(ref(`${WORLD}:place:room1`));
+    engine.flush();
+
+    await engine.handleCommand('north');
+    const output = engine.flush();
+
+    const transition = output.find((e) => e.type === 'transition');
+    expect(transition).toBeDefined();
+    expect(transition.effect).toBe('blackout');
+    expect(transition.duration).toBe(1200);
+    expect(transition.clear).toBe(false);
+  });
+
+  it('portal with transition-clear emits transition with clear=true', async () => {
+    const room1 = makePlace('room1', { exits: ['north'] });
+    const room2 = makePlace('room2', { exits: ['south'] });
+    const portal = makePortal('p1', [
+      [`${WORLD}:place:room1`, 'north'],
+      [`${WORLD}:place:room2`, 'south'],
+    ], {
+      extraTags: [
+        ['transition-effect', 'fade'],
+        ['transition-clear', 'true'],
+      ],
+    });
+    const events = buildEvents(room1, room2, portal);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room1`) });
+    engine.enterRoom(ref(`${WORLD}:place:room1`));
+    engine.flush();
+
+    await engine.handleCommand('north');
+    const output = engine.flush();
+
+    const transition = output.find((e) => e.type === 'transition');
+    expect(transition).toBeDefined();
+    expect(transition.effect).toBe('fade');
+    expect(transition.clear).toBe(true);
+  });
+
+  it('portal without transition tags emits no transition entry', async () => {
+    const room1 = makePlace('room1', { exits: ['north'] });
+    const room2 = makePlace('room2', { exits: ['south'] });
+    const portal = makePortal('p1', [
+      [`${WORLD}:place:room1`, 'north'],
+      [`${WORLD}:place:room2`, 'south'],
+    ]);
+    const events = buildEvents(room1, room2, portal);
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room1`) });
+    engine.enterRoom(ref(`${WORLD}:place:room1`));
+    engine.flush();
+
+    await engine.handleCommand('north');
+    const output = engine.flush();
+
+    const transition = output.find((e) => e.type === 'transition');
+    expect(transition).toBeUndefined();
+  });
+});
+
+// ── Place colour overrides ───────────────────────────────────────────
+
+describe('place colour overrides', () => {
+  it('place with colour tags emits theme-override with colours object', () => {
+    const place = makePlace('dungeon', {
+      extraTags: [
+        ['colour', 'bg', '#1a0000'],
+        ['colour', 'text', '#ff4444'],
+      ],
+    });
+    const events = buildEvents(place);
+    const engine = createEngine(events);
+    engine.enterRoom(ref(`${WORLD}:place:dungeon`));
+    const output = engine.flush();
+
+    const override = output.find((e) => e.type === 'theme-override');
+    expect(override).toBeDefined();
+    expect(override.colours).toEqual({ bg: '#1a0000', text: '#ff4444' });
+  });
+
+  it('place without colour tags emits theme-override with colours=null', () => {
+    const place = makePlace('clearing');
+    const events = buildEvents(place);
+    const engine = createEngine(events);
+    engine.enterRoom(ref(`${WORLD}:place:clearing`));
+    const output = engine.flush();
+
+    const override = output.find((e) => e.type === 'theme-override');
+    expect(override).toBeDefined();
+    expect(override.colours).toBeNull();
+  });
+});

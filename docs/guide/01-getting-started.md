@@ -38,6 +38,8 @@ A place is a location the player can occupy. It has a title, prose description, 
 
 Common exit slot names: `north`, `south`, `east`, `west`, `up`, `down`, `in`, `out`. You can also use custom names like `climb`, `path`, or `follow-river`.
 
+**Place colour overrides** — a place can override the world's colour theme with its own `colour` tags. The override applies while the player is in that room and reverts when they leave. This lets specific locations feel distinct — a warm amber tavern in a green world, a blood-red dungeon, or a blinding white void.
+
 ### Portal
 
 A portal stitches two exit slots together. It says: "the `north` exit on Place A leads to Place B, and the `south` exit on Place B leads back to Place A." A two-way portal has two `exit` tags. A one-way portal has one.
@@ -46,6 +48,7 @@ Portals are separate events from places. This means:
 - Anyone can propose a connection between two places (in open/vouched worlds).
 - Connections can be gated with `requires` tags (e.g. needing a key).
 - Multiple portals can claim the same exit slot — the client resolves this by trust level.
+- Portals can trigger **transition effects** — visual animations like blackout, flash, shake, or glitch that play when the player traverses. Add `["transition-effect", "blackout"]` and optionally `["transition-duration", "1000"]` to a portal. Use `["transition-clear", "true"]` to clear the game log during the transition — useful for dramatic scene changes.
 
 ---
 

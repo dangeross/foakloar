@@ -282,6 +282,9 @@ export function validateEvent(template) {
       { tag: 'flicker', field: 'value', label: 'Flicker' },
       { tag: 'quest-type', field: 'type', label: 'Quest type' },
       { tag: 'colour', field: 'slot', label: 'Colour slot' },
+      { tag: 'transition-effect', field: 'value', label: 'Transition effect' },
+      { tag: 'transition-clear', field: 'value', label: 'Transition clear' },
+      { tag: 'roam-type', field: 'value', label: 'Roam type' },
     ];
     for (const check of selectChecks) {
       for (const tag of template.tags) {

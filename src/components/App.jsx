@@ -380,18 +380,24 @@ export default function App() {
   }, [mergedEvents, player.state, worldConfig, trustInfo]);
 
   // Flush engine output into React log state and commit player state
+  // Active transition effect state
+  const [transitionEffect, setTransitionEffect] = useState(null);
+  const gameContainerRef = useRef(null);
+
   const commitEngine = useCallback((engine) => {
     const entries = engine.flush();
-    // Process sound entries — play one-shots, don't add to log
     const logEntries = [];
     let shouldRestart = false;
+    let shouldClear = false;
+    let transition = null;
+    let themeOverride = null;
+
     for (const entry of entries) {
       if (entry.type === 'sound' && entry.sound) {
         playOneShotRef(entry.sound, entry.volume);
       } else if (entry.type === 'restart') {
         shouldRestart = true;
       } else if (entry.type === 'report' && entry.report) {
-        // Publish report event to relays
         if (identity?.signer && pool) {
           const slug = worldTag;
           const r = entry.report;
@@ -399,22 +405,58 @@ export default function App() {
           const shortReporter = identity.pubkey.slice(0, 8);
           publishReport({ pool, signer: identity.signer, worldSlug: slug, targetRef: r.targetRef, reason: r.reason, shortTarget, shortReporter });
         }
+      } else if (entry.type === 'transition') {
+        transition = entry;
+        if (entry.clear) shouldClear = true;
+      } else if (entry.type === 'theme-override') {
+        themeOverride = entry;
       } else {
         logEntries.push(entry);
       }
     }
+
     if (shouldRestart) {
-      // Clear player state and reload — cleanest way to restart
       player.reset();
       setLog([]);
       window.location.reload();
       return;
     }
-    if (logEntries.length > 0) {
-      setLog((prev) => [...prev, ...logEntries]);
+
+    // Apply place theme override
+    if (themeOverride) {
+      if (themeOverride.colours) {
+        // Merge world theme + place overrides
+        const worldTheme = worldConfig ? resolveTheme(worldConfig.worldEvent) : {};
+        applyTheme({ ...worldTheme, ...themeOverride.colours });
+      } else if (worldConfig) {
+        // Reset to world-only theme
+        applyTheme(resolveTheme(worldConfig.worldEvent));
+      }
     }
+
+    // Handle transition effect
+    if (transition?.effect) {
+      const duration = transition.duration || 800;
+      setTransitionEffect(transition.effect);
+      // Set CSS variable for animation duration
+      if (gameContainerRef.current) {
+        gameContainerRef.current.style.setProperty('--transition-duration', `${duration}ms`);
+      }
+      // Clear log if requested (during the transition)
+      if (shouldClear) setLog([]);
+      // Add new entries after a brief delay (mid-transition)
+      setTimeout(() => {
+        if (logEntries.length > 0) setLog((prev) => [...prev, ...logEntries]);
+      }, duration * 0.4);
+      // Remove effect class after animation
+      setTimeout(() => setTransitionEffect(null), duration);
+    } else {
+      if (shouldClear) setLog([]);
+      if (logEntries.length > 0) setLog((prev) => [...prev, ...logEntries]);
+    }
+
     player.replaceState(engine.getPlayerState(), engine.player.npcStates);
-  }, [player]);
+  }, [player, worldConfig]);
 
   useEffect(() => {
     logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -613,7 +655,8 @@ export default function App() {
   return (
     <>
     {noiseOverlay}
-    <div className="max-w-2xl mx-auto p-6 flex flex-col h-dvh game-text game-container"
+    <div ref={gameContainerRef}
+         className={`max-w-2xl mx-auto p-6 flex flex-col h-dvh game-text game-container${transitionEffect ? ` transition-${transitionEffect}` : ''}`}
          style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}>
       <div className="text-sm mb-2 flex justify-between items-center shrink-0" style={{ color: 'var(--colour-dim)' }}>
         <span className="flex items-center min-w-0">

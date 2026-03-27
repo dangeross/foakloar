@@ -312,6 +312,9 @@ export function mixMovement(Engine) {
       }
     }
 
+    // Emit transition metadata from portal before entering room
+    this._emitTransition(exit.portalEvent);
+
     this.player.incrementMoveCount();
     this.processOnMove();
     this._processNpcOnMove();
@@ -349,9 +352,31 @@ export function mixMovement(Engine) {
 
     if (!destinationDTag) return;
 
+    // Emit transition metadata from portal
+    this._emitTransition(portal);
+
     this.player.incrementMoveCount();
     this.processOnMove();
     this._processNpcOnMove();
     this.enterRoom(destinationDTag, { isMoving: true });
+  };
+
+  /**
+   * Emit transition metadata from a portal event.
+   * Tags: transition-effect, transition-duration, transition-clear
+   */
+  Engine.prototype._emitTransition = function(portalEvent) {
+    if (!portalEvent) return;
+    const effect = getTag(portalEvent, 'transition-effect');
+    const duration = getTag(portalEvent, 'transition-duration');
+    const clear = getTag(portalEvent, 'transition-clear');
+    if (effect || clear) {
+      this.output.push({
+        type: 'transition',
+        effect: effect || null,
+        duration: parseInt(duration, 10) || 800,
+        clear: clear === 'true',
+      });
+    }
   };
 }

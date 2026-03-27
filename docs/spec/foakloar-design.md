@@ -174,6 +174,7 @@ The atomic unit of the world. A place the player can occupy.
 
 The client renders exit slot names as available movement options. Custom exit names read naturally as player commands.
 
+- **Per-place colour overrides:** `["colour", "<slot>", "<value>"]` — overrides theme colours for this place. The `slot` matches any colour slot defined on the world event (e.g. `bg`, `text`, `accent`, `border`). When the player enters a place with `colour` tags, those values override the world theme for that place. When the player leaves (enters a place without `colour` tags), colours reset to the world theme. This enables location-specific atmosphere — a dungeon can be darker, a forest greener.
 - Rooms can carry `on-enter` handlers — fired when the player enters the place. NPCs use the same tag with a place reference as the first argument — fired when the NPC arrives at that place. Same tag, different first argument, dispatched by event `type`.
 
 ```json
@@ -231,6 +232,17 @@ Stitches two exit slots together. Owned and published by whoever creates the con
 - One-way portals have a single `exit` tag. Two-way portals have two. A hub place could have many.
 - `requires` tags on a portal gate traversal inline — no separate lock event needed. The optional failed description tells the player why they cannot pass.
 - `sound` tags on a portal with role `effect` fire as one-shots when the player traverses the portal. Use for door creaks, footstep sounds, transition effects.
+- **Transition tags** control visual effects when the player traverses the portal:
+  - `["transition-effect", "<effect>"]` — CSS animation played during traversal. Available effects: `blackout`, `flash`, `fade`, `shake`, `glitch`, `invert`, `static`, `pulse`.
+  - `["transition-duration", "<ms>"]` — duration of the effect in milliseconds. Defaults to `800` if omitted.
+  - `["transition-clear", "true"]` — clears the game log during the transition. Useful for dramatic scene changes (e.g. teleportation, dream sequences). Omit or set to anything other than `"true"` to keep the log.
+
+```json
+// Portal with a blackout transition that clears the log
+["transition-effect", "blackout"],
+["transition-duration", "1200"],
+["transition-clear", "true"]
+```
 
 ```json
 // One-way teleport trap

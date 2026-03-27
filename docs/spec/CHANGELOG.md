@@ -5,6 +5,16 @@
 
 ## [Unreleased] — March 2026
 
+### Added — Portal transition effects
+
+**`transition-effect`, `transition-duration`, `transition-clear` on portal events**
+Portals can now declare a visual transition effect when traversed. `["transition-effect", "<effect>"]` triggers a CSS animation — available effects: `blackout`, `flash`, `fade`, `shake`, `glitch`, `invert`, `static`, `pulse`. `["transition-duration", "<ms>"]` sets the duration (default 800ms). `["transition-clear", "true"]` clears the game log during the transition for dramatic scene changes.
+
+### Added — Per-place colour overrides
+
+**`colour` tag on place events**
+`["colour", "<slot>", "<value>"]` overrides theme colours for a specific place. Slots match world-level colour slots (e.g. `bg`, `text`, `accent`, `border`). Overrides apply on room entry and reset when entering a place without colour tags.
+
 ### Added — HUD display
 
 **`hud` tag on world event**

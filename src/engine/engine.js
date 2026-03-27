@@ -375,6 +375,19 @@ export class GameEngine {
     this.dialogueActive = null;
     this.pendingChoice = null;
 
+    // Emit place colour overrides (if any)
+    const placeColours = getTags(room, 'colour');
+    if (placeColours.length > 0) {
+      const overrides = {};
+      for (const tag of placeColours) {
+        if (tag[1] && tag[2]) overrides[tag[1]] = tag[2];
+      }
+      this.output.push({ type: 'theme-override', colours: overrides });
+    } else {
+      // Reset to world-only theme
+      this.output.push({ type: 'theme-override', colours: null });
+    }
+
     const title = getTag(room, 'title') || dtag;
     this._emit(`\n— ${title} —`, 'title');
 

@@ -220,6 +220,7 @@ D-tag: `<slug>:world`
 | `content-type` | `["content-type", "application/nip44"\|"text/plain"]` | opt | Default is markdown. Use `application/nip44` for sealed content or `text/plain` to disable formatting |
 | `cw` | `["cw", "<warning>"]` (repeatable) | opt | content warning label |
 | `puzzle` | `["puzzle", "<puzzle-ref>"]` | opt (NIP-44) | encryption key source (NIP-44) |
+| `colour` | `["colour", "<slot>", "<value>"]` (repeatable) | opt | per-place theme colour override (e.g. `bg`, `text`, `accent`) |
 
 **NOT valid on place:** `verb`, `dialogue`, `damage`, `health`, `on-interact`, `on-attacked`, `on-encounter`, `counter`, `contains`
 
@@ -237,6 +238,9 @@ D-tag: `<slug>:world`
 | `consequence` | `["consequence", "<consequence-ref>"]` | opt | portal death trap ref |
 | `cw` | `["cw", "<warning>"]` (repeatable) | opt | content warning label |
 | `sound` | `["sound", "<sound-ref>", "effect", "<volume>"]` (repeatable) | opt | one-shot on traversal (door creak, footsteps) |
+| `transition-effect` | `["transition-effect", "<effect>"]` | opt | CSS animation on traversal: `blackout`, `flash`, `fade`, `shake`, `glitch`, `invert`, `static`, `pulse` |
+| `transition-duration` | `["transition-duration", "<ms>"]` | opt | effect duration in milliseconds (default: 800) |
+| `transition-clear` | `["transition-clear", "true"]` | opt | clears the game log during the transition |
 
 **NOT valid on portal:** `title`, `noun`, `verb`, `item`, `feature`, `npc`, `clue`, `on-interact`, `on-enter`, `counter`, `damage`, `health`, `media`, `dialogue`, `contains`
 

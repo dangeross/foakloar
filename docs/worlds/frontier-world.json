@@ -674,6 +674,31 @@
           "30078:<PUBKEY>:frontier:sound:saloon-glass",
           "layer",
           "0.4"
+        ],
+        [
+          "colour",
+          "bg",
+          "#2a1505"
+        ],
+        [
+          "colour",
+          "text",
+          "#ff9933"
+        ],
+        [
+          "colour",
+          "title",
+          "#ffcc66"
+        ],
+        [
+          "colour",
+          "dim",
+          "#aa6622"
+        ],
+        [
+          "colour",
+          "exits",
+          "#aa6622"
         ]
       ],
       "content": "Low-ceilinged and amber-lit, Rennick's doubles as general store, post office, and the closest thing Harrow has to a public square. Shelves of dry goods line one wall. The bar runs the length of the other. A notice board near the door is thick with papers — wanted posters, lost notices, a hand-drawn map of trail conditions that someone updates irregularly.\n\nCole Rennick works the bar with the particular economy of someone who has done this for thirty years and doesn't intend to stop."
@@ -1320,6 +1345,21 @@
           "unvisited",
           "set-state",
           "visited"
+        ],
+        [
+          "colour",
+          "bg",
+          "#0a0505"
+        ],
+        [
+          "colour",
+          "text",
+          "#cc8866"
+        ],
+        [
+          "colour",
+          "dim",
+          "#664433"
         ]
       ],
       "content": "The passage opens into a chamber large enough that you cannot see the far wall clearly. The silence here is absolute in a way that has nothing to do with the absence of sound — it is a specific, deliberate quiet, like an intake of breath held for a very long time.\n\nThe walls catch what little light you carry and return it differently — warm tones where the stone is smooth, darker where it has been worked. Someone spent considerable time in this chamber. The evidence is everywhere: a low stone ledge along one wall, carefully levelled. A formation at the centre of the floor, natural but arranged around, footpaths worn into the stone from repeated use.\n\nAnd in the far wall, visible now as your eyes adjust, a series of marks. Not scratched. Carved. The same hand as the entrance, but this is the original — everything outside is a copy of what is written here."
@@ -1590,6 +1630,18 @@
           "30078:<PUBKEY>:frontier:item:climbing-rope",
           "",
           "The ground drops away sharply here. You'd need rope to climb down safely."
+        ],
+        [
+          "transition-effect",
+          "blackout"
+        ],
+        [
+          "transition-duration",
+          "1000"
+        ],
+        [
+          "transition-clear",
+          "true"
         ]
       ],
       "content": ""
@@ -1692,6 +1744,14 @@
           "30078:<PUBKEY>:frontier:item:old-pickaxe",
           "",
           "A boulder blocks the passage. It looks like it could be broken through with the right tool."
+        ],
+        [
+          "transition-effect",
+          "shake"
+        ],
+        [
+          "transition-duration",
+          "500"
         ]
       ],
       "content": ""
@@ -1728,6 +1788,14 @@
           "30078:<PUBKEY>:frontier:feature:wall-formation",
           "unlocked",
           "The wall is solid. There must be a way to open it."
+        ],
+        [
+          "transition-effect",
+          "flash"
+        ],
+        [
+          "transition-duration",
+          "600"
         ]
       ],
       "content": ""
@@ -5045,6 +5113,14 @@
           "30078:<PUBKEY>:frontier:place:rennicks-saloon",
           "south",
           "Back to the fork in the road"
+        ],
+        [
+          "transition-effect",
+          "pulse"
+        ],
+        [
+          "transition-duration",
+          "500"
         ]
       ],
       "content": ""
