@@ -468,7 +468,11 @@ export default function App() {
   }, [player, worldConfig]);
 
   useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Delay scroll to account for mobile keyboard animation
+    const timer = setTimeout(() => {
+      logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+    return () => clearTimeout(timer);
   }, [log]);
 
   // Keep input focused (skip when builder panels are open, or on touch devices to avoid keyboard popup)
