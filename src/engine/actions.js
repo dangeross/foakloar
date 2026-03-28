@@ -26,9 +26,16 @@ export function applyExternalSetState(targetRef, targetState, events, player, em
   const targetType = getTag(targetEvent, 'type');
 
   if (targetType === 'clue') {
-    player.markClueSeen(targetRef);
-    emit(`\n${getTag(targetEvent, 'title')}:`, 'clue-title');
-    emit(targetEvent.content, 'clue');
+    // Set the requested state (not hardcoded 'seen')
+    player.setState(targetRef, targetState);
+    // Only display content if the clue's own requires pass
+    const clueReq = checkRequires(targetEvent, player.state, events);
+    if (clueReq.allowed) {
+      // Mark as seen (for re-display prevention) and show content
+      player.markClueSeen(targetRef);
+      emit(`\n${getTag(targetEvent, 'title')}:`, 'clue-title');
+      emit(targetEvent.content, 'clue');
+    }
     return { acted: true, puzzleActivated: null };
   }
 

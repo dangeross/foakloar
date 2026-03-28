@@ -72,6 +72,11 @@ export function checkRequires(event, playerState, events) {
       if (expectedState && currentState !== expectedState) {
         return { allowed: false, reason: failDesc };
       }
+    } else if (refType === 'clue') {
+      const currentState = playerState.states?.[ref];
+      if (expectedState && currentState !== expectedState) {
+        return { allowed: false, reason: failDesc };
+      }
     } else {
       return { allowed: false, reason: failDesc };
     }

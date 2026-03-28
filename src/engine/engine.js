@@ -470,6 +470,23 @@ export class GameEngine {
       this._emit(`${getTag(npc, 'title')} is here.${npcUv}`, 'npc');
     }
 
+    // Clues — display if requires pass and not already seen
+    for (const ref of getTags(room, 'clue')) {
+      const clueDTag = ref[1];
+      const clue = this.events.get(clueDTag);
+      if (!clue) continue;
+      const clueTrust = this.config.trustSet ? isEventTrusted(clue, this.config.trustSet, this.config.clientMode) : 'trusted';
+      if (clueTrust === 'hidden') continue;
+      const clueState = this.player.getState(clueDTag) ?? getDefaultState(clue);
+      if (clueState === 'hidden') continue;
+      if (this.player.isClueSeen(clueDTag)) continue;
+      const clueReq = checkRequires(clue, this.player.state, this.events);
+      if (!clueReq.allowed) continue;
+      this.player.markClueSeen(clueDTag);
+      this._emit(`\n${getTag(clue, 'title')}:`, 'clue-title');
+      this._emit(clue.content, 'clue');
+    }
+
     // Roaming NPCs — check if any are currently at this place
     const roamingHere = findRoamingNpcsAtPlace(
       this.events, dtag, this.player.getMoveCount(),

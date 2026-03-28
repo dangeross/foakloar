@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { GameEngine } from '../engine.js';
 import {
   ref, PUBKEY, WORLD,
-  makePlace, makeFeature, makeItem, makePortal, makeClue, makeNPC, makeDialogueNode, makeQuest, makeRecipe, makeWorldEvent,
+  makeEvent, makePlace, makeFeature, makeItem, makePortal, makeClue, makeNPC, makeDialogueNode, makeQuest, makeRecipe, makeWorldEvent,
   buildEvents, freshState, makeMutator,
 } from './helpers.js';
 
@@ -11,7 +11,8 @@ const CONFIG = { GENESIS_PLACE: ref(`${WORLD}:place:start`), AUTHOR_PUBKEY: PUBK
 function createEngine(events, playerOverrides = {}) {
   const { npcStates, ...stateOverrides } = playerOverrides;
   const player = makeMutator(stateOverrides, npcStates || {});
-  return new GameEngine({ events, player, config: CONFIG });
+  const eventsMap = Array.isArray(events) ? buildEvents(...events) : events;
+  return new GameEngine({ events: eventsMap, player, config: CONFIG });
 }
 
 // ── Construction & position ──────────────────────────────────────────
@@ -1427,5 +1428,86 @@ describe('container examine', () => {
     const text = output.map((e) => e.text || e.html || '').join(' ');
     expect(text).toContain('A brown sack');
     expect(text).not.toContain('Bread');
+  });
+});
+
+// ── Clue display and state ────────────────────────────────────────────────
+
+describe('clue display', () => {
+  const world = makeWorldEvent();
+
+  it('displays place clue on room entry when requires pass', async () => {
+    const clue = makeClue('hint', 'A useful hint.');
+    const room = makePlace('start', { clues: [`${WORLD}:clue:hint`] });
+    const roomRef = ref(`${WORLD}:place:start`);
+    const engine = createEngine([world, room, clue], { GENESIS_PLACE: roomRef });
+    engine.enterRoom(roomRef);
+    const output = engine.flush();
+    expect(output.some(e => (e.text || e.html || '').includes('A useful hint'))).toBe(true);
+  });
+
+  it('skips hidden clue on room entry', async () => {
+    const clue = makeEvent(`${WORLD}:clue:hint`, [['type', 'clue'], ['title', 'Hint'], ['state', 'hidden']], 'Hidden text.');
+    const room = makePlace('start', { clues: [`${WORLD}:clue:hint`] });
+    const roomRef = ref(`${WORLD}:place:start`);
+    const engine = createEngine([world, room, clue], { GENESIS_PLACE: roomRef });
+    engine.enterRoom(roomRef);
+    const output = engine.flush();
+    expect(output.some(e => (e.text || e.html || '').includes('Hidden text'))).toBe(false);
+  });
+
+  it('does not re-display clue on second visit', async () => {
+    const clue = makeClue('hint', 'Once only.');
+    const room = makePlace('start', { clues: [`${WORLD}:clue:hint`] });
+    const roomRef = ref(`${WORLD}:place:start`);
+    const engine = createEngine([world, room, clue], { GENESIS_PLACE: roomRef });
+    engine.enterRoom(roomRef);
+    engine.flush();
+    engine.enterRoom(roomRef);
+    const output = engine.flush();
+    expect(output.some(e => (e.text || e.html || '').includes('Once only'))).toBe(false);
+  });
+
+  it('set-state on clue respects requested state and displays', async () => {
+    const clueRef = ref(`${WORLD}:clue:hint`);
+    const clue = makeEvent(`${WORLD}:clue:hint`, [['type', 'clue'], ['title', 'Hint'], ['state', 'hidden']], 'Revealed text.');
+    const feature = makeFeature('lever', {
+      verbs: [['pull']],
+      onInteract: [['pull', 'set-state', 'visible', clueRef]],
+    });
+    const room = makePlace('start', { features: [`${WORLD}:feature:lever`], clues: [`${WORLD}:clue:hint`] });
+    const roomRef = ref(`${WORLD}:place:start`);
+    const engine = createEngine([world, room, feature, clue], { GENESIS_PLACE: roomRef });
+    engine.enterRoom(roomRef);
+    engine.flush();
+    await engine.handleCommand('pull lever');
+    const output = engine.flush();
+    expect(output.some(e => (e.text || e.html || '').includes('Revealed text'))).toBe(true);
+    // markClueSeen fires after display — state is 'seen'
+    expect(engine.player.getState(clueRef)).toBe('seen');
+  });
+
+  it('set-state on clue with failing requires sets state but does not display', async () => {
+    const keyRef = ref(`${WORLD}:item:key`);
+    const clueRef = ref(`${WORLD}:clue:locked`);
+    const key = makeItem('key');
+    const clue = makeEvent(`${WORLD}:clue:locked`, [
+      ['type', 'clue'], ['title', 'Secret'], ['state', 'hidden'],
+      ['requires', keyRef, '', 'You need the key.'],
+    ], 'Secret text.');
+    const feature = makeFeature('box', {
+      verbs: [['open']],
+      onInteract: [['open', 'set-state', 'visible', clueRef]],
+    });
+    const room = makePlace('start', { features: [`${WORLD}:feature:box`] });
+    const roomRef = ref(`${WORLD}:place:start`);
+    const engine = createEngine([world, room, feature, clue, key], { GENESIS_PLACE: roomRef });
+    engine.enterRoom(roomRef);
+    engine.flush();
+    await engine.handleCommand('open box');
+    const output = engine.flush();
+    // State changed to 'visible' but content NOT shown (no key)
+    expect(engine.player.getState(clueRef)).toBe('visible');
+    expect(output.some(e => (e.text || e.html || '').includes('Secret text'))).toBe(false);
   });
 });
