@@ -199,6 +199,12 @@ export function mixInteraction(Engine) {
 
     const { event, dtag } = match;
 
+    // If matched item is in inventory, use examineInventoryItem (handles containers)
+    if (match.type === 'item' && this.player.hasItem(dtag)) {
+      this.examineInventoryItem({ event, dtag });
+      return;
+    }
+
     if (match.type === 'feature') {
       const fDefault = getDefaultState(event);
       const fCurrent = this.player.getState(dtag) ?? fDefault;

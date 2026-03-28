@@ -1382,3 +1382,50 @@ describe('place colour overrides', () => {
     expect(override.colours).toBeNull();
   });
 });
+
+// ── Container examine ──────────────────────────────────────────────────
+
+describe('container examine', () => {
+  const breadRef = ref(`${WORLD}:item:bread`);
+  const sackRef = ref(`${WORLD}:item:sack`);
+
+  function makeSackWorld() {
+    const bread = makeItem('bread', { nouns: [['bread', 'loaf']], content: 'A crusty loaf.' });
+    const sack = makeItem('sack', {
+      nouns: [['sack', 'bag']],
+      content: 'A brown sack.',
+      extraTags: [['contains', breadRef, '', '']],
+    });
+    const place = makePlace('room', { items: [sackRef, breadRef] });
+    return buildEvents(place, sack, bread);
+  }
+
+  it('shows container contents when examining held container', async () => {
+    const events = makeSackWorld();
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:room`), inventory: [sackRef] });
+    engine.enterRoom(ref(`${WORLD}:place:room`));
+    engine.flush();
+
+    await engine.handleCommand('examine sack');
+    const output = engine.flush();
+    const text = output.map((e) => e.text || e.html || '').join(' ');
+    expect(text).toContain('A brown sack');
+    expect(text).toContain('Bread');
+  });
+
+  it('hides already-taken items from container listing', async () => {
+    const events = makeSackWorld();
+    const engine = createEngine(events, {
+      place: ref(`${WORLD}:place:room`),
+      inventory: [sackRef, breadRef],
+    });
+    engine.enterRoom(ref(`${WORLD}:place:room`));
+    engine.flush();
+
+    await engine.handleCommand('examine sack');
+    const output = engine.flush();
+    const text = output.map((e) => e.text || e.html || '').join(' ');
+    expect(text).toContain('A brown sack');
+    expect(text).not.toContain('Bread');
+  });
+});

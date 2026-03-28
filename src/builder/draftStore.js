@@ -532,8 +532,8 @@ export async function bulkPublish(worldSlug, pubkey, signer, pool, options = {})
 
   // Publish sequentially per relay (delay between events), parallel across relays
   const DELAY_MS = 200;
+  const completedEvents = new Set(); // track events completed on all relays
   await Promise.allSettled(relayUrls.map(async (url) => {
-    const relay = target.getAnyRelay(); // We need per-url, but pool handles routing
     for (let i = 0; i < signed.length; i++) {
       const { signed: ev, dTag } = signed[i];
       if (!ev) continue;
@@ -547,6 +547,17 @@ export async function bulkPublish(worldSlug, pubkey, signer, pool, options = {})
       } catch (err) {
         details[i].relays[url] = 'failed';
         errors.push(`${dTag} → ${url}: ${err.message}`);
+      }
+      // Fire progress after each event completes on this relay
+      if (!completedEvents.has(i)) {
+        const allDone = Object.values(details[i].relays).every((s) => s !== 'pending');
+        if (allDone) {
+          completedEvents.add(i);
+          const ok = Object.values(details[i].relays).some((s) => s === 'ok');
+          if (ok) publishedCount++;
+          else failedCount++;
+          options.onProgress?.({ total, published: publishedCount, failed: failedCount, details });
+        }
       }
       // Delay between events per relay
       if (DELAY_MS > 0) await new Promise((r) => setTimeout(r, DELAY_MS));
