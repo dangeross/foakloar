@@ -404,7 +404,7 @@ describe('Portal exit slot validation', () => {
     ]);
     const events = buildEvents(place, dest, portal);
 
-    const exits = resolveExits(events, ref(`${WORLD}:place:hall`), freshState());
+    const { exits } = resolveExits(events, ref(`${WORLD}:place:hall`), freshState());
     expect(exits).toHaveLength(1);
     expect(exits[0].slot).toBe('north');
   });
@@ -419,7 +419,7 @@ describe('Portal exit slot validation', () => {
     ]);
     const events = buildEvents(place, dest, portal);
 
-    const exits = resolveExits(events, ref(`${WORLD}:place:hall`), freshState());
+    const { exits } = resolveExits(events, ref(`${WORLD}:place:hall`), freshState());
     expect(exits).toHaveLength(0);
   });
 });

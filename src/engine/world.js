@@ -171,6 +171,7 @@ export function findTransition(event, currentState, targetState) {
  */
 export function resolveExits(events, placeDTag, playerState) {
   const exits = [];
+  const allClaimedSlots = new Set(); // includes hidden portal slots
 
   // Collect declared exit slots on the place — portals can only use declared slots
   const placeEvent = events.get(placeDTag);
@@ -180,6 +181,13 @@ export function resolveExits(events, placeDTag, playerState) {
 
   for (const [, event] of events) {
     if (getTag(event, 'type') !== 'portal') continue;
+
+    // Track all portal-claimed slots (even hidden) for unexplored detection
+    for (const tag of getTags(event, 'exit')) {
+      if (tag[1] === placeDTag && tag[2] && declaredSlots.has(tag[2])) {
+        allClaimedSlots.add(tag[2]);
+      }
+    }
 
     // Check portal visibility — state key is the full a-tag
     const portalRef = aTagOf(event);
@@ -211,7 +219,7 @@ export function resolveExits(events, placeDTag, playerState) {
     }
   }
 
-  return exits;
+  return { exits, allClaimedSlots };
 }
 
 /**
@@ -231,12 +239,12 @@ export function resolveExits(events, placeDTag, playerState) {
  * @returns {{ exits: Array, hiddenByTrust: Array }}
  */
 export function resolveExitsWithTrust(events, placeDTag, playerState, trustSet, clientMode, getTrustLevelFn) {
-  const rawExits = resolveExits(events, placeDTag, playerState);
+  const { exits: rawExits, allClaimedSlots } = resolveExits(events, placeDTag, playerState);
 
   // No trust set — fall back to unfiltered (backward compat)
   if (!trustSet) {
     const exits = rawExits.map((e) => ({ ...e, trusted: true, trustLevel: 'trusted', contested: false }));
-    return { exits, hiddenByTrust: [] };
+    return { exits, hiddenByTrust: [], allClaimedSlots };
   }
 
   // Tag each exit with trust level
@@ -260,5 +268,5 @@ export function resolveExitsWithTrust(events, placeDTag, playerState, trustSet, 
     contested: slotCounts[exit.slot] > 1,
   }));
 
-  return { exits, hiddenByTrust };
+  return { exits, hiddenByTrust, allClaimedSlots };
 }

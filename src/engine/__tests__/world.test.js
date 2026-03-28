@@ -283,7 +283,7 @@ describe('resolveExits', () => {
       [`${WORLD}:place:room2`, 'south'],
     ]);
     const events = buildEvents(place1, place2, portal);
-    const exits = resolveExits(events, ref(`${WORLD}:place:room1`), freshState());
+    const { exits } = resolveExits(events, ref(`${WORLD}:place:room1`), freshState());
 
     expect(exits).toHaveLength(1);
     expect(exits[0].slot).toBe('north');
@@ -298,7 +298,7 @@ describe('resolveExits', () => {
       [`${WORLD}:place:room2`, 'south'],
     ], { state: 'hidden' });
     const events = buildEvents(place1, place2, portal);
-    const exits = resolveExits(events, ref(`${WORLD}:place:room1`), freshState());
+    const { exits } = resolveExits(events, ref(`${WORLD}:place:room1`), freshState());
 
     expect(exits).toHaveLength(0);
   });
@@ -312,7 +312,7 @@ describe('resolveExits', () => {
     ], { state: 'hidden' });
     const events = buildEvents(place1, place2, portal);
     const state = freshState({ states: { [ref(`${WORLD}:portal:p1`)]: 'visible' } });
-    const exits = resolveExits(events, ref(`${WORLD}:place:room1`), state);
+    const { exits } = resolveExits(events, ref(`${WORLD}:place:room1`), state);
 
     expect(exits).toHaveLength(1);
   });

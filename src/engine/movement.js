@@ -22,10 +22,11 @@ export function mixMovement(Engine) {
         trustSet, clientMode || 'community', getTrustLevel,
       );
     }
-    const raw = resolveExits(this.events, dtag, this.player.state);
+    const { exits: raw, allClaimedSlots } = resolveExits(this.events, dtag, this.player.state);
     return {
       exits: raw.map((e) => ({ ...e, trusted: true, trustLevel: 'trusted', contested: false })),
       hiddenByTrust: [],
+      allClaimedSlots,
     };
   };
 
@@ -39,7 +40,7 @@ export function mixMovement(Engine) {
    * - `[+N unverified]` hint when trusted portal exists but hidden alternatives do too
    */
   Engine.prototype._emitExits = function(dtag) {
-    const { exits, hiddenByTrust } = this._resolveRoomExits(dtag);
+    const { exits, hiddenByTrust, allClaimedSlots } = this._resolveRoomExits(dtag);
     if (exits.length === 0 && hiddenByTrust.length === 0) return;
 
     // Group visible exits by slot
@@ -134,10 +135,11 @@ export function mixMovement(Engine) {
     }
 
     // Open exit slots — declared on place but no portal connects
-    const claimedSlots = new Set(Object.keys(slotGroups));
+    // Open exit slots — declared on place but no portal connects (even hidden ones)
+    const visibleClaimedSlots = new Set(Object.keys(slotGroups));
     const placeEvent = this.events.get(dtag);
     const declaredSlots = placeEvent ? getTags(placeEvent, 'exit').map((t) => t[1]) : [];
-    const openSlots = declaredSlots.filter((s) => !claimedSlots.has(s));
+    const openSlots = declaredSlots.filter((s) => !visibleClaimedSlots.has(s) && !allClaimedSlots.has(s));
     if (openSlots.length > 0) {
       if (labels.length > 0 || unverifiedOnlySlots.length > 0) {
         // Append to existing exits line
