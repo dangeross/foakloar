@@ -69,7 +69,7 @@ export default function AuthorProfile({ npub, pubkeyHex, identity }) {
                 fontSize: '0.6rem',
               }}
             >
-              zap
+              tip
             </button>
           </div>
         )}

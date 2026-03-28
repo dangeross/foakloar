@@ -694,7 +694,7 @@ export default function App() {
                 marginLeft: '0.5em',
               }}
             >
-              <span className="hidden sm:inline">zap</span>
+              <span className="hidden sm:inline">tip</span>
               <span className="sm:hidden">⚡</span>
             </button>
           )}

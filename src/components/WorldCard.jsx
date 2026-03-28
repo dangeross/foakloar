@@ -75,7 +75,7 @@ export default function WorldCard({ world, onClick, onZap }) {
                 fontSize: '0.6rem',
               }}
             >
-              zap
+              tip
             </button>
           )}
         </div>
