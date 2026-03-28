@@ -607,7 +607,9 @@
         ],
         [
           "dialogue",
-          "30078:<PUBKEY>:errand:dialogue:baker-thanks"
+          "30078:<PUBKEY>:errand:dialogue:baker-thanks",
+          "30078:<PUBKEY>:errand:feature:oven",
+          "hot"
         ]
       ],
       "content": "The baker. Flour on her apron, worry on her face."
