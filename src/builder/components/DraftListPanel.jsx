@@ -30,6 +30,8 @@ export default function DraftListPanel({
   onExport,
   onBulkPublish,
   onDeleteAll,
+  pendingImportData,
+  onPendingImportConsumed,
   zIndex,
 }) {
   const [confirmDelete, setConfirmDelete] = useState(null);
@@ -42,6 +44,39 @@ export default function DraftListPanel({
   const [playtesting, setPlaytesting] = useState(false);
   const [publishProgress, setPublishProgress] = useState(null); // { total, published, failed }
   const fileRef = useRef(null);
+  const pendingConsumed = useRef(false);
+
+  // Auto-trigger import preview from pending Lobby import
+  useEffect(() => {
+    if (pendingImportData && !pendingConsumed.current && events) {
+      pendingConsumed.current = true;
+      try {
+      const publishedEvents = events instanceof Map ? [...events.entries()].filter(([, e]) => !e._isDraft) : [];
+      const validation = validateImport(worldSlug, pendingImportData, publishedEvents);
+      for (const event of (validation.valid || [])) {
+        const dTag = event.tags?.find((t) => t[0] === 'd')?.[1] || '?';
+        const result = validateEvent(event);
+        for (const issue of result.errors) validation.warnings.push(`${dTag}: ${issue.message}`);
+        for (const issue of result.warnings) validation.warnings.push(`${dTag}: ${issue.message}`);
+      }
+      const publishedEventsFlat = publishedEvents.map(([, e]) => e);
+      const combinedEvents = [...drafts, ...(validation.valid || []), ...publishedEventsFlat];
+      const dedupMap = new Map();
+      for (const e of combinedEvents) {
+        const d = e.tags?.find((t) => t[0] === 'd')?.[1];
+        if (d) dedupMap.set(d, e);
+      }
+      const answers = { ...loadAnswers(worldSlug), ...(pendingImportData.answers || {}) };
+      const worldResult = validateWorld([...dedupMap.values()], answers);
+      for (const issue of worldResult.errors) validation.warnings.push(`${issue.dTag}: ${issue.message}`);
+      for (const issue of worldResult.warnings) validation.warnings.push(`${issue.dTag}: ${issue.message}`);
+      setImportPreview({ validation, data: pendingImportData });
+      if (onPendingImportConsumed) onPendingImportConsumed();
+      } catch (err) {
+        console.error('[pending import]', err);
+      }
+    }
+  }, [pendingImportData, events]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Validate all drafts upfront (per-event + cross-event)
   const validations = useMemo(() => {
@@ -306,7 +341,8 @@ export default function DraftListPanel({
               reader.onload = () => {
                 try {
                   const data = parseJsonLenient(reader.result);
-                  const validation = validateImport(worldSlug, data, events);
+                  const publishedArr = events instanceof Map ? [...events.entries()].filter(([, e]) => !e._isDraft) : [];
+                  const validation = validateImport(worldSlug, data, publishedArr);
                   // Run per-event validation — surface issues as warnings
                   for (const event of validation.valid) {
                     const dTag = event.tags?.find((t) => t[0] === 'd')?.[1] || '?';

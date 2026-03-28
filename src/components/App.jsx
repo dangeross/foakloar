@@ -161,6 +161,7 @@ export default function App() {
   // Build mode state
   const [buildMode, setBuildMode] = useState(false);
   const [showDrafts, setShowDrafts] = useState(false);
+  const pendingImportRef = useRef(null); // { data } — queued from Lobby import
   const [editorState, setEditorState] = useState(null); // { eventType, draft?, initialTags?, ... }
   const [showWorldCreator, setShowWorldCreator] = useState(false);
   const [showZap, setShowZap] = useState(false);
@@ -219,6 +220,14 @@ export default function App() {
   useEffect(() => {
     if (status === 'ready' && drafts.length > 0 && events.size === 0 && !buildMode) setBuildMode(true);
   }, [status, drafts.length, events.size]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-open drafts panel when pending import arrives from Lobby
+  useEffect(() => {
+    if (pendingImportRef.current && status === 'ready') {
+      setBuildMode(true);
+      setShowDrafts(true);
+    }
+  }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Sound: hush on entering build mode, restore ambient on exit
   useEffect(() => {
@@ -632,6 +641,10 @@ export default function App() {
       <>{noiseOverlay}<Lobby
         identity={identity}
         onSelectWorld={(slug) => navigateToWorld(slug)}
+        onImportToWorld={(slug, data) => {
+          pendingImportRef.current = { data };
+          navigateToWorld(slug);
+        }}
         onCreateWorld={() => setShowWorldCreator(true)}
         showWorldCreator={showWorldCreator}
         worldCreatorNode={showWorldCreator && (
@@ -913,6 +926,8 @@ export default function App() {
           drafts={drafts}
           events={mergedEvents}
           worldSlug={worldTag}
+          pendingImportData={pendingImportRef.current?.data || null}
+          onPendingImportConsumed={() => { pendingImportRef.current = null; }}
           zIndex={undefined}
           onClose={() => setShowDrafts(false)}
           onEdit={(draft) => {

@@ -22,9 +22,14 @@ export const PUBKEY_PLACEHOLDER = '<PUBKEY>';
 function eventsEqual(a, b) {
   if (!a || !b) return false;
   if ((a.content || '') !== (b.content || '')) return false;
-  const aTags = JSON.stringify([...(a.tags || [])].sort());
-  const bTags = JSON.stringify([...(b.tags || [])].sort());
-  return aTags === bTags;
+  // Normalize <PUBKEY> placeholders: replace with the other event's pubkey for comparison
+  const pubkeyA = a.pubkey || '';
+  const pubkeyB = b.pubkey || '';
+  const normA = JSON.stringify([...(a.tags || [])].sort())
+    .replaceAll('<PUBKEY>', pubkeyB || pubkeyA);
+  const normB = JSON.stringify([...(b.tags || [])].sort())
+    .replaceAll('<PUBKEY>', pubkeyA || pubkeyB);
+  return normA === normB;
 }
 
 /**

@@ -16,8 +16,7 @@ import LoginPanel from './ui/LoginPanel.jsx';
 import WorldCard from './WorldCard.jsx';
 import TipPanel from './TipPanel.jsx';
 import { useWorldDiscovery } from '../hooks/useWorldDiscovery.js';
-import { listDraftWorlds, validateImport, importEvents, parseJsonLenient } from '../builder/draftStore.js';
-import { validateEvent } from '../builder/eventBuilder.js';
+import { listDraftWorlds, parseJsonLenient } from '../builder/draftStore.js';
 import { TIDE_THEME } from '../services/guideTheme.js';
 import ImportPreviewPanel from '../builder/components/ImportPreviewPanel.jsx';
 import { APP_PUBKEY } from '../config.js';
@@ -30,6 +29,7 @@ const LOBBY_MODES = [
 export default function Lobby({
   identity,
   onSelectWorld,
+  onImportToWorld,
   onCreateWorld,
   showWorldCreator,
   worldCreatorNode,
@@ -219,25 +219,15 @@ export default function Lobby({
                 );
                 const detectedSlug = worldEvent?.tags?.find((t) => t[0] === 't')?.[1] || '';
                 if (!detectedSlug) {
+                  // No slug — can't navigate, show error inline
                   setImportPreview({
                     validation: { valid: [], rejected: [], warnings: ['No world event found — cannot determine world slug'], worldSlug: null },
                     data,
                   });
                   return;
                 }
-                const validation = validateImport(detectedSlug, data);
-                // Run per-event validation — surface issues as warnings
-                for (const event of validation.valid) {
-                  const dTag = event.tags?.find((t) => t[0] === 'd')?.[1] || '?';
-                  const result = validateEvent(event);
-                  for (const issue of result.errors) {
-                    validation.warnings.push(`${dTag}: ${issue.message}`);
-                  }
-                  for (const issue of result.warnings) {
-                    validation.warnings.push(`${dTag}: ${issue.message}`);
-                  }
-                }
-                setImportPreview({ validation, data, worldSlug: detectedSlug });
+                // Navigate to the world and pass import data for in-world preview
+                onImportToWorld(detectedSlug, data);
               } catch {
                 // Invalid JSON
               }
@@ -254,15 +244,9 @@ export default function Lobby({
           validation={importPreview.validation}
           onConfirm={() => {
             const slug = importPreview.worldSlug;
-            const validData = {
-              events: importPreview.validation.valid,
-              answers: importPreview.data.answers || {},
-              walkthrough: importPreview.data.walkthrough || undefined,
-            };
-            importEvents(slug, validData);
             setImportPreview(null);
-            // Navigate to the imported world in build mode
-            onSelectWorld(slug);
+            // Navigate to the world and pass import data for in-world import
+            onImportToWorld(slug, importPreview.data);
           }}
           onClose={() => setImportPreview(null)}
         />
