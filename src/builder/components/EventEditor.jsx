@@ -52,6 +52,8 @@ export default function EventEditor({
   // Pre-populated tags (for new events, e.g. portal from exit click)
   initialTags = [],
   onSaveDraft,       // (eventTemplate) => void
+  onDeletePublished,  // (event) => Promise — delete a published event from relays
+  originalEvent = null, // the full event object (for delete — has pubkey, _isDraft)
   // Start in preview mode (e.g. from draft list "Pub" button)
   startInPreview = false,
   zIndex,
@@ -389,14 +391,50 @@ export default function EventEditor({
       )}
 
       {/* Actions */}
-      <div className="flex gap-2 pt-2" style={{ borderTop: '1px solid var(--colour-dim)' }}>
-        {onSaveDraft && (
-          <DOSButton onClick={handleSaveDraft} colour="text">
-            Save Draft
-          </DOSButton>
+      <div className="flex gap-2 pt-2" style={{ borderTop: '1px solid var(--colour-dim)', justifyContent: 'space-between' }}>
+        <div className="flex gap-2">
+          {onSaveDraft && (
+            <DOSButton onClick={handleSaveDraft} colour="text">
+              Save Draft
+            </DOSButton>
+          )}
+        </div>
+        {onDeletePublished && originalEvent && !originalEvent._isDraft && originalEvent.pubkey === pubkey && (
+          <DeletePublishedButton event={originalEvent} onDelete={onDeletePublished} onClose={onClose} />
         )}
       </div>
     </DOSPanel>
+  );
+}
+
+/** Delete published event button with confirmation */
+function DeletePublishedButton({ event, onDelete, onClose }) {
+  const [confirm, setConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  if (deleting) {
+    return <span style={{ color: 'var(--colour-dim)', fontSize: '0.65rem' }}>Deleting...</span>;
+  }
+
+  if (confirm) {
+    return (
+      <div className="flex gap-2" style={{ alignItems: 'center' }}>
+        <span style={{ color: 'var(--colour-error)', fontSize: '0.65rem' }}>Delete?</span>
+        <DOSButton colour="error" onClick={async () => {
+          setDeleting(true);
+          await onDelete(event);
+          setDeleting(false);
+          onClose();
+        }}>Yes</DOSButton>
+        <DOSButton colour="dim" onClick={() => setConfirm(false)}>No</DOSButton>
+      </div>
+    );
+  }
+
+  return (
+    <DOSButton colour="error" onClick={() => setConfirm(true)}>
+      Delete
+    </DOSButton>
   );
 }
 

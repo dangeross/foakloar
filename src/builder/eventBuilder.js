@@ -667,3 +667,51 @@ export async function publishRevoke({ pool, signer, worldSlug, targetPubkey }) {
   };
   return publishEvent(signer, pool, template);
 }
+
+/**
+ * Delete a published event from relays.
+ * 1. Publish an empty overwrite (same d-tag, newer created_at) to clear content
+ * 2. Publish a kind 5 deletion event to request removal
+ * The overwrite ensures content is gone even on relays that ignore kind 5.
+ */
+export async function deletePublishedEvent({ pool, signer, event }) {
+  const target = pool.current;
+  if (!target) return { ok: false, error: 'Not connected to any relay.' };
+
+  const dTag = event.tags?.find((t) => t[0] === 'd')?.[1];
+  const tTag = event.tags?.find((t) => t[0] === 't')?.[1];
+  if (!dTag) return { ok: false, error: 'Event has no d-tag.' };
+
+  const now = Math.floor(Date.now() / 1000);
+
+  // Step 1: empty overwrite (replaces content on all relays)
+  const overwrite = await signer.signEvent({
+    kind: 30078,
+    created_at: now,
+    tags: [['d', dTag], ...(tTag ? [['t', tTag]] : [])],
+    content: '',
+  });
+
+  // Step 2: kind 5 deletion (relays that honour it remove the event)
+  const aTag = `30078:${event.pubkey}:${dTag}`;
+  const deletion = await signer.signEvent({
+    kind: 5,
+    created_at: now + 1,
+    tags: [['a', aTag]],
+    content: 'Event deleted by author.',
+  });
+
+  // Publish both — overwrite first, delete second
+  const overwriteResults = await target.publish(overwrite);
+  const deleteResults = await target.publish(deletion);
+
+  const anyOk = [...overwriteResults.values()].some((r) => r.ok) ||
+                [...deleteResults.values()].some((r) => r.ok);
+
+  return {
+    ok: anyOk,
+    overwriteResults,
+    deleteResults,
+    error: anyOk ? null : 'Failed to delete on all relays.',
+  };
+}

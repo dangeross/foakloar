@@ -23,7 +23,7 @@ import WorldCreator from '../builder/components/WorldCreator.jsx';
 import VouchPanel from '../builder/components/VouchPanel.jsx';
 import TrustPanel from '../builder/components/TrustPanel.jsx';
 import EventGraph from '../builder/components/EventGraph.jsx';
-import { publishReport, publishRevoke } from '../builder/eventBuilder.js';
+import { publishReport, publishRevoke, deletePublishedEvent } from '../builder/eventBuilder.js';
 import Lobby from './Lobby.jsx';
 import AuthorProfile from './AuthorProfile.jsx';
 import TipPanel from './TipPanel.jsx';
@@ -891,6 +891,7 @@ export default function App() {
             setEditorState({
               eventType,
               eventTemplate: { kind: 30078, tags: [...event.tags], content: event.content || '' },
+              originalEvent: event,
             });
           }}
           onNewEvent={(eventType) => setEditorState({ eventType })}
@@ -1004,9 +1005,18 @@ export default function App() {
           pool={pool}
           events={mergedEvents}
           eventTemplate={editorState.eventTemplate || null}
+          originalEvent={editorState.originalEvent || null}
           initialTags={editorState.initialTags || []}
           zIndex={undefined}
           startInPreview={editorState.showPreview || false}
+          onDeletePublished={identity?.signer ? async (event) => {
+            const result = await deletePublishedEvent({ pool, signer: identity.signer, event });
+            if (result.ok) {
+              setGeneration((g) => g + 1);
+            } else {
+              console.error('[delete]', result.error);
+            }
+          } : null}
           onSaveDraft={(eventTemplate) => {
             const draftId = editorState.eventTemplate?._draft?.id;
             if (draftId) {
