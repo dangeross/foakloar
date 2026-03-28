@@ -98,20 +98,15 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:forge:place:storeroom",
-          "east",
-          "A storeroom to the east."
+          "east"
         ],
         [
           "exit",
-          "30078:<PUBKEY>:forge:place:yard",
-          "south",
-          "The yard to the south."
+          "south"
         ],
         [
           "exit",
-          "north",
-          "The road north — beyond the edge of this map."
+          "north"
         ],
         [
           "feature",
@@ -155,9 +150,7 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:forge:place:smithy",
-          "west",
-          "Back to the smithy."
+          "west"
         ],
         [
           "item",
@@ -197,9 +190,7 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:forge:place:smithy",
-          "north",
-          "Back to the smithy."
+          "north"
         ],
         [
           "item",
@@ -300,18 +291,6 @@
           "bar",
           "iron bar",
           "iron"
-        ],
-        [
-          "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
-          "use",
-          "forge",
-          "smelt",
-          "combine"
         ]
       ],
       "content": "A bar of wrought iron. Still workable if the forge were lit."
@@ -340,17 +319,6 @@
           "leather",
           "strip",
           "leather strip"
-        ],
-        [
-          "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
-          "use",
-          "combine",
-          "wrap"
         ]
       ],
       "content": "A strip of tanned leather, stiff with age but still pliable. Good for a grip."
@@ -378,17 +346,6 @@
           "noun",
           "key",
           "iron key"
-        ],
-        [
-          "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
-          "use",
-          "unlock",
-          "insert"
         ]
       ],
       "content": "A freshly forged iron key. Still warm. The leather grip fits the hand well."
@@ -469,15 +426,9 @@
         ],
         [
           "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
           "light",
           "start",
-          "ignite",
-          "use"
+          "ignite"
         ],
         [
           "on-interact",
@@ -549,14 +500,8 @@
         ],
         [
           "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
           "open",
-          "unlock",
-          "use"
+          "unlock"
         ],
         [
           "requires",
@@ -628,13 +573,11 @@
         ],
         [
           "verb",
-          "examine",
-          "look",
           "search"
         ],
         [
           "on-interact",
-          "examine",
+          "search",
           "",
           "set-state",
           "visible",
@@ -671,13 +614,11 @@
         ],
         [
           "verb",
-          "examine",
-          "look",
           "search"
         ],
         [
           "on-interact",
-          "examine",
+          "search",
           "",
           "set-state",
           "visible",
@@ -711,13 +652,7 @@
         ],
         [
           "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
           "pump",
-          "use",
           "pull"
         ],
         [
@@ -754,11 +689,6 @@
           "noun",
           "sack",
           "bag"
-        ],
-        [
-          "verb",
-          "examine",
-          "look"
         ],
         [
           "contains",
@@ -798,10 +728,6 @@
           "noun",
           "bread",
           "loaf"
-        ],
-        [
-          "verb",
-          "examine"
         ]
       ],
       "content": "A stale loaf. Still edible."
@@ -829,10 +755,6 @@
           "noun",
           "garlic",
           "clove"
-        ],
-        [
-          "verb",
-          "examine"
         ]
       ],
       "content": "A bulb of garlic, pungent and dry."
@@ -861,11 +783,6 @@
           "journal",
           "book",
           "diary"
-        ],
-        [
-          "verb",
-          "examine",
-          "read"
         ]
       ],
       "content": "A worn journal. The last entry reads: 'The iron must go first, then the leather for grip. The forge must be hot.'"
@@ -894,10 +811,6 @@
           "coin",
           "gold",
           "gold coin"
-        ],
-        [
-          "verb",
-          "examine"
         ]
       ],
       "content": "A heavy gold coin, stamped with a serpent crest."

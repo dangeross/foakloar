@@ -121,15 +121,11 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:arena:place:arena-floor",
-          "north",
-          "The arena floor."
+          "north"
         ],
         [
           "exit",
-          "30078:<PUBKEY>:arena:place:freedom-road",
-          "south",
-          "The way out."
+          "south"
         ]
       ],
       "content": "A stone tunnel leading north to the arena floor. The gate behind you sealed the moment you entered. The crowd's noise filters through the stone. Someone hands you nothing — you're on your own."
@@ -161,21 +157,15 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:arena:place:entrance",
-          "south",
-          "Back to the entrance tunnel."
+          "south"
         ],
         [
           "exit",
-          "30078:<PUBKEY>:arena:place:armoury",
-          "east",
-          "A door to the armoury."
+          "east"
         ],
         [
           "exit",
-          "30078:<PUBKEY>:arena:place:champions-gate",
-          "north",
-          "The champion's gate."
+          "north"
         ],
         [
           "npc",
@@ -211,9 +201,7 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:arena:place:arena-floor",
-          "west",
-          "Back to the arena floor."
+          "west"
         ],
         [
           "item",
@@ -253,15 +241,11 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:arena:place:arena-floor",
-          "south",
-          "Back to the arena floor."
+          "south"
         ],
         [
           "exit",
-          "30078:<PUBKEY>:arena:place:freedom-road",
-          "north",
-          "The gate to freedom."
+          "north"
         ],
         [
           "npc",
@@ -303,8 +287,11 @@
         ],
         [
           "exit",
-          "south",
-          "The arena is behind you. There is no going back."
+          "south"
+        ],
+        [
+          "exit",
+          "north"
         ]
       ],
       "content": "Sunlight. Real sunlight, not the filtered kind that reaches the sand below. The road stretches ahead — open, empty, yours. The crowd's roar fades behind you. You won."
@@ -510,12 +497,6 @@
         ],
         [
           "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
-          "attack",
           "swing",
           "strike",
           "hit",
@@ -524,6 +505,13 @@
         [
           "on-interact",
           "attack",
+          "",
+          "deal-damage-npc",
+          ""
+        ],
+        [
+          "on-interact",
+          "swing",
           "",
           "deal-damage-npc",
           ""
@@ -579,13 +567,7 @@
         ],
         [
           "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
           "drink",
-          "use",
           "sip"
         ],
         [

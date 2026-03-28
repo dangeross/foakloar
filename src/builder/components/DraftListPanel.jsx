@@ -318,8 +318,14 @@ export default function DraftListPanel({
                       validation.warnings.push(`${dTag}: ${issue.message}`);
                     }
                   }
-                  // Run cross-event validation on combined set
-                  const combinedEvents = [...drafts, ...validation.valid];
+                  // Run cross-event validation on combined set (published + drafts + new imports, deduped by d-tag)
+                  const seen = new Set();
+                  const combinedEvents = [];
+                  // New imports take priority, then drafts, then published
+                  for (const ev of [...validation.valid, ...drafts, ...(events ? [...events.values()] : [])]) {
+                    const d = ev.tags?.find((t) => t[0] === 'd')?.[1];
+                    if (d && !seen.has(d)) { seen.add(d); combinedEvents.push(ev); }
+                  }
                   const answers = { ...loadAnswers(worldSlug), ...(data.answers || {}) };
                   const worldResult = validateWorld(combinedEvents, answers);
                   // Merge world warnings into import warnings

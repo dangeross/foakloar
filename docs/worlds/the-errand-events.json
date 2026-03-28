@@ -94,21 +94,15 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:errand:place:market",
-          "north",
-          "The market stalls."
+          "north"
         ],
         [
           "exit",
-          "30078:<PUBKEY>:errand:place:well",
-          "east",
-          "The old well."
+          "east"
         ],
         [
           "exit",
-          "30078:<PUBKEY>:errand:place:bakery",
-          "west",
-          "The bakery."
+          "west"
         ],
         [
           "feature",
@@ -144,9 +138,7 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:errand:place:village-square",
-          "south",
-          "Back to the square."
+          "south"
         ],
         [
           "npc",
@@ -185,9 +177,7 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:errand:place:village-square",
-          "west",
-          "Back to the square."
+          "west"
         ],
         [
           "feature",
@@ -226,9 +216,7 @@
         ],
         [
           "exit",
-          "30078:<PUBKEY>:errand:place:village-square",
-          "east",
-          "Back to the square."
+          "east"
         ],
         [
           "npc",
@@ -355,17 +343,6 @@
           "flour",
           "sack",
           "flour sack"
-        ],
-        [
-          "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
-          "give",
-          "deliver",
-          "hand"
         ]
       ],
       "content": "A heavy sack of milled flour. The baker's been waiting for this."
@@ -412,14 +389,8 @@
         ],
         [
           "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
           "fill",
-          "lower",
-          "use"
+          "lower"
         ],
         [
           "verb",
@@ -471,13 +442,11 @@
         ],
         [
           "verb",
-          "examine",
-          "look",
           "read"
         ],
         [
           "on-interact",
-          "examine",
+          "read",
           "",
           "set-state",
           "visible",
@@ -510,17 +479,6 @@
           "well",
           "rope",
           "winch"
-        ],
-        [
-          "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
-          "use",
-          "lower",
-          "draw"
         ]
       ],
       "content": "A deep stone well. The rope and winch still work. Lower a bucket to draw water."
@@ -567,15 +525,9 @@
         ],
         [
           "verb",
-          "examine",
-          "look"
-        ],
-        [
-          "verb",
           "light",
           "start",
-          "ignite",
-          "use"
+          "ignite"
         ],
         [
           "requires",
@@ -674,10 +626,6 @@
         [
           "type",
           "dialogue"
-        ],
-        [
-          "title",
-          "Merchant"
         ]
       ],
       "content": "The flour's in. Take a sack to the bakery if you're heading that way. She's been waiting."
@@ -696,10 +644,6 @@
         [
           "type",
           "dialogue"
-        ],
-        [
-          "title",
-          "Baker"
         ]
       ],
       "content": "No flour, no bread. No bread, no village. Simple as that. The merchant has my order — if he ever gets round to it."
@@ -718,10 +662,6 @@
         [
           "type",
           "dialogue"
-        ],
-        [
-          "title",
-          "Baker"
         ],
         [
           "requires",
