@@ -204,18 +204,8 @@ export default function EventEditor({
 
   return (
     <DOSPanel
-      title={<>
-        {`${eventTemplate ? 'EDIT' : 'NEW'} ${eventType.toUpperCase()}`}
-        {getGuideUrl(eventType) && (
-          <a
-            href={getGuideUrl(eventType)}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: 'var(--colour-bg)', opacity: 0.7, marginLeft: '0.5em', fontSize: '0.65rem' }}
-            onClick={(e) => e.stopPropagation()}
-          >[?]</a>
-        )}
-      </>}
+      title={`${eventTemplate ? 'EDIT' : 'NEW'} ${eventType.toUpperCase()}`}
+      helpUrl={getGuideUrl(eventType)}
       onClose={onClose}
       minWidth="32em"
       maxWidth="95vw"

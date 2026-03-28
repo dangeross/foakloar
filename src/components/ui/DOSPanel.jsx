@@ -17,6 +17,7 @@ export default function DOSPanel({
   maxHeight = '80vh',
   zIndex,
   noPadding,
+  helpUrl,
 }) {
   const panel = (
     <div
@@ -63,7 +64,15 @@ export default function DOSPanel({
           >
             [X]
           </button>
-          <span>{title}</span>
+          <span style={{ flex: 1 }}>{title}</span>
+          {helpUrl && (
+            <a
+              href={helpUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'var(--colour-bg)', textDecoration: 'none', opacity: 0.7 }}
+            >[?]</a>
+          )}
         </div>
 
         {/* Content */}

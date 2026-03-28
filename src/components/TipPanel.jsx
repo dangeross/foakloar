@@ -194,7 +194,7 @@ export default function TipPanel({ lud16: lud16Prop, recipientName, recipientPub
 
   return (
     <>
-      <DOSPanel title={`${isZap ? 'ZAP' : 'TIP'} — ${displayName || lud16 || 'loading...'}`} onClose={onClose}>
+      <DOSPanel title={`${isZap ? 'ZAP' : 'TIP'} — ${displayName || lud16 || 'loading...'}`} onClose={onClose} helpUrl="/guide/lightning">
         {/* No Lightning address */}
         {stage === 'no-address' && (
           <div className="py-2 text-center">

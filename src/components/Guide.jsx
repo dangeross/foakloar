@@ -31,11 +31,12 @@ const TUTORIALS = [
   { id: '09-recipes', title: 'Recipes', subtitle: 'Crafting, Ingredients' },
   { id: '10-payments', title: 'Payments', subtitle: 'Lightning, LNURL gates' },
   { id: '11-endgame', title: 'Endgame', subtitle: 'Endings, Restart' },
-  { id: '12-trust', title: 'Trust & Collaboration', subtitle: 'Vouching, Revoking, Modes' },
 ];
 
-const AUTHORING = [
+const ADVANCED = [
   { id: 'authoring', title: 'Create Worlds with AI', subtitle: 'LLM-assisted authoring' },
+  { id: 'lightning', title: 'Lightning & Tipping', subtitle: 'Bitcoin payments in foakloar' },
+  { id: '12-trust', title: 'Trust & Collaboration', subtitle: 'Vouching, moderation, open worlds' },
 ];
 
 const SHOWCASES = [
@@ -43,7 +44,7 @@ const SHOWCASES = [
   { id: 'the-courier', title: 'The Courier', subtitle: 'A logistics puzzle in five rooms' },
 ];
 
-const PAGES = [...TUTORIALS, ...SHOWCASES, ...AUTHORING];
+const PAGES = [...TUTORIALS, ...SHOWCASES, ...ADVANCED];
 
 const THEME = TIDE_THEME;
 
@@ -276,13 +277,13 @@ function Sidebar({ currentPage, onNavigate, open, onToggle }) {
           </>
         )}
 
-        {AUTHORING.length > 0 && (
+        {ADVANCED.length > 0 && (
           <>
             <div style={{ borderTop: `1px solid ${THEME.tableBorder}`, margin: '0.75rem 0 0.5rem', paddingTop: '0.5rem' }}>
-              <span style={{ color: THEME.highlight, fontSize: '0.7rem' }}>Authoring</span>
+              <span style={{ color: THEME.highlight, fontSize: '0.7rem' }}>Advanced</span>
             </div>
             <div className="flex flex-col gap-0.5">
-              {AUTHORING.map((p) => {
+              {ADVANCED.map((p) => {
                 const active = currentPage === p.id;
                 return (
                   <button
@@ -404,16 +405,16 @@ function GuideTOC({ onNavigate }) {
         </>
       )}
 
-      {AUTHORING.length > 0 && (
+      {ADVANCED.length > 0 && (
         <>
           <h2 style={{ color: THEME.highlight, fontSize: '1rem', marginTop: '2rem', marginBottom: '0.5rem', fontWeight: 'normal' }}>
-            Authoring
+            Advanced
           </h2>
           <p style={{ color: THEME.dim, fontSize: '0.75rem', marginBottom: '1rem', maxWidth: 600 }}>
-            Use AI to create worlds. Guides, references, and prompts for LLM-assisted authoring.
+            Deeper topics: AI authoring, Lightning payments, trust and collaboration.
           </p>
           <div className="flex flex-col gap-1" style={{ maxWidth: 600 }}>
-            {AUTHORING.map((p) => (
+            {ADVANCED.map((p) => (
               <button
                 key={p.id}
                 onClick={() => onNavigate(p.id)}
