@@ -322,12 +322,11 @@ function Sidebar({ currentPage, onNavigate, open, onToggle }) {
       {/* Mobile styles */}
       <style>{`
         @media (max-width: 639px) {
-          #guide-sidebar-toggle { display: ${open ? 'none' : 'block'} !important; }
+          #guide-sidebar-toggle { display: none !important; }
           .guide-sidebar { transform: translateX(${open ? '0' : '-100%'}) !important; }
           .guide-overlay { display: ${open ? 'block' : 'none'} !important; }
           .guide-main { margin-left: 0 !important; padding-left: 0 !important; padding-top: 0 !important; }
-          #guide-sidebar-toggle { position: absolute !important; left: 0.5rem !important; top: 0.4rem !important; display: ${open ? 'none' : 'block'} !important; border: none !important; background: none !important; }
-          .guide-header { padding: 0.4rem 1rem 0.4rem 2.5rem !important; }
+          .guide-header-burger { display: ${open ? 'none' : 'block'} !important; }
           .guide-sidebar-close { display: block !important; }
         }
       `}</style>
@@ -743,12 +742,18 @@ export default function Guide({ guidePage, identity }) {
       />
       <div className="guide-main" style={{ marginLeft: '200px' }}>
         {/* Header bar */}
-        <div className="flex items-center justify-end gap-3 guide-header" style={{
-          padding: '0.4rem 2rem',
+        <div className="flex items-center justify-between gap-3 guide-header" style={{
+          padding: '0.4rem 1rem',
           borderBottom: `1px solid ${THEME.tableBorder}`,
           position: 'sticky', top: 0, zIndex: 30,
           backgroundColor: THEME.bg,
         }}>
+          <button
+            className="cursor-pointer hover:opacity-80 guide-header-burger"
+            style={{ color: THEME.highlight, background: 'none', border: 'none', font: 'inherit', fontSize: '0.875rem', display: 'none' }}
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >☰</button>
+          <div className="flex items-center gap-3" style={{ marginLeft: 'auto' }}>
           <div ref={buildRef} style={{ position: 'relative' }}>
             <button
               onClick={() => setBuildOpen(!buildOpen)}
@@ -783,6 +788,7 @@ export default function Guide({ guidePage, identity }) {
           <span style={{ '--colour-highlight': '#ffffff', '--colour-dim': THEME.dim, fontSize: '14px' }}>
             <IdentityButton identity={identity} />
           </span>
+          </div>
         </div>
 
         <div style={{ padding: '1.5rem 2rem' }}>
