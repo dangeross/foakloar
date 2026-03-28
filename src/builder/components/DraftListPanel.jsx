@@ -306,7 +306,7 @@ export default function DraftListPanel({
               reader.onload = () => {
                 try {
                   const data = parseJsonLenient(reader.result);
-                  const validation = validateImport(worldSlug, data);
+                  const validation = validateImport(worldSlug, data, events);
                   // Run per-event validation — surface issues as warnings
                   for (const event of validation.valid) {
                     const dTag = event.tags?.find((t) => t[0] === 'd')?.[1] || '?';

@@ -99,10 +99,11 @@ function PlaceNode({ data }) {
 }
 
 function WorldNode({ data }) {
+  const borderStyle = data.isDraft ? 'dashed' : 'solid';
   return (
     <div style={{
       padding: '10px 18px',
-      border: '1px solid var(--colour-npc)',
+      border: `1px ${borderStyle} var(--colour-npc)`,
       background: 'color-mix(in srgb, var(--colour-bg) 90%, var(--colour-dim))',
       color: 'var(--colour-npc)',
       fontSize: '0.8rem',
@@ -245,7 +246,7 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode, answers) {
       id: worldRef,
       type: 'world',
       position: { x: 0, y: 0 },
-      data: { label: getTag(worldEvent, 'title') || 'World', ref: worldRef, author: worldEvent.pubkey, issues: getIssues(worldRef) },
+      data: { label: getTag(worldEvent, 'title') || 'World', ref: worldRef, author: worldEvent.pubkey, isDraft: isDraft(worldEvent), issues: getIssues(worldRef) },
     });
   }
 

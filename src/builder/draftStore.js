@@ -16,6 +16,18 @@ const STORAGE_PREFIX = 'drafts:';
 export const PUBKEY_PLACEHOLDER = '<PUBKEY>';
 
 /**
+ * Compare two events for equality (ignoring _draft metadata, pubkey, sig, id, created_at).
+ * Tags are compared as sorted JSON strings to handle order differences.
+ */
+function eventsEqual(a, b) {
+  if (!a || !b) return false;
+  if ((a.content || '') !== (b.content || '')) return false;
+  const aTags = JSON.stringify([...(a.tags || [])].sort());
+  const bTags = JSON.stringify([...(b.tags || [])].sort());
+  return aTags === bTags;
+}
+
+/**
  * Parse JSON with lenient handling — strips // comments and trailing commas.
  * Standard JSON doesn't support comments, but world authors may add them.
  */
@@ -231,10 +243,17 @@ export function listDraftWorlds() {
  * @param {{ events?: Array, answers?: Object }} data
  * @returns {{ valid: Array, rejected: Array<{event, reason}>, warnings: string[], worldSlug: string|null }}
  */
-export function validateImport(worldSlug, data) {
+/**
+ * @param {string} worldSlug
+ * @param {{ events: Array }} data
+ * @param {Map<string, object>} [publishedEvents] — optional map of a-tag → published event for diff
+ */
+export function validateImport(worldSlug, data, publishedEvents) {
   const warnings = [];
   const valid = [];
   const rejected = [];
+  let unchangedCount = 0;
+  let updatedCount = 0;
 
   if (!data || !Array.isArray(data.events)) {
     return { valid: [], rejected: [], warnings: ['Invalid format: expected { events: [...] }'], worldSlug: null };
@@ -253,7 +272,14 @@ export function validateImport(worldSlug, data) {
     : getTagValue(data.events[0], 't');
 
   const store = readStore(worldSlug);
-  const existingDTags = new Set(store.events.map((e) => getTagValue(e, 'd')).filter(Boolean));
+  // Build lookup of existing drafts by d-tag
+  const draftsByDTag = new Map();
+  for (const e of store.events) {
+    const d = getTagValue(e, 'd');
+    if (d) draftsByDTag.set(d, e);
+  }
+
+  const seenDTags = new Set();
 
   for (const event of data.events) {
     if (!event.tags || !Array.isArray(event.tags)) {
@@ -273,18 +299,48 @@ export function validateImport(worldSlug, data) {
       continue;
     }
 
-    if (existingDTags.has(dTag)) {
-      rejected.push({ event, reason: `Duplicate d-tag: ${dTag}` });
+    // Intra-import duplicate check
+    if (seenDTags.has(dTag)) {
+      rejected.push({ event, reason: `Duplicate d-tag in file: ${dTag}` });
       continue;
     }
+    seenDTags.add(dTag);
 
     const typeTag = getTagValue(event, 'type');
     if (!typeTag) {
       warnings.push(`${dTag}: missing type tag`);
     }
 
+    // Compare against existing draft
+    const existingDraft = draftsByDTag.get(dTag);
+    if (existingDraft && eventsEqual(event, existingDraft)) {
+      unchangedCount++;
+      rejected.push({ event, reason: 'Unchanged (matches existing draft)' });
+      continue;
+    }
+
+    // Compare against published event (if available)
+    if (publishedEvents) {
+      // Try both a-tag formats: with pubkey and with placeholder
+      let published = null;
+      for (const [aTag, ev] of publishedEvents) {
+        const pubDTag = ev.tags?.find((t) => t[0] === 'd')?.[1];
+        if (pubDTag === dTag) { published = ev; break; }
+      }
+      if (published && eventsEqual(event, published)) {
+        unchangedCount++;
+        rejected.push({ event, reason: 'Unchanged (matches published event)' });
+        continue;
+      }
+    }
+
+    // Mark as updated if replacing an existing draft
+    if (existingDraft) {
+      event._importStatus = 'updated';
+      updatedCount++;
+    }
+
     valid.push(event);
-    existingDTags.add(dTag); // prevent intra-import duplicates
   }
 
   // Warn if no world event in the valid set (and none already in drafts)
@@ -297,7 +353,7 @@ export function validateImport(worldSlug, data) {
   // Note walkthrough presence
   const walkthroughSteps = Array.isArray(data.walkthrough) ? data.walkthrough.length : 0;
 
-  return { valid, rejected, warnings, worldSlug: detectedSlug, walkthroughSteps };
+  return { valid, rejected, warnings, worldSlug: detectedSlug, walkthroughSteps, unchangedCount, updatedCount };
 }
 
 // ── Import / Export ────────────────────────────────────────────────────────
@@ -312,17 +368,39 @@ export function validateImport(worldSlug, data) {
  */
 export function importEvents(worldSlug, data) {
   const store = readStore(worldSlug);
-  const existingDTags = new Set(store.events.map((e) => getTagValue(e, 'd')).filter(Boolean));
+  const draftIndexByDTag = new Map();
+  for (let i = 0; i < store.events.length; i++) {
+    const d = getTagValue(store.events[i], 'd');
+    if (d) draftIndexByDTag.set(d, i);
+  }
   const now = Date.now();
   let imported = 0;
+  let updated = 0;
   let skipped = 0;
 
   for (const event of (data.events || [])) {
     const dTag = getTagValue(event, 'd');
-    if (dTag && existingDTags.has(dTag)) {
-      skipped++;
+    const existingIdx = dTag ? draftIndexByDTag.get(dTag) : undefined;
+
+    if (existingIdx !== undefined) {
+      // Update existing draft if content changed
+      if (eventsEqual(event, store.events[existingIdx])) {
+        skipped++;
+        continue;
+      }
+      store.events[existingIdx] = {
+        kind: event.kind || 30078,
+        tags: event.tags || [],
+        content: event.content || '',
+        _draft: {
+          ...store.events[existingIdx]._draft,
+          updatedAt: now,
+        },
+      };
+      updated++;
       continue;
     }
+
     store.events.push({
       kind: event.kind || 30078,
       tags: event.tags || [],
@@ -333,7 +411,7 @@ export function importEvents(worldSlug, data) {
         updatedAt: now,
       },
     });
-    if (dTag) existingDTags.add(dTag);
+    if (dTag) draftIndexByDTag.set(dTag, store.events.length - 1);
     imported++;
   }
 
@@ -348,7 +426,7 @@ export function importEvents(worldSlug, data) {
   }
 
   writeStore(worldSlug, store);
-  return { imported, skipped };
+  return { imported, updated, skipped };
 }
 
 /**
