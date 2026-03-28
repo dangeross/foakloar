@@ -523,6 +523,7 @@ export async function bulkPublish(worldSlug, pubkey, signer, pool, options = {})
   const details = signed.map((s) => ({
     draftId: s.draftId,
     dTag: s.dTag,
+    signedEvent: s.signed || null,
     relays: Object.fromEntries(relayUrls.map((url) => [url, s.signed ? 'pending' : 'skipped'])),
     signError: s.error || null,
   }));
@@ -592,6 +593,54 @@ export async function bulkPublish(worldSlug, pubkey, signer, pool, options = {})
   options.onProgress?.({ total, published: publishedCount, failed: failedCount, details });
 
   return { published: publishedCount, failed: failedCount, errors, details };
+}
+
+/**
+ * Retry publishing events that failed on specific relays.
+ * Re-publishes only the failed relay×event pairs from a previous result.
+ */
+export async function retryFailed(previousResult, pool, options = {}) {
+  if (!pool || !previousResult?.details) return previousResult;
+
+  const DELAY_MS = 1000; // longer delay for retry (rate limit recovery)
+  const relayUrls = pool.connectedUrls;
+  const errors = [];
+  let publishedCount = previousResult.published;
+  let failedCount = 0;
+
+  // Find events with failed relays
+  const retryDetails = previousResult.details.filter((d) =>
+    d.signedEvent && Object.values(d.relays).some((s) => s === 'failed')
+  );
+
+  for (const detail of retryDetails) {
+    const failedRelays = Object.entries(detail.relays)
+      .filter(([, s]) => s === 'failed')
+      .map(([url]) => url);
+
+    const results = await pool.publishTo(detail.signedEvent, failedRelays);
+    for (const [url, res] of results) {
+      detail.relays[url] = res.ok ? 'ok' : 'failed';
+      if (!res.ok) errors.push(`${detail.dTag} → ${url}: ${res.error}`);
+    }
+
+    await new Promise((r) => setTimeout(r, DELAY_MS));
+  }
+
+  // Recount failures
+  failedCount = previousResult.details.filter((d) =>
+    Object.values(d.relays).some((s) => s === 'failed')
+  ).length;
+
+  const result = {
+    published: previousResult.details.length - failedCount,
+    failed: failedCount,
+    errors: [...(previousResult.errors || []), ...errors],
+    details: previousResult.details,
+  };
+
+  options.onProgress?.(result);
+  return result;
 }
 
 /** Legacy fallback for single relay. */

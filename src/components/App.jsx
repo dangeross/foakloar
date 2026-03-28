@@ -29,7 +29,7 @@ import AuthorProfile from './AuthorProfile.jsx';
 import TipPanel from './TipPanel.jsx';
 import IdentityButton from './ui/IdentityButton.jsx';
 import LoginPanel from './ui/LoginPanel.jsx';
-import { loadDrafts, saveDraft, updateDraft, deleteDraft, clearDrafts, importEvents, exportDrafts, bulkPublish, loadAnswers } from '../builder/draftStore.js';
+import { loadDrafts, saveDraft, updateDraft, deleteDraft, clearDrafts, importEvents, exportDrafts, bulkPublish, retryFailed, loadAnswers } from '../builder/draftStore.js';
 import { validateWorld, verifyPuzzleHashes } from '../builder/validateWorld.js';
 import RelaySettingsPanel from './RelaySettingsPanel.jsx';
 import PublishProgressPanel from '../builder/components/PublishProgressPanel.jsx';
@@ -855,6 +855,10 @@ export default function App() {
           result={publishResult}
           zIndex={undefined}
           onClose={() => setPublishResult(null)}
+          onRetryFailed={async () => {
+            const updated = await retryFailed(publishResult, pool);
+            setPublishResult(updated);
+          }}
         />
       )}
 

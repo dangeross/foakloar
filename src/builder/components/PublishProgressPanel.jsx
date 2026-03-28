@@ -8,7 +8,7 @@
 import React from 'react';
 import DOSPanel from '../../components/ui/DOSPanel.jsx';
 
-export default function PublishProgressPanel({ result, onClose, zIndex }) {
+export default function PublishProgressPanel({ result, onClose, onRetryFailed, zIndex }) {
   if (!result) return null;
 
   const { published, failed, errors, details } = result;
@@ -87,6 +87,19 @@ export default function PublishProgressPanel({ result, onClose, zIndex }) {
               {e}
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Retry failed button */}
+      {failed > 0 && onRetryFailed && (
+        <div className="mt-2">
+          <button
+            className="text-xs font-mono px-2 py-1"
+            style={{ border: '1px solid var(--colour-error)', color: 'var(--colour-error)', background: 'transparent', cursor: 'pointer' }}
+            onClick={onRetryFailed}
+          >
+            Retry {failed} failed
+          </button>
         </div>
       )}
 
