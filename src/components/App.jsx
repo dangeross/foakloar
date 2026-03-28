@@ -673,7 +673,7 @@ export default function App() {
     <>
     {noiseOverlay}
     <div ref={gameContainerRef}
-         className={`max-w-2xl mx-auto p-6 flex flex-col h-svh game-text game-container${transitionEffect ? ` transition-${transitionEffect}` : ''}`}
+         className={`max-w-2xl mx-auto p-6 flex flex-col h-dvh game-text game-container${transitionEffect ? ` transition-${transitionEffect}` : ''}`}
          style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}>
       <div className="text-sm mb-2 flex justify-between items-center shrink-0" style={{ color: 'var(--colour-dim)' }}>
         <span className="flex items-center min-w-0">
