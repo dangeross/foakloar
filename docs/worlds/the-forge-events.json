@@ -533,12 +533,6 @@
         ],
         [
           "contains",
-          "30078:<PUBKEY>:forge:item:smith-journal",
-          "open",
-          "The chest is locked."
-        ],
-        [
-          "contains",
           "30078:<PUBKEY>:forge:item:gold-coin",
           "open",
           "The chest is locked."
@@ -582,6 +576,12 @@
           "set-state",
           "visible",
           "30078:<PUBKEY>:forge:clue:shelves-note"
+        ],
+        [
+          "contains",
+          "30078:<PUBKEY>:forge:item:smith-journal",
+          "",
+          ""
         ]
       ],
       "content": "Wooden shelves, most empty. Dust outlines where things used to sit."
