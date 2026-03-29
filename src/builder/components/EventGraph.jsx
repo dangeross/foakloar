@@ -77,8 +77,11 @@ function PlaceNode({ data }) {
       position: 'relative',
       opacity,
     }}>
-      <Handle type="target" position={Position.Top} style={handleStyle} />
-      <Handle type="source" position={Position.Bottom} style={handleStyle} />
+      <Handle id="top"        type="target" position={Position.Top}    style={handleStyle} />
+      <Handle id="bottom"     type="source" position={Position.Bottom} style={handleStyle} />
+      {/* Extra handles used only by traverse edges — hidden from normal use */}
+      <Handle id="top-src"    type="source" position={Position.Top}    style={{ ...handleStyle, opacity: 0, pointerEvents: 'none' }} />
+      <Handle id="bottom-tgt" type="target" position={Position.Bottom} style={{ ...handleStyle, opacity: 0, pointerEvents: 'none' }} />
       <div style={{ fontWeight: 'bold', marginBottom: 2 }}>{data.label}</div>
       {data.details.length > 0 && (
         <div style={{ color: 'var(--colour-dim)', fontSize: '0.5rem', lineHeight: 1.3 }}>
@@ -138,10 +141,47 @@ function OrphanNode({ data }) {
   );
 }
 
+/** Diamond node representing a traverse-only hidden portal. */
+function TraverseNode({ data }) {
+  const colour = data.isDraft ? 'var(--colour-item)' : 'var(--colour-clue)';
+  return (
+    <div style={{ position: 'relative', width: 36, height: 36, cursor: 'pointer' }}>
+      <Handle id="top-in"     type="target" position={Position.Top}    style={{ ...handleStyle, top: -5,    left: '50%' }} />
+      <Handle id="top-out"    type="source" position={Position.Top}    style={{ ...handleStyle, top: -5,    left: '50%', opacity: 0, pointerEvents: 'none' }} />
+      <Handle id="bottom-in"  type="target" position={Position.Bottom} style={{ ...handleStyle, bottom: -5, left: '50%', opacity: 0, pointerEvents: 'none' }} />
+      <Handle id="bottom-out" type="source" position={Position.Bottom} style={{ ...handleStyle, bottom: -5, left: '50%' }} />
+      {/* Rotated square = diamond */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        transform: 'rotate(45deg)',
+        border: `1px ${data.isDraft ? 'dashed' : 'solid'} ${colour}`,
+        background: 'color-mix(in srgb, var(--colour-bg) 85%, var(--colour-dim))',
+      }} />
+      {/* Label centred over the diamond (not rotated) */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        color: colour,
+        fontSize: '0.42rem',
+        lineHeight: 1.2,
+        fontFamily: 'inherit',
+        pointerEvents: 'none',
+        textAlign: 'center',
+        padding: '0 4px',
+      }}>
+        <span style={{ opacity: 0.6, fontSize: '0.38rem' }}>⟡</span>
+        <span>{data.label}</span>
+      </div>
+    </div>
+  );
+}
+
 const nodeTypes = {
   place: PlaceNode,
   world: WorldNode,
   orphan: OrphanNode,
+  traverse: TraverseNode,
 };
 
 // ── Helpers ─────────────────────────────────────────────────────────────
@@ -312,6 +352,82 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode, answers) {
     }
   }
 
+  // Traverse-only portals (single exit tag with blank slot)
+  // Build a map: portalRef → verb(s) that trigger it, by scanning place on-interact tags
+  const traverseTriggers = new Map(); // portalRef → [{ sourcePlaceRef, verb }]
+  for (const [placeRef, placeEvent] of places) {
+    for (const tag of getTags(placeEvent, 'on-interact')) {
+      if (tag[3] !== 'traverse') continue;
+      const targetRef = tag[4];
+      if (!targetRef) continue;
+      // Normalise: targetRef may be a short d-tag or a full a-tag ref
+      for (const { ref: portalRef } of portals) {
+        if (portalRef === targetRef || portalRef.endsWith(':' + targetRef)) {
+          if (!traverseTriggers.has(portalRef)) traverseTriggers.set(portalRef, []);
+          traverseTriggers.get(portalRef).push({ sourcePlaceRef: placeRef, verb: tag[1] });
+        }
+      }
+    }
+  }
+
+  for (const { ref: portalRef, event } of portals) {
+    const exitTags = getTags(event, 'exit');
+    // A traverse-only portal has exactly one exit tag with a blank slot
+    if (exitTags.length !== 1 || exitTags[0][2]) continue;
+    const destRef = exitTags[0][1];
+    if (!places.has(destRef)) continue;
+
+    const shortName = portalRef.split(':').pop();
+    const traverseNode = {
+      id: portalRef,
+      type: 'traverse',
+      position: { x: 0, y: 0 },
+      data: {
+        label: shortName,
+        ref: portalRef,
+        author: event.pubkey,
+        isDraft: isDraft(event),
+        issues: getIssues(portalRef),
+      },
+    };
+    nodes.push(traverseNode);
+    referencedRefs.add(portalRef);
+
+    // Edge: traverse node → destination place
+    edges.push({
+      id: `${portalRef}:traverse->dest`,
+      source: portalRef,
+      target: destRef,
+      data: { portalRef, author: event.pubkey, isDraft: isDraft(event) },
+      style: {
+        stroke: isDraft(event) ? 'var(--colour-item)' : 'var(--colour-clue)',
+        strokeWidth: 1,
+        strokeDasharray: '3 3',
+        cursor: 'pointer',
+      },
+    });
+
+    // Edges: source place(s) → traverse node (if trigger found)
+    for (const { sourcePlaceRef, verb } of traverseTriggers.get(portalRef) || []) {
+      edges.push({
+        id: `${portalRef}:src->${sourcePlaceRef}`,
+        source: sourcePlaceRef,
+        target: portalRef,
+        label: verb,
+        labelStyle: { fontSize: '0.55rem', fill: 'var(--colour-clue)', fontFamily: 'inherit' },
+        labelBgStyle: { fill: 'var(--colour-bg)' },
+        labelBgPadding: [3, 1],
+        data: { portalRef, author: event.pubkey, isDraft: isDraft(event) },
+        style: {
+          stroke: isDraft(event) ? 'var(--colour-item)' : 'var(--colour-clue)',
+          strokeWidth: 1,
+          strokeDasharray: '3 3',
+          cursor: 'pointer',
+        },
+      });
+    }
+  }
+
   // Compute unclaimed exit slots per place (declared but no portal connects)
   const claimedSlots = new Map(); // placeRef → Set of claimed slots
   for (const { event } of portals) {
@@ -332,15 +448,97 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode, answers) {
     node.data.unclaimedSlots = declaredSlots.filter((s) => !claimed.has(s));
   }
 
-  // Dagre layout
+  // Dagre layout — place/world nodes only; traverse nodes are positioned after
   const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
   g.setGraph({ rankdir: 'TB', nodesep: 100, ranksep: 120, align: 'DL', edgesep: 40 });
-  for (const node of nodes) g.setNode(node.id, { width: 180, height: 60 });
-  for (const edge of edges) g.setEdge(edge.source, edge.target);
+  for (const node of nodes) {
+    if (node.type === 'traverse') continue;
+    g.setNode(node.id, { width: 180, height: 60 });
+  }
+  for (const edge of edges) {
+    // Only add edges between non-traverse nodes to Dagre
+    const srcNode = nodes.find((n) => n.id === edge.source);
+    const tgtNode = nodes.find((n) => n.id === edge.target);
+    if (srcNode?.type !== 'traverse' && tgtNode?.type !== 'traverse') {
+      g.setEdge(edge.source, edge.target);
+    }
+  }
   Dagre.layout(g);
   for (const node of nodes) {
+    if (node.type === 'traverse') continue;
     const pos = g.node(node.id);
     if (pos) node.position = { x: pos.x - (pos.width / 2), y: pos.y - (pos.height / 2) };
+  }
+
+  // Position traverse nodes: midpoint between their connected places + rightward offset
+  // Build a lookup: nodeId → position centre
+  const nodeCentre = (id) => {
+    const n = nodes.find((nd) => nd.id === id);
+    if (!n) return null;
+    return { x: n.position.x + 90, y: n.position.y + 30 }; // centre of 180×60
+  };
+  let traverseOffset = 0;
+  for (const node of nodes) {
+    if (node.type !== 'traverse') continue;
+    const inEdge  = edges.find((e) => e.target === node.id);
+    const outEdge = edges.find((e) => e.source === node.id);
+    const srcPos  = inEdge  ? nodeCentre(inEdge.source)  : null;
+    const dstPos  = outEdge ? nodeCentre(outEdge.target) : null;
+    let x, y;
+    if (srcPos && dstPos) {
+      x = (srcPos.x + dstPos.x) / 2 + 220 + (traverseOffset % 2) * 80;
+      y = (srcPos.y + dstPos.y) / 2;
+    } else if (dstPos) {
+      x = dstPos.x + 220 + (traverseOffset % 2) * 80;
+      y = dstPos.y;
+    } else {
+      x = 400 + traverseOffset * 100;
+      y = 0;
+    }
+    node.position = { x: x - 18, y: y - 18 }; // centre the 36×36 diamond
+    traverseOffset++;
+  }
+
+  // Fix traverse edge handles based on relative positions
+  // Centre Y of a node (place=180×60, traverse=36×36)
+  const centreY = (n) => n.position.y + (n.type === 'traverse' ? 18 : 30);
+  for (const node of nodes) {
+    if (node.type !== 'traverse') continue;
+    const tcy = centreY(node);
+
+    // inEdge: source place → traverse node
+    const inEdge = edges.find((e) => e.target === node.id);
+    if (inEdge) {
+      const srcNode = nodes.find((n) => n.id === inEdge.source);
+      if (srcNode) {
+        if (tcy < centreY(srcNode)) {
+          // traverse above source: exit place via top, enter traverse via bottom
+          inEdge.sourceHandle = 'top-src';
+          inEdge.targetHandle = 'bottom-in';
+        } else {
+          // traverse below source: exit place via bottom, enter traverse via top
+          inEdge.sourceHandle = 'bottom';
+          inEdge.targetHandle = 'top-in';
+        }
+      }
+    }
+
+    // outEdge: traverse node → destination place
+    const outEdge = edges.find((e) => e.source === node.id);
+    if (outEdge) {
+      const dstNode = nodes.find((n) => n.id === outEdge.target);
+      if (dstNode) {
+        if (tcy < centreY(dstNode)) {
+          // traverse above dest: exit traverse via bottom, enter dest via top
+          outEdge.sourceHandle = 'bottom-out';
+          outEdge.targetHandle = 'top';
+        } else {
+          // traverse below dest: exit traverse via top, enter dest via bottom
+          outEdge.sourceHandle = 'top-out';
+          outEdge.targetHandle = 'bottom-tgt';
+        }
+      }
+    }
   }
 
   // Orphans
