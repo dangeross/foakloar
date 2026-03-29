@@ -13,9 +13,9 @@ import { useProfile } from '../hooks/useProfile.js';
 import PageHeader from './ui/PageHeader.jsx';
 import { navigateToLobby, navigateToWorld } from '../services/router.js';
 
-export default function AuthorProfile({ npub, pubkeyHex, identity }) {
+export default function AuthorProfile({ npub, pubkeyHex, identity, pool }) {
   const { worlds, status } = useWorldDiscovery('author', pubkeyHex);
-  const { profile } = useProfile(pubkeyHex);
+  const { profile } = useProfile(pubkeyHex, pool);
   const [copied, setCopied] = useState(false);
   const [showTip, setShowTip] = useState(false);
   const [zapTarget, setZapTarget] = useState(null); // { eventId, pubkey }

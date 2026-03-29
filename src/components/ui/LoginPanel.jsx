@@ -11,7 +11,7 @@ import React, { useState } from 'react';
 import { nip19 } from 'nostr-tools';
 import DOSPanel from './DOSPanel.jsx';
 
-export default function LoginPanel({ identity, onClose, children }) {
+export default function LoginPanel({ identity, onClose, onEditProfile, children }) {
   const [loginError, setLoginError] = useState('');
   const [showNsec, setShowNsec] = useState(false);
 
@@ -31,6 +31,18 @@ export default function LoginPanel({ identity, onClose, children }) {
       <div className="mb-3" style={{ color: 'var(--colour-dim)', wordBreak: 'break-all' }}>
         {identity?.pubkey ? nip19.npubEncode(identity.pubkey) : 'none'}
       </div>
+
+      {identity?.pubkey && onEditProfile && (
+        <div className="mb-3">
+          <button
+            onClick={() => { handleClose(); onEditProfile(); }}
+            className="cursor-pointer"
+            style={{ color: 'var(--colour-highlight)', background: 'none', border: '1px solid var(--colour-dim)', font: 'inherit', padding: '2px 8px' }}
+          >
+            Edit Profile
+          </button>
+        </div>
+      )}
 
       {identity?.method === 'ephemeral' && (
         <div className="mb-3 pt-2" style={{ borderTop: '1px solid var(--colour-dim)' }}>

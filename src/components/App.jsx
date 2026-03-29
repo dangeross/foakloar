@@ -29,6 +29,7 @@ import AuthorProfile from './AuthorProfile.jsx';
 import TipPanel from './TipPanel.jsx';
 import IdentityButton from './ui/IdentityButton.jsx';
 import LoginPanel from './ui/LoginPanel.jsx';
+import ProfileEditor from './ui/ProfileEditor.jsx';
 import { loadDrafts, saveDraft, updateDraft, deleteDraft, clearDrafts, importEvents, exportDrafts, bulkPublish, retryFailed, loadAnswers } from '../builder/draftStore.js';
 import { validateWorld, verifyPuzzleHashes } from '../builder/validateWorld.js';
 import RelaySettingsPanel from './RelaySettingsPanel.jsx';
@@ -157,6 +158,7 @@ export default function App() {
   const [log, setLog] = useState([]);
   const [previewUnvouched, setPreviewUnvouched] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [showProfileEditor, setShowProfileEditor] = useState(false);
   const [generation, setGeneration] = useState(0);
   // Build mode state
   const [buildMode, setBuildMode] = useState(false);
@@ -476,7 +478,7 @@ export default function App() {
   }, [log]);
 
   // Keep input focused (skip when builder panels are open, or on touch devices to avoid keyboard popup)
-  const panelOpen = showDrafts || editorState || showLogin;
+  const panelOpen = showDrafts || editorState || showLogin || showProfileEditor;
   const isTouchDevice = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
   useEffect(() => {
@@ -624,7 +626,7 @@ export default function App() {
 
   // ── Profile route ──────────────────────────────────────────────────────
   if (route.page === 'profile') {
-    return <>{noiseOverlay}<AuthorProfile npub={route.npub} pubkeyHex={route.pubkeyHex} identity={identity} /></>;
+    return <>{noiseOverlay}<AuthorProfile npub={route.npub} pubkeyHex={route.pubkeyHex} identity={identity} pool={pool} /></>;
   }
 
   // ── Non-game routes: reset theme to defaults (moved to effect below) ──
@@ -751,8 +753,22 @@ export default function App() {
         );
       })()}
 
+      {showProfileEditor && (
+        <ProfileEditor
+          identity={identity}
+          pool={pool}
+          publishUrls={publishUrls}
+          nip65WriteRelays={nip65.writeRelays}
+          onClose={() => setShowProfileEditor(false)}
+        />
+      )}
+
       {showLogin && (
-        <LoginPanel identity={identity} onClose={() => setShowLogin(false)}>
+        <LoginPanel
+          identity={identity}
+          onClose={() => setShowLogin(false)}
+          onEditProfile={() => setShowProfileEditor(true)}
+        >
           {backup.canBackup && (
             <div className="mt-3 pt-2" style={{ borderTop: '1px solid var(--colour-dim)' }}>
               <div className="mb-1" style={{ color: 'var(--colour-dim)' }}>State Backup:</div>
