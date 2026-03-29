@@ -12,6 +12,8 @@ import { validateImport, importEvents, saveDraft, parseJsonLenient } from '../bu
 import ImportPreviewPanel from '../builder/components/ImportPreviewPanel.jsx';
 import WorldCreator from '../builder/components/WorldCreator.jsx';
 import IdentityButton from './ui/IdentityButton.jsx';
+import LoginPanel from './ui/LoginPanel.jsx';
+import ProfileEditor from './ui/ProfileEditor.jsx';
 import { TIDE_THEME } from '../services/guideTheme.js';
 
 // Import all guide markdown files at build time
@@ -703,6 +705,8 @@ export default function Guide({ guidePage, identity }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showCreator, setShowCreator] = useState(false);
   const [buildOpen, setBuildOpen] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showProfileEditor, setShowProfileEditor] = useState(false);
   const buildRef = React.useRef(null);
 
   // Close build dropdown on outside click
@@ -786,7 +790,7 @@ export default function Guide({ guidePage, identity }) {
             )}
           </div>
           <span style={{ '--colour-highlight': '#ffffff', '--colour-dim': THEME.dim, fontSize: '14px' }}>
-            <IdentityButton identity={identity} />
+            <IdentityButton identity={identity} onClick={() => setShowLogin(!showLogin)} />
           </span>
           </div>
         </div>
@@ -809,6 +813,21 @@ export default function Guide({ guidePage, identity }) {
             setShowCreator(false);
             navigateToWorld(worldSlug);
           }}
+        />
+      )}
+
+      {/* Identity panels */}
+      {showLogin && (
+        <LoginPanel
+          identity={identity}
+          onClose={() => setShowLogin(false)}
+          onEditProfile={() => setShowProfileEditor(true)}
+        />
+      )}
+      {showProfileEditor && (
+        <ProfileEditor
+          identity={identity}
+          onClose={() => setShowProfileEditor(false)}
         />
       )}
     </div>

@@ -8,9 +8,11 @@
 import React, { useState } from 'react';
 import IdentityButton from './IdentityButton.jsx';
 import LoginPanel from './LoginPanel.jsx';
+import ProfileEditor from './ProfileEditor.jsx';
 
 export default function PageHeader({ identity, children }) {
   const [showLogin, setShowLogin] = useState(false);
+  const [showProfileEditor, setShowProfileEditor] = useState(false);
 
   return (
     <>
@@ -41,7 +43,17 @@ export default function PageHeader({ identity, children }) {
         </span>
       </div>
       {showLogin && (
-        <LoginPanel identity={identity} onClose={() => setShowLogin(false)} />
+        <LoginPanel
+          identity={identity}
+          onClose={() => setShowLogin(false)}
+          onEditProfile={() => setShowProfileEditor(true)}
+        />
+      )}
+      {showProfileEditor && (
+        <ProfileEditor
+          identity={identity}
+          onClose={() => setShowProfileEditor(false)}
+        />
       )}
     </>
   );

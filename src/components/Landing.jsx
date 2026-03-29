@@ -12,6 +12,9 @@ import { APP_PUBKEY } from '../config.js';
 import { TIDE_THEME as T } from '../services/guideTheme.js';
 import WorldCard from './WorldCard.jsx';
 import DOSPanel from './ui/DOSPanel.jsx';
+import IdentityButton from './ui/IdentityButton.jsx';
+import LoginPanel from './ui/LoginPanel.jsx';
+import ProfileEditor from './ui/ProfileEditor.jsx';
 
 const PILLARS = [
   {
@@ -31,6 +34,8 @@ const PILLARS = [
 export default function Landing({ identity }) {
   const { worlds, status } = useWorldDiscovery('curated', APP_PUBKEY);
   const [pendingWorld, setPendingWorld] = useState(null);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showProfileEditor, setShowProfileEditor] = useState(false);
 
   function handleWorldClick(world) {
     if (world.cw?.length > 0) {
@@ -66,7 +71,7 @@ export default function Landing({ identity }) {
       <div className="max-w-2xl mx-auto font-mono text-sm game-container" style={{ paddingBottom: 0 }}>
         <div className="flex items-center justify-between mb-4">
           <span style={{ color: T.highlight }}>foakloar</span>
-          <span />
+          <IdentityButton identity={identity} onClick={() => setShowLogin(!showLogin)} />
         </div>
       </div>
 
@@ -249,6 +254,21 @@ export default function Landing({ identity }) {
           Built on NOSTR
         </a>
       </footer>
+
+      {/* ── Identity panels ────────────────────────────────── */}
+      {showLogin && (
+        <LoginPanel
+          identity={identity}
+          onClose={() => setShowLogin(false)}
+          onEditProfile={() => setShowProfileEditor(true)}
+        />
+      )}
+      {showProfileEditor && (
+        <ProfileEditor
+          identity={identity}
+          onClose={() => setShowProfileEditor(false)}
+        />
+      )}
 
       {/* ── CW confirmation ────────────────────────────────── */}
       {pendingWorld && (
