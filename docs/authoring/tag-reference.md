@@ -242,10 +242,12 @@ D-tag: `<slug>:world`
 | `npc` | `["npc", "<npc-ref>"]` (repeatable) | opt | — |
 | `clue` | `["clue", "<clue-ref>"]` (repeatable) | opt | — |
 | `noun` | `["noun", "<canonical>", "<alias>", ...]` (repeatable) | opt | — |
+| `verb` | `["verb", "<canonical>", "<alias>", ...]` (repeatable) | opt | registers a bare verb in the parser while the player is in this room |
 | `state` | `["state", "<initial>"]` | opt | — |
 | `transition` | `["transition", "<from>", "<to>", "<text?>"]` (repeatable) | opt | — |
 | `requires` | `["requires", "<ref>", "<state>", "<desc>"]` (repeatable) | opt | — |
 | `requires-not` | `["requires-not", "<ref>", "<state>", "<desc>"]` (repeatable) | opt | — |
+| `on-interact` | `["on-interact", "<verb>", "<state-guard-or-''>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | fires when player types a bare verb in this room; checked before world on-interact |
 | `on-enter` | `["on-enter", "player", "<state-guard-or-''\>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | — |
 | `on-drop` | `["on-drop", "<item-ref-or-''>", "<state-guard-or-''>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | fires when item dropped in this place (plain `drop X`) |
 | `on-player-health` | `["on-player-health", "<dir>", "<threshold>", "<action>", "<target>"]` (repeatable) | opt | — |
@@ -257,7 +259,7 @@ D-tag: `<slug>:world`
 | `puzzle` | `["puzzle", "<puzzle-ref>"]` | opt (NIP-44) | encryption key source (NIP-44) |
 | `colour` | `["colour", "<slot>", "<value>"]` (repeatable) | opt | per-place theme colour override (e.g. `bg`, `text`, `accent`) |
 
-**NOT valid on place:** `verb`, `dialogue`, `damage`, `health`, `on-interact`, `on-attacked`, `on-encounter`, `counter`, `contains`
+**NOT valid on place:** `dialogue`, `damage`, `health`, `on-attacked`, `on-encounter`, `counter`, `contains`
 
 **Content field:** REQUIRED. **Place exit tags are slot-only** — the portal binds destinations.
 
