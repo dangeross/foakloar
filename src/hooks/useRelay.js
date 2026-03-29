@@ -77,14 +77,57 @@ export function useRelay(worldTag) {
 
       setStatus('connected');
 
+      // PAGE_SIZE is the threshold at which we suspect relay truncation and
+      // fetch an additional page using until: minCreatedAt-1.
+      const PAGE_SIZE = 500;
+
+      // Track minimum created_at across the initial subscription so we can
+      // paginate if the first batch fills PAGE_SIZE.
+      let initialMin = Infinity;
+      let initialCount = 0;
+
+      // Recursive paginator — only called if the initial subscription fills PAGE_SIZE.
+      function fetchNextPage(until) {
+        const filter = { kinds: [30078], '#t': [worldTag], limit: PAGE_SIZE, until };
+        let pageMin = Infinity;
+        let pageCount = 0;
+        pool.subscribe([filter], {
+          onevent(event) {
+            pageCount++;
+            if (event.created_at < pageMin) pageMin = event.created_at;
+            handleEvent(event);
+          },
+          oneose() {
+            if (cancelled) return;
+            if (pageCount >= PAGE_SIZE && pageMin < Infinity) {
+              console.log(`[useRelay] page full (${pageCount}), fetching next page until=${pageMin - 1}`);
+              fetchNextPage(pageMin - 1);
+            } else {
+              console.log(`[useRelay] pagination complete (${pageCount} events in final page).`);
+            }
+          },
+        });
+      }
+
+      // Initial subscription — no limit so relay EOSE semantics are unchanged.
+      // We observe event count/timestamps to detect truncation after EOSE.
       pool.subscribe(
         [{ kinds: [30078], '#t': [worldTag] }],
         {
-          onevent: handleEvent,
+          onevent(event) {
+            initialCount++;
+            if (event.created_at < initialMin) initialMin = event.created_at;
+            handleEvent(event);
+          },
           oneose() {
             if (!cancelled) {
-              console.log('[useRelay] EOSE — initial events received.');
+              console.log(`[useRelay] EOSE — ${initialCount} events received.`);
               setStatus('ready');
+              // If the relay appeared to truncate, fetch older pages
+              if (initialCount >= PAGE_SIZE && initialMin < Infinity) {
+                console.log(`[useRelay] initial batch full — paginating from until=${initialMin - 1}`);
+                fetchNextPage(initialMin - 1);
+              }
             }
           },
         },

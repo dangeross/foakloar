@@ -695,13 +695,19 @@ export class GameEngine {
 
   /** Find a recipe whose verb tag matches the given verb (canonical). */
   _findRecipeByVerb(verb) {
-    for (const [dtag, event] of this.events) {
-      if (getTag(event, 'type') !== 'recipe') continue;
-      for (const vt of getTags(event, 'verb')) {
-        if (vt[1]?.toLowerCase() === verb) return { event, dtag, type: 'recipe' };
+    // Lazy index keyed on the events Map reference — auto-rebuilds when
+    // App.jsx swaps in a new mergedEvents Map (e.g. after relay expansion).
+    if (!this._recipeIndex || this._recipeIndex.ref !== this.events) {
+      const map = new Map();
+      for (const [dtag, event] of this.events) {
+        if (getTag(event, 'type') !== 'recipe') continue;
+        for (const vt of getTags(event, 'verb')) {
+          if (vt[1]) map.set(vt[1].toLowerCase(), { event, dtag, type: 'recipe' });
+        }
       }
+      this._recipeIndex = { ref: this.events, map };
     }
-    return null;
+    return this._recipeIndex.map.get(verb) ?? null;
   }
 
   /** Check a single requires tag against player state. */

@@ -499,8 +499,15 @@ export default function App() {
 
   // Initial room on ready (mergedEvents includes drafts in build mode)
   useEffect(() => {
-    if (status === 'ready' && mergedEvents.size > 0 && log.length === 0) {
+    // worldConfig requires the world event — don't proceed until it's loaded.
+    // Without it genesisPlace is '' and the engine gets an invalid currentPlace.
+    if (status === 'ready' && worldConfig && mergedEvents.size > 0 && log.length === 0) {
       const engine = getEngine();
+
+      // Defer if the start place event hasn't arrived yet (world relays may
+      // still be expanding after EOSE fires from the default relays).
+      const startDtag = engine.currentPlace;
+      if (!startDtag || !mergedEvents.get(startDtag)) return;
 
       engine.reconcileCounterLow();
 

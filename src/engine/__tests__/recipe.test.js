@@ -269,3 +269,69 @@ describe('recipe discovery', () => {
     expect(engine.output.some((o) => o.text.includes('\u2717') && o.text.includes('Leather'))).toBe(true);
   });
 });
+
+describe('recipe index cache', () => {
+  it('finds recipe on first lookup (cold cache)', () => {
+    const place = makePlace('forge');
+    const bar = makeItem('iron-bar', { nouns: [['bar']] });
+    const sword = makeItem('sword', { nouns: [['sword']] });
+    const recipe = makeRecipe('forge-sword', {
+      verbs: [['forge', 'smith']],
+      nouns: [['sword']],
+      ingredients: [ref(`${WORLD}:item:iron-bar`)],
+      result: ref(`${WORLD}:item:sword`),
+    });
+    const engine = makeEngine(buildEvents(place, bar, sword, recipe), {
+      place: ref(`${WORLD}:place:forge`),
+      inventory: [ref(`${WORLD}:item:iron-bar`)],
+    });
+
+    const found = engine._findRecipeByVerb('forge');
+    expect(found).not.toBeNull();
+    expect(found.dtag).toContain('forge-sword');
+  });
+
+  it('finds recipe by alias', () => {
+    const place = makePlace('forge');
+    const bar = makeItem('iron-bar', { nouns: [['bar']] });
+    const sword = makeItem('sword', { nouns: [['sword']] });
+    const recipe = makeRecipe('forge-sword', {
+      verbs: [['forge', 'smith']],
+      nouns: [['sword']],
+      ingredients: [ref(`${WORLD}:item:iron-bar`)],
+      result: ref(`${WORLD}:item:sword`),
+    });
+    const engine = makeEngine(buildEvents(place, bar, sword, recipe), {
+      place: ref(`${WORLD}:place:forge`),
+    });
+
+    // 'smith' is an alias, not the canonical — _findRecipeByVerb uses canonical only
+    expect(engine._findRecipeByVerb('forge')).not.toBeNull();
+    expect(engine._findRecipeByVerb('missing')).toBeNull();
+  });
+
+  it('index rebuilds when events map is replaced', () => {
+    const place = makePlace('forge');
+    const bar = makeItem('iron-bar', { nouns: [['bar']] });
+    const sword = makeItem('sword', { nouns: [['sword']] });
+    const recipe = makeRecipe('forge-sword', {
+      verbs: [['forge']],
+      nouns: [['sword']],
+      ingredients: [ref(`${WORLD}:item:iron-bar`)],
+      result: ref(`${WORLD}:item:sword`),
+    });
+    const engine = makeEngine(buildEvents(place, bar, sword), {
+      place: ref(`${WORLD}:place:forge`),
+    });
+
+    // No recipe yet — cold cache
+    expect(engine._findRecipeByVerb('forge')).toBeNull();
+
+    // Simulate App.jsx swapping in a new mergedEvents map with the recipe added
+    const extended = buildEvents(place, bar, sword, recipe);
+    engine.events = extended;
+
+    // Index should rebuild for the new map
+    expect(engine._findRecipeByVerb('forge')).not.toBeNull();
+  });
+});

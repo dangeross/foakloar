@@ -497,7 +497,10 @@ export async function bulkPublish(worldSlug, pubkey, signer, pool, options = {})
   const allResolved = store.events.map((e) => resolvePubkeyPlaceholder(e, pubkey));
   const errors = [];
 
-  // Sign all events first
+  // Sign all events first.
+  // Stagger created_at by index so events have unique timestamps — this ensures
+  // that timestamp-based relay pagination works correctly for large worlds.
+  const baseTime = Math.floor(Date.now() / 1000);
   const signed = [];
   for (let i = 0; i < store.events.length; i++) {
     const event = store.events[i];
@@ -505,7 +508,7 @@ export async function bulkPublish(worldSlug, pubkey, signer, pool, options = {})
     const dTag = getTagValue(event, 'd') || '?';
     try {
       const prepared = await encryptEventContent(resolved, signer, answers, allResolved);
-      const unsigned = { ...prepared, created_at: Math.floor(Date.now() / 1000) };
+      const unsigned = { ...prepared, created_at: baseTime + i };
       const signedEvent = await signer.signEvent(unsigned);
       signed.push({ draftId: event._draft?.id, dTag, signed: signedEvent });
     } catch (err) {
