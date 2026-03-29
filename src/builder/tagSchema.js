@@ -176,7 +176,7 @@ export const TAG_SCHEMAS = {
       portal: {
         fields: [
           { name: 'place-ref', type: 'event-ref', required: true, eventTypeFilter: 'place' },
-          { name: 'slot', type: 'text', required: true, placeholder: 'north' },
+          { name: 'slot', type: 'text', required: false, placeholder: 'north (blank for traverse-only hidden portals)' },
           { name: 'label', type: 'text', required: false, placeholder: 'A dark passage leads north...' },
         ],
       },
