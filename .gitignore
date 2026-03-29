@@ -4,3 +4,6 @@ dist/
 .env
 .DS_Store
 .claude/
+
+# Generated stress-test worlds (run scripts/gen-world.js to recreate)
+docs/worlds/stress-test*.json
