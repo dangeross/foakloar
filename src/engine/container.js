@@ -142,6 +142,9 @@ export function mixContainer(Engine) {
     }
     // List container contents (only state-matching ones)
     this._listContainerContents(invMatch.event, invMatch.dtag);
+    // Fire any on-interact: examine tags (same as features and ground items)
+    const currentState = itemState ?? getDefaultState(invMatch.event);
+    this.processFeatureInteract(invMatch.event, invMatch.dtag, 'examine', currentState);
   };
 
   /** List contents of a container (item or feature). Shows accessible items

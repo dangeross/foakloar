@@ -82,7 +82,7 @@ For interactions beyond the built-ins, add a `verb` tag. The first value is the 
 ["verb", "turn on", "switch on", "on"]
 ```
 
-**Do not add `examine` as a verb tag** — it is built-in and always available. Adding it would create a duplicate.
+**Do not add `examine` as a verb tag** — it is built-in and always available. Adding it would create a duplicate. You CAN (and often should) use `["on-interact", "examine", "", ...]` to fire side effects when an item or feature is examined — just omit the `verb` tag for it.
 
 ### on-interact
 
@@ -235,7 +235,7 @@ A place can also carry `on-drop` handlers. These fire on any plain `drop X` in t
 
 - **Noun aliases matter** — Players will try many phrasings — `key`, `rusty key`, `the key`, `the rusty key`. Give your noun tag enough aliases to cover likely inputs. Articles are stripped automatically, so focus on adjective+noun forms.
 - **One verb tag per canonical verb** — Don't combine unrelated verbs into one tag. `["verb", "read"]` and `["verb", "open"]` should be separate tags.
-- **Do not add `examine` to verb tags** — It is built-in and always works. Same for `take`, `drop`, `look`, and `inventory`.
+- **Do not add `examine` to verb tags** — It is built-in and always works. Same for `take`, `drop`, `look`, and `inventory`. However, `examine` IS usable as a trigger in `on-interact`: `["on-interact", "examine", "", "consequence", "<ref>"]` fires when the player examines an entity. This works for features, ground items, and inventory items.
 - **on-interact references canonical verbs only** — If your verb tag is `["verb", "read", "peruse"]`, your on-interact must use `read`, not `peruse`.
 - **Content is the examine text** — The `content` field on items and features is what the player sees when they `examine` something. Make it descriptive.
 - **Mention things in room descriptions** — Bold the names of items and features in the place's `content` so players know they are there: `An **old lantern** sits on a crate.`

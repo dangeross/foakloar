@@ -495,6 +495,63 @@ describe('examine', () => {
     expect(output.some((e) => e.text === 'A brass lantern.')).toBe(true);
     expect(output.some((e) => e.text?.includes('currently on'))).toBe(true);
   });
+
+  it('fires on-interact: examine on a feature', async () => {
+    const inscription = makeFeature('inscription', {
+      nouns: [['inscription']],
+      state: 'unread',
+      transitions: [['unread', 'read', 'The runes glow as you study them.']],
+      onInteract: [['examine', 'set-state', 'read']],
+      content: 'Faint runes are carved into the wall.',
+    });
+    const place = makePlace('room', { features: [`${WORLD}:feature:inscription`] });
+    const engine = createEngine(buildEvents(place, inscription), { place: ref(`${WORLD}:place:room`) });
+    engine.flush();
+    await engine.handleCommand('examine inscription');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('runes glow'))).toBe(true);
+  });
+
+  it('fires on-interact: examine on a ground item', async () => {
+    const note = makeItem('note', {
+      nouns: [['note']],
+      state: 'unread',
+      transitions: [['unread', 'read', 'You read the note carefully.']],
+      onInteract: [['examine', 'set-state', 'read']],
+      content: 'A folded note.',
+    });
+    const place = makePlace('room');
+    const roomRef = ref(`${WORLD}:place:room`);
+    const noteRef = ref(`${WORLD}:item:note`);
+    const engine = createEngine(buildEvents(place, note), {
+      place: roomRef,
+      npcStates: { [roomRef]: { inventory: [noteRef] } },
+    });
+    engine.flush();
+    await engine.handleCommand('examine note');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('read the note carefully'))).toBe(true);
+  });
+
+  it('fires on-interact: examine on an inventory item', async () => {
+    const locket = makeItem('locket', {
+      nouns: [['locket']],
+      state: 'closed',
+      transitions: [['closed', 'open', 'The locket springs open to reveal a portrait.']],
+      onInteract: [['examine', 'set-state', 'open']],
+      content: 'A silver locket on a chain.',
+    });
+    const place = makePlace('room');
+    const locketRef = ref(`${WORLD}:item:locket`);
+    const engine = createEngine(buildEvents(place, locket), {
+      place: ref(`${WORLD}:place:room`),
+      inventory: [locketRef],
+    });
+    engine.flush();
+    await engine.handleCommand('examine locket');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('springs open'))).toBe(true);
+  });
 });
 
 // ── on-interact state guard ──────────────────────────────────────────
