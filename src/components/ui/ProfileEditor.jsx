@@ -86,6 +86,11 @@ export default function ProfileEditor({ identity, pool, publishUrls, nip65WriteR
       ? { name: cached.name || '', about: cached.about || '', picture: cached.picture || '', lud16: cached.lud16 || '', nip05: cached.nip05 || '' }
       : EMPTY;
   });
+  // Full raw profile object from the relay — preserved so unknown fields aren't lost on save
+  const [rawProfile, setRawProfile] = useState(() => {
+    if (!identity?.pubkey) return {};
+    return fromCached(identity.pubkey) || {};
+  });
   const [loadStatus, setLoadStatus] = useState('loading'); // loading | ready
   const [saveStatus, setSaveStatus] = useState('idle');    // idle | saving | saved | error:<msg>
 
@@ -131,6 +136,7 @@ export default function ProfileEditor({ identity, pool, publishUrls, nip65WriteR
       if (best) {
         try {
           const data = JSON.parse(best.content);
+          setRawProfile(data);
           setFields({
             name:    data.name    || '',
             about:   data.about   || '',
@@ -157,7 +163,10 @@ export default function ProfileEditor({ identity, pool, publishUrls, nip65WriteR
     setSaveStatus('saving');
 
     try {
+      // Spread rawProfile first so unknown fields (website, banner, display_name, etc.)
+      // are preserved — kind:0 is a full replacement, not a patch.
       const content = JSON.stringify({
+        ...rawProfile,
         name:    fields.name.trim(),
         about:   fields.about.trim(),
         picture: fields.picture.trim(),
