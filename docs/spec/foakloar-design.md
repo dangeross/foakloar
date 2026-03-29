@@ -489,6 +489,8 @@ The full `on-interact` shape is:
 
 The state guard (position 2) gates whether the action fires based on the entity's current state. Blank (`""`) means the action fires regardless of state — this is the common case. A specific state value means the action only fires when the entity is currently in that state. This enables different behaviour per state without needing separate events.
 
+**Firing semantics — all matching tags fire.** Every `on-interact` tag whose verb and state guard both match is dispatched, in declaration order. There is no "first match wins" — ordering controls execution sequence, not selection. Place more specific state-guarded tags before general blank-guarded fallbacks so side effects occur in the intended order.
+
 Features can have an initial **state** — a string value declared by the author. The client tracks current state per-feature in local player state. State values are arbitrary strings defined by the feature author. The client renders descriptions and available verbs based on current state.
 
 #### on-* event dispatcher
@@ -540,6 +542,7 @@ Dispatch rules:
 - **On a feature event:** fires ONLY when the player explicitly targets the feature — `drop X in/on/into Y` or `drop X on Y`. Plain `drop X` does not trigger feature `on-drop` handlers; the item drops to the floor silently.
 - If item-ref matches a feature `on-drop` but the state guard fails: "You can't do that."
 - If no matching `on-drop` for the dropped item on a feature: item drops to floor silently (no error).
+- **Firing semantics — all matching tags fire.** Every `on-drop` tag whose item-ref and state guard both match is dispatched, in declaration order. Same semantics as `on-interact` — no "first match wins". Place more specific tags before general ones to control execution sequence.
 
 `set-state` via ext-ref on `on-drop` can target items — use this to change the dropped item's own state (e.g. marking a coin as deposited).
 
@@ -917,6 +920,7 @@ Dispatch rules:
 - State guard (position 2) blank = fires in any feature state. A specific state = fires only when the feature is in that state.
 - If item-ref matches but state guard fails → "You can't do that."
 - If no `on-drop` matches the item → item drops to floor silently (no error message).
+- **All matching tags fire**, in declaration order — same semantics as `on-interact`. The three-tag example above (mark item deposited → set feature state → reveal clue) works because all three match and execute in sequence.
 
 ---
 

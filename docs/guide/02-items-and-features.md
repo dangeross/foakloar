@@ -211,7 +211,7 @@ Example — a wishing well that reacts when an ancient coin is dropped in:
 }
 ```
 
-The first `on-drop` changes the coin's own state to `deposited` using the ext-ref position. The second changes the well's state to `fulfilled`. Both fire when the player types `drop coin in well`.
+The first `on-drop` changes the coin's own state to `deposited` using the ext-ref position. The second changes the well's state to `fulfilled`. Both fire when the player types `drop coin in well` — **all matching tags fire in declaration order**, the same semantics as `on-interact`. Ordering matters: put any action that depends on a prior side effect (e.g. a counter check after a `set-state`) later in the list.
 
 **Dispatch rules:**
 - Item-ref blank = any item triggers this handler; specific event ref = only that item.

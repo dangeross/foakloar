@@ -105,7 +105,8 @@ The final element (`ext-ref`) is optional — include it to target a different e
 - **On a place:** fires when `drop X` is used in the room (any drop, no feature target needed).
 - **On a feature:** fires ONLY when `drop X in/on/into Y` explicitly targets the feature. Plain `drop X` does not trigger it; item falls to floor silently.
 - item-ref blank = any item. state-guard blank = any state.
-- Valid actions: `set-state`, `give-item`, `consume-item`, `consequence`, `sound`.
+- Valid actions: `set-state`, `give-item`, `consume-item`, `decrement`, `increment`, `set-counter`, `consequence`, `sound`.
+- **All matching tags fire**, in declaration order — same semantics as `on-interact`. Multiple tags with the same item-ref + state-guard key all execute.
 
 ### Threshold triggers (extra fields for direction + threshold)
 

@@ -198,6 +198,7 @@ A feature that reacts when a specific item is dropped into or onto it — a well
 - Player uses `drop X in/on/into Y` — the client resolves Y to the feature and fires matching `on-drop` tags
 - Plain `drop X` (no feature target) does not trigger feature `on-drop` — item falls to the floor silently
 - Use `set-state` with ext-ref to change the dropped item's own state (mark it as deposited, consumed, placed)
+- **All matching tags fire in declaration order** — the same semantics as `on-interact`. Multiple `on-drop` tags with the same item-ref + state-guard key all execute sequentially. Put side effects that depend on earlier ones (e.g. counter checks after a `set-state`) later in the tag list.
 
 ### Drop-triggered place effect (on-drop on a place)
 
@@ -206,6 +207,7 @@ A place that reacts to any drop — or to a specific item being dropped anywhere
 - Place carries `on-drop` tags
 - Fires on plain `drop X` — no explicit feature target needed
 - Item-ref (position 1) blank = any item triggers the handler; specific ref = only that item
+- **All matching tags fire in declaration order** — same semantics as `on-interact` and feature `on-drop`
 
 ### Inline actions vs consequences
 
