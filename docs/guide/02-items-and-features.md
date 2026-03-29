@@ -174,6 +174,63 @@ Features often have richer interactions than items. Use `verb`, `state`, `transi
 
 ---
 
+## Dropping Items onto Features
+
+The built-in `drop` command has two forms:
+
+| Command | Behaviour |
+|---------|-----------|
+| `drop X` | Drops the item to the floor of the current place. Triggers `on-drop` handlers on the place (if any). |
+| `drop X in/on/into Y` | Drops the item explicitly onto feature Y. Triggers `on-drop` handlers on the feature (if any). |
+
+### on-drop on a feature
+
+A feature can react when a specific item is dropped into or onto it. This is how you build receptacles — wells, slots, altars, bowls — where depositing an item changes world state.
+
+```json
+["on-drop", "<item-ref-or-blank>", "<state-guard-or-blank>", "<action-type>", "<action-target?>", "<ext-ref?>"]
+```
+
+Example — a wishing well that reacts when an ancient coin is dropped in:
+
+```json
+{
+  "kind": 30078,
+  "tags": [
+    ["d", "my-world:feature:wishing-well"],
+    ["t", "my-world"],
+    ["type", "feature"],
+    ["title", "Wishing Well"],
+    ["noun", "well", "wishing well"],
+    ["state", "empty"],
+    ["transition", "empty", "fulfilled", "The coin glints as it falls. A low hum rises from the depths."],
+    ["on-drop", "30078:<PUBKEY>:my-world:item:ancient-coin", "", "set-state", "deposited", "30078:<PUBKEY>:my-world:item:ancient-coin"],
+    ["on-drop", "30078:<PUBKEY>:my-world:item:ancient-coin", "", "set-state", "fulfilled"]
+  ],
+  "content": "A mossy stone well. The bucket rope is frayed and useless."
+}
+```
+
+The first `on-drop` changes the coin's own state to `deposited` using the ext-ref position. The second changes the well's state to `fulfilled`. Both fire when the player types `drop coin in well`.
+
+**Dispatch rules:**
+- Item-ref blank = any item triggers this handler; specific event ref = only that item.
+- State guard blank = fires regardless of feature state; specific state = fires only when feature is in that state.
+- If item-ref matches but state guard fails: "You can't do that."
+- If no `on-drop` matches the dropped item: item drops to the floor silently (no error).
+- Plain `drop X` (without naming a feature) does NOT trigger feature `on-drop` handlers.
+
+### on-drop on a place
+
+A place can also carry `on-drop` handlers. These fire on any plain `drop X` in the room — no feature targeting needed. Use this for environmental reactions: pressure-sensitive floors, scent traps, or puzzles where dropping an item in a specific room matters.
+
+```json
+["on-drop", "30078:<PUBKEY>:my-world:item:ancient-coin", "", "set-state", "visible", "30078:<PUBKEY>:my-world:clue:floor-inscription"]
+["on-drop", "", "", "sound", "30078:<PUBKEY>:my-world:sound:thud"]
+```
+
+---
+
 ## Tips
 
 - **Noun aliases matter** — Players will try many phrasings — `key`, `rusty key`, `the key`, `the rusty key`. Give your noun tag enough aliases to cover likely inputs. Articles are stripped automatically, so focus on adjective+noun forms.

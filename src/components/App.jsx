@@ -261,12 +261,12 @@ export default function App() {
       const resolvedTags = draft.tags.map((tag) =>
         tag.map((v) => (typeof v === 'string' ? v.replaceAll('<PUBKEY>', pubkey) : v))
       );
-      // Use existing published key if same author, so portal refs stay connected
+      // Use existing published key (if any) so portal refs stay connected.
+      // Drafts always override the matching relay event in local preview.
       const existingKey = dTagToATag.get(dTag);
       const existingEvent = existingKey ? merged.get(existingKey) : null;
-      const sameAuthor = existingEvent && existingEvent.pubkey === pubkey;
-      const aTag = sameAuthor ? existingKey : `30078:${pubkey}:${dTag}`;
-      const effectivePubkey = sameAuthor ? existingEvent.pubkey : pubkey;
+      const aTag = existingKey || `30078:${pubkey}:${dTag}`;
+      const effectivePubkey = existingEvent ? existingEvent.pubkey : pubkey;
       merged.set(aTag, {
         kind: 30078,
         pubkey: effectivePubkey,

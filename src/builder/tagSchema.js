@@ -35,6 +35,7 @@ export const TRIGGER_ACTIONS = {
   'on-player-health-zero': ['set-state', 'traverse', 'consequence', 'sound'],
   'on-move':               ['set-state', 'deal-damage', 'consequence', 'decrement', 'increment', 'set-counter', 'sound'],
   'on-counter':            ['set-state', 'give-item', 'deal-damage', 'heal', 'consequence', 'sound'],
+  'on-drop':               ['set-state', 'give-item', 'consume-item', 'decrement', 'increment', 'set-counter', 'consequence', 'sound'],
 };
 
 /**
@@ -301,6 +302,18 @@ export const TAG_SCHEMAS = {
       { name: 'threshold', type: 'number', required: true, placeholder: '0' },
       { name: 'action', type: 'select', required: true, options: TRIGGER_ACTIONS['on-counter'] },
       { name: 'target', type: 'text', required: false },
+    ],
+  },
+  'on-drop': {
+    label: 'On Drop',
+    desc: 'Fires when an item is dropped here. On a place: fires when item lands in this room (plain drop). On a feature: fires only when the feature is explicitly targeted ("drop X in/on Y"). Item filter (blank = any item). State guard gates on the entity\'s own state.',
+    repeatable: true,
+    fields: [
+      { name: 'item-ref', type: 'event-ref', required: false, eventTypeFilter: 'item', placeholder: 'item filter (blank = any)' },
+      { name: 'state-guard', type: 'text', required: false, placeholder: 'state guard (blank = any)' },
+      { name: 'action', type: 'select', required: true, options: TRIGGER_ACTIONS['on-drop'] },
+      { name: 'target', type: 'text', required: false, placeholder: 'action target (state, amount, etc.)' },
+      { name: 'event-ref', type: 'event-ref', required: false, placeholder: 'target event (blank = self)' },
     ],
   },
   'on-fail': {
@@ -614,10 +627,10 @@ export const TAG_SCHEMAS = {
 
 /** Which tags are valid for each event type */
 export const TAGS_BY_EVENT_TYPE = {
-  place:       ['title', 'content-type', 'exit', 'item', 'feature', 'npc', 'clue', 'noun', 'state', 'transition', 'requires', 'requires-not', 'on-enter', 'on-player-health', 'media', 'sound', 'bpm', 'cw', 'puzzle', 'colour'],
+  place:       ['title', 'content-type', 'exit', 'item', 'feature', 'npc', 'clue', 'noun', 'state', 'transition', 'requires', 'requires-not', 'on-enter', 'on-drop', 'on-player-health', 'media', 'sound', 'bpm', 'cw', 'puzzle', 'colour'],
   portal:      ['title', 'exit', 'state', 'transition', 'requires', 'requires-not', 'consequence', 'cw', 'content-type', 'sound', 'transition-effect', 'transition-duration', 'transition-clear'],
   item:        ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-move', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'damage', 'hit-chance', 'content-type', 'media', 'sound'],
-  feature:     ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'content-type', 'media', 'sound'],
+  feature:     ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-drop', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'content-type', 'media', 'sound'],
   clue:        ['title', 'noun', 'state', 'transition', 'content-type', 'requires', 'requires-not', 'media', 'puzzle', 'sound'],
   puzzle:      ['title', 'puzzle-type', 'answer-hash', 'salt', 'ordered', 'requires', 'on-complete', 'on-fail', 'counter', 'on-counter', 'content-type', 'sound'],
   recipe:      ['title', 'noun', 'verb', 'state', 'transition', 'requires', 'on-complete', 'on-fail', 'counter', 'on-counter', 'ordered', 'content-type', 'sound'],

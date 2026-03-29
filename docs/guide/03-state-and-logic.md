@@ -258,6 +258,44 @@ Add `["item", "30078:<PUBKEY>:my-world:item:lantern"]` to the place where the la
 
 ---
 
+## on-drop: Reacting to Dropped Items
+
+The `on-drop` trigger fires when an item is dropped. Its shape is the same on both places and features:
+
+```json
+["on-drop", "<item-ref-or-blank>", "<state-guard-or-blank>", "<action-type>", "<action-target?>", "<ext-ref?>"]
+```
+
+**On a place** — fires on plain `drop X` anywhere in the room:
+
+```json
+// Any item dropped here triggers a sound
+["on-drop", "", "", "sound", "30078:<PUBKEY>:my-world:sound:thud"]
+
+// Only fires when a specific item is dropped
+["on-drop", "30078:<PUBKEY>:my-world:item:ancient-coin", "", "set-state", "visible", "30078:<PUBKEY>:my-world:clue:inscription"]
+```
+
+**On a feature** — fires only when the player explicitly targets the feature with `drop X in/on/into Y`:
+
+```json
+// Well reacts to receiving the coin
+["on-drop", "30078:<PUBKEY>:my-world:item:ancient-coin", "", "set-state", "fulfilled"]
+```
+
+Plain `drop X` (no feature named) does not trigger feature `on-drop` handlers — the item goes to the floor silently.
+
+The `set-state` action with an ext-ref can target the dropped item itself:
+
+```json
+// Mark the coin as deposited
+["on-drop", "30078:<PUBKEY>:my-world:item:ancient-coin", "", "set-state", "deposited", "30078:<PUBKEY>:my-world:item:ancient-coin"]
+```
+
+See [Tutorial 2 — Items and Features](./02-items-and-features.md) for a full worked example.
+
+---
+
 ## Tips
 
 - **Requires uses event refs, not strings** — Always use the full `30078:<pubkey>:<d-tag>` format. There is no flag system — the engine resolves the reference to check the event's actual state.

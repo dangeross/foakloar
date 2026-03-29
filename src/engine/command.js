@@ -246,6 +246,10 @@ export function mixCommand(Engine) {
       return;
     }
 
+    // Built-in: drop X in/on/into Y (targeted — check before plain drop)
+    const dropInMatch = trimmed.match(/^drop\s+(.+?)\s+(?:in|on|into)\s+(.+)$/);
+    if (dropInMatch) { this._handleDrop(dropInMatch[1], dropInMatch[2]); return; }
+
     // Built-in: drop
     const dropMatch = trimmed.match(/^drop\s+(.+)$/);
     if (dropMatch) { this._handleDrop(dropMatch[1]); return; }

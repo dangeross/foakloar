@@ -256,7 +256,11 @@
           "30078:<PUBKEY>:the-lake:sound:water-drip",
           "layer",
           "0.5"
-        ]
+        ],
+        ["state", "undisturbed"],
+        ["transition", "undisturbed", "disturbed", "Something shifts in the dark as you set it down. The cave feels different now."],
+        ["transition", "disturbed", "disturbed", "The cave floor is already disturbed."],
+        ["on-drop", "", "", "set-state", "disturbed"]
       ],
       "content": "The air is cool and damp. You stand in a natural cavern, its walls slick with moisture. Something glints on the ground nearby. An old brass lantern sits on a ledge — it looks like it could still be turned on. A rough-hewn stairway descends into darkness."
     },
@@ -1403,7 +1407,11 @@
           "",
           "set-state",
           "read"
-        ]
+        ],
+        ["transition", "weathered", "lit", "You set the lantern at the base of the stone. In its warm glow, fresh carvings emerge from the lichen — a spiral, a wave, a serpent swallowing its own tail."],
+        ["transition", "read", "lit", "You set the lantern at the base of the stone. In its warm glow, fresh carvings emerge from the lichen — a spiral, a wave, a serpent swallowing its own tail."],
+        ["transition", "lit", "lit", "The lantern already rests at the stone's base, casting its light across the carvings."],
+        ["on-drop", "30078:<PUBKEY>:the-lake:item:brass-lantern", "", "set-state", "lit"]
       ],
       "content": "A tall stone, rough-hewn and ancient, stands at the edge of the clearing. Lichen covers most of its surface, but you can make out faint carved letters beneath."
     },

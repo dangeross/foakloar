@@ -50,16 +50,89 @@ export function mixInteraction(Engine) {
 
   // ── Drop item ────────────────────────────────────────────────────────
 
-  Engine.prototype._handleDrop = function(rawNoun) {
+  /**
+   * Drop an item from inventory.
+   *
+   * Plain drop (`drop X`): item lands on floor; fires place's `on-drop` triggers.
+   * Targeted drop (`drop X in/on Y`): resolves feature Y, checks its `on-drop` tags,
+   *   fires matching actions, then drops item on floor (unless consumed by action).
+   *
+   * on-drop tag shape (place or feature):
+   *   ["on-drop", "<item-ref-or-blank>", "<state-guard-or-blank>", "<action>", "<target?>", "<ext-ref?>"]
+   */
+  Engine.prototype._handleDrop = function(rawNoun, rawTargetNoun) {
     const noun = stripArticles(rawNoun);
-    const match = findInventoryItem(this.events, this.player.state.inventory, noun);
-    if (!match) {
+    const itemMatch = findInventoryItem(this.events, this.player.state.inventory, noun);
+    if (!itemMatch) {
       this._emit("You don't have that.", 'error');
       return;
     }
-    this.player.removeItem(match.dtag);
-    this.player.addPlaceItem(this.currentPlace, match.dtag);
-    this._emit(`Dropped: ${getTag(match.event, 'title')}`, 'item');
+
+    if (rawTargetNoun) {
+      // ── Feature-targeted drop: "drop X in/on Y" ───────────────────────
+      const tNoun = stripArticles(rawTargetNoun);
+      const resolved = this.resolveFeature(tNoun);
+      if (!resolved) {
+        this._emit("You don't see that here.", 'error');
+        return;
+      }
+      const { event: featEvent, dtag: featDtag, currentState: featState } = resolved;
+      const itemRef = itemMatch.dtag;
+
+      // Find on-drop tags that match the item (blank = any item)
+      const onDropTags = getTags(featEvent, 'on-drop');
+      const itemMatchingTags = onDropTags.filter((t) => !t[1] || t[1] === itemRef);
+
+      if (itemMatchingTags.length > 0) {
+        // Filter by state guard
+        const fireableTags = itemMatchingTags.filter((t) => !t[2] || t[2] === featState);
+        if (fireableTags.length === 0) {
+          // Item matches but all state guards fail
+          this._emit("You can't do that.", 'error');
+          return;
+        }
+        for (const tag of fireableTags) {
+          this._dispatchAction({
+            action: tag[3],
+            target: tag[4],
+            extRef: tag[5],
+            selfDtag: featDtag,
+            selfEvent: featEvent,
+          });
+        }
+      }
+      // Drop item on floor unless already consumed by an action
+      if (this.player.hasItem(itemMatch.dtag)) {
+        this.player.removeItem(itemMatch.dtag);
+        this.player.addPlaceItem(this.currentPlace, itemMatch.dtag);
+        this._emit(`Dropped: ${getTag(itemMatch.event, 'title')}`, 'item');
+      }
+      this._evalQuests();
+    } else {
+      // ── Plain drop: "drop X" ───────────────────────────────────────────
+      this.player.removeItem(itemMatch.dtag);
+      this.player.addPlaceItem(this.currentPlace, itemMatch.dtag);
+      this._emit(`Dropped: ${getTag(itemMatch.event, 'title')}`, 'item');
+
+      // Fire place's on-drop triggers
+      const room = this.place;
+      if (room) {
+        const itemRef = itemMatch.dtag;
+        const placeState = this.player.getState(this.currentPlace) ?? getDefaultState(room);
+        for (const tag of getTags(room, 'on-drop')) {
+          if (tag[1] && tag[1] !== itemRef) continue;  // item-ref filter
+          if (tag[2] && tag[2] !== placeState) continue; // state guard
+          this._dispatchAction({
+            action: tag[3],
+            target: tag[4],
+            extRef: tag[5],
+            selfDtag: this.currentPlace,
+            selfEvent: room,
+          });
+        }
+      }
+      this._evalQuests();
+    }
   };
 
   // ── Feature interaction ───────────────────────────────────────────────

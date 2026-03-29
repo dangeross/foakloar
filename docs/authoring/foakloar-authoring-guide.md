@@ -190,6 +190,23 @@ Two routes to the same destination with different costs. One requires puzzle-sol
 
 There is no special branching mechanic. Forks are expressed through `set-state` on any trigger (dialogue choice, item used, puzzle solved). The state gates future content wherever `requires` is declared.
 
+### Drop receptacle (on-drop on a feature)
+
+A feature that reacts when a specific item is dropped into or onto it — a well, a slot, a bowl, an altar.
+
+- Feature carries `on-drop` tags with the item ref in position 1 and a state guard in position 2 (blank = any state)
+- Player uses `drop X in/on/into Y` — the client resolves Y to the feature and fires matching `on-drop` tags
+- Plain `drop X` (no feature target) does not trigger feature `on-drop` — item falls to the floor silently
+- Use `set-state` with ext-ref to change the dropped item's own state (mark it as deposited, consumed, placed)
+
+### Drop-triggered place effect (on-drop on a place)
+
+A place that reacts to any drop — or to a specific item being dropped anywhere in the room. Useful for pressure-sensitive floors, scent-based traps, or environmental puzzles where placement matters.
+
+- Place carries `on-drop` tags
+- Fires on plain `drop X` — no explicit feature target needed
+- Item-ref (position 1) blank = any item triggers the handler; specific ref = only that item
+
 ### Inline actions vs consequences
 
 One action from one trigger: use inline `on-*` tags. Multiple actions firing together, or the same outcome from multiple triggers: use a `consequence` event.

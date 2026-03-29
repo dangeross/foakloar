@@ -183,6 +183,13 @@ The client renders exit slot names as available movement options. Custom exit na
 ["on-enter", "player", "", "set-state", "visible", "30078:<pubkey>:the-lake:clue:ambient-note"]
 ```
 
+- Places can carry `on-drop` handlers — fired when the player drops any item (`drop X`) in this room. Item-ref (position 1) filters to a specific item; blank = any item. State guard (position 2) gates on place state; blank = any state.
+
+```json
+["on-drop", "", "", "sound", "30078:<pubkey>:the-lake:sound:thud"]
+["on-drop", "30078:<pubkey>:the-lake:item:ancient-coin", "", "set-state", "visible", "30078:<pubkey>:the-lake:clue:floor-inscription"]
+```
+
 ```json
 {
   "kind": 30078,
@@ -506,6 +513,7 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 | `on-move` | State string or `—` | Every player move; optional state guard |
 | `on-counter` | Direction (`down`\|`up`), counter name, threshold | Fires when counter crosses threshold in declared direction — see counter section |
 | `on-fail` | `""` (blank, always) | Puzzle receives a wrong answer. Trigger-target is always blank — there is nothing to filter on. Only valid on `riddle` and `cipher` puzzle types. |
+| `on-drop` | Item `a`-tag or `""` (any item), state guard | Item is dropped in this place (on `place`) or explicitly dropped on/in this feature (on `feature`). Item-ref blank = any item. State guard blank = any state. See below. |
 
 **Trigger-target filter semantics:**
 
@@ -514,6 +522,40 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 | `on-attacked` | Any weapon | — (not applicable) | That weapon only | — |
 | `on-encounter` | Any entity | Player only | — | That NPC only |
 | `on-enter` | — | Player entering | — | — |
+
+**`on-drop` shape and semantics:**
+
+```json
+["on-drop", "<item-ref-or-blank>", "<state-guard-or-blank>", "<action-type>", "<action-target?>", "<ext-ref?>"]
+```
+
+Valid on `place` and `feature` events only.
+
+- **item-ref** (position 1): blank = any item triggers this handler; specific event ref = only that item.
+- **state-guard** (position 2): blank = fires in any entity state; specific state = fires only when the entity (place or feature) is in that state.
+- **action-type / action-target / ext-ref**: same as all other `on-*` dispatchers.
+
+Dispatch rules:
+- **On a place event:** fires when the player drops any item (`drop X`) in the room. No explicit feature target needed.
+- **On a feature event:** fires ONLY when the player explicitly targets the feature — `drop X in/on/into Y` or `drop X on Y`. Plain `drop X` does not trigger feature `on-drop` handlers; the item drops to the floor silently.
+- If item-ref matches a feature `on-drop` but the state guard fails: "You can't do that."
+- If no matching `on-drop` for the dropped item on a feature: item drops to floor silently (no error).
+
+`set-state` via ext-ref on `on-drop` can target items — use this to change the dropped item's own state (e.g. marking a coin as deposited).
+
+Examples:
+
+```json
+// Place: any item dropped here plays a sound
+["on-drop", "", "", "sound", "30078:<pk>:world:sound:splash"]
+
+// Place: dropping a specific coin reveals a clue
+["on-drop", "30078:<pk>:world:item:ancient-coin", "", "set-state", "visible", "30078:<pk>:world:clue:inscription"]
+
+// Feature (well): dropping the coin in the well marks it as deposited and sets feature state
+["on-drop", "30078:<pk>:world:item:ancient-coin", "", "set-state", "deposited", "30078:<pk>:world:item:ancient-coin"],
+["on-drop", "30078:<pk>:world:item:ancient-coin", "", "set-state", "fulfilled"]
+```
 
 `on-encounter` and `on-attacked` both support an optional external action target as the final element — same convention across all `on-*` tags:
 
@@ -581,6 +623,7 @@ New action types can be added without changing the tag structure — the dispatc
 | `on-move` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ | ✓ | — |
 | `on-counter` | ✓ | ✓ | — | — | ✓ | — | ✓ | ✓ | — | — | — | — | — | — | ✓ | — |
 | `on-fail` | ✓ | — | — | — | ✓ | — | — | ✓ | — | — | — | ✓ | — | — | ✓ | — |
+| `on-drop` | ✓ | ✓ | ✓ | — | — | — | — | ✓ | — | — | — | — | — | — | ✓ | — |
 
 **Notes:**
 - `steals-item`, `deposits`, `flees` are NPC-only actions — only meaningful on `on-encounter` and `on-attacked` where an NPC is the actor
@@ -859,6 +902,21 @@ The place event declares the chest and any ground-level items — not items insi
 ["feature", "30078:<pubkey>:the-lake:feature:ancient-chest"],
 ["feature", "30078:<pubkey>:the-lake:feature:bronze-altar"]
 ```
+
+**`on-drop` on a feature** fires when the player explicitly drops an item onto or into the feature — `drop X in/on/into Y` or `drop X on Y`. Plain `drop X` (no feature target) does not trigger feature `on-drop` handlers; the item falls to the floor silently. This makes features into receptacles — wells, bowls, slots, chests — that react to specific items being deposited.
+
+```json
+// Feature (wishing well): coin deposited → reveal clue and change well state
+["on-drop", "30078:<pubkey>:the-lake:item:ancient-coin", "", "set-state", "deposited", "30078:<pubkey>:the-lake:item:ancient-coin"],
+["on-drop", "30078:<pubkey>:the-lake:item:ancient-coin", "", "set-state", "fulfilled"],
+["on-drop", "30078:<pubkey>:the-lake:item:ancient-coin", "", "set-state", "visible", "30078:<pubkey>:the-lake:clue:well-inscription"]
+```
+
+Dispatch rules:
+- Item-ref (position 1) blank = any item matches. Specific event ref = only that item.
+- State guard (position 2) blank = fires in any feature state. A specific state = fires only when the feature is in that state.
+- If item-ref matches but state guard fails → "You can't do that."
+- If no `on-drop` matches the item → item drops to floor silently (no error message).
 
 ---
 
@@ -3137,6 +3195,7 @@ The following commands are always available regardless of world content. They ar
 | `take <noun> from <container>` | | Extract item from container (item in inventory or feature in place) |
 | `take all from <container>` | | Extract all accessible contents from container |
 | `drop <noun>` | | Drop an item to current place |
+| `drop <noun> in/on/into <feature>` | `drop X on Y` | Drop an item onto a specific feature (triggers feature `on-drop` handlers) |
 | `go <direction>` | Direction alone | Navigate an exit slot |
 | `north` / `south` / `east` / `west` / `up` / `down` | `n s e w u d` | Navigation shortcuts |
 | `attack <noun>` | `fight`, `hit` | Attack a target (combat) |

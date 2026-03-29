@@ -5,6 +5,33 @@
 
 ## [Unreleased] — March 2026
 
+### Added — `on-drop` trigger
+
+**`on-drop` trigger on `place` and `feature` events**
+
+New trigger tag that fires when an item is dropped.
+
+Shape (identical on both place and feature):
+```
+["on-drop", "<item-ref-or-blank>", "<state-guard-or-blank>", "<action-type>", "<action-target?>", "<ext-ref?>"]
+```
+
+- **item-ref** blank = any item; specific event ref = only that item.
+- **state-guard** blank = any entity state; specific state = fires only when entity is in that state.
+- **Valid action types:** `set-state`, `give-item`, `consume-item`, `consequence`, `sound`.
+
+Dispatch semantics differ by event type:
+- **On a place:** fires when the player runs plain `drop X` in the room.
+- **On a feature:** fires ONLY when the player explicitly targets the feature — `drop X in/on/into Y`. Plain drops do not trigger feature `on-drop` handlers; item falls to floor silently.
+
+Error semantics on feature:
+- Item-ref matches but state guard fails → "You can't do that."
+- No matching `on-drop` for the item → item drops to floor silently.
+
+**New command form:** `drop X in/on/into Y` — drops item X explicitly onto feature Y.
+
+**`set-state` via ext-ref on `on-drop`** can now target items — `applyExternalSetState` handles items as event targets, so `["on-drop", "<coin-ref>", "", "set-state", "deposited", "<coin-ref>"]` correctly changes the dropped item's state.
+
 ### Added — Portal transition effects
 
 **`transition-effect`, `transition-duration`, `transition-clear` on portal events**

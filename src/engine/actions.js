@@ -71,6 +71,16 @@ export function applyExternalSetState(targetRef, targetState, events, player, em
     return { acted: true, puzzleActivated: null };
   }
 
+  if (targetType === 'item') {
+    const itemCurrentState = player.getState(targetRef) ?? getDefaultState(targetEvent);
+    if (itemCurrentState !== targetState) {
+      player.setState(targetRef, targetState);
+      const transition = findTransition(targetEvent, itemCurrentState, targetState);
+      if (transition?.text) emit(transition.text, 'narrative');
+    }
+    return { acted: true, puzzleActivated: null };
+  }
+
   return { acted: false, puzzleActivated: null };
 }
 
