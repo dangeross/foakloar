@@ -2,7 +2,7 @@
  * Puzzle mixin — adds puzzle, counter, and on-move methods to GameEngine prototype.
  */
 
-import { getTag, getTags, findTransition } from './world.js';
+import { getTag, getTags, findTransition, getDefaultState } from './world.js';
 import { isEventTrusted } from './trust.js';
 import { derivePrivateKey } from './nip44-client.js';
 
@@ -204,17 +204,34 @@ export function mixPuzzle(Engine) {
   };
 
   Engine.prototype.processOnMove = function() {
+    // Item on-move: fires for each inventory item matching state guard
     for (const dtag of this.player.state.inventory) {
       const item = this.events.get(dtag);
       if (!item) continue;
-      const currentState = this.player.getState(dtag);
+      const currentState = this.player.getState(dtag) ?? getDefaultState(item);
 
       for (const tag of getTags(item, 'on-move')) {
-        if (tag[1] !== currentState) continue;
+        const guard = tag[1] || '';
+        if (guard && guard !== currentState) continue;
 
         this._dispatchAction({
           action: tag[2], target: tag[3], extRef: tag[4],
           selfDtag: dtag, selfEvent: item,
+        });
+      }
+    }
+
+    // World on-move: global triggers, state-guarded on world state
+    const worldEvent = this._findWorldEvent();
+    if (worldEvent) {
+      const worldDtag = getTag(worldEvent, 'd');
+      const worldState = this.player.getState(worldDtag) ?? getDefaultState(worldEvent);
+      for (const tag of getTags(worldEvent, 'on-move')) {
+        const guard = tag[1] || '';
+        if (guard && guard !== worldState) continue;
+        this._dispatchAction({
+          action: tag[2], target: tag[3], extRef: tag[4],
+          selfDtag: worldDtag, selfEvent: worldEvent,
         });
       }
     }

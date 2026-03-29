@@ -525,7 +525,7 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 | `on-attacked` | `""` or item `a`-tag | NPC is attacked. `""` = any weapon. Item `a`-tag = that weapon only. Optional external action target. |
 | `on-health` | `down`\|`up`, threshold | This NPC's health crosses threshold in declared direction. Replaces `on-health-zero`. |
 | `on-player-health` | `down`\|`up`, threshold | Player health crosses threshold. Valid on world event (global) or NPC (local). Replaces `on-player-health-zero`. |
-| `on-move` | State string or `—` | Every player move; optional state guard |
+| `on-move` | State string or `—` | Every player move; optional state guard. Valid on `item` (fires while item is in inventory), `npc`, and `world` (global — fires on every move regardless of inventory). |
 | `on-counter` | Direction (`down`\|`up`), counter name, threshold | Fires when counter crosses threshold in declared direction — see counter section |
 | `on-fail` | `""` (blank, always) | Puzzle receives a wrong answer. Trigger-target is always blank — there is nothing to filter on. Only valid on `riddle` and `cipher` puzzle types. |
 | `on-drop` | Item `a`-tag or `""` (any item), state guard | Item is dropped in this place (on `place`) or explicitly dropped on/in this feature (on `feature`). Item-ref blank = any item. State guard blank = any state. See below. |

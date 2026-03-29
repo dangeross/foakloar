@@ -5,6 +5,22 @@
 
 ## [Unreleased] — March 2026
 
+### Added — `on-move` on world events
+
+The `on-move` trigger is now valid on world events, firing globally on every player move. This closes the gap for world-scoped move counters (e.g. pirate appearance timing, cave-closing countdowns) that previously required an item in inventory to track.
+
+```json
+["on-move", "<world-state-guard-or-blank>", "<action-type>", "<action-target?>", "<ext-ref?>"]
+```
+
+- **state-guard** (position 1): blank = fires on every move; specific value = fires only when the world is in that state.
+- Fires after item and NPC `on-move` handlers.
+- Supports same actions as item `on-move`: `set-state`, `deal-damage`, `consequence`, `decrement`, `increment`, `set-counter`, `sound`.
+
+Also fixed: item `on-move` now correctly treats a blank state guard as "any state" (previously only fired when item state exactly matched the guard, which prevented blank-guard item on-move from ever firing).
+
+---
+
 ### Added — `on-interact` on place events
 
 Places can now carry `on-interact` tags that fire when the player types a bare verb while in that room:

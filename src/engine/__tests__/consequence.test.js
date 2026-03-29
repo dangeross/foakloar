@@ -4,7 +4,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   ref, WORLD,
-  makePlace, makeItem, makeConsequence, makePortal, makeRoamingNPC, makeNPC, makeFeature,
+  makePlace, makeItem, makeConsequence, makePortal, makeRoamingNPC, makeNPC, makeFeature, makeWorldEvent,
   buildEvents, makeEngine,
 } from './helpers.js';
 
@@ -504,5 +504,83 @@ describe('flees action', () => {
     // set-state should have changed NPC state to 'scared' (activates roams-when)
     const npcState = engine.player.getNpcState(ref(`${WORLD}:npc:rat`));
     expect(npcState.state).toBe('scared');
+  });
+});
+
+describe('world on-move', () => {
+  it('increments a world counter on every move', () => {
+    const place = makePlace('hall');
+    const world = makeWorldEvent({
+      extraTags: [
+        ['counter', 'moves', '0'],
+        ['on-move', '', 'increment', 'moves'],
+      ],
+    });
+    const events = buildEvents(place, world);
+    const engine = makeEngine(events, { place: ref(`${WORLD}:place:hall`) });
+
+    engine.processOnMove();
+    engine.processOnMove();
+    engine.processOnMove();
+
+    const worldDtag = `${WORLD}:world`;
+    expect(engine.player.getCounter(`${worldDtag}:moves`)).toBe(3);
+  });
+
+  it('world on-move respects state guard — fires only in matching state', () => {
+    const place = makePlace('cave');
+    const world = makeWorldEvent({
+      extraTags: [
+        ['state', 'open'],
+        ['counter', 'ticks', '0'],
+        ['on-move', 'closing', 'increment', 'ticks'],
+      ],
+    });
+    const events = buildEvents(place, world);
+    const engine = makeEngine(events, { place: ref(`${WORLD}:place:cave`) });
+
+    // World state is 'open' — guarded handler should NOT fire
+    engine.processOnMove();
+    expect(engine.player.getCounter(`${WORLD}:world:ticks`)).toBe(0);
+
+    // Change world state to 'closing' — handler should now fire
+    engine.player.setState(`${WORLD}:world`, 'closing');
+    engine.processOnMove();
+    expect(engine.player.getCounter(`${WORLD}:world:ticks`)).toBe(1);
+  });
+
+  it('world on-move fires independently of inventory', () => {
+    const place = makePlace('hall');
+    const world = makeWorldEvent({
+      extraTags: [
+        ['counter', 'moves', '0'],
+        ['on-move', '', 'increment', 'moves'],
+      ],
+    });
+    const events = buildEvents(place, world);
+    // Empty inventory — world trigger should still fire
+    const engine = makeEngine(events, { place: ref(`${WORLD}:place:hall`), inventory: [] });
+
+    engine.processOnMove();
+    expect(engine.player.getCounter(`${WORLD}:world:moves`)).toBe(1);
+  });
+
+  it('item on-move blank state guard fires in any state', () => {
+    const place = makePlace('hall');
+    const torch = makeItem('torch', {
+      state: 'burning',
+      counters: [['fuel', '10']],
+      onMove: [['', 'decrement', 'fuel']],
+    });
+    const events = buildEvents(place, torch);
+    const engine = makeEngine(events, {
+      place: ref(`${WORLD}:place:hall`),
+      inventory: [ref(`${WORLD}:item:torch`)],
+      states: { [ref(`${WORLD}:item:torch`)]: 'burning' },
+      counters: { [`${ref(`${WORLD}:item:torch`)}:fuel`]: 10 },
+    });
+
+    engine.processOnMove();
+    expect(engine.player.getCounter(`${ref(`${WORLD}:item:torch`)}:fuel`)).toBe(9);
   });
 });

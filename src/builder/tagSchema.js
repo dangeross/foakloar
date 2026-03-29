@@ -283,7 +283,7 @@ export const TAG_SCHEMAS = {
   },
   'on-move': {
     label: 'On Move',
-    desc: 'Fires an action each time the player moves while holding this item',
+    desc: 'Fires an action each time the player moves. On items: fires while item is in inventory. On world: fires globally (use for move counters, cave-closing timers, etc.). State guard is optional — blank fires on every move.',
     repeatable: true,
     fields: [
       { name: 'state-guard', type: 'text', required: false, placeholder: 'state or blank' },
@@ -639,7 +639,7 @@ export const TAGS_BY_EVENT_TYPE = {
   dialogue:    ['option', 'requires', 'requires-not', 'on-enter', 'content-type', 'sound'],
   consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage', 'set-state', 'content-type', 'sound'],
   sound:       ['note', 's', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan', 'lpf', 'hpf', 'bpf', 'bpq', 'lpq', 'hpq', 'ftype', 'vowel', 'crush', 'shape', 'distort', 'coarse', 'room', 'roomsize', 'roomfade', 'roomlp', 'roomdim', 'delay', 'delaytime', 'delayfeedback', 'phaser', 'phaserdepth', 'phasercenter', 'phasersweep', 'rev', 'palindrome', 'degrade-by', 'jux', 'arp', 'sustain', 'attack', 'decay', 'release', 'lpenv', 'lpattack', 'lpdecay', 'lpsustain', 'lprelease', 'hpenv', 'hpattack', 'hpdecay', 'hpsustain', 'hprelease', 'bpenv', 'bpattack', 'bpdecay', 'bpsustain', 'bprelease', 'fanchor', 'penv', 'pattack', 'pdecay', 'prelease', 'pcurve', 'panchor', 'fm', 'fmh', 'fmattack', 'fmdecay', 'fmsustain', 'fmenv', 'vib', 'vibmod', 'tremolodepth', 'tremolosync', 'tremoloskew', 'tremolophase', 'tremoloshape', 'velocity', 'postgain', 'compressor', 'n', 'begin', 'end', 'speed', 'cut', 'loop', 'loop-begin', 'loop-end', 'loop-at', 'clip', 'chop', 'striate', 'fit', 'orbit', 'dry', 'xfade', 'early', 'late', 'swing', 'iter', 'ply', 'sample'],
-  world:       ['title', 'author', 'version', 'lang', 'voice', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'max-inventory', 'on-player-health', 'on-interact', 'on-inventory-full', 'counter', 'on-counter', 'hud', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'bpm', 'samples', 'content-type', 'media', 'w'],
+  world:       ['title', 'author', 'version', 'lang', 'voice', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'max-inventory', 'on-player-health', 'on-interact', 'on-inventory-full', 'on-move', 'counter', 'on-counter', 'hud', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'bpm', 'samples', 'content-type', 'media', 'w'],
   vouch:       ['pubkey', 'scope', 'can-vouch'],
   revoke:      ['pubkey'],
   quest:       ['title', 'quest-type', 'involves', 'requires', 'requires-not', 'on-complete', 'content-type', 'sound'],

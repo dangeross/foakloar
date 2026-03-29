@@ -230,8 +230,11 @@ D-tag: `<slug>:world`
 | `samples` | `["samples", "<preset-or-url>"]` (repeatable) | opt | Strudel sample preset or URL |
 | `content-type` | `["content-type", "application/nip44"\|"text/plain"]` | opt | Default is markdown. Use `application/nip44` for sealed content or `text/plain` to disable formatting |
 | `media` | `["media", "<mime>", "<value>"]` (repeatable) | opt | — |
+| `counter` | `["counter", "<name>", "<initial>"]` (repeatable) | opt | World-scoped counter (e.g. total moves) |
+| `on-move` | `["on-move", "<state-guard-or-''>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | Fires on every player move. State guard blank = always. Use for global move counters, cave-closing timers, etc. |
+| `on-counter` | `["on-counter", "<dir>", "<counter>", "<threshold>", "<action>", "<target?>"]` (repeatable) | opt | — |
 
-**NOT valid on world:** `noun`, `verb`, `exit`, `item`, `feature`, `npc`, `clue`, `requires`, `damage`, `dialogue`, `on-enter`, `on-encounter`, `on-attacked`, `on-health`, `on-move`
+**NOT valid on world:** `noun`, `verb`, `exit`, `item`, `feature`, `npc`, `clue`, `requires`, `damage`, `dialogue`, `on-enter`, `on-encounter`, `on-attacked`, `on-health`
 
 ### place
 
