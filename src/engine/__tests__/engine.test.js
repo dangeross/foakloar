@@ -1074,6 +1074,142 @@ describe('world on-interact', () => {
   });
 });
 
+// ── Place on-interact ────────────────────────────────────────────────────
+
+describe('place on-interact', () => {
+  it('fires place on-interact for a bare verb', async () => {
+    const start = makePlace('start', {
+      exits: ['north'],
+      extraTags: [
+        ['on-interact', 'xyzzy', '', 'traverse', ref(`${WORLD}:portal:magic`)],
+      ],
+    });
+    const secret = makePlace('secret', { exits: ['south'] });
+    const portal = makePortal('magic', [
+      [`${WORLD}:place:start`, 'north'],
+      [`${WORLD}:place:secret`, 'south'],
+    ]);
+    const engine = createEngine(buildEvents(start, secret, portal), { place: ref(`${WORLD}:place:start`) });
+    engine.flush();
+    await engine.handleCommand('xyzzy');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Secret'))).toBe(true);
+  });
+
+  it('place on-interact only fires in the right room', async () => {
+    const start = makePlace('start', {
+      exits: ['north'],
+      extraTags: [
+        ['on-interact', 'xyzzy', '', 'traverse', ref(`${WORLD}:portal:magic`)],
+      ],
+    });
+    const other = makePlace('other', { exits: ['south'] });
+    const secret = makePlace('secret', { exits: ['east'] });
+    const portal = makePortal('magic', [
+      [`${WORLD}:place:start`, 'north'],
+      [`${WORLD}:place:secret`, 'south'],
+    ]);
+    const engine = createEngine(buildEvents(start, other, secret, portal), { place: ref(`${WORLD}:place:other`) });
+    engine.flush();
+    // Player is in 'other', not 'start' — place on-interact should not fire
+    await engine.handleCommand('xyzzy');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Secret'))).toBe(false);
+  });
+
+  it('place on-interact takes priority over world on-interact', async () => {
+    const world = makeWorldEvent({
+      start: ref(`${WORLD}:place:start`),
+      extraTags: [
+        ['on-interact', 'xyzzy', '', 'traverse', ref(`${WORLD}:portal:world-dest`)],
+      ],
+    });
+    const start = makePlace('start', {
+      exits: ['north'],
+      extraTags: [
+        ['on-interact', 'xyzzy', '', 'traverse', ref(`${WORLD}:portal:place-dest`)],
+      ],
+    });
+    const placeRoom = makePlace('place-room', { exits: ['south'] });
+    const worldRoom = makePlace('world-room', { exits: ['south'] });
+    const placeDest = makePortal('place-dest', [
+      [`${WORLD}:place:start`, 'north'],
+      [`${WORLD}:place:place-room`, 'south'],
+    ]);
+    const worldDest = makePortal('world-dest', [
+      [`${WORLD}:place:start`, 'north'],
+      [`${WORLD}:place:world-room`, 'south'],
+    ]);
+    const engine = createEngine(buildEvents(start, placeRoom, worldRoom, placeDest, worldDest, world), { place: ref(`${WORLD}:place:start`) });
+    engine.flush();
+    await engine.handleCommand('xyzzy');
+    const output = engine.flush();
+    // Place handler fires: should arrive in place-room, not world-room
+    expect(output.some((e) => e.text?.includes('Place-room'))).toBe(true);
+    expect(output.some((e) => e.text?.includes('World-room'))).toBe(false);
+  });
+
+  it('place on-interact respects state guard', async () => {
+    const start = makePlace('start', {
+      exits: ['north'],
+      extraTags: [
+        ['state', 'normal'],
+        ['on-interact', 'xyzzy', 'enchanted', 'traverse', ref(`${WORLD}:portal:magic`)],
+      ],
+    });
+    const secret = makePlace('secret', { exits: ['south'] });
+    const portal = makePortal('magic', [
+      [`${WORLD}:place:start`, 'north'],
+      [`${WORLD}:place:secret`, 'south'],
+    ]);
+    const engine = createEngine(buildEvents(start, secret, portal), { place: ref(`${WORLD}:place:start`) });
+    engine.flush();
+    // Place is in 'normal' state — guard requires 'enchanted', should not fire
+    await engine.handleCommand('xyzzy');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Secret'))).toBe(false);
+  });
+
+  it('place on-interact fires when state guard matches', async () => {
+    const start = makePlace('start', {
+      exits: ['north'],
+      extraTags: [
+        ['state', 'enchanted'],
+        ['on-interact', 'xyzzy', 'enchanted', 'traverse', ref(`${WORLD}:portal:magic`)],
+      ],
+    });
+    const secret = makePlace('secret', { exits: ['south'] });
+    const portal = makePortal('magic', [
+      [`${WORLD}:place:start`, 'north'],
+      [`${WORLD}:place:secret`, 'south'],
+    ]);
+    const engine = createEngine(buildEvents(start, secret, portal), {
+      place: ref(`${WORLD}:place:start`),
+      states: { [`${WORLD}:place:start`]: 'enchanted' },
+    });
+    engine.flush();
+    await engine.handleCommand('xyzzy');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('Secret'))).toBe(true);
+  });
+
+  it('place on-interact set-state changes place state', async () => {
+    const start = makePlace('start', {
+      exits: ['north'],
+      extraTags: [
+        ['state', 'dark'],
+        ['transition', 'dark', 'lit', 'The room fills with light.'],
+        ['on-interact', 'light', '', 'set-state', 'lit'],
+      ],
+    });
+    const engine = createEngine(buildEvents(start), { place: ref(`${WORLD}:place:start`) });
+    engine.flush();
+    await engine.handleCommand('light');
+    const output = engine.flush();
+    expect(output.some((e) => e.text?.includes('fills with light'))).toBe(true);
+  });
+});
+
 // ── Inventory cap ────────────────────────────────────────────────────────
 
 describe('inventory cap', () => {

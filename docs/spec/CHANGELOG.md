@@ -5,6 +5,22 @@
 
 ## [Unreleased] — March 2026
 
+### Added — `on-interact` on place events
+
+Places can now carry `on-interact` tags that fire when the player types a bare verb while in that room:
+
+```
+["on-interact", "<verb>", "<state-guard-or-blank>", "<action-type>", "<action-target?>", "<ext-ref?>"]
+```
+
+- **verb** (position 1): bare verb the player must type (no noun needed).
+- **state-guard** (position 2): blank = any place state; specific value = fires only when the place is in that state.
+- **action types**: same set as world-level `on-interact` (`traverse`, `set-state`, `give-item`, `consequence`, `sound`, etc.).
+- **Resolution order**: place-level handlers are checked *before* world-level `on-interact`, so a place can override a global verb for that room.
+- **`verb` tag**: pair with `["verb", "<word>"]` so the verb is registered in the parser when the player is in the room.
+
+---
+
 ### Added — `on-drop` trigger
 
 **`on-drop` trigger on `place` and `feature` events**

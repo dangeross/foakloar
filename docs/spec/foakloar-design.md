@@ -183,6 +183,16 @@ The client renders exit slot names as available movement options. Custom exit na
 ["on-enter", "player", "", "set-state", "visible", "30078:<pubkey>:the-lake:clue:ambient-note"]
 ```
 
+- Places can carry `on-interact` handlers — fired when the player types a **bare verb** (no noun target) while in this room. Verb (position 1) must match. State guard (position 2) gates on place state — blank = any state. Place-level handlers are checked before world-level `on-interact` handlers, so a place can override a global verb for that room. Same action types as world-level `on-interact` are supported.
+
+```json
+["on-interact", "xyzzy", "",    "traverse", "30078:<pubkey>:the-lake:portal:escape-route"]
+["on-interact", "pray",  "lit", "set-state", "blessed", "30078:<pubkey>:the-lake:place:shrine"]
+["on-interact", "knock", "",    "sound",    "30078:<pubkey>:the-lake:sound:hollow-knock"]
+```
+
+Use a `["verb", "<word>", "<alias?>"]` tag alongside `on-interact` to register the verb in the parser so the player gets `"<verb> what?"` feedback in other rooms rather than "I don't understand that."
+
 - Places can carry `on-drop` handlers — fired when the player drops any item (`drop X`) in this room. Item-ref (position 1) filters to a specific item; blank = any item. State guard (position 2) gates on place state; blank = any state.
 
 ```json
@@ -508,7 +518,7 @@ All reactive behaviour across features, items, NPCs, rooms, and portals uses a u
 
 | Tag | Trigger target | Fires when |
 |-----|---------------|------------|
-| `on-interact` | Verb string + optional state guard | Player uses a verb on this feature, item, or NPC. State guard (position 2) gates firing — blank fires in any state, a value fires only when the entity is in that state. |
+| `on-interact` | Verb string + optional state guard | Player uses a verb on this feature, item, or NPC — or a bare verb while in this place (place events only). State guard (position 2) gates firing — blank fires in any state, a value fires only when the entity is in that state. |
 | `on-complete` | `""` (blank) | Player satisfies all `requires` and confirms action (puzzle answered, recipe combined). Trigger-target is always blank — `["on-complete", "", "<action-type>", "<action-target?>"]` |
 | `on-enter` | `player` or place `a`-tag | Player enters this place (arg: `player`), or NPC arrives at a place (arg: place ref). Client dispatches based on event `type`. |
 | `on-encounter` | `""`, `player`, or NPC `a`-tag | NPC is in the same place as target. `""` = any entity. `player` = player only. NPC `a`-tag = that NPC only. Optional external action target. |

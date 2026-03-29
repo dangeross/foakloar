@@ -97,6 +97,26 @@ The final element (`ext-ref`) is optional — include it to target a different e
 ["on-fail",     "", "<action>", "<target>", "<ref?>"]
 ```
 
+### Place on-interact (bare verb, room-scoped)
+
+```
+["on-interact", "<verb>", "<state-guard-or-''>", "<action>", "<target>", "<ext-ref?>"]
+```
+
+Valid on **place** events only (this usage). Fires when the player types a bare verb — no noun — while in that room.
+
+- **verb** (position 1): the command the player types, with no noun.
+- **state-guard** (position 2): blank = any place state; specific value = fires only when the place is in that state.
+- Checked **before** world-level `on-interact` — a place can override a global verb for that room.
+- Same action types as world on-interact (`traverse`, `set-state`, `give-item`, `consequence`, `sound`, etc.).
+- Pair with `["verb", "<word>"]` on the place to register the verb in the parser for that room.
+
+```json
+["verb", "xyzzy"]
+["on-interact", "xyzzy", "", "traverse", "30078:<PUBKEY>:my-world:portal:escape-route"]
+["on-interact", "pray",  "lit", "set-state", "blessed", "30078:<PUBKEY>:my-world:place:shrine"]
+```
+
 ### Drop trigger (place and feature only)
 
 ```

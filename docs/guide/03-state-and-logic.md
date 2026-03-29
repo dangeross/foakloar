@@ -258,6 +258,46 @@ Add `["item", "30078:<PUBKEY>:my-world:item:lantern"]` to the place where the la
 
 ---
 
+## on-interact on Places: Room-Scoped Verbs
+
+Items and features use `on-interact` to respond when a player targets them by name. Places use `on-interact` differently — to respond to **bare verbs** (no noun) typed while the player is in that room.
+
+```json
+["on-interact", "<verb>", "<state-guard-or-blank>", "<action-type>", "<action-target?>"]
+```
+
+This is useful for classic magic words, room-specific commands, or environmental interactions that only make sense in one location:
+
+```json
+// A ritual chamber — "pray" only works here
+["on-interact", "pray",  "",       "set-state",  "blessed", "30078:<PUBKEY>:my-world:place:shrine"]
+
+// A hidden teleport — "xyzzy" takes you somewhere
+["on-interact", "xyzzy", "",       "traverse",   "30078:<PUBKEY>:my-world:portal:escape-route"]
+
+// State-gated — only works when room is "lit"
+["on-interact", "read",  "lit",    "consequence","30078:<PUBKEY>:my-world:consequence:inscription-reveals"]
+
+// A sound cue when the player knocks
+["on-interact", "knock", "",       "sound",      "30078:<PUBKEY>:my-world:sound:hollow-knock"]
+```
+
+**How it works:**
+- The verb must match exactly (position 1) — no noun is required or expected.
+- The state guard (position 2) gates on the **place's own state** — blank fires in any state.
+- Place handlers are checked **before** world-level `on-interact`, so a room can override a global verb for that location.
+- Supports the same action types as world-level `on-interact`: `traverse`, `set-state`, `give-item`, `consequence`, `sound`, etc.
+
+**Registering the verb:** Add a `["verb", "<word>"]` tag to the place so the parser recognises it while the player is in the room. Without it, the verb still fires if the player guesses it, but they'll get "I don't understand that" in any other room — which may be intentional for a secret command, or may be confusing.
+
+```json
+// Declare the verb so the room's parser recognises it
+["verb", "xyzzy"]
+["on-interact", "xyzzy", "", "traverse", "30078:<PUBKEY>:my-world:portal:escape-route"]
+```
+
+---
+
 ## on-drop: Reacting to Dropped Items
 
 The `on-drop` trigger fires when an item is dropped. Its shape is the same on both places and features:

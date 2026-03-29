@@ -627,7 +627,7 @@ export const TAG_SCHEMAS = {
 
 /** Which tags are valid for each event type */
 export const TAGS_BY_EVENT_TYPE = {
-  place:       ['title', 'content-type', 'exit', 'item', 'feature', 'npc', 'clue', 'noun', 'state', 'transition', 'requires', 'requires-not', 'on-enter', 'on-drop', 'on-player-health', 'media', 'sound', 'bpm', 'cw', 'puzzle', 'colour'],
+  place:       ['title', 'content-type', 'exit', 'item', 'feature', 'npc', 'clue', 'noun', 'verb', 'state', 'transition', 'requires', 'requires-not', 'on-interact', 'on-enter', 'on-drop', 'on-player-health', 'media', 'sound', 'bpm', 'cw', 'puzzle', 'colour'],
   portal:      ['title', 'exit', 'state', 'transition', 'requires', 'requires-not', 'consequence', 'cw', 'content-type', 'sound', 'transition-effect', 'transition-duration', 'transition-clear'],
   item:        ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-move', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'damage', 'hit-chance', 'content-type', 'media', 'sound'],
   feature:     ['title', 'noun', 'verb', 'state', 'transition', 'on-interact', 'on-drop', 'on-counter', 'counter', 'contains', 'requires', 'requires-not', 'content-type', 'media', 'sound'],

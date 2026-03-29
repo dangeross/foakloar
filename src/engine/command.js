@@ -326,7 +326,8 @@ export function mixCommand(Engine) {
         this._attemptCraft(recipeByVerb.event, recipeByVerb.dtag);
         return;
       }
-      // Try world on-interact for no-noun verbs (e.g. "xyzzy")
+      // Try place on-interact first (room-scoped), then world on-interact (global)
+      if (this._tryPlaceInteract(parsed.verb)) return;
       if (this._tryWorldInteract(parsed.verb)) return;
       this._emit(`${parsed.verb} what?`, 'error');
       return;
@@ -345,10 +346,68 @@ export function mixCommand(Engine) {
       }
     }
 
-    // World on-interact — global verb dispatcher (fallback after local + direction)
+    // Place on-interact (room-scoped) then world on-interact — fallback after local + direction
+    if (this._tryPlaceInteract(trimmed)) return;
     if (this._tryWorldInteract(trimmed)) return;
 
     this._emit("I don't understand that.", 'error');
+  };
+
+  /**
+   * Try current place's on-interact handlers as a room-scoped verb dispatcher.
+   * Checked before world on-interact so a place can override a global verb.
+   * State guard (position 2) checks the place's own state.
+   * Returns true if handled.
+   */
+  Engine.prototype._tryPlaceInteract = function(input) {
+    if (!this.currentPlace) return false;
+    const placeEvent = this.events.get(this.currentPlace);
+    if (!placeEvent) return false;
+    const placeDtag = getTag(placeEvent, 'd');
+
+    const verb = input.toLowerCase().trim();
+    for (const tag of getTags(placeEvent, 'on-interact')) {
+      if (tag[1] !== verb) continue;
+      // State guard at position 2 — checks place state
+      const stateGuard = tag[2] || '';
+      if (stateGuard) {
+        const placeState = this.player.getState(placeDtag) ?? getDefaultState(placeEvent);
+        if (placeState !== stateGuard) continue;
+      }
+      const action = tag[3];
+      const actionTarget = tag[4];
+      const extRef = tag[5];
+
+      if (action === 'traverse' && actionTarget) {
+        // Portal traversal: same resolution as world on-interact traverse
+        const portal = this.events.get(actionTarget);
+        if (!portal) { this._emit('Nothing happens.', 'narrative'); return true; }
+        const req = checkRequires(portal, this.player.state, this.events);
+        if (!req.allowed) {
+          this._emit(req.reason || 'Nothing happens.', 'narrative');
+          return true;
+        }
+        const exitTags = getTags(portal, 'exit');
+        const dest = exitTags.find((e) => e[1] !== this.currentPlace);
+        if (dest) {
+          this.currentPlace = dest[1];
+          this.player.setPlace(dest[1]);
+          this.enterRoom(dest[1]);
+        } else {
+          this._emit('Nothing happens.', 'narrative');
+        }
+        return true;
+      } else {
+        // All other actions (set-state, give-item, sound, consequence, etc.)
+        // go through _dispatchAction which handles transitions, trust, etc.
+        this._dispatchAction({
+          action, target: actionTarget, extRef,
+          selfDtag: placeDtag, selfEvent: placeEvent,
+        });
+        return true;
+      }
+    }
+    return false;
   };
 
   /**
