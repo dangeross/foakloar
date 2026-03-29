@@ -7,20 +7,15 @@ import { getTrustLevel, isEventTrusted } from './trust.js';
 import { renderMarkdown } from './content.js';
 
 export function mixQuest(Engine) {
-  /** Find all quest events in the world. */
+  /** Find all quest events in the world (cached). */
   Engine.prototype._findQuests = function() {
-    const quests = [];
-    for (const [dtag, event] of this.events) {
-      if (getTag(event, 'type') === 'quest') {
-        // Skip hidden quest events (untrusted authors in closed/vouched modes)
-        if (this.config.trustSet) {
-          const level = getTrustLevel(this.config.trustSet, event.pubkey, 'all', this.config.clientMode || 'community');
-          if (level === 'hidden') continue;
-        }
-        quests.push({ event, dtag });
-      }
-    }
-    return quests;
+    const raw = this._getQuestList();
+    if (!this.config.trustSet) return raw;
+    // Filter by trust — skip hidden quest events
+    return raw.filter(({ event }) => {
+      const level = getTrustLevel(this.config.trustSet, event.pubkey, 'all', this.config.clientMode || 'community');
+      return level !== 'hidden';
+    });
   };
 
   /** Evaluate all quests and mark newly completed ones. */

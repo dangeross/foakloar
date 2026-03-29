@@ -449,6 +449,7 @@ export function mixInteraction(Engine) {
     const roaming = findRoamingNpcsAtPlace(
       this.events, this.currentPlace, this.player.getMoveCount(),
       (npcDtag) => this.player.getNpcState(npcDtag),
+      this._getRoamingNpcList(),
     );
     for (const { npcEvent, npcDtag } of roaming) {
       const title = getTag(npcEvent, 'title')?.toLowerCase() || '';
@@ -473,6 +474,7 @@ export function mixInteraction(Engine) {
       const roaming = findRoamingNpcsAtPlace(
         this.events, this.currentPlace, this.player.getMoveCount(),
         (npcDtag) => this.player.getNpcState(npcDtag),
+        this._getRoamingNpcList(),
       );
       for (const { npcEvent, npcDtag } of roaming) {
         const title = getTag(npcEvent, 'title')?.toLowerCase() || '';

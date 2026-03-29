@@ -15,14 +15,15 @@ export function mixMovement(Engine) {
    * Without trust set, hiddenByTrust is always empty.
    */
   Engine.prototype._resolveRoomExits = function(dtag) {
+    const portals = this._getPortalIndex().get(dtag) ?? [];
     const { trustSet, clientMode } = this.config;
     if (trustSet) {
       return resolveExitsWithTrust(
         this.events, dtag, this.player.state,
-        trustSet, clientMode || 'community', getTrustLevel,
+        trustSet, clientMode || 'community', getTrustLevel, portals,
       );
     }
-    const { exits: raw, allClaimedSlots } = resolveExits(this.events, dtag, this.player.state);
+    const { exits: raw, allClaimedSlots } = resolveExits(this.events, dtag, this.player.state, portals);
     return {
       exits: raw.map((e) => ({ ...e, trusted: true, trustLevel: 'trusted', contested: false })),
       hiddenByTrust: [],

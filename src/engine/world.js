@@ -168,8 +168,14 @@ export function findTransition(event, currentState, targetState) {
  * For a given place d-tag, find all portals that reference it and return
  * resolved exits: { slot, label, destinationDTag, portalEvent }
  * Portals in state "hidden" are filtered out unless overridden by playerState.
+ *
+ * @param {Map} events - full event map (used to resolve place event)
+ * @param {string} placeDTag - place a-tag
+ * @param {Object} playerState
+ * @param {Array|null} portals - pre-filtered portal events for this place (fast path).
+ *   When null, falls back to scanning all events (backward-compatible, used by tests).
  */
-export function resolveExits(events, placeDTag, playerState) {
+export function resolveExits(events, placeDTag, playerState, portals = null) {
   const exits = [];
   const allClaimedSlots = new Set(); // includes hidden portal slots
 
@@ -179,8 +185,16 @@ export function resolveExits(events, placeDTag, playerState) {
     placeEvent ? getTags(placeEvent, 'exit').map((t) => t[1]) : []
   );
 
-  for (const [, event] of events) {
-    if (getTag(event, 'type') !== 'portal') continue;
+  // Use pre-filtered portals if provided (O(k) fast path from index),
+  // otherwise scan all events for portals (O(n) backward-compatible path).
+  function* portalCandidates() {
+    if (portals) { yield* portals; return; }
+    for (const [, event] of events) {
+      if (getTag(event, 'type') === 'portal') yield event;
+    }
+  }
+
+  for (const event of portalCandidates()) {
 
     // Track all portal-claimed slots (even hidden) for unexplored detection
     for (const tag of getTags(event, 'exit')) {
@@ -238,8 +252,8 @@ export function resolveExits(events, placeDTag, playerState) {
  * @param {function} getTrustLevelFn — getTrustLevel function
  * @returns {{ exits: Array, hiddenByTrust: Array }}
  */
-export function resolveExitsWithTrust(events, placeDTag, playerState, trustSet, clientMode, getTrustLevelFn) {
-  const { exits: rawExits, allClaimedSlots } = resolveExits(events, placeDTag, playerState);
+export function resolveExitsWithTrust(events, placeDTag, playerState, trustSet, clientMode, getTrustLevelFn, portals = null) {
+  const { exits: rawExits, allClaimedSlots } = resolveExits(events, placeDTag, playerState, portals);
 
   // No trust set — fall back to unfiltered (backward compat)
   if (!trustSet) {

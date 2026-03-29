@@ -5,15 +5,9 @@
 import { getTag, getTags, getDefaultState, checkRequires, findTransition } from './world.js';
 
 export function mixCrafting(Engine) {
-  /** Find all recipe events in the world. */
+  /** Find all recipe events in the world (cached). */
   Engine.prototype._findRecipes = function() {
-    const recipes = [];
-    for (const [dtag, event] of this.events) {
-      if (getTag(event, 'type') === 'recipe') {
-        recipes.push({ event, dtag });
-      }
-    }
-    return recipes;
+    return this._getRecipeList();
   };
 
   /** Find a recipe by noun/title match. */

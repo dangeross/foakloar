@@ -85,6 +85,7 @@ export function mixConsequence(Engine) {
     const roaming = findRoamingNpcsAtPlace(
       this.events, this.currentPlace, this.player.getMoveCount(),
       (npcDtag) => this.player.getNpcState(npcDtag),
+      this._getRoamingNpcList(),
     );
     for (const { npcEvent } of roaming) sources.push(npcEvent);
 

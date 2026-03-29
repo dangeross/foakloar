@@ -491,6 +491,7 @@ export class GameEngine {
     const roamingHere = findRoamingNpcsAtPlace(
       this.events, dtag, this.player.getMoveCount(),
       (npcDtag) => this.player.getNpcState(npcDtag),
+      this._getRoamingNpcList(),
     );
     for (const { npcEvent, npcDtag } of roamingHere) {
       const roamTrust = this.config.trustSet ? isEventTrusted(npcEvent, this.config.trustSet, this.config.clientMode) : 'trusted';
@@ -693,21 +694,85 @@ export class GameEngine {
 
   // ── Recipe helpers (see crafting.js mixin) ──────────────────────────
 
+  /**
+   * Rebuild all event-type indexes in a single O(n) pass.
+   * Called lazily by any index accessor when this.events has been swapped.
+   *
+   * Indexes built:
+   *   _portalIndex   — Map<placeDTag, portalEvent[]>    for resolveExits O(k)
+   *   _recipeIndex   — { map: Map<verb, entry>, list }  for recipe lookups O(1)
+   *   _roamingNpcIndex — { list }                       for roaming NPC scans O(k)
+   *   _questIndex    — { list }                         for _evalQuests O(q)
+   */
+  _rebuildIndexes() {
+    const ref = this.events;
+    const portalMap = new Map();
+    const recipeMap = new Map();
+    const recipeList = [];
+    const npcList = [];
+    const questList = [];
+
+    for (const [dtag, event] of ref) {
+      const type = getTag(event, 'type');
+
+      if (type === 'portal') {
+        for (const tag of getTags(event, 'exit')) {
+          const placeRef = tag[1];
+          if (!placeRef) continue;
+          if (!portalMap.has(placeRef)) portalMap.set(placeRef, []);
+          portalMap.get(placeRef).push(event);
+        }
+      } else if (type === 'recipe') {
+        recipeList.push({ event, dtag });
+        for (const vt of getTags(event, 'verb')) {
+          if (vt[1]) recipeMap.set(vt[1].toLowerCase(), { event, dtag, type: 'recipe' });
+        }
+      } else if (type === 'npc') {
+        if (getTags(event, 'route').length > 0) npcList.push({ dtag, event });
+      } else if (type === 'quest') {
+        questList.push({ dtag, event });
+      }
+    }
+
+    this._portalIndex    = { ref, map: portalMap };
+    this._recipeIndex    = { ref, map: recipeMap, list: recipeList };
+    this._roamingNpcIndex = { ref, list: npcList };
+    this._questIndex     = { ref, list: questList };
+  }
+
+  /** Check whether indexes are stale (events Map reference changed). */
+  _indexesStale() {
+    return !this._portalIndex || this._portalIndex.ref !== this.events;
+  }
+
+  /** Portal index: Map<placeDTag, portalEvent[]> */
+  _getPortalIndex() {
+    if (this._indexesStale()) this._rebuildIndexes();
+    return this._portalIndex.map;
+  }
+
   /** Find a recipe whose verb tag matches the given verb (canonical). */
   _findRecipeByVerb(verb) {
-    // Lazy index keyed on the events Map reference — auto-rebuilds when
-    // App.jsx swaps in a new mergedEvents Map (e.g. after relay expansion).
-    if (!this._recipeIndex || this._recipeIndex.ref !== this.events) {
-      const map = new Map();
-      for (const [dtag, event] of this.events) {
-        if (getTag(event, 'type') !== 'recipe') continue;
-        for (const vt of getTags(event, 'verb')) {
-          if (vt[1]) map.set(vt[1].toLowerCase(), { event, dtag, type: 'recipe' });
-        }
-      }
-      this._recipeIndex = { ref: this.events, map };
-    }
+    if (this._indexesStale()) this._rebuildIndexes();
     return this._recipeIndex.map.get(verb) ?? null;
+  }
+
+  /** Return cached list of all recipe events. */
+  _getRecipeList() {
+    if (this._indexesStale()) this._rebuildIndexes();
+    return this._recipeIndex.list;
+  }
+
+  /** Return cached list of all roaming NPC events (those with route tags). */
+  _getRoamingNpcList() {
+    if (this._indexesStale()) this._rebuildIndexes();
+    return this._roamingNpcIndex.list;
+  }
+
+  /** Return cached list of all quest events. */
+  _getQuestList() {
+    if (this._indexesStale()) this._rebuildIndexes();
+    return this._questIndex.list;
   }
 
   /** Check a single requires tag against player state. */

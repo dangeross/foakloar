@@ -36,6 +36,7 @@ export function mixCommand(Engine) {
     const roamingHere = findRoamingNpcsAtPlace(
       this.events, this.currentPlace, this.player.getMoveCount(),
       (npcDtag) => this.player.getNpcState(npcDtag),
+      this._getRoamingNpcList(),
     );
     const roamingEvents = roamingHere.map((r) => r.npcEvent);
     const recipeEvents = this._findRecipes().map((r) => r.event);
@@ -293,6 +294,7 @@ export function mixCommand(Engine) {
     const roamingHere = findRoamingNpcsAtPlace(
       this.events, this.currentPlace, this.player.getMoveCount(),
       (npcDtag) => this.player.getNpcState(npcDtag),
+      this._getRoamingNpcList(),
     );
     const roamingEvents = roamingHere.map((r) => r.npcEvent);
     const recipeEvents = this._findRecipes().map((r) => r.event);

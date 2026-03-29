@@ -77,10 +77,7 @@ export function mixNpcEncounter(Engine) {
 
     // Build a map of place → NPCs at that place (for NPC-on-NPC encounters)
     const npcsByPlace = new Map();
-    for (const [dtag, event] of this.events) {
-      if (getTag(event, 'type') !== 'npc') continue;
-      if (getTags(event, 'route').length === 0) continue;
-
+    for (const { dtag, event } of this._getRoamingNpcList()) {
       const npcState = this.player.getNpcState(dtag);
       if (!npcState) continue;
 

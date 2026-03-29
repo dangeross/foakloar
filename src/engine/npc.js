@@ -71,14 +71,27 @@ export function initNpcState(npcEvent) {
 /**
  * Find all roaming NPCs currently at a given place.
  * Returns array of { npcEvent, npcDtag }.
+ *
+ * @param {Map} events — full event map
+ * @param {string} placeDtag — place a-tag to check
+ * @param {number} moveCount — player's total move count
+ * @param {function} getNpcState — (dtag) => npc state object
+ * @param {Array|null} roamingNpcs — pre-filtered list of { dtag, event } for roaming NPCs.
+ *   When provided, skips the O(n) scan. Pass result of engine._getRoamingNpcList().
  */
-export function findRoamingNpcsAtPlace(events, placeDtag, moveCount, getNpcState) {
+export function findRoamingNpcsAtPlace(events, placeDtag, moveCount, getNpcState, roamingNpcs = null) {
   const results = [];
-  for (const [dtag, event] of events) {
-    if (getTag(event, 'type') !== 'npc') continue;
-    const routeTags = getTags(event, 'route');
-    if (routeTags.length === 0) continue;
 
+  function* candidates() {
+    if (roamingNpcs) { yield* roamingNpcs; return; }
+    for (const [dtag, event] of events) {
+      if (getTag(event, 'type') !== 'npc') continue;
+      if (getTags(event, 'route').length === 0) continue;
+      yield { dtag, event };
+    }
+  }
+
+  for (const { dtag, event } of candidates()) {
     const npcState = getNpcState(dtag);
     const currentPlace = calculateNpcPlace(event, moveCount, npcState?.state);
     if (currentPlace === placeDtag) {
