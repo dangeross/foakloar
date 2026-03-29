@@ -236,7 +236,10 @@ Stitches two exit slots together. Owned and published by whoever creates the con
 - Two portals claiming the same exit slot = contested territory. The client resolves by trust (see §6).
 - Contested portals are not a bug — they are world-changing events. Factions can fight over portal infrastructure.
 - The client renders conflicting portals as *"the passage north feels unstable — you sense two possible destinations."*
-- One-way portals have a single `exit` tag. Two-way portals have two. A hub place could have many.
+- Two-way portals have two `exit` tags, one per end. One-way walkable portals have one. A hub place could have many.
+- **Exit tag place-ref semantics differ by portal type:**
+  - **Walkable portals:** each exit tag's place-ref is the SOURCE — the place where the player must stand to use that direction. The destination is the "other" exit tag's place-ref.
+  - **Traverse-only hidden portals** (activated via `traverse` action, not by walking a direction): the single exit tag must reference the DESTINATION. The `traverse` action resolves destination as the first exit whose place-ref differs from the player's current place. A traverse-only portal with no exit tags silently does nothing when traversed.
 - `requires` tags on a portal gate traversal inline — no separate lock event needed. The optional failed description tells the player why they cannot pass.
 - `sound` tags on a portal with role `effect` fire as one-shots when the player traverses the portal. Use for door creaks, footstep sounds, transition effects.
 - **Transition tags** control visual effects when the player traverses the portal:

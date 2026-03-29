@@ -20,7 +20,8 @@ Machine-readable reference for LLM world authoring. All events are `kind: 30078`
 | `["on-counter", "battery", "0", "set-state", "dead"]` | Missing direction: `["on-counter", "down", "battery", "0", "set-state", "dead"]` |
 | `["exit", "north"]` on a portal | Portal exits need a place ref: `["exit", "30078:<pk>:<d-tag>", "north", "label"]` |
 | `["exit", "30078:<pk>:<d-tag>", "north", "label"]` on a place | Place exits are slot-only: `["exit", "north"]` |
-| Portal exit place-ref is the DESTINATION | Place-ref is the SOURCE — `["exit", "<where-player-is>", "<direction>", "<label>"]` |
+| Portal exit place-ref is the DESTINATION (walkable portals) | For **walkable portals**, place-ref is the SOURCE — `["exit", "<where-player-is>", "<slot>", "<label>"]`. A two-way portal has two such tags, one per end. Exception: for **traverse-only hidden portals**, the single exit tag must reference the DESTINATION (the place to teleport to), because `traverse` resolves destination as "first exit pointing somewhere other than the current place". |
+| Hidden/traverse-only portal with no exit tags | Every portal needs at least one exit tag. Without one, `traverse` silently does nothing. |
 | Putting `noun` or `verb` tags on a portal | Portals have no nouns or verbs |
 | Numeric values as words (`"ten"`, `"high"`) | Always use numeric strings: `"10"`, `"3"` |
 | Adding `title` tag to portal, dialogue, or sound | These types have no `title` tag (portal/dialogue/sound). Puzzles DO have `title`. |
@@ -259,6 +260,12 @@ D-tag: `<slug>:world`
 **NOT valid on portal:** `title`, `noun`, `verb`, `item`, `feature`, `npc`, `clue`, `on-interact`, `on-enter`, `counter`, `damage`, `health`, `media`, `dialogue`, `contains`
 
 **Content field:** optional (usually empty).
+
+Two-way portal (2 exit tags, each referencing one end as SOURCE):
+
+> For **walkable portals**, each exit tag's place-ref is the place where the player must stand to use that direction. The destination is resolved as the "other" exit tag's place-ref.
+>
+> For **traverse-only hidden portals** (activated via `traverse` action, not by walking a direction), the single exit tag must reference the **DESTINATION** — `traverse` resolves destination as the first exit pointing somewhere other than the player's current place. A traverse-only portal with zero exit tags silently does nothing.
 
 One-way portal (1 exit tag) or two-way (2 exit tags):
 
