@@ -1117,7 +1117,7 @@ export default function App() {
       </div>
 
       {status === 'ready' && (
-        <form onSubmit={onSubmit} className="flex gap-2 shrink-0 pb-1">
+        <form onSubmit={onSubmit} className="flex gap-2 shrink-0 pb-1" autoComplete="off">
           <span style={{ color: craftingActive ? 'var(--colour-puzzle)' : 'var(--colour-text)' }}>
             {dialogueActive ? '#' : puzzleActive ? '?' : craftingActive ? '+' : '>'}
           </span>
