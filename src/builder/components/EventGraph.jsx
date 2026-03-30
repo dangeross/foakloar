@@ -443,7 +443,11 @@ function eventsToGraph(events, currentPlace, trustSet, clientMode, answers) {
     if (node.type !== 'place') continue;
     const placeEvent = places.get(node.id);
     if (!placeEvent) continue;
-    const declaredSlots = getTags(placeEvent, 'exit').map((t) => t[1]);
+    // Only slot-declaration exits: ["exit", "north"] — exclude old-format extended
+    // exits ["exit", "30078:...", "north", "label"] where t[1] is an a-tag ref.
+    const declaredSlots = getTags(placeEvent, 'exit')
+      .map((t) => t[1])
+      .filter((s) => s && !s.startsWith('30078:'));
     const claimed = claimedSlots.get(node.id) || new Set();
     node.data.unclaimedSlots = declaredSlots.filter((s) => !claimed.has(s));
   }
