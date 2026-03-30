@@ -2,9 +2,10 @@
  * Puzzle mixin — adds puzzle, counter, and on-move methods to GameEngine prototype.
  */
 
-import { getTag, getTags, findTransition, getDefaultState } from './world.js';
+import { getTag, getTags, findTransition, getDefaultState, checkRequires } from './world.js';
 import { isEventTrusted } from './trust.js';
 import { derivePrivateKey } from './nip44-client.js';
+import { giveItem } from './actions.js';
 
 export function mixPuzzle(Engine) {
   Engine.prototype.handlePuzzleAnswer = async function(answer) {
@@ -198,6 +199,59 @@ export function mixPuzzle(Engine) {
             action: ctAction, target: ctTarget,
             selfDtag: targetDtag, selfEvent: targetEvent,
           });
+        }
+      }
+    }
+  };
+
+  /**
+   * Globally evaluate all sequence puzzles — fires regardless of current room.
+   * Mirrors _evalQuests: iterates the full seqPuzzle index, checks requires,
+   * fires on-complete actions for newly satisfied puzzles.
+   */
+  Engine.prototype._evalSequencePuzzles = function() {
+    for (const { event, dtag } of this._getSeqPuzzleList()) {
+      if (this.player.isPuzzleSolved(dtag)) continue;
+
+      const reqResult = checkRequires(event, this.player.state, this.events);
+      if (!reqResult.allowed) continue;
+
+      // All requires pass — puzzle solved!
+      this.player.markPuzzleSolved(dtag);
+      this._emit('Something clicks into place.', 'success');
+
+      for (const tag of getTags(event, 'on-complete')) {
+        const action = tag[2];
+        const value  = tag[3];
+        const extRef = tag[4];
+
+        if (action === 'set-state' && extRef) {
+          const targetEvent = this.events.get(extRef);
+          if (!targetEvent) continue;
+          if (this.config.trustSet && isEventTrusted(targetEvent, this.config.trustSet, this.config.clientMode) === 'hidden') continue;
+          const targetType = getTag(targetEvent, 'type');
+          const currentState = this.player.getState(extRef) ?? getDefaultState(targetEvent);
+          if (currentState !== value) {
+            this.player.setState(extRef, value);
+            const transition = findTransition(targetEvent, currentState, value);
+            if (transition?.text) this._emit(transition.text, 'narrative');
+          }
+        } else if (action === 'set-state' && value) {
+          // Self set-state (no extRef)
+          this.player.setState(dtag, value);
+        } else if (action === 'give-item' && value) {
+          if (!this.player.hasItem(value)) {
+            giveItem(value, this.events, this.player, (t, ty) => this._emit(t, ty), this.config.trustSet, this.config.clientMode);
+          }
+        } else if (action === 'consume-item' && value) {
+          if (this.player.hasItem(value)) {
+            this.player.removeItem(value);
+            const consumeEvent = this.events.get(value);
+            const consumeTitle = consumeEvent ? getTag(consumeEvent, 'title') : value;
+            this._emit(`${consumeTitle} is consumed.`, 'item');
+          }
+        } else if (action === 'sound' && value) {
+          this._emitSound(value, extRef || '1');
         }
       }
     }

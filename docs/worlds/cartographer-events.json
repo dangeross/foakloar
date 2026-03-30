@@ -1,7 +1,5 @@
 {
   "answers": {
-    "cartographer:puzzle:first-record-complete": "RECORD",
-    "cartographer:puzzle:first-record-protect": "PROTECT",
     "cartographer:puzzle:vael-cache": "AZIMUTH",
     "cartographer:puzzle:cairn-sequence": "CONFLUENCE"
   },
@@ -36,7 +34,7 @@
         ],
         [
           "version",
-          "1.0.0"
+          "0.0.3"
         ],
         [
           "lang",
@@ -57,10 +55,6 @@
         [
           "tag",
           "cartography"
-        ],
-        [
-          "cw",
-          "mild-peril"
         ],
         [
           "start",
@@ -139,6 +133,14 @@
           "30078:<PUBKEY>:cartographer:sound:world-breath",
           "ambient",
           "0.3"
+        ],
+        [
+          "samples",
+          "dirt"
+        ],
+        [
+          "samples",
+          "classic"
         ]
       ],
       "content": "The valley has no name on any map.\n\nThat is not an accident.\n\nYou are four days in. Your compass has been unreliable since day two. You have recorded this in your field notes as *observer error, possible heat exhaustion*, because the alternative is not something a working cartographer can afford to believe.\n\nSomething found you on the third morning and decided to trust you.\n\nYou are going to find out what that costs."
@@ -209,6 +211,12 @@
         [
           "exit",
           "north"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:jungle-insects",
+          "layer",
+          "0.2"
         ]
       ],
       "content": "The valley announces itself as a wall of green so dense it reads as solid. There is a gap — barely — where a previous survey party cut through and didn't bother to mark properly. You found it because you were looking for exactly this kind of carelessness. Someone else's failure to be thorough.\n\nYour survey kit is where you left it, beside the marker stone. The work starts here."
@@ -286,6 +294,12 @@
         [
           "exit",
           "north"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:jungle-insects",
+          "layer",
+          "0.25"
         ]
       ],
       "content": "A clearing barely large enough to call one. Your tent, your equipment cases, the cold remains of last night's fire. The kind of camp you make when you're planning to be somewhere else soon.\n\nAsha is here. She arrived before you woke, as she has every morning since the third day. She doesn't explain how. She sits with the patience of someone who has been waiting for much longer than this particular morning."
@@ -798,6 +812,12 @@
         [
           "exit",
           "north"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:jungle-insects",
+          "layer",
+          "0.15"
         ]
       ],
       "content": "Someone came here before you. They came prepared, they came professional, and they did not come back out.\n\nThe equipment is expensive and rotting — two seasons in this humidity. The field notes are partially legible. They got further than you would have expected given what they apparently understood about where they were going, which was: almost nothing.\n\nVael has been here. Recently. He took some of the notes."
@@ -1064,18 +1084,6 @@
           "Back to the river source."
         ],
         [
-          "exit",
-          "30078:<PUBKEY>:cartographer:place:sealed-record",
-          "west",
-          "A passage to the west, sealed with something that isn't stone."
-        ],
-        [
-          "exit",
-          "30078:<PUBKEY>:cartographer:place:sealed-silence",
-          "east",
-          "A passage to the east, sealed with something that isn't stone."
-        ],
-        [
           "feature",
           "30078:<PUBKEY>:cartographer:feature:auric-stones"
         ],
@@ -1086,6 +1094,10 @@
         [
           "npc",
           "30078:<PUBKEY>:cartographer:npc:vael-final"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:cartographer:npc:asha"
         ],
         [
           "sound",
@@ -1106,133 +1118,9 @@
         [
           "exit",
           "south"
-        ],
-        [
-          "exit",
-          "west"
-        ],
-        [
-          "exit",
-          "east"
         ]
       ],
-      "content": "The Auric Stones are not golden. They are amber — geological amber, older than anything with eyes — and they are arranged in a configuration that completes the First Record the way a full stop completes a sentence. Remove them and the sentence becomes a question with no answer. Remove them and the river source loses the only index that tells the valley where it is in relation to itself.\n\nVael is here. He has been here long enough to understand most of this. He is looking at the stones with an expression you have only seen on people who have just understood that they want something they cannot have without becoming someone they hadn't planned to be.\n\nHe looks at you. You both know what the other knows. The valley is quiet in a way that feels like listening."
-    },
-    {
-      "kind": 30078,
-      "pubkey": "<PUBKEY>",
-      "tags": [
-        [
-          "d",
-          "cartographer:place:sealed-record"
-        ],
-        [
-          "t",
-          "cartographer"
-        ],
-        [
-          "type",
-          "place"
-        ],
-        [
-          "title",
-          "The Map That Was Made"
-        ],
-        [
-          "noun",
-          "record",
-          "map",
-          "document"
-        ],
-        [
-          "state",
-          "hidden"
-        ],
-        [
-          "exit",
-          "30078:<PUBKEY>:cartographer:place:auric-chamber",
-          "east",
-          "Back to the chamber."
-        ],
-        [
-          "sound",
-          "30078:<PUBKEY>:cartographer:sound:record-resolution",
-          "ambient",
-          "0.7"
-        ],
-        [
-          "content-type",
-          "application/nip44",
-          "text/markdown"
-        ],
-        [
-          "exit",
-          "east"
-        ],
-        [
-          "puzzle",
-          "30078:<PUBKEY>:cartographer:puzzle:first-record-complete"
-        ]
-      ],
-      "content": "# The Map That Was Made\n\nYou published it.\n\nThe First Record is now in the cartographic literature — translated, annotated, cross-referenced. The valley has coordinates. The Auric Stones are in a secure collection. The Kael-Sura have been contacted by three university departments and a heritage foundation and they are navigating this with the careful exhaustion of people who expected it and had hoped to be wrong.\n\nYour map is accurate. It is the best work of your career. It will be cited for decades.\n\nAsha has not responded to your letters. You did not expect her to. You write them anyway, because you are not sure what else to do with the knowledge that you made the right professional decision and the wrong human one, and that these are sometimes the same decision and this was one of those times.\n\nThe valley is on the map now. You put it there. You were the best person who could have done it, which means you were also the person who should have known not to.\n\nYou are already looking at the next survey. The work doesn't stop. You have learned to be grateful for that.\n\n*You made the map. The valley is known. You will wonder, for the rest of your career, whether known was what it needed to be.*"
-    },
-    {
-      "kind": 30078,
-      "pubkey": "<PUBKEY>",
-      "tags": [
-        [
-          "d",
-          "cartographer:place:sealed-silence"
-        ],
-        [
-          "t",
-          "cartographer"
-        ],
-        [
-          "type",
-          "place"
-        ],
-        [
-          "title",
-          "The Map That Was Not Made"
-        ],
-        [
-          "noun",
-          "silence",
-          "decision",
-          "unmade"
-        ],
-        [
-          "state",
-          "hidden"
-        ],
-        [
-          "exit",
-          "30078:<PUBKEY>:cartographer:place:auric-chamber",
-          "west",
-          "Back to the chamber."
-        ],
-        [
-          "sound",
-          "30078:<PUBKEY>:cartographer:sound:protect-stillness",
-          "ambient",
-          "0.5"
-        ],
-        [
-          "content-type",
-          "application/nip44",
-          "text/markdown"
-        ],
-        [
-          "exit",
-          "west"
-        ],
-        [
-          "puzzle",
-          "30078:<PUBKEY>:cartographer:puzzle:first-record-protect"
-        ]
-      ],
-      "content": "# The Map That Was Not Made\n\nYou walked out with nothing written down.\n\nYour field notes from the interior describe rock formations, moisture levels, unreliable instrument readings. Nothing that would tell anyone where to go or what they would find. You cited equipment failure, difficult terrain, inconclusive results. Your professional reputation absorbed it. People who know your work raised an eyebrow. You let them.\n\nVael filed a competing expedition report six months later. It was credible and almost entirely wrong — he understood what the Stones were worth but not what they were for, and his navigation notes had enough errors that no one who followed them would find the chamber. You read it carefully and did not correct it.\n\nAsha sent you something. Not a letter — a small stone, smoothed by the river, with a single mark on it that you recognise from the First Record. You looked it up. It means, approximately: *the water remembers the path even when the path is not visible.*\n\nYou keep it on your desk. You do not explain it to anyone.\n\nYou still do cartography. You are still good at it. You have simply become the kind of cartographer who knows that some places are described most accurately by the decision not to describe them.\n\nThe valley has no name on any map.\n\n*That is not an accident. You made sure of it.*"
+      "content": "The Auric Stones are not golden. They are amber — geological amber, older than anything with eyes — and they are arranged in a configuration that completes the First Record the way a full stop completes a sentence. Remove them and the sentence becomes a question with no answer. Remove them and the river source loses the only index that tells the valley where it is in relation to itself.\n\nVael is here. He has been here long enough to understand most of this. He is looking at the stones with an expression you have only seen on people who have just understood that they want something they cannot have without becoming someone they hadn't planned to be.\n\nAsha is here too. She has not spoken since you entered.\n\nHe looks at you. You both know what the other knows. The valley is quiet in a way that feels like listening."
     },
     {
       "kind": 30078,
@@ -1619,81 +1507,7 @@
           "requires",
           "30078:<PUBKEY>:cartographer:puzzle:cairn-sequence",
           "solved",
-          "Something stops you — not physical, not fear. The sense that you are not ready. That you are missing something the cairn field was trying to tell you."
-        ]
-      ],
-      "content": ""
-    },
-    {
-      "kind": 30078,
-      "pubkey": "<PUBKEY>",
-      "tags": [
-        [
-          "d",
-          "cartographer:portal:auric-to-sealed-record"
-        ],
-        [
-          "t",
-          "cartographer"
-        ],
-        [
-          "type",
-          "portal"
-        ],
-        [
-          "exit",
-          "30078:<PUBKEY>:cartographer:place:auric-chamber",
-          "west",
-          "Back to the chamber."
-        ],
-        [
-          "exit",
-          "30078:<PUBKEY>:cartographer:place:sealed-record",
-          "east",
-          "The west passage."
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:puzzle:first-record-complete",
-          "solved",
-          "The passage west will not open for you yet."
-        ]
-      ],
-      "content": ""
-    },
-    {
-      "kind": 30078,
-      "pubkey": "<PUBKEY>",
-      "tags": [
-        [
-          "d",
-          "cartographer:portal:auric-to-sealed-silence"
-        ],
-        [
-          "t",
-          "cartographer"
-        ],
-        [
-          "type",
-          "portal"
-        ],
-        [
-          "exit",
-          "30078:<PUBKEY>:cartographer:place:auric-chamber",
-          "east",
-          "Back to the chamber."
-        ],
-        [
-          "exit",
-          "30078:<PUBKEY>:cartographer:place:sealed-silence",
-          "west",
-          "The east passage."
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:puzzle:first-record-protect",
-          "solved",
-          "The passage east will not open for you yet."
+          "Something stops you — not physical, not fear. The sense that you are not ready. The cairn field was trying to tell you something."
         ]
       ],
       "content": ""
@@ -2212,7 +2026,7 @@
         ],
         [
           "title",
-          "Your Field Notes"
+          "Survey Notebook"
         ],
         [
           "noun",
@@ -2795,13 +2609,13 @@
           "requires",
           "30078:<PUBKEY>:cartographer:item:plumb-line",
           "",
-          "The platform needs a plumb reading to activate. You need your plumb line."
+          "The notation on the platform's edge calls for a plumb line. You don't have one."
         ],
         [
           "requires",
           "30078:<PUBKEY>:cartographer:feature:central-cairn",
           "read",
-          "The central cairn indexes this platform. Read it first."
+          "The central cairn holds the key to reading this platform. Start there."
         ]
       ],
       "content": "A flat stone platform, low to the ground, positioned at the geometric centre of the cairn field. It's a survey station — built to take readings from. The notation on the edge tells you what instrument is needed."
@@ -2960,7 +2774,7 @@
           "requires",
           "30078:<PUBKEY>:cartographer:item:survey-kit",
           "",
-          "You need your survey kit for this."
+          "Your instruments. You'd need them to read this properly."
         ]
       ],
       "content": "The ridge gives you the first real sightline you've had since entering the valley. Your instruments can work here. The question is whether what they measure will match what you thought you were measuring. Survey the view from here."
@@ -3127,7 +2941,9 @@
         [
           "noun",
           "trail",
+          "vael trail",
           "footprints",
+          "boot prints",
           "marks",
           "evidence"
         ],
@@ -3503,7 +3319,7 @@
           "requires",
           "30078:<PUBKEY>:cartographer:item:first-record-entry-4",
           "",
-          "You need entry four of the First Record first. The cave notation established the variant used here."
+          "The cave notation comes before this. You're not there yet."
         ]
       ],
       "content": "The founding inscription of the First Record, carved into the basin rim by the Kael-Sura who began the project. You can read enough to know this is important. You cannot read enough to know what it says. Not yet. Translate it if you can."
@@ -3578,20 +3394,6 @@
           "sound",
           "30078:<PUBKEY>:cartographer:sound:resonance-shift",
           "0.9"
-        ],
-        [
-          "on-interact",
-          "examine",
-          "",
-          "activate",
-          "30078:<PUBKEY>:cartographer:puzzle:first-record-complete"
-        ],
-        [
-          "on-interact",
-          "examine",
-          "",
-          "activate",
-          "30078:<PUBKEY>:cartographer:puzzle:first-record-protect"
         ]
       ],
       "content": "Seven stones of geological amber, each the size of a fist, arranged in a configuration that matches the final notation in the gallery — the closing punctuation of the First Record. They are not beautiful in the way treasure is beautiful. They are beautiful in the way a correctly resolved bearing is beautiful: they are *right*, and their rightness is structural, and removing them would make the whole edifice wrong."
@@ -3626,6 +3428,10 @@
         [
           "verb",
           "read"
+        ],
+        [
+          "state",
+          "undecided"
         ],
         [
           "on-interact",
@@ -3682,19 +3488,19 @@
           "requires",
           "30078:<PUBKEY>:cartographer:feature:central-cairn",
           "read",
-          "The central cairn hasn't been decoded yet. It indexes the sequence."
+          "The central cairn is still unread. Start there."
         ],
         [
           "requires",
           "30078:<PUBKEY>:cartographer:feature:survey-platform",
           "active",
-          "The survey platform needs to be active — plumb reading taken."
+          "The plumb reading from the platform is still missing."
         ],
         [
           "requires",
           "30078:<PUBKEY>:cartographer:feature:ridge-survey",
           "measured",
-          "The ridge survey gives the bearing that completes the sequence."
+          "You haven't taken the bearing from the ridge yet."
         ],
         [
           "on-complete",
@@ -3786,202 +3592,6 @@
       "tags": [
         [
           "d",
-          "cartographer:puzzle:first-record-complete"
-        ],
-        [
-          "t",
-          "cartographer"
-        ],
-        [
-          "type",
-          "puzzle"
-        ],
-        [
-          "title",
-          "Complete the First Record"
-        ],
-        [
-          "puzzle-type",
-          "cipher"
-        ],
-        [
-          "answer-hash",
-          "8528b3b6fd6cdd72dee9afc3dbe7261fd2e260752128d2451b38bf42ea13d6a8"
-        ],
-        [
-          "salt",
-          "cartographer:puzzle:first-record-complete:v1"
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:item:first-record-entry-1",
-          "",
-          "The First Record is incomplete."
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:item:first-record-entry-2",
-          "",
-          "The First Record is incomplete."
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:item:first-record-entry-3",
-          "",
-          "The First Record is incomplete."
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:item:first-record-entry-4",
-          "",
-          "The First Record is incomplete."
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:item:first-record-entry-5",
-          "",
-          "The First Record is incomplete."
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:npc:vael-final",
-          "negotiated",
-          "Vael is still a problem. Resolve him first."
-        ],
-        [
-          "on-complete",
-          "",
-          "set-state",
-          "solved"
-        ],
-        [
-          "on-complete",
-          "",
-          "set-state",
-          "visible",
-          "30078:<PUBKEY>:cartographer:place:sealed-record"
-        ],
-        [
-          "on-complete",
-          "",
-          "sound",
-          "30078:<PUBKEY>:cartographer:sound:record-resolution",
-          "1.0"
-        ],
-        [
-          "on-fail",
-          "",
-          "sound",
-          "30078:<PUBKEY>:cartographer:sound:compass-tick",
-          "0.4"
-        ]
-      ],
-      "content": "You have assembled the complete First Record. You understand what it is, what it protects, and what it would mean for it to exist in the outside world's cartographic literature.\n\nThe west passage will open for one answer only. The action it represents is irreversible.\n\nTo publish the First Record and make the valley known: enter RECORD."
-    },
-    {
-      "kind": 30078,
-      "pubkey": "<PUBKEY>",
-      "tags": [
-        [
-          "d",
-          "cartographer:puzzle:first-record-protect"
-        ],
-        [
-          "t",
-          "cartographer"
-        ],
-        [
-          "type",
-          "puzzle"
-        ],
-        [
-          "title",
-          "Protect the First Record"
-        ],
-        [
-          "puzzle-type",
-          "cipher"
-        ],
-        [
-          "answer-hash",
-          "c8dc87e135f3dd71ea83bccabb76a16df518d8f5db840edd2fa43d92b603e92c"
-        ],
-        [
-          "salt",
-          "cartographer:puzzle:first-record-protect:v1"
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:item:first-record-entry-1",
-          "",
-          "The First Record is incomplete."
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:item:first-record-entry-2",
-          "",
-          "The First Record is incomplete."
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:item:first-record-entry-3",
-          "",
-          "The First Record is incomplete."
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:item:first-record-entry-4",
-          "",
-          "The First Record is incomplete."
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:item:first-record-entry-5",
-          "",
-          "The First Record is incomplete."
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:cartographer:npc:vael-final",
-          "negotiated",
-          "Vael is still a problem. Resolve him first."
-        ],
-        [
-          "on-complete",
-          "",
-          "set-state",
-          "solved"
-        ],
-        [
-          "on-complete",
-          "",
-          "set-state",
-          "visible",
-          "30078:<PUBKEY>:cartographer:place:sealed-silence"
-        ],
-        [
-          "on-complete",
-          "",
-          "sound",
-          "30078:<PUBKEY>:cartographer:sound:protect-stillness",
-          "1.0"
-        ],
-        [
-          "on-fail",
-          "",
-          "sound",
-          "30078:<PUBKEY>:cartographer:sound:compass-tick",
-          "0.4"
-        ]
-      ],
-      "content": "You have assembled the complete First Record. You understand what it is, what it protects, and what it would mean for it to exist in the outside world's cartographic literature.\n\nThe east passage will open for one answer only. The action it represents is irreversible.\n\nTo protect the First Record and leave the valley unknown: enter PROTECT."
-    },
-    {
-      "kind": 30078,
-      "pubkey": "<PUBKEY>",
-      "tags": [
-        [
-          "d",
           "cartographer:npc:asha"
         ],
         [
@@ -4052,6 +3662,12 @@
           "30078:<PUBKEY>:cartographer:dialogue:asha:trusting",
           "30078:<PUBKEY>:cartographer:npc:asha",
           "trusting"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:chamber",
+          "30078:<PUBKEY>:cartographer:feature:choice-inscription",
+          "undecided"
         ]
       ],
       "content": "She is patient in the way that people are patient when they have been waiting for something for a long time and have made peace with not knowing whether it will arrive. She watches you work without commenting on your methods. She corrects you, when she does, without making it feel like correction."
@@ -4781,6 +4397,94 @@
         ]
       ],
       "content": "I have already done it. Every day for forty years. *She picks up one of the memory stones.* The question is what you would do. That is the only question that matters now."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:chamber"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Publish it. The world should know this place.",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:choice-record"
+        ],
+        [
+          "option",
+          "Protect it. Some things should stay unknown.",
+          "30078:<PUBKEY>:cartographer:dialogue:asha:choice-protect"
+        ],
+        [
+          "option",
+          "I'm not ready to decide.",
+          ""
+        ]
+      ],
+      "content": "She has read the inscription alongside you. She has said nothing since. Now she looks at you — not with expectation, not with hope, just with attention.\n\nWhat do you decide?"
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:choice-record"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "set-state",
+          "record",
+          "30078:<PUBKEY>:cartographer:feature:choice-inscription"
+        ]
+      ],
+      "content": "She nods. A single, slow movement. She does not look surprised and she does not look approving — she looks like someone who has just seen a choice made cleanly, whatever the choice is."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:dialogue:asha:choice-protect"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "set-state",
+          "protect",
+          "30078:<PUBKEY>:cartographer:feature:choice-inscription"
+        ]
+      ],
+      "content": "She exhales. Not relief — something slower than that, something she has been carrying for long enough that putting it down takes a moment."
     },
     {
       "kind": 30078,
@@ -6291,13 +5995,13 @@
           "requires",
           "30078:<PUBKEY>:cartographer:item:first-record-entry-4",
           "",
-          "You need entry four to understand the notation variant used at the source."
+          "The cave notation established the variant used here. You need that first."
         ],
         [
           "requires",
           "30078:<PUBKEY>:cartographer:item:water-sample",
           "",
-          "The sample gives you the hydrological context needed to complete the translation."
+          "The water sample from the spring. Without it, this doesn't resolve."
         ],
         [
           "on-complete",
@@ -6336,32 +6040,28 @@
           "sound"
         ],
         [
-          "noise",
-          ""
-        ],
-        [
-          "lpf",
-          "200"
-        ],
-        [
-          "hpf",
-          "40"
+          "s",
+          "birds:0 ~ ~ ~ ~ ~ ~ ~ birds:3 ~ ~ ~ ~ ~ ~ ~ birds:1 ~ ~ ~ ~ ~ ~ ~ ~ birds:2 ~ ~ ~ ~ ~ ~"
         ],
         [
           "slow",
           "12"
         ],
         [
+          "room",
+          "0.3"
+        ],
+        [
           "gain",
-          "0.25"
+          "0.22"
         ],
         [
           "attack",
-          "4"
+          "0.4"
         ],
         [
           "release",
-          "4"
+          "1"
         ]
       ],
       "content": ""
@@ -6383,16 +6083,12 @@
           "sound"
         ],
         [
+          "s",
+          "ocarina_vib"
+        ],
+        [
           "note",
-          "g2 ~ ~ ~ ~ ~ ~ ~"
-        ],
-        [
-          "oscillator",
-          "sine"
-        ],
-        [
-          "lpf",
-          "280"
+          "g2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
         ],
         [
           "slow",
@@ -6400,15 +6096,23 @@
         ],
         [
           "room",
-          "0.4"
+          "0.55"
+        ],
+        [
+          "roomsize",
+          "5"
         ],
         [
           "gain",
-          "0.35"
+          "0.32"
         ],
         [
           "attack",
           "2"
+        ],
+        [
+          "release",
+          "3"
         ]
       ],
       "content": ""
@@ -6430,32 +6134,36 @@
           "sound"
         ],
         [
-          "note",
-          "d3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
-        ],
-        [
-          "oscillator",
-          "sine"
-        ],
-        [
-          "lpf",
-          "240"
+          "s",
+          "perc ~ ~ ~ ~ ~ perc:2 ~ ~ ~ ~ ~ ~ ~ perc:1 ~ ~ ~ ~ ~ ~ ~"
         ],
         [
           "slow",
-          "16"
+          "9"
         ],
         [
           "room",
-          "0.3"
+          "0.6"
+        ],
+        [
+          "roomsize",
+          "4"
         ],
         [
           "gain",
-          "0.2"
+          "0.18"
+        ],
+        [
+          "lpf",
+          "900"
         ],
         [
           "attack",
-          "3"
+          "0.05"
+        ],
+        [
+          "release",
+          "2"
         ]
       ],
       "content": ""
@@ -6477,24 +6185,36 @@
           "sound"
         ],
         [
-          "noise",
-          ""
+          "s",
+          "hh*32"
         ],
         [
           "lpf",
-          "700"
+          "380"
         ],
         [
           "hpf",
-          "100"
+          "40"
         ],
         [
-          "slow",
+          "room",
+          "0.5"
+        ],
+        [
+          "roomsize",
           "3"
         ],
         [
           "gain",
-          "0.45"
+          "0.38"
+        ],
+        [
+          "attack",
+          "0.3"
+        ],
+        [
+          "release",
+          "0.25"
         ]
       ],
       "content": ""
@@ -6516,36 +6236,32 @@
           "sound"
         ],
         [
-          "note",
-          "c2 ~ ~ ~ ~ ~ ~ ~"
-        ],
-        [
-          "oscillator",
-          "sine"
-        ],
-        [
-          "lpf",
-          "260"
+          "s",
+          "birds:0 ~ birds:2 ~ ~ birds:4 ~ ~ birds:1 ~ ~ ~ birds:3 ~ birds:0 ~"
         ],
         [
           "slow",
-          "8"
+          "5"
         ],
         [
           "room",
-          "0.5"
-        ],
-        [
-          "roomsize",
-          "6"
-        ],
-        [
-          "gain",
           "0.4"
         ],
         [
+          "roomsize",
+          "4"
+        ],
+        [
+          "gain",
+          "0.42"
+        ],
+        [
           "attack",
-          "2"
+          "0.2"
+        ],
+        [
+          "release",
+          "0.9"
         ]
       ],
       "content": ""
@@ -6567,36 +6283,32 @@
           "sound"
         ],
         [
-          "note",
-          "c2 ~ ~ ~ g2 ~ ~ ~ ~ ~ ~ ~ c2 ~ ~ ~"
-        ],
-        [
-          "oscillator",
-          "triangle"
-        ],
-        [
-          "lpf",
-          "300"
+          "s",
+          "insect ~ insect:2 ~ insect:0 ~ insect:3 ~ ~ ~ insect:1 ~ insect:2 ~ ~ ~"
         ],
         [
           "slow",
-          "8"
+          "4"
+        ],
+        [
+          "lpf",
+          "700"
         ],
         [
           "room",
-          "0.6"
-        ],
-        [
-          "gain",
           "0.2"
         ],
         [
-          "attack",
-          "1.5"
+          "gain",
+          "0.32"
         ],
         [
-          "degrade-by",
-          "0.15"
+          "attack",
+          "0.1"
+        ],
+        [
+          "release",
+          "0.3"
         ]
       ],
       "content": ""
@@ -6618,24 +6330,28 @@
           "sound"
         ],
         [
-          "noise",
-          ""
-        ],
-        [
-          "lpf",
-          "500"
-        ],
-        [
-          "hpf",
-          "80"
+          "s",
+          "wind ~ ~ ~ ~ wind:1 ~ ~ ~ ~ ~ ~ wind:2 ~ ~ ~ ~ wind:0 ~ ~ ~ ~ ~ ~ ~ wind:1 ~ ~ ~ ~ ~"
         ],
         [
           "slow",
-          "5"
+          "8"
+        ],
+        [
+          "room",
+          "0.3"
         ],
         [
           "gain",
-          "0.35"
+          "0.38"
+        ],
+        [
+          "attack",
+          "1"
+        ],
+        [
+          "release",
+          "2"
         ]
       ],
       "content": ""
@@ -6708,12 +6424,12 @@
           "sound"
         ],
         [
-          "note",
-          "c3 ~ eb3 ~ ~ ~ g3 ~ ~ ~ ~ ~ ~ ~ ~ ~"
+          "s",
+          "ocarina_vib"
         ],
         [
-          "oscillator",
-          "sine"
+          "note",
+          "c3 ~ eb3 ~ ~ ~ g3 ~ ~ ~ ~ ~ ~ ~ ~ ~"
         ],
         [
           "slow",
@@ -6721,7 +6437,11 @@
         ],
         [
           "room",
-          "0.5"
+          "0.55"
+        ],
+        [
+          "roomsize",
+          "5"
         ],
         [
           "gain",
@@ -6730,6 +6450,10 @@
         [
           "attack",
           "1.5"
+        ],
+        [
+          "release",
+          "2"
         ],
         [
           "delay",
@@ -6756,32 +6480,28 @@
           "sound"
         ],
         [
-          "note",
-          "f3 ~ ~ ~ ~ ~ ~ ~"
-        ],
-        [
-          "oscillator",
-          "triangle"
-        ],
-        [
-          "lpf",
-          "400"
+          "s",
+          "tabla ~ ~ tabla:2 ~ ~ ~ tabla:1 ~ ~ ~ tabla:3 ~ ~ ~ ~"
         ],
         [
           "slow",
-          "8"
+          "5"
         ],
         [
           "room",
-          "0.3"
+          "0.35"
         ],
         [
           "gain",
-          "0.3"
+          "0.28"
         ],
         [
           "attack",
-          "2"
+          "0.1"
+        ],
+        [
+          "release",
+          "0.6"
         ]
       ],
       "content": ""
@@ -7068,20 +6788,12 @@
           "sound"
         ],
         [
-          "note",
-          "c1 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
-        ],
-        [
-          "oscillator",
-          "sine"
-        ],
-        [
-          "lpf",
-          "160"
+          "s",
+          "didgeridoo"
         ],
         [
           "slow",
-          "32"
+          "8"
         ],
         [
           "room",
@@ -7092,11 +6804,19 @@
           "10"
         ],
         [
+          "lpf",
+          "600"
+        ],
+        [
           "gain",
-          "0.55"
+          "0.45"
         ],
         [
           "attack",
+          "4"
+        ],
+        [
+          "release",
           "6"
         ]
       ],
@@ -7374,28 +7094,155 @@
           "sound"
         ],
         [
-          "note",
-          "c5 ~ ~ ~ ~ ~ ~ ~"
+          "s",
+          "hh ~ ~ hh ~ ~ ~ hh ~ ~ hh ~ ~ ~ ~ ~"
         ],
         [
-          "oscillator",
-          "square"
-        ],
-        [
-          "fast",
-          "2"
-        ],
-        [
-          "crush",
-          "8"
+          "slow",
+          "3"
         ],
         [
           "gain",
+          "0.22"
+        ],
+        [
+          "room",
+          "0.05"
+        ],
+        [
+          "attack",
+          "0.001"
+        ],
+        [
+          "release",
+          "0.06"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:quest:ending-record"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Map That Was Made"
+        ],
+        [
+          "quest-type",
+          "endgame"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:feature:choice-inscription",
+          "record",
+          ""
+        ],
+        [
+          "on-complete",
+          "",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:record-resolution",
+          "0.7"
+        ]
+      ],
+      "content": "You published it.\n\nThe First Record is now in the cartographic literature — translated, annotated, cross-referenced. The valley has coordinates. The Auric Stones are in a secure collection. The Kael-Sura have been contacted by three university departments and a heritage foundation and they are navigating this with the careful exhaustion of people who expected it and had hoped to be wrong.\n\nYour map is accurate. It is the best work of your career. It will be cited for decades.\n\nAsha has not responded to your letters. You did not expect her to. You write them anyway, because you are not sure what else to do with the knowledge that you made the right professional decision and the wrong human one, and that these are sometimes the same decision and this was one of those times.\n\nThe valley is on the map now. You put it there. You were the best person who could have done it, which means you were also the person who should have known not to.\n\nYou are already looking at the next survey. The work doesn't stop. You have learned to be grateful for that.\n\n**You made the map. The valley is known. You will wonder, for the rest of your career, whether known was what it needed to be.**"
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:quest:ending-protect"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Map That Was Not Made"
+        ],
+        [
+          "quest-type",
+          "endgame"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:cartographer:feature:choice-inscription",
+          "protect",
+          ""
+        ],
+        [
+          "on-complete",
+          "",
+          "sound",
+          "30078:<PUBKEY>:cartographer:sound:protect-stillness",
+          "0.5"
+        ]
+      ],
+      "content": "You walked out with nothing written down.\n\nYour field notes from the interior describe rock formations, moisture levels, unreliable instrument readings. Nothing that would tell anyone where to go or what they would find. You cited equipment failure, difficult terrain, inconclusive results. Your professional reputation absorbed it. People who know your work raised an eyebrow. You let them.\n\nVael filed a competing expedition report six months later. It was credible and almost entirely wrong — he understood what the Stones were worth but not what they were for, and his navigation notes had enough errors that no one who followed them would find the chamber. You read it carefully and did not correct it.\n\nAsha sent you something. Not a letter — a small stone, smoothed by the river, with a single mark on it that you recognise from the First Record. You looked it up. It means, approximately: the water remembers the path even when the path is not visible.\n\nYou keep it on your desk. You do not explain it to anyone.\n\nYou still do cartography. You are still good at it. You have simply become the kind of cartographer who knows that some places are described most accurately by the decision not to describe them.\n\nThe valley has no name on any map.\n\n**That is not an accident. You made sure of it.**"
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "cartographer:sound:jungle-insects"
+        ],
+        [
+          "t",
+          "cartographer"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "insect:0 ~ ~ ~ insect:2 ~ ~ ~ ~ insect:1 ~ ~ insect:3 ~ ~ ~"
+        ],
+        [
+          "slow",
+          "3"
+        ],
+        [
+          "lpf",
+          "600"
+        ],
+        [
+          "room",
           "0.15"
         ],
         [
-          "degrade-by",
+          "gain",
           "0.3"
+        ],
+        [
+          "attack",
+          "0.1"
+        ],
+        [
+          "release",
+          "0.4"
         ]
       ],
       "content": ""

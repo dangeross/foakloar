@@ -532,8 +532,11 @@ export class GameEngine {
       }
     }
 
-    // Re-evaluate quests after on-enter state changes
-    if (isMoving) this._evalQuests();
+    // Re-evaluate quests and sequence puzzles after on-enter state changes
+    if (isMoving) {
+      this._evalSequencePuzzles();
+      this._evalQuests();
+    }
 
     // Exits — spec 6.7 contested exit model
     this._emitExits(dtag);
@@ -612,8 +615,10 @@ export class GameEngine {
           }
         } else if (reqType === 'puzzle') {
           passes = requiresState === 'solved' && this.player.isPuzzleSolved(requiresRef);
-        } else if (reqType === 'feature') {
-          passes = requiresState && this.player.getState(requiresRef) === requiresState;
+        } else if (reqType === 'feature' || reqType === 'npc' || reqType === 'place' || reqType === 'portal') {
+          // Fall back to default state when player hasn't set it yet
+          const currentState = this.player.getState(requiresRef) ?? getDefaultState(reqEvent);
+          passes = requiresState && currentState === requiresState;
         }
 
         if (passes) entryRef = nodeRef;
@@ -711,6 +716,7 @@ export class GameEngine {
     const recipeList = [];
     const npcList = [];
     const questList = [];
+    const seqPuzzleList = [];
 
     for (const [dtag, event] of ref) {
       const type = getTag(event, 'type');
@@ -731,13 +737,16 @@ export class GameEngine {
         if (getTags(event, 'route').length > 0) npcList.push({ dtag, event });
       } else if (type === 'quest') {
         questList.push({ dtag, event });
+      } else if (type === 'puzzle' && getTag(event, 'puzzle-type') === 'sequence') {
+        seqPuzzleList.push({ dtag, event });
       }
     }
 
-    this._portalIndex    = { ref, map: portalMap };
-    this._recipeIndex    = { ref, map: recipeMap, list: recipeList };
-    this._roamingNpcIndex = { ref, list: npcList };
-    this._questIndex     = { ref, list: questList };
+    this._portalIndex        = { ref, map: portalMap };
+    this._recipeIndex        = { ref, map: recipeMap, list: recipeList };
+    this._roamingNpcIndex    = { ref, list: npcList };
+    this._questIndex         = { ref, list: questList };
+    this._seqPuzzleIndex     = { ref, list: seqPuzzleList };
   }
 
   /** Check whether indexes are stale (events Map reference changed). */
@@ -773,6 +782,12 @@ export class GameEngine {
   _getQuestList() {
     if (this._indexesStale()) this._rebuildIndexes();
     return this._questIndex.list;
+  }
+
+  /** Return cached list of all sequence puzzle events. */
+  _getSeqPuzzleList() {
+    if (this._indexesStale()) this._rebuildIndexes();
+    return this._seqPuzzleIndex.list;
   }
 
   /** Check a single requires tag against player state. */

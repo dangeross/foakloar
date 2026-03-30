@@ -51,12 +51,16 @@ export function mixDialogue(Engine) {
       }
     }
 
+    // Evaluate quests after on-enter state changes — allows endgame quests to
+    // fire immediately from dialogue choices (e.g. the final choice in a world).
+    this._evalQuests();
+
     // Show options (filter by destination requires)
     const options = getTags(node, 'option');
     const visibleOptions = this._getVisibleOptions(options);
 
-    if (visibleOptions.length === 0) {
-      // Leaf node — auto-exit dialogue
+    if (visibleOptions.length === 0 || this.gameOver) {
+      // Leaf node (or game just ended) — auto-exit dialogue
       this.dialogueActive = null;
       return;
     }
