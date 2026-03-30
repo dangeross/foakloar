@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { useRelay } from '../hooks/useRelay.js';
 import { usePlayerState } from '../hooks/usePlayerState.js';
 import { useSigner } from '../hooks/useSigner.js';
-import { parseRoute, navigateToWorld, navigateToLobby, navigateToProfile } from '../services/router.js';
+import { parseRoute, navigateToWorld, navigateToLobby, navigateToProfile, pinnedSlug } from '../services/router.js';
 import { GameEngine } from '../engine/engine.js';
 import { renderMarkdown } from '../engine/content.js';
 import { PlayerStateMutator } from '../engine/player-state.js';
@@ -142,6 +142,7 @@ export default function App() {
   }, [route]);
 
   const worldTag = route.worldSlug;
+  const pubkeyPrefix = route.pubkeyPrefix ?? null;
 
   // ── Core hooks (worldTag-scoped) ─────────────────────────────────────────
   const { events, status, pool, relayStatus, publishUrls, updateRelays } = useRelay(worldTag);
@@ -306,10 +307,16 @@ export default function App() {
       }
     }
     if (candidates.length === 0) return null;
+    // If URL includes a pubkey prefix, filter to matching author.
+    // Fall back to all candidates if none match (graceful degradation).
+    const pinned = pubkeyPrefix
+      ? candidates.filter((ev) => ev.pubkey.startsWith(pubkeyPrefix))
+      : candidates;
+    const pool = pinned.length > 0 ? pinned : candidates;
     // Pick the oldest world event (lowest created_at) as genesis — attacker's
     // newer event won't override the original author
-    candidates.sort((a, b) => (a.created_at || 0) - (b.created_at || 0));
-    worldEvent = candidates[0];
+    pool.sort((a, b) => (a.created_at || 0) - (b.created_at || 0));
+    worldEvent = pool[0];
     if (!worldEvent) return null;
 
     const authorPubkey = worldEvent.pubkey;
@@ -320,7 +327,17 @@ export default function App() {
     const cwTags = getTags(worldEvent, 'cw').map((t) => t[1]);
 
     return { genesisPlace, inventoryRefs, title, cwTags, worldEvent, authorPubkey };
-  }, [mergedEvents, worldTag]);
+  }, [mergedEvents, worldTag, pubkeyPrefix]);
+
+  // Once the world loads, normalize the URL to include the author pubkey prefix.
+  // Uses replaceState (no navigation, no popstate) so the pinned URL is bookmarkable/shareable.
+  useEffect(() => {
+    if (!worldConfig || !worldTag) return;
+    const prefix = worldConfig.authorPubkey.slice(0, 8);
+    if (!pubkeyPrefix || pubkeyPrefix !== prefix) {
+      window.history.replaceState({}, '', `/w/${pinnedSlug(worldTag, worldConfig.authorPubkey)}`);
+    }
+  }, [worldConfig, worldTag, pubkeyPrefix]);
 
   // Build trust set from world event + vouch events
   const trustInfo = useMemo(() => {
