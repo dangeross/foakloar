@@ -135,18 +135,26 @@ export function mixMovement(Engine) {
       }
     }
 
-    // Open exit slots — declared on place but no portal connects
-    // Open exit slots — declared on place but no portal connects (even hidden ones)
-    const visibleClaimedSlots = new Set(Object.keys(slotGroups));
-    const placeEvent = this.events.get(dtag);
-    const declaredSlots = placeEvent ? getTags(placeEvent, 'exit').map((t) => t[1]) : [];
-    const openSlots = declaredSlots.filter((s) => !visibleClaimedSlots.has(s) && !allClaimedSlots.has(s));
-    if (openSlots.length > 0) {
-      if (labels.length > 0 || unverifiedOnlySlots.length > 0) {
-        // Append to existing exits line
-        this._emit(`       ${openSlots.join(', ')} (unexplored)`, 'exits-open');
-      } else {
-        this._emit(`Exits: ${openSlots.join(', ')} (unexplored)`, 'exits-open');
+    // Open exit slots — declared on place but no portal connects.
+    // Only shown in community/explorer mode where a stranger's portal might fill
+    // the slot. In canonical mode (closed worlds) there is nothing to discover.
+    const clientMode = this.config.clientMode;
+    const showUnexplored = clientMode === 'community' || clientMode === 'explorer';
+    if (showUnexplored) {
+      const visibleClaimedSlots = new Set(Object.keys(slotGroups));
+      const placeEvent = this.events.get(dtag);
+      // Only slot-declaration exits ["exit", "direction"] — skip old-format extended
+      // exits ["exit", "30078:...", "direction", "label"] where t[1] is an a-tag ref.
+      const declaredSlots = placeEvent
+        ? getTags(placeEvent, 'exit').map((t) => t[1]).filter((s) => s && !s.startsWith('30078:'))
+        : [];
+      const openSlots = declaredSlots.filter((s) => !visibleClaimedSlots.has(s) && !allClaimedSlots.has(s));
+      if (openSlots.length > 0) {
+        if (labels.length > 0 || unverifiedOnlySlots.length > 0) {
+          this._emit(`       ${openSlots.join(', ')} (unexplored)`, 'exits-open');
+        } else {
+          this._emit(`Exits: ${openSlots.join(', ')} (unexplored)`, 'exits-open');
+        }
       }
     }
   };
