@@ -1168,6 +1168,10 @@
         [
           "exit",
           "east"
+        ],
+        [
+          "puzzle",
+          "30078:<PUBKEY>:cartographer:puzzle:first-record-complete"
         ]
       ],
       "content": "# The Map That Was Made\n\nYou published it.\n\nThe First Record is now in the cartographic literature — translated, annotated, cross-referenced. The valley has coordinates. The Auric Stones are in a secure collection. The Kael-Sura have been contacted by three university departments and a heritage foundation and they are navigating this with the careful exhaustion of people who expected it and had hoped to be wrong.\n\nYour map is accurate. It is the best work of your career. It will be cited for decades.\n\nAsha has not responded to your letters. You did not expect her to. You write them anyway, because you are not sure what else to do with the knowledge that you made the right professional decision and the wrong human one, and that these are sometimes the same decision and this was one of those times.\n\nThe valley is on the map now. You put it there. You were the best person who could have done it, which means you were also the person who should have known not to.\n\nYou are already looking at the next survey. The work doesn't stop. You have learned to be grateful for that.\n\n*You made the map. The valley is known. You will wonder, for the rest of your career, whether known was what it needed to be.*"
@@ -1222,6 +1226,10 @@
         [
           "exit",
           "west"
+        ],
+        [
+          "puzzle",
+          "30078:<PUBKEY>:cartographer:puzzle:first-record-protect"
         ]
       ],
       "content": "# The Map That Was Not Made\n\nYou walked out with nothing written down.\n\nYour field notes from the interior describe rock formations, moisture levels, unreliable instrument readings. Nothing that would tell anyone where to go or what they would find. You cited equipment failure, difficult terrain, inconclusive results. Your professional reputation absorbed it. People who know your work raised an eyebrow. You let them.\n\nVael filed a competing expedition report six months later. It was credible and almost entirely wrong — he understood what the Stones were worth but not what they were for, and his navigation notes had enough errors that no one who followed them would find the chamber. You read it carefully and did not correct it.\n\nAsha sent you something. Not a letter — a small stone, smoothed by the river, with a single mark on it that you recognise from the First Record. You looked it up. It means, approximately: *the water remembers the path even when the path is not visible.*\n\nYou keep it on your desk. You do not explain it to anyone.\n\nYou still do cartography. You are still good at it. You have simply become the kind of cartographer who knows that some places are described most accurately by the decision not to describe them.\n\nThe valley has no name on any map.\n\n*That is not an accident. You made sure of it.*"
@@ -1760,10 +1768,6 @@
           "plumb",
           "line",
           "weight"
-        ],
-        [
-          "verb",
-          "measure"
         ]
       ],
       "content": "A simple tool: a brass weight on a length of waxed cord. Finds true vertical with more reliability than any instrument you own. You found it in the cairn field beside the survey platform, which means the Kael-Sura use the same basic principle. There is something reassuring about this."
@@ -1793,10 +1797,6 @@
           "sample",
           "water",
           "vial"
-        ],
-        [
-          "verb",
-          "analyse"
         ]
       ],
       "content": "A sealed vial of water from the spring basin at the river source. It is the same temperature as the rock it emerges from — cold enough that it shouldn't be liquid, which is a geological observation you have written down and underlined twice."
@@ -2132,6 +2132,14 @@
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:marker-history"
+        ],
+        [
+          "on-interact",
+          "survey",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:marker-history"
         ]
       ],
       "content": "A cairn of five stones with a metal stake driven through the centre — not Kael-Sura work, not old enough. Someone planted this marker within the last decade. The survey notation scratched into the stake is in a shorthand you recognise from academic cartography. Whoever was here before you was trained."
@@ -2174,6 +2182,14 @@
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:old-marking"
+        ],
+        [
+          "on-interact",
+          "read",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:old-marking"
         ]
       ],
       "content": "Cut into a tree old enough to have half-absorbed it: a single mark in Kael-Sura notation. Not aggressive. Not a barrier. The kind of mark that means *pay attention here*. You would have missed it if Asha hadn't been in your peripheral vision when you passed it."
@@ -2212,6 +2228,22 @@
         [
           "on-interact",
           "examine",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:current-map-state"
+        ],
+        [
+          "on-interact",
+          "read",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:current-map-state"
+        ],
+        [
+          "on-interact",
+          "review",
           "",
           "set-state",
           "visible",
@@ -2274,6 +2306,14 @@
           "layer",
           "0.2",
           "unreliable"
+        ],
+        [
+          "on-interact",
+          "check",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:compass-behaviour"
         ]
       ],
       "content": "Your primary compass. The needle moves without input — not randomly, but rhythmically, as if responding to something that isn't magnetic north. You have written this down. You have not written down what it might mean."
@@ -2359,6 +2399,14 @@
         [
           "on-interact",
           "examine",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:vael-knowledge"
+        ],
+        [
+          "on-interact",
+          "read",
           "",
           "set-state",
           "visible",
@@ -2455,6 +2503,14 @@
         [
           "on-interact",
           "examine",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:water-level"
+        ],
+        [
+          "on-interact",
+          "read",
           "",
           "set-state",
           "visible",
@@ -2668,6 +2724,14 @@
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:outer-cairn-pattern"
+        ],
+        [
+          "on-interact",
+          "count",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:outer-cairn-pattern"
         ]
       ],
       "content": "Forty-two cairns arranged in a pattern that isn't concentric — it's something more complex, a relationship between the cairns and the terrain features rather than a geometric form imposed on them. They fit the landscape rather than sitting on it. This took a long time to build and a longer time to understand."
@@ -2714,14 +2778,14 @@
         ],
         [
           "on-interact",
-          "survey",
+          "stand",
           "",
           "set-state",
           "active"
         ],
         [
           "on-interact",
-          "survey",
+          "stand",
           "",
           "sound",
           "30078:<PUBKEY>:cartographer:sound:first-record-reveal",
@@ -2938,6 +3002,14 @@
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:bearing-stone-system"
+        ],
+        [
+          "on-interact",
+          "align",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:bearing-stone-system"
         ]
       ],
       "content": "Seven stones along the ridge crest, each placed with deliberate orientation. They are sighting stones — you look along them as you would look along a transit. Each points somewhere specific in the interior. At the current time of day, two are pointing at nothing visible. One is pointing at something you haven't reached yet."
@@ -3066,6 +3138,14 @@
         [
           "on-interact",
           "examine",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:cartographer:clue:vael-was-here"
+        ],
+        [
+          "on-interact",
+          "track",
           "",
           "set-state",
           "visible",
@@ -3503,14 +3583,14 @@
           "on-interact",
           "examine",
           "",
-          "puzzle",
+          "activate",
           "30078:<PUBKEY>:cartographer:puzzle:first-record-complete"
         ],
         [
           "on-interact",
           "examine",
           "",
-          "puzzle",
+          "activate",
           "30078:<PUBKEY>:cartographer:puzzle:first-record-protect"
         ]
       ],
@@ -3583,6 +3663,10 @@
           "puzzle"
         ],
         [
+          "title",
+          "The Cairn Sequence"
+        ],
+        [
           "puzzle-type",
           "sequence"
         ],
@@ -3652,6 +3736,10 @@
           "puzzle"
         ],
         [
+          "title",
+          "Vael's Cache"
+        ],
+        [
           "puzzle-type",
           "riddle"
         ],
@@ -3707,6 +3795,10 @@
         [
           "type",
           "puzzle"
+        ],
+        [
+          "title",
+          "Complete the First Record"
         ],
         [
           "puzzle-type",
@@ -3801,6 +3893,10 @@
         [
           "type",
           "puzzle"
+        ],
+        [
+          "title",
+          "Protect the First Record"
         ],
         [
           "puzzle-type",
@@ -6252,11 +6348,6 @@
           "40"
         ],
         [
-          "rand",
-          "0.02",
-          "0.08"
-        ],
-        [
           "slow",
           "12"
         ],
@@ -6398,11 +6489,6 @@
           "100"
         ],
         [
-          "rand",
-          "0.1",
-          "0.3"
-        ],
-        [
           "slow",
           "3"
         ],
@@ -6542,11 +6628,6 @@
         [
           "hpf",
           "80"
-        ],
-        [
-          "rand",
-          "0.05",
-          "0.25"
         ],
         [
           "slow",
