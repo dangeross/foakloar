@@ -600,8 +600,8 @@ Examples:
 | `deal-damage-npc` | NPC `a`-tag or `—` for current | Reduces target NPC health by weapon damage |
 | `heal` | Integer string | Restores player health by this amount |
 | `consequence` | Consequence `a`-tag | Fires a consequence event |
-| `steals-item` | `any` or item `a`-tag | Takes item from player inventory |
-| `deposits` | — | NPC drops held items in current place |
+| `steals-item` | `any` or item `a`-tag | Takes item from player inventory into NPC's stolen list |
+| `deposits` | — | NPC drops all stolen items at current place (native `inventory` is unaffected) |
 | `flees` | — | Emits a departure message. Pair with `set-state` to activate roaming — see below. |
 | `decrement` | Counter name | Reduces named counter by 1 |
 | `increment` | Counter name | Increases named counter by 1 |
@@ -1333,9 +1333,9 @@ The grue only exists (is rendered) when the lantern is off — `requires-not` on
 | `speed` | Integer string | Moves once every N player moves |
 | `order` | `sequential` \| `random` | How the NPC traverses its route |
 | `route` | Place `a`-tag | A place in the NPC's movement pool (multiple allowed) |
-| `stash` | Place `a`-tag | Where the NPC deposits stolen or held items |
+| `stash` | Place `a`-tag | Where the NPC deposits stolen items on arrival |
 | `roams-when` | State string | NPC only roams when in this state; if absent, always roams |
-| `inventory` | Item `a`-tag | Item the NPC carries — multiple allowed. Can be stolen, dropped on death, or deposited at stash. |
+| `inventory` | Item `a`-tag | Item the NPC starts with — multiple allowed. Shown on `examine`. Separate from stolen items. |
 
 `inventory` on an NPC fills the gap left by `steals-item` and `deposits` — those actions imply the NPC can hold items, but without `inventory` there was no way to declare what it starts with. The Zork thief carrying a stiletto, the bat stealing your lantern — both need a starting inventory:
 
@@ -1349,7 +1349,12 @@ The grue only exists (is rendered) when the lantern is off — `requires-not` on
 ["inventory", "30078:<pubkey>:the-lake:item:torch"]
 ```
 
-NPC inventory items are tracked in player state per NPC — the client knows what each NPC is carrying at any point. When `deposits` fires, carried items appear in the current place. When the NPC dies, carried items drop. When `steals-item` fires, the stolen item is added to the NPC's carried set.
+NPC items are tracked in two separate lists in player state:
+
+- **`inventory`** — native items declared on the NPC event. Shown on `examine`. Never auto-dropped; transfer to the player only via explicit `give-item` actions in triggers.
+- **`stolen`** — items taken from the player via `steals-item`. When `deposits` fires, the stolen list is deposited at the current place and cleared. Native inventory is not affected by `deposits`.
+
+Nothing drops automatically on NPC defeat. The author uses `give-item` in `on-health` or `on-health-zero` triggers to control exactly what the player receives and when.
 
 `roams-when` allows movement to be state-conditional. An NPC with `route` tags but a `roams-when` state will only move when its current state matches. In any other state it stays at its spawn point. This means roaming can be activated or deactivated by a state transition — a consequence fires, the NPC transitions to the `roams-when` state, and the client begins routing it.
 

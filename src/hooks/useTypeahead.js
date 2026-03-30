@@ -17,6 +17,7 @@
 import { useMemo } from 'react';
 import { buildVerbMap, stripArticles } from '../engine/parser.js';
 import { getTag, getTags } from '../engine/world.js';
+import { findRoamingNpcsAtPlace } from '../engine/npc.js';
 
 // Static built-in verb aliases the engine always recognises.
 const BUILT_IN_VERBS = [
@@ -128,6 +129,16 @@ export function computeSuggestion(rawInput, engine, events) {
         const ev = events?.get(ref[1]);
         if (ev) nouns.push(...eventNouns(ev));
       }
+    }
+    // Roaming NPCs currently at this place (not in static npc tags)
+    const moveCount = engine.player?.getMoveCount?.() ?? 0;
+    const roamingHere = findRoamingNpcsAtPlace(
+      events, engine.currentPlace, moveCount,
+      (dtag) => engine.player?.getNpcState?.(dtag),
+      engine._getRoamingNpcList?.(),
+    );
+    for (const { npcEvent } of roamingHere) {
+      nouns.push(...eventNouns(npcEvent));
     }
   }
   // Items on the ground at this place (tracked in player state, not place tags)

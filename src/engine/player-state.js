@@ -166,25 +166,24 @@ export class PlayerStateMutator {
     return this.npcStates[npcDtag];
   }
 
-  /** Add item to NPC inventory. */
+  /** Record an item stolen from the player (steals-item action). */
   npcPickUp(npcDtag, itemDtag) {
     const npc = this.getNpcState(npcDtag);
     if (!npc) return;
-    if (!npc.inventory.includes(itemDtag)) {
-      this.setNpcState(npcDtag, {
-        ...npc,
-        inventory: [...npc.inventory, itemDtag],
-      });
+    const stolen = npc.stolen || [];
+    if (!stolen.includes(itemDtag)) {
+      this.setNpcState(npcDtag, { ...npc, stolen: [...stolen, itemDtag] });
     }
   }
 
-  /** Remove all items from NPC inventory. Returns the removed items. */
+  /** Drop all stolen items from NPC (used by stash deposit mechanic). Returns dropped items.
+   *  Native inventory (declared via inventory tags) is never deposited automatically. */
   npcDropAll(npcDtag) {
     const npc = this.getNpcState(npcDtag);
-    if (!npc || npc.inventory.length === 0) return [];
-    const items = [...npc.inventory];
-    this.setNpcState(npcDtag, { ...npc, inventory: [] });
-    return items;
+    const stolen = npc?.stolen || [];
+    if (stolen.length === 0) return [];
+    this.setNpcState(npcDtag, { ...npc, stolen: [] });
+    return stolen;
   }
 
   // ── Payments ────────────────────────────────────────────────────────────

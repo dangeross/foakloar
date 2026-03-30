@@ -246,9 +246,9 @@ describe('engine roaming NPC integration', () => {
 
     // Player should have lost the sword
     expect(engine.player.hasItem(ref(`${WORLD}:item:sword`))).toBe(false);
-    // NPC should have gained it
+    // NPC should have gained it (in stolen list, not native inventory)
     const npcState = engine.player.getNpcState(ref(`${WORLD}:npc:thief`));
-    expect(npcState.inventory).toContain(ref(`${WORLD}:item:sword`));
+    expect(npcState.stolen).toContain(ref(`${WORLD}:item:sword`));
     // Output should mention the theft
     expect(output.some((e) => e.type === 'error' && e.text.includes('snatches'))).toBe(true);
   });
@@ -285,11 +285,12 @@ describe('engine roaming NPC integration', () => {
     });
     const events = buildEvents(room1, stashRoom, portal, dagger, thief);
 
-    // NPC starts with a dagger in inventory
+    // NPC starts with a stolen dagger (depositing only clears stolen items)
     const npcStates = {
       [ref(`${WORLD}:npc:thief`)]: {
         state: null,
-        inventory: [ref(`${WORLD}:item:dagger`)],
+        inventory: [],
+        stolen: [ref(`${WORLD}:item:dagger`)],
         health: null,
       },
     };
@@ -304,9 +305,9 @@ describe('engine roaming NPC integration', () => {
     // At moveCount=1, NPC moves to stash (route[1])
     await engine.handleCommand('north');
 
-    // NPC should have deposited the dagger
+    // NPC should have deposited the dagger (stolen list cleared; native inventory unchanged)
     const npcState = engine.player.getNpcState(ref(`${WORLD}:npc:thief`));
-    expect(npcState.inventory).toEqual([]);
+    expect(npcState.stolen).toEqual([]);
   });
 
   it('can talk to a roaming NPC', async () => {
@@ -418,7 +419,7 @@ describe('engine roaming NPC integration', () => {
     engine.flush();
     expect(engine.player.hasItem(ref(`${WORLD}:item:key`))).toBe(false);
     const npcState = engine.player.getNpcState(ref(`${WORLD}:npc:thief`));
-    expect(npcState.inventory).toContain(ref(`${WORLD}:item:key`));
+    expect(npcState.stolen).toContain(ref(`${WORLD}:item:key`));
 
     // Re-enter room — key should NOT appear
     engine.enterRoom(ref(`${WORLD}:place:cave`));
@@ -447,7 +448,8 @@ describe('engine roaming NPC integration', () => {
     const npcStates = {
       [ref(`${WORLD}:npc:thief`)]: {
         state: null,
-        inventory: [ref(`${WORLD}:item:key`)],
+        inventory: [],
+        stolen: [ref(`${WORLD}:item:key`)],
         health: null,
       },
     };
@@ -475,5 +477,173 @@ describe('engine roaming NPC integration', () => {
     engine.enterRoom(ref(`${WORLD}:place:stash`));
     const stashOutput = engine.flush();
     expect(stashOutput.some((e) => e.type === 'item' && e.text.includes('Key'))).toBe(true);
+  });
+
+  // ── NPC native inventory ──────────────────────────────────────────────
+
+  it('initNpcState seeds native inventory from event tags', () => {
+    const sword = makeItem('sword');
+    const thief = makeRoamingNPC('thief', {
+      routes: [`${WORLD}:place:market`],
+      inventory: [`${WORLD}:item:sword`],
+    });
+    const state = initNpcState(thief);
+    expect(state.inventory).toContain(ref(`${WORLD}:item:sword`));
+    expect(state.stolen).toEqual([]);
+  });
+
+  it('native inventory shown on examine; stolen items shown together', async () => {
+    const room = makePlace('market', { npcs: [`${WORLD}:npc:thief`] });
+    const sword = makeItem('sword');
+    const dagger = makeItem('dagger');
+    const thief = makeRoamingNPC('thief', {
+      routes: [`${WORLD}:place:market`],
+      inventory: [`${WORLD}:item:sword`],
+      content: 'A shifty figure.',
+    });
+    const events = buildEvents(room, sword, dagger, thief);
+    const engine = createEngine(events, {
+      place: ref(`${WORLD}:place:market`),
+      inventory: [ref(`${WORLD}:item:dagger`)],
+      moveCount: 0,
+    });
+    // Seed stolen item directly
+    engine.player.ensureNpcState(ref(`${WORLD}:npc:thief`), {
+      state: null, inventory: [ref(`${WORLD}:item:sword`)], stolen: [ref(`${WORLD}:item:dagger`)], health: null,
+    });
+    engine.enterRoom(ref(`${WORLD}:place:market`));
+    engine.flush();
+
+    await engine.handleCommand('examine thief');
+    const out = engine.flush();
+    const carryLine = out.find((e) => e.text?.includes('Carrying:'));
+    expect(carryLine).toBeTruthy();
+    expect(carryLine.text).toContain('Sword');
+    expect(carryLine.text).toContain('Dagger');
+  });
+
+  it('steals-item goes to stolen list, not native inventory', async () => {
+    const room = makePlace('market');
+    const sword = makeItem('sword');
+    const thief = makeRoamingNPC('thief', {
+      speed: 1,
+      routes: [`${WORLD}:place:market`],
+      inventory: [],
+      onEncounter: [['player', 'steals-item', 'any']],
+    });
+    const events = buildEvents(room, sword, thief);
+    const engine = createEngine(events, {
+      place: ref(`${WORLD}:place:market`),
+      inventory: [ref(`${WORLD}:item:sword`)],
+      moveCount: 0,
+    });
+    engine.enterRoom(ref(`${WORLD}:place:market`), { isMoving: true });
+    engine.flush();
+
+    const npcState = engine.player.getNpcState(ref(`${WORLD}:npc:thief`));
+    expect(npcState.stolen).toContain(ref(`${WORLD}:item:sword`));
+    expect(npcState.inventory).toEqual([]);
+  });
+
+  it('deposits clears stolen list but leaves native inventory', async () => {
+    const cave = makePlace('cave', { exits: ['north'] });
+    const stash = makePlace('stash', { exits: ['south'] });
+    const portal = makePortal('p', [
+      [`${WORLD}:place:cave`, 'north', ''],
+      [`${WORLD}:place:stash`, 'south', ''],
+    ]);
+    const sword = makeItem('sword');
+    const key = makeItem('key');
+    const thief = makeRoamingNPC('thief', {
+      speed: 1,
+      order: 'sequential',
+      routes: [`${WORLD}:place:cave`, `${WORLD}:place:stash`],
+      inventory: [`${WORLD}:item:sword`],   // native — should survive deposit
+      onEnter: [[ref(`${WORLD}:place:stash`), 'deposits']],
+    });
+    const events = buildEvents(cave, stash, portal, sword, key, thief);
+    const npcStates = {
+      [ref(`${WORLD}:npc:thief`)]: {
+        state: null,
+        inventory: [ref(`${WORLD}:item:sword`)],
+        stolen: [ref(`${WORLD}:item:key`)],
+        health: null,
+      },
+    };
+    const engine = createEngine(events, { place: ref(`${WORLD}:place:cave`), moveCount: 0 }, npcStates);
+    engine.enterRoom(ref(`${WORLD}:place:cave`));
+    engine.flush();
+
+    await engine.handleCommand('north');
+
+    const npcState = engine.player.getNpcState(ref(`${WORLD}:npc:thief`));
+    // Stolen item deposited
+    expect(npcState.stolen).toEqual([]);
+    // Native inventory untouched
+    expect(npcState.inventory).toContain(ref(`${WORLD}:item:sword`));
+  });
+
+  // ── examine roaming NPC ───────────────────────────────────────────────
+
+  it('examine finds a roaming NPC at the current place', async () => {
+    const room = makePlace('market', { exits: [] });
+    const guard = makeRoamingNPC('guard', {
+      speed: 1,
+      routes: [`${WORLD}:place:market`],
+      content: 'A stern guard.',
+    });
+    const events = buildEvents(room, guard);
+    const engine = createEngine(events, {
+      place: ref(`${WORLD}:place:market`),
+      moveCount: 0,
+    });
+    engine.enterRoom(ref(`${WORLD}:place:market`));
+    engine.flush();
+
+    await engine.handleCommand('examine guard');
+    const out = engine.flush();
+    expect(out.some((e) => e.text?.includes('stern guard'))).toBe(true);
+    expect(out.some((e) => e.text?.includes("don't see"))).toBe(false);
+  });
+
+  it('examine does not find a roaming NPC that is at a different place', async () => {
+    const market = makePlace('market', { exits: ['north'] });
+    const plaza = makePlace('plaza', { exits: ['south'] });
+    const portal = makePortal('p', [
+      [`${WORLD}:place:market`, 'north', ''],
+      [`${WORLD}:place:plaza`, 'south', ''],
+    ]);
+    // Guard routes: market (move 0), plaza (move 1)
+    const guard = makeRoamingNPC('guard', {
+      speed: 1,
+      routes: [`${WORLD}:place:market`, `${WORLD}:place:plaza`],
+      content: 'A stern guard.',
+    });
+    const events = buildEvents(market, plaza, portal, guard);
+    const engine = createEngine(events, {
+      place: ref(`${WORLD}:place:market`),
+      moveCount: 0,
+    });
+    engine.enterRoom(ref(`${WORLD}:place:market`));
+    engine.flush();
+
+    // Move to plaza — guard also moves to plaza (moveCount now 1, route[1])
+    await engine.handleCommand('north');
+    engine.flush();
+
+    // Now player is in plaza, guard is also in plaza — should be findable
+    await engine.handleCommand('examine guard');
+    const outFound = engine.flush();
+    expect(outFound.some((e) => e.text?.includes('stern guard'))).toBe(true);
+
+    // Move back to market — guard moves back to market (moveCount 2, route[0])
+    await engine.handleCommand('south');
+    engine.flush();
+
+    // Player in market, guard also in market at moveCount=2
+    // Verify guard IS found here too
+    await engine.handleCommand('examine guard');
+    const outFoundAgain = engine.flush();
+    expect(outFoundAgain.some((e) => e.text?.includes('stern guard'))).toBe(true);
   });
 });

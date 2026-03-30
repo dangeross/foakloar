@@ -4,7 +4,7 @@
 
 import { getTag, getTags, getDefaultState } from './world.js';
 import { isEventTrusted } from './trust.js';
-import { calculateNpcPlace } from './npc.js';
+import { calculateNpcPlace, initNpcState } from './npc.js';
 
 export function mixNpcEncounter(Engine) {
   Engine.prototype._fireNpcEncounter = function(npcEvent, npcDtag) {
@@ -46,8 +46,8 @@ export function mixNpcEncounter(Engine) {
   Engine.prototype._npcStealsItem = function(npcDtag, target) {
     const npcEvent = this.events.get(npcDtag);
     const npcTitle = npcEvent ? getTag(npcEvent, 'title') : 'Someone';
-    // Ensure NPC state exists so it can carry stolen items
-    this.player.ensureNpcState(npcDtag, { state: getDefaultState(npcEvent) || 'default', inventory: [] });
+    // Ensure NPC state is seeded (native inventory + stolen list)
+    this.player.ensureNpcState(npcDtag, initNpcState(npcEvent));
 
     if (!target || target === 'any') {
       // Steal the most recently acquired item

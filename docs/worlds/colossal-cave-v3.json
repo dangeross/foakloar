@@ -1,0 +1,928 @@
+{
+  "answers": {},
+  "walkthrough": [
+    { "input": "east",            "expect": ["Well House", "lantern", "keys"] },
+    { "input": "take lantern",    "expect": ["Taken"] },
+    { "input": "take keys",       "expect": ["Taken"] },
+    { "input": "turn on lantern", "expect": ["flickers to life"] },
+    { "input": "west",            "expect": ["End of Road"] },
+    { "input": "south",           "expect": ["Valley"] },
+    { "input": "south",           "expect": ["Slit"] },
+    { "input": "south",           "expect": ["Grate"] },
+    { "input": "open grate",      "expect": ["clicks open"] },
+    { "input": "down",            "expect": ["Cobble Crawl"] },
+    { "input": "take cage",       "expect": ["Taken"] },
+    { "input": "west",              "expect": ["Debris Room", "inscription"] },
+    { "input": "examine inscription","expect": ["XYZZY"] },
+    { "input": "take rod",          "expect": ["Taken"] },
+    { "input": "west",            "expect": ["Bird Room"] },
+    { "input": "drop rod",        "expect": ["Dropped"] },
+    { "input": "catch bird",      "expect": ["captured", "cage"] },
+    { "input": "take rod",        "expect": ["Taken"] },
+    { "input": "west",            "expect": ["Hall of Mists"] },
+    { "input": "south",           "expect": ["gold", "won't get it up"] },
+    { "input": "take gold",       "expect": ["Taken"] },
+    { "input": "north",           "expect": ["Hall of Mists"] },
+    { "input": "north",           "expect": ["Hall of the Mountain King", "snake"] },
+    { "input": "release bird",    "expect": ["feathers", "retreats"] },
+    { "input": "south",           "expect": ["South Side Chamber", "jewelry"] },
+    { "input": "take jewelry",    "expect": ["Taken"] },
+    { "input": "north",           "expect": ["Hall of the Mountain King"] },
+    { "input": "west",            "expect": ["West Side Chamber", "coins"] },
+    { "input": "take coins",      "expect": ["Taken"] },
+    { "input": "east",            "expect": ["Hall of the Mountain King"] },
+    { "input": "north",              "expect": ["Y2"] },
+    { "input": "examine rock",       "expect": ["PLUGH"] },
+    { "input": "plugh",              "expect": ["Well House"] },
+    { "input": "examine inscription","expect": ["PLUGH"] },
+    { "input": "drop gold in shelf",    "expect": ["gleams"] },
+    { "input": "drop jewelry in shelf", "expect": ["light"] },
+    { "input": "drop coins in shelf",   "expect": ["clink"] },
+    { "input": "plugh",                 "expect": ["Y2"] }
+  ],
+  "events": [
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:world"],
+        ["t", "colossal-cave"],
+        ["type", "world"],
+        ["title", "Colossal Cave Adventure"],
+        ["author", "Crowther & Woods (1976) — FOAKLOAR port v3"],
+        ["version", "0.3.0"],
+        ["lang", "en"],
+        ["collaboration", "closed"],
+        ["w", "foakloar"],
+        ["start", "30078:<PUBKEY>:colossal-cave:place:end-of-road"],
+        ["health", "6"],
+        ["max-health", "6"],
+        ["max-inventory", "7", "Your hands are full."],
+        ["on-player-health", "down", "0", "consequence", "30078:<PUBKEY>:colossal-cave:consequence:death"],
+        ["counter", "score", "0"],
+        ["hud", "Score: {{score}}"],
+        ["theme", "terminal-green"],
+        ["effects", "typewriter"],
+        ["tag", "classic"],
+        ["tag", "exploration"],
+        ["voice", "Terse, dry, second-person. Concrete sensory detail. Puzzle feedback is deadpan. Magic words delivered without ceremony."]
+      ],
+      "content": "You are standing at the end of a road before a small brick building. Around you is a forest. A small stream flows out of the building and down a gully."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:end-of-road"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "End of Road"],
+        ["exit", "east"],
+        ["exit", "in"],
+        ["exit", "west"],
+        ["exit", "north"],
+        ["exit", "south"],
+        ["exit", "up"]
+      ],
+      "content": "You are standing at the end of a road before a small brick building. Around you is a forest. A small stream flows out of the building and down a gully."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:well-house"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "Well House"],
+        ["exit", "west"],
+        ["exit", "out"],
+        ["item", "30078:<PUBKEY>:colossal-cave:item:lantern"],
+        ["item", "30078:<PUBKEY>:colossal-cave:item:keys"],
+        ["item", "30078:<PUBKEY>:colossal-cave:item:food"],
+        ["item", "30078:<PUBKEY>:colossal-cave:item:bottle"],
+        ["feature", "30078:<PUBKEY>:colossal-cave:feature:xyzzy-wellhouse"],
+        ["feature", "30078:<PUBKEY>:colossal-cave:feature:plugh-wellhouse"],
+        ["feature", "30078:<PUBKEY>:colossal-cave:feature:deposit-shelf"],
+        ["noun", "wellhouse", "well house", "building", "cabin"],
+        ["verb", "xyzzy"],
+        ["verb", "plugh"],
+        ["on-interact", "xyzzy", "", "traverse", "30078:<PUBKEY>:colossal-cave:portal:xyzzy-wellhouse-to-debris"],
+        ["on-interact", "plugh", "", "traverse", "30078:<PUBKEY>:colossal-cave:portal:plugh-wellhouse-to-y2"]
+      ],
+      "content": "You are inside a small well house for a large spring. There are some keys on the ground here. There is a shiny brass lantern nearby. There is food here. There is a bottle of water here."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:valley"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "Valley"],
+        ["exit", "north"],
+        ["exit", "south"],
+        ["exit", "west"],
+        ["exit", "up"],
+        ["exit", "down"]
+      ],
+      "content": "You are in a valley in the forest beside a stream tumbling along a rocky bed."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:slit-in-streambed"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "Slit in Streambed"],
+        ["exit", "north"],
+        ["exit", "south"],
+        ["exit", "down"]
+      ],
+      "content": "At your feet all the water of the stream splashes into a 2-inch slit in the rock. Downstream the streambed is bare rock."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:outside-grate"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "Outside Grate"],
+        ["exit", "north"],
+        ["exit", "south"],
+        ["exit", "east"],
+        ["exit", "west"],
+        ["exit", "down"],
+        ["feature", "30078:<PUBKEY>:colossal-cave:feature:grate"]
+      ],
+      "content": "You are in a 20-foot depression floored with bare dirt. Set into the dirt is a strong steel grate mounted in concrete. A dry streambed leads into the depression from the north."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:cobble-crawl"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "Cobble Crawl"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:item:lantern", "on", "It is pitch dark. You are likely to be eaten by a grue."],
+        ["exit", "east"],
+        ["exit", "west"],
+        ["exit", "up"],
+        ["item", "30078:<PUBKEY>:colossal-cave:item:wicker-cage"],
+        ["npc", "30078:<PUBKEY>:colossal-cave:npc:grue"]
+      ],
+      "content": "You are crawling over cobbles in a low passage. There is a dim passage to the east and a wider passage to the west."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:debris-room"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "Debris Room"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:item:lantern", "on", "It is pitch dark. You are likely to be eaten by a grue."],
+        ["exit", "east"],
+        ["exit", "west"],
+        ["item", "30078:<PUBKEY>:colossal-cave:item:black-rod"],
+        ["feature", "30078:<PUBKEY>:colossal-cave:feature:xyzzy-debris"],
+        ["npc", "30078:<PUBKEY>:colossal-cave:npc:grue"],
+        ["verb", "xyzzy"],
+        ["on-interact", "xyzzy", "", "traverse", "30078:<PUBKEY>:colossal-cave:portal:xyzzy-debris-to-wellhouse"],
+        ["state", "unvisited"],
+        ["transition", "unvisited", "visited", ""],
+        ["on-enter", "player", "unvisited", "increment", "score", "1"],
+        ["on-enter", "player", "unvisited", "set-state", "visited"]
+      ],
+      "content": "You are in a debris room filled with stuff washed in from the surface. A low wide passage with cobbles becomes plugged with mud and debris here, but an awkward passage leads west into the rocks. Rough stone steps lead up the slope."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:bird-room"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "Bird Room"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:item:lantern", "on", "It is pitch dark. You are likely to be eaten by a grue."],
+        ["exit", "east"],
+        ["exit", "west"],
+        ["npc", "30078:<PUBKEY>:colossal-cave:npc:bird"],
+        ["npc", "30078:<PUBKEY>:colossal-cave:npc:grue"],
+        ["state", "unvisited"],
+        ["transition", "unvisited", "visited", ""],
+        ["on-enter", "player", "unvisited", "increment", "score", "1"],
+        ["on-enter", "player", "unvisited", "set-state", "visited"]
+      ],
+      "content": "You are in a splendid chamber thirty feet high. The walls are frozen rivers of orange stone. An awkward sloping canyon winds upward to the east. A cheerful little bird is sitting here singing."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:hall-of-mists"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "Hall of Mists"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:item:lantern", "on", "It is pitch dark. You are likely to be eaten by a grue."],
+        ["exit", "east"],
+        ["exit", "west"],
+        ["exit", "north"],
+        ["exit", "south"],
+        ["exit", "up"],
+        ["feature", "30078:<PUBKEY>:colossal-cave:feature:fissure"],
+        ["npc", "30078:<PUBKEY>:colossal-cave:npc:grue"],
+        ["state", "unvisited"],
+        ["transition", "unvisited", "visited", ""],
+        ["on-enter", "player", "unvisited", "increment", "score", "2"],
+        ["on-enter", "player", "unvisited", "set-state", "visited"]
+      ],
+      "content": "You are at one end of a vast hall stretching forward out of sight to the west. There are openings to either side. Nearby, a wide stone staircase leads downward. The hall is filled with wisps of white mist swaying to and fro almost as if alive."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:nugget-room"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "Nugget of Gold Room"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:item:lantern", "on", "It is pitch dark. You are likely to be eaten by a grue."],
+        ["exit", "north"],
+        ["item", "30078:<PUBKEY>:colossal-cave:item:gold-nugget"],
+        ["npc", "30078:<PUBKEY>:colossal-cave:npc:grue"]
+      ],
+      "content": "This is a low room with a crude note on the wall. The note says, 'You won't get it up the steps'."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:hall-of-mountain-king"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "Hall of the Mountain King"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:item:lantern", "on", "It is pitch dark. You are likely to be eaten by a grue."],
+        ["exit", "north"],
+        ["exit", "south"],
+        ["exit", "east"],
+        ["exit", "west"],
+        ["exit", "up"],
+        ["exit", "southwest"],
+        ["npc", "30078:<PUBKEY>:colossal-cave:npc:snake"],
+        ["npc", "30078:<PUBKEY>:colossal-cave:npc:grue"],
+        ["state", "unvisited"],
+        ["transition", "unvisited", "visited", ""],
+        ["on-enter", "player", "unvisited", "increment", "score", "2"],
+        ["on-enter", "player", "unvisited", "set-state", "visited"]
+      ],
+      "content": "You are in the Hall of the Mountain King, with passages off in all directions."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:south-side-chamber"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "South Side Chamber"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:item:lantern", "on", "It is pitch dark. You are likely to be eaten by a grue."],
+        ["exit", "north"],
+        ["item", "30078:<PUBKEY>:colossal-cave:item:precious-jewelry"],
+        ["npc", "30078:<PUBKEY>:colossal-cave:npc:grue"]
+      ],
+      "content": "Stalactites and stalagmites crowd this chamber. Something glitters in the dim light."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:west-side-chamber"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "West Side Chamber"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:item:lantern", "on", "It is pitch dark. You are likely to be eaten by a grue."],
+        ["exit", "east"],
+        ["item", "30078:<PUBKEY>:colossal-cave:item:coins"],
+        ["npc", "30078:<PUBKEY>:colossal-cave:npc:grue"]
+      ],
+      "content": "Here are some coins: 'In god we trust', it says."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:place:y2"],
+        ["t", "colossal-cave"],
+        ["type", "place"],
+        ["title", "Y2"],
+        ["exit", "south"],
+        ["exit", "north"],
+        ["exit", "east"],
+        ["exit", "west"],
+        ["feature", "30078:<PUBKEY>:colossal-cave:feature:plugh-rock"],
+        ["npc", "30078:<PUBKEY>:colossal-cave:npc:grue"],
+        ["verb", "plugh"],
+        ["on-interact", "plugh", "", "traverse", "30078:<PUBKEY>:colossal-cave:portal:plugh-y2-to-wellhouse"],
+        ["state", "unvisited"],
+        ["transition", "unvisited", "visited", ""],
+        ["on-enter", "player", "unvisited", "set-state", "visited"]
+      ],
+      "content": "You are in a large room, with a passage to the south, a passage to the west, and a wall of broken rock to the east. There is a large 'Y2' on a rock in the room's center. Sometimes you hear a hollow voice say 'PLUGH'."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:road-east-to-wellhouse"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:end-of-road", "east", "A small brick building."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:well-house", "west", "Out into the forest."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:road-in-to-wellhouse"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:end-of-road", "in", "Into the building."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:well-house", "out", "Out of the building."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:road-to-valley"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:end-of-road", "south", "Down into the valley."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:valley", "north", "Back up the road."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:valley-to-slit"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:valley", "south", "Further down the streambed."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:slit-in-streambed", "north", "Back up the valley."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:slit-to-grate"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:slit-in-streambed", "south", "Down the dry streambed."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:outside-grate", "north", "Back up the streambed."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:grate-down"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:feature:grate", "open", "The grate is locked shut."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:outside-grate", "down", "Down through the grate."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:cobble-crawl", "up", "Up through the grate to the surface."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:cobble-to-debris"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:cobble-crawl", "west", "A wider passage to the west."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:debris-room", "east", "The cobble crawl to the east."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:debris-to-bird"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:debris-room", "west", "An awkward passage leads west."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:bird-room", "east", "A sloping canyon winds east."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:bird-to-mists"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:bird-room", "west", "The passage continues west."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:hall-of-mists", "east", "East toward the bird room."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:mists-to-nugget"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:hall-of-mists", "south", "Down a staircase to the south."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:nugget-room", "north", "Back up the staircase."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:mists-to-mountain-king"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:hall-of-mists", "north", "North toward the Hall of the Mountain King."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:hall-of-mountain-king", "south", "South back to the Hall of Mists."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:mountain-king-to-south"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:npc:snake", "gone", "A large green snake bars the way south."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:hall-of-mountain-king", "south", "South passage, now clear."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:south-side-chamber", "north", "Back north to the Hall of the Mountain King."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:mountain-king-to-west"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:hall-of-mountain-king", "west", "West to a side chamber."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:west-side-chamber", "east", "Back east to the Hall."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:mountain-king-to-y2"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:hall-of-mountain-king", "north", "North to a large room."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:y2", "south", "South toward the Hall of the Mountain King."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:xyzzy-debris-to-wellhouse"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["state", "hidden"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:feature:xyzzy-debris", "read", "Nothing happens."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:well-house", "", ""]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:xyzzy-wellhouse-to-debris"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["state", "hidden"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:feature:xyzzy-wellhouse", "read", "Nothing happens."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:debris-room", "", ""]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:plugh-y2-to-wellhouse"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["state", "hidden"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:feature:plugh-rock", "read", "Nothing happens."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:well-house", "", ""]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:portal:plugh-wellhouse-to-y2"],
+        ["t", "colossal-cave"],
+        ["type", "portal"],
+        ["state", "hidden"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:feature:plugh-wellhouse", "read", "Nothing happens."],
+        ["exit", "30078:<PUBKEY>:colossal-cave:place:y2", "", ""]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:item:lantern"],
+        ["t", "colossal-cave"],
+        ["type", "item"],
+        ["title", "Brass Lantern"],
+        ["noun", "lantern", "brass lantern", "lamp", "light"],
+        ["verb", "turn on", "switch on", "on", "light"],
+        ["verb", "turn off", "switch off", "off", "extinguish"],
+        ["state", "off"],
+        ["counter", "battery", "330"],
+        ["transition", "off",        "on",         "The lantern flickers to life, casting a warm glow."],
+        ["transition", "on",         "flickering",  "The lantern flickers ominously. The battery is running low."],
+        ["transition", "flickering", "on",           ""],
+        ["transition", "on",         "off",          "Darkness closes in."],
+        ["transition", "flickering", "off",           "Darkness closes in."],
+        ["transition", "flickering", "dead",          "The lantern flickers one last time and dies."],
+        ["transition", "on",         "dead",          "The lantern flickers and dies. You are plunged into darkness."],
+        ["transition", "dead",       "dead",          "The lantern is dead and will not light."],
+        ["on-interact", "turn on",  "off",        "set-state",  "on"],
+        ["on-interact", "turn on",  "dead",       "set-state",  "dead"],
+        ["on-interact", "turn off", "on",         "set-state",  "off"],
+        ["on-interact", "turn off", "flickering", "set-state",  "off"],
+        ["on-move", "on",           "decrement",  "battery",    "1"],
+        ["on-move", "flickering",   "decrement",  "battery",    "1"],
+        ["on-counter", "down", "battery", "50", "set-state", "flickering"],
+        ["on-counter", "down", "battery", "0",  "set-state", "dead"],
+        ["on-counter", "down", "battery", "0",  "consequence", "30078:<PUBKEY>:colossal-cave:consequence:lamp-dies"]
+      ],
+      "content": "A shiny brass lantern, battery-powered."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:item:keys"],
+        ["t", "colossal-cave"],
+        ["type", "item"],
+        ["title", "Set of Keys"],
+        ["noun", "keys", "key", "set of keys"]
+      ],
+      "content": "A set of keys, presumably to the grate."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:item:food"],
+        ["t", "colossal-cave"],
+        ["type", "item"],
+        ["title", "Food"],
+        ["noun", "food", "ration", "lunch"],
+        ["verb", "eat"],
+        ["on-interact", "eat", "", "heal",         "2"],
+        ["on-interact", "eat", "", "consume-item",  "30078:<PUBKEY>:colossal-cave:item:food"]
+      ],
+      "content": "Some food rations."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:item:bottle"],
+        ["t", "colossal-cave"],
+        ["type", "item"],
+        ["title", "Small Bottle"],
+        ["noun", "bottle", "water", "small bottle"],
+        ["verb", "drink"],
+        ["state", "water"],
+        ["transition", "water", "empty", "You drink the water. The bottle is now empty."],
+        ["on-interact", "drink", "water", "heal",      "1"],
+        ["on-interact", "drink", "water", "set-state", "empty"]
+      ],
+      "content": "A small bottle of spring water."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:item:wicker-cage"],
+        ["t", "colossal-cave"],
+        ["type", "item"],
+        ["title", "Wicker Cage"],
+        ["noun", "cage", "wicker cage", "bird cage"],
+        ["state", "empty"],
+        ["transition", "empty",    "occupied", "The bird is now in the cage."],
+        ["transition", "occupied", "empty",    "The bird flutters free."]
+      ],
+      "content": "A small wicker cage."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:item:black-rod"],
+        ["t", "colossal-cave"],
+        ["type", "item"],
+        ["title", "Black Rod"],
+        ["noun", "rod", "black rod", "star rod"],
+        ["verb", "wave"],
+        ["on-interact", "wave", "", "set-state", "bridged", "30078:<PUBKEY>:colossal-cave:feature:fissure"]
+      ],
+      "content": "A three-foot black rod with a rusty star on an end."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:item:gold-nugget"],
+        ["t", "colossal-cave"],
+        ["type", "item"],
+        ["title", "Large Gold Nugget"],
+        ["noun", "gold", "nugget", "gold nugget", "large gold nugget"],
+        ["state", "held"],
+        ["transition", "held", "deposited", "The gold nugget gleams on the shelf."]
+      ],
+      "content": "It's a large sparkling nugget of gold!"
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:item:precious-jewelry"],
+        ["t", "colossal-cave"],
+        ["type", "item"],
+        ["title", "Precious Jewelry"],
+        ["noun", "jewelry", "jewels", "precious jewelry", "gems"],
+        ["state", "held"],
+        ["transition", "held", "deposited", "The gems catch the light beautifully."]
+      ],
+      "content": "Several extremely rare and priceless gems."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:item:coins"],
+        ["t", "colossal-cave"],
+        ["type", "item"],
+        ["title", "Rare Coins"],
+        ["noun", "coins", "coin", "rare coins"],
+        ["state", "held"],
+        ["transition", "held", "deposited", "The coins clink softly as they settle."]
+      ],
+      "content": "Some rare coins of mixed origin."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:feature:grate"],
+        ["t", "colossal-cave"],
+        ["type", "feature"],
+        ["title", "Steel Grate"],
+        ["noun", "grate", "steel grate", "gate", "door"],
+        ["verb", "open", "unlock"],
+        ["verb", "close", "lock"],
+        ["state", "closed"],
+        ["transition", "closed", "open",   "The grate clicks open."],
+        ["transition", "open",   "closed", "The grate swings shut."],
+        ["requires", "30078:<PUBKEY>:colossal-cave:item:keys", "", "You don't have the keys."],
+        ["on-interact", "open",  "closed", "set-state", "open"],
+        ["on-interact", "close", "open",   "set-state", "closed"]
+      ],
+      "content": "A strong steel grate is set into the ground, mounted in concrete."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:feature:xyzzy-debris"],
+        ["t", "colossal-cave"],
+        ["type", "feature"],
+        ["title", "Rock Inscription"],
+        ["noun", "inscription", "writing", "rock", "xyzzy"],
+        ["state", "unread"],
+        ["transition", "unread", "read", "You trace the letters with your finger. XYZZY."],
+        ["on-interact", "examine", "unread", "set-state", "read"]
+      ],
+      "content": "On the wall is scrawled the word 'XYZZY'."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:feature:xyzzy-wellhouse"],
+        ["t", "colossal-cave"],
+        ["type", "feature"],
+        ["title", "Rough Stone Wall"],
+        ["noun", "wall", "stone"],
+        ["state", "unread"],
+        ["transition", "unread", "read", "Scratched into the stone: XYZZY."],
+        ["on-interact", "examine", "unread", "set-state", "read"]
+      ],
+      "content": "The rough stone wall of the well house. Someone has scratched the word 'XYZZY' into the rock."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:feature:fissure"],
+        ["t", "colossal-cave"],
+        ["type", "feature"],
+        ["title", "Wide Fissure"],
+        ["noun", "fissure", "chasm", "crack"],
+        ["state", "unbridged"],
+        ["transition", "unbridged", "bridged",   "A crystal bridge appears, spanning the fissure!"],
+        ["transition", "bridged",   "unbridged", "The crystal bridge vanishes."]
+      ],
+      "content": "A wide fissure spans the hall from side to side."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:feature:plugh-rock"],
+        ["t", "colossal-cave"],
+        ["type", "feature"],
+        ["title", "Y2 Rock"],
+        ["noun", "rock", "y2"],
+        ["state", "unread"],
+        ["transition", "unread", "read", "Carved into the rock: Y2. And below it, faintly: PLUGH."],
+        ["on-interact", "examine", "unread", "set-state", "read"]
+      ],
+      "content": "A large rock with 'Y2' carved into it."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:npc:grue"],
+        ["t", "colossal-cave"],
+        ["type", "npc"],
+        ["title", "Grue"],
+        ["noun", "grue"],
+        ["requires-not", "30078:<PUBKEY>:colossal-cave:item:lantern", "on", ""],
+        ["on-encounter", "player", "consequence", "30078:<PUBKEY>:colossal-cave:consequence:eaten-by-grue"]
+      ],
+      "content": "It is pitch black."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:npc:bird"],
+        ["t", "colossal-cave"],
+        ["type", "npc"],
+        ["title", "Little Bird"],
+        ["noun", "bird", "little bird", "cheerful bird"],
+        ["verb", "catch"],
+        ["verb", "release", "free"],
+        ["state", "free"],
+        ["transition", "free",  "caged", "You catch the bird and place it in the cage."],
+        ["transition", "caged", "free",  "The bird flutters free in a flurry of feathers and attacks the snake. The snake retreats!"],
+        ["requires-not", "30078:<PUBKEY>:colossal-cave:item:black-rod", "", "The bird is frightened by the rod and refuses to be caught."],
+        ["requires", "30078:<PUBKEY>:colossal-cave:item:wicker-cage", "", "You need a cage to catch the bird."],
+        ["on-interact", "catch",   "free",  "set-state", "caged"],
+        ["on-interact", "catch",   "free",  "set-state", "occupied", "30078:<PUBKEY>:colossal-cave:item:wicker-cage"],
+        ["on-interact", "release", "caged", "set-state", "free"],
+        ["on-interact", "release", "caged", "set-state", "gone",     "30078:<PUBKEY>:colossal-cave:npc:snake"],
+        ["on-interact", "release", "caged", "set-state", "empty",    "30078:<PUBKEY>:colossal-cave:item:wicker-cage"]
+      ],
+      "content": "A cheerful little bird is sitting here singing. It seems frightened by the black rod."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:npc:snake"],
+        ["t", "colossal-cave"],
+        ["type", "npc"],
+        ["title", "Large Green Snake"],
+        ["noun", "snake", "serpent", "large green snake"],
+        ["state", "present"],
+        ["transition", "present", "gone", "The snake retreats!"]
+      ],
+      "content": "A large green snake bars the way south."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:consequence:death"],
+        ["t", "colossal-cave"],
+        ["type", "consequence"],
+        ["respawn", "30078:<PUBKEY>:colossal-cave:place:end-of-road"],
+        ["clears", "inventory"],
+        ["clears", "states"],
+        ["clears", "counters"]
+      ],
+      "content": "You died.\n\nYou find yourself back at the end of a road, as if waking from a dream. Your possessions are gone."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:consequence:eaten-by-grue"],
+        ["t", "colossal-cave"],
+        ["type", "consequence"],
+        ["respawn", "30078:<PUBKEY>:colossal-cave:place:end-of-road"],
+        ["clears", "inventory"],
+        ["clears", "states"],
+        ["clears", "counters"]
+      ],
+      "content": "It is pitch black. You are likely to be eaten by a grue.\n\n...You are eaten by a grue."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:consequence:lamp-dies"],
+        ["t", "colossal-cave"],
+        ["type", "consequence"]
+      ],
+      "content": "Your lantern flickers and dies. Darkness closes in around you."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:feature:plugh-wellhouse"],
+        ["t", "colossal-cave"],
+        ["type", "feature"],
+        ["title", "Spring Inscription"],
+        ["noun", "inscription", "spring", "plugh"],
+        ["state", "unread"],
+        ["transition", "unread", "read", "Etched near the spring: PLUGH."],
+        ["on-interact", "examine", "unread", "set-state", "read"]
+      ],
+      "content": "Near the spring, someone has etched a word into the stone."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:feature:deposit-shelf"],
+        ["t", "colossal-cave"],
+        ["type", "feature"],
+        ["title", "Wooden Shelf"],
+        ["noun", "shelf", "wooden shelf", "ledge"],
+        ["on-drop", "30078:<PUBKEY>:colossal-cave:item:gold-nugget",      "", "increment", "score", "9"],
+        ["on-drop", "30078:<PUBKEY>:colossal-cave:item:gold-nugget",      "", "set-state", "deposited", "30078:<PUBKEY>:colossal-cave:item:gold-nugget"],
+        ["on-drop", "30078:<PUBKEY>:colossal-cave:item:precious-jewelry", "", "increment", "score", "5"],
+        ["on-drop", "30078:<PUBKEY>:colossal-cave:item:precious-jewelry", "", "set-state", "deposited", "30078:<PUBKEY>:colossal-cave:item:precious-jewelry"],
+        ["on-drop", "30078:<PUBKEY>:colossal-cave:item:coins",            "", "increment", "score", "5"],
+        ["on-drop", "30078:<PUBKEY>:colossal-cave:item:coins",            "", "set-state", "deposited", "30078:<PUBKEY>:colossal-cave:item:coins"]
+      ],
+      "content": "A wooden shelf along the wall, clearly intended for storing valuables."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "colossal-cave:quest:first-treasure-run"],
+        ["t", "colossal-cave"],
+        ["type", "quest"],
+        ["title", "Return the Treasures"],
+        ["quest-type", "open"],
+        ["involves", "30078:<PUBKEY>:colossal-cave:item:gold-nugget"],
+        ["involves", "30078:<PUBKEY>:colossal-cave:item:precious-jewelry"],
+        ["involves", "30078:<PUBKEY>:colossal-cave:item:coins"],
+        ["requires", "30078:<PUBKEY>:colossal-cave:item:gold-nugget",      "deposited", "The gold nugget has not been deposited."],
+        ["requires", "30078:<PUBKEY>:colossal-cave:item:precious-jewelry", "deposited", "The jewelry has not been deposited."],
+        ["requires", "30078:<PUBKEY>:colossal-cave:item:coins",            "deposited", "The coins have not been deposited."]
+      ],
+      "content": "Find the treasures of Colossal Cave and return them to the Well House."
+    }
+
+  ]
+}

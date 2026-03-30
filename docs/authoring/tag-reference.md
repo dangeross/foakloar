@@ -162,7 +162,7 @@ The action tail is always: `"<action>", "<target>"` — with an optional `"<ext-
 | `heal` | amount | `["on-interact", "drink", "", "heal", "5"]` |
 | `consequence` | consequence ref | `["on-player-health", "down", "0", "consequence", "30078:<pk>:...:death"]` |
 | `steals-item` | item ref or `"any"` | `["on-encounter", "", "steals-item", "any"]` |
-| `deposits` | `""` | `["on-health", "down", "0", "deposits", ""]` |
+| `deposits` | `""` | `["on-enter", "<stash-ref>", "deposits", ""]` — drops stolen items only |
 | `flees` | `""` | `["on-health", "down", "3", "flees", ""]` |
 | `sound` | sound ref | `["on-interact", "ring", "", "sound", "30078:<pk>:...:sound:bell"]` |
 | `activate` | event ref (recipe, puzzle, or payment) | `["on-interact", "use", "", "activate", "30078:<pk>:...:recipe"]` |
@@ -400,12 +400,12 @@ One-way portal (1 exit tag) or two-way (2 exit tags):
 | `route` | `["route", "<place-ref>"]` (repeatable) | opt (roaming) | roaming waypoint |
 | `stash` | `["stash", "<place-ref>"]` | opt (roaming) | where NPC drops stolen items |
 | `roams-when` | `["roams-when", "<state>"]` | opt (roaming) | only roams in this state |
-| `inventory` | `["inventory", "<item-ref>"]` (repeatable) | opt | NPC-held item |
+| `inventory` | `["inventory", "<item-ref>"]` (repeatable) | opt | Native item the NPC starts with. Shown on `examine`. Never auto-dropped — use `give-item` in a trigger to transfer to the player. Separate from items stolen via `steals-item`. |
 | `requires` | `["requires", "<ref>", "<state>", "<desc>"]` (repeatable) | opt | — |
 | `requires-not` | `["requires-not", "<ref>", "<state>", "<desc>"]` (repeatable) | opt | — |
 | `sound` | `["sound", "<sound-ref>", "<role>", "<volume>", "<state?>"]` (repeatable) | opt | — |
 
-**Content field:** REQUIRED. **NPC placement:** Add `["npc", "<npc-ref>"]` to the **place** event. Use `inventory` not `item` for NPC-held items.
+**Content field:** REQUIRED. **NPC placement:** Add `["npc", "<npc-ref>"]` to the **place** event. Use `inventory` (not `item`) for NPC-held items. `steals-item` tracks stolen items separately — `deposits` only drops stolen items, never native inventory.
 
 ### dialogue
 

@@ -20,9 +20,10 @@ export function mixInteraction(Engine) {
     // Exclude items held by player or any NPC
     const onGround = itemDtags.filter((d) => {
       if (this.player.hasItem(d)) return false;
-      // Check all NPC inventories
+      // Check all NPC inventories (native + stolen)
       for (const npc of Object.values(this.player.npcStates)) {
-        if (npc.inventory && npc.inventory.includes(d)) return false;
+        if (npc.inventory?.includes(d)) return false;
+        if (npc.stolen?.includes(d)) return false;
       }
       return true;
     });
@@ -232,6 +233,20 @@ export function mixInteraction(Engine) {
 
   // ── Examine ───────────────────────────────────────────────────────────
 
+  /** Emit "Carrying: ..." line for an NPC — combines native inventory + stolen items. */
+  Engine.prototype._emitNpcCarrying = function(npcDtag) {
+    const npcState = this.player.getNpcState(npcDtag);
+    const allCarried = [
+      ...(npcState?.inventory || []),
+      ...(npcState?.stolen || []),
+    ];
+    if (allCarried.length === 0) return;
+    const names = allCarried
+      .map((ref) => { const ev = this.events.get(ref); return ev ? getTag(ev, 'title') : null; })
+      .filter(Boolean);
+    if (names.length > 0) this._emit(`Carrying: ${names.join(', ')}`, 'item');
+  };
+
   Engine.prototype.handleExamine = function(noun) {
     if (!this.place) return;
 
@@ -256,6 +271,27 @@ export function mixInteraction(Engine) {
         for (const nt of getTags(item, 'noun')) {
           for (let i = 1; i < nt.length; i++) {
             if (nt[i].toLowerCase() === noun) { match = { event: item, dtag: itemDtag, type: 'item' }; break; }
+          }
+          if (match) break;
+        }
+        if (match) break;
+      }
+    }
+
+    if (!match) {
+      // Check roaming NPCs currently at this place
+      const moveCount = this.player.getMoveCount();
+      const roaming = findRoamingNpcsAtPlace(
+        this.events, this.currentPlace, moveCount,
+        (dtag) => this.player.getNpcState(dtag),
+        this._getRoamingNpcList(),
+      );
+      for (const { npcEvent, npcDtag } of roaming) {
+        const title = getTag(npcEvent, 'title')?.toLowerCase() || '';
+        if (title.includes(noun)) { match = { event: npcEvent, dtag: npcDtag, type: 'npc' }; break; }
+        for (const nt of getTags(npcEvent, 'noun')) {
+          for (let i = 1; i < nt.length; i++) {
+            if (nt[i].toLowerCase() === noun) { match = { event: npcEvent, dtag: npcDtag, type: 'npc' }; break; }
           }
           if (match) break;
         }
@@ -292,6 +328,14 @@ export function mixInteraction(Engine) {
     const featureReq = checkRequires(event, this.player.state, this.events);
     if (!featureReq.allowed) {
       this._emit(featureReq.reason, 'error');
+      return;
+    }
+
+    // NPC examine — emit description + carrying list then return
+    if (getTag(event, 'type') === 'npc') {
+      const desc = event.content;
+      if (desc) this._emit(desc, 'narrative');
+      this._emitNpcCarrying(dtag);
       return;
     }
 
@@ -555,6 +599,7 @@ export function mixInteraction(Engine) {
       if (verb === 'examine') {
         const desc = event.content;
         if (desc) this._emit(desc, 'narrative');
+        this._emitNpcCarrying(dtag);
       } else if (verb === 'talk') {
         this.startDialogue(dtag);
       } else if (verb === 'attack') {

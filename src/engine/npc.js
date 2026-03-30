@@ -64,6 +64,7 @@ export function initNpcState(npcEvent) {
   return {
     state,
     inventory: inventoryRefs,
+    stolen: [],
     health: health ? parseInt(health, 10) : null,
   };
 }

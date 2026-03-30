@@ -212,6 +212,49 @@ Enter the room and use `talk to <noun>` to start the conversation. Walk through 
 
 ---
 
+## NPC Inventory and Theft
+
+### Native inventory
+
+An NPC can start with its own items declared via `inventory` tags:
+
+```json
+["inventory", "30078:<PUBKEY>:my-world:item:stiletto"],
+["inventory", "30078:<PUBKEY>:my-world:item:lantern"]
+```
+
+These items appear when the player examines the NPC ("Carrying: Stiletto, Lantern"). They are **never dropped automatically** — use a `give-item` action in an `on-health` trigger to transfer them to the player:
+
+```json
+["on-health", "down", "0", "give-item", "30078:<PUBKEY>:my-world:item:stiletto"]
+```
+
+### Stealing from the player
+
+`steals-item` takes an item from the player when a trigger fires. The stolen item is tracked separately from the NPC's native inventory:
+
+```json
+// Steal a specific item
+["on-encounter", "player", "steals-item", "30078:<PUBKEY>:my-world:item:lantern"]
+
+// Steal whatever the player is holding most recently
+["on-encounter", "player", "steals-item", "any"]
+```
+
+### Depositing stolen items
+
+A roaming NPC with a `stash` tag will deposit stolen items at that place when it arrives there via the `deposits` action. Only stolen items are deposited — native inventory is unaffected:
+
+```json
+// On the NPC event:
+["stash",    "30078:<PUBKEY>:my-world:place:hideout"],
+["on-enter", "30078:<PUBKEY>:my-world:place:hideout", "deposits"]
+```
+
+The stolen items then appear on the ground at the hideout, where the player can retrieve them.
+
+---
+
 ## Tips
 
 - **Dialogue text in content, not text tags** — The `content` field of a dialogue event is the NPC's speech. Do not use `["text", "..."]` tags — they do not exist in the dialogue schema.
