@@ -160,7 +160,10 @@ All previously tracked deviations have been fixed:
 | Examine as built-in command | Done |
 | Dialogue text → content field | Done |
 | Puzzle exit (back/leave/cancel) | Done |
-| Multi-relay support | In progress (feature/multi-relay) |
+| Multi-relay support | Done (merged) |
+| NPC native inventory (inventory tag, stolen separation, examine display) | Done |
+| Mobile typeahead (ghost text, verb/noun/direction, roaming NPC nouns) | Done |
+| World scaling indexes (portal, recipe, NPC, quest — single-pass rebuild) | Done |
 
 ---
 
