@@ -1131,7 +1131,7 @@ export default function App() {
                 style={{ color: 'transparent' }}
               >
                 {inputValue}
-                <span style={{ color: 'var(--colour-text)', opacity: 0.3 }}>
+                <span style={{ color: 'var(--colour-text)', opacity: 0.45 }}>
                   {typeahead.ghost}
                 </span>
               </div>
