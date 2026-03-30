@@ -32,6 +32,7 @@ import LoginPanel from './ui/LoginPanel.jsx';
 import ProfileEditor from './ui/ProfileEditor.jsx';
 import { loadDrafts, saveDraft, updateDraft, deleteDraft, clearDrafts, importEvents, exportDrafts, bulkPublish, retryFailed, loadAnswers } from '../builder/draftStore.js';
 import { validateWorld, verifyPuzzleHashes } from '../builder/validateWorld.js';
+import { useTypeahead } from '../hooks/useTypeahead.js';
 import RelaySettingsPanel from './RelaySettingsPanel.jsx';
 import PublishProgressPanel from '../builder/components/PublishProgressPanel.jsx';
 import SoundToggle from './SoundToggle.jsx';
@@ -173,6 +174,7 @@ export default function App() {
   const [publishResult, setPublishResult] = useState(null); // { published, failed, errors, details }
   const [showRelaySettings, setShowRelaySettings] = useState(false);
   const [showTrust, setShowTrust] = useState(false);
+  const [inputValue, setInputValue] = useState('');
   const engineRef = useRef(null);
   const inputRef = useRef(null);
   const prevWorldTag = useRef(worldTag);
@@ -481,6 +483,9 @@ export default function App() {
   const panelOpen = showDrafts || editorState || showLogin || showProfileEditor;
   const isTouchDevice = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
+  // Ghost-text typeahead
+  const typeahead = useTypeahead(inputValue, engineRef.current, mergedEvents);
+
   useEffect(() => {
     if (!panelOpen && !isTouchDevice) inputRef.current?.focus();
   }, [status, log, panelOpen]);
@@ -549,11 +554,22 @@ export default function App() {
     }
   }, [previewUnvouched]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  function acceptTypeahead() {
+    if (!typeahead) return false;
+    inputRef.current.value = typeahead.accept;
+    setInputValue(typeahead.accept);
+    // Move cursor to end
+    const len = typeahead.accept.length;
+    inputRef.current.setSelectionRange(len, len);
+    return true;
+  }
+
   async function onSubmit(e) {
     e.preventDefault();
     const val = inputRef.current.value;
     if (!val.trim()) return;
     inputRef.current.value = '';
+    setInputValue('');
     if (isTouchDevice) inputRef.current.blur();
     const engine = getEngine();
     if (!engine.dialogueActive && !engine.puzzleActive) {
@@ -586,6 +602,13 @@ export default function App() {
   }
 
   function onKeyDown(e) {
+    // Tab accepts the ghost-text suggestion (desktop)
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      acceptTypeahead();
+      return;
+    }
+
     const hist = historyRef.current;
     if (hist.length === 0) return;
 
@@ -1098,19 +1121,48 @@ export default function App() {
           <span style={{ color: craftingActive ? 'var(--colour-puzzle)' : 'var(--colour-text)' }}>
             {dialogueActive ? '#' : puzzleActive ? '?' : craftingActive ? '+' : '>'}
           </span>
-          <input
-            ref={inputRef}
-            type="text"
-            className="flex-1 bg-transparent border-none outline-none font-mono"
-            style={{ color: craftingActive ? 'var(--colour-puzzle)' : 'var(--colour-text)' }}
-            placeholder={dialogueActive ? 'Choose an option...' : puzzleActive ? 'Enter your answer...' : craftingActive ? 'Select an item...' : ''}
-            onKeyDown={onKeyDown}
-            autoFocus={!isTouchDevice}
-            autoCapitalize="off"
-            autoCorrect="off"
-            autoComplete="off"
-            spellCheck="false"
-          />
+          {/* Ghost-text wrapper */}
+          <div className="relative flex-1 flex items-center font-mono overflow-hidden">
+            {/* Ghost layer — sits behind the input, same font metrics */}
+            {typeahead && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 flex items-center pointer-events-none whitespace-pre select-none"
+                style={{ color: 'transparent' }}
+              >
+                {inputValue}
+                <span style={{ color: 'var(--colour-text)', opacity: 0.3 }}>
+                  {typeahead.ghost}
+                </span>
+              </div>
+            )}
+            <input
+              ref={inputRef}
+              type="text"
+              className="w-full bg-transparent border-none outline-none font-mono"
+              style={{ color: craftingActive ? 'var(--colour-puzzle)' : 'var(--colour-text)' }}
+              placeholder={dialogueActive ? 'Choose an option...' : puzzleActive ? 'Enter your answer...' : craftingActive ? 'Select an item...' : ''}
+              onKeyDown={onKeyDown}
+              onChange={(e) => setInputValue(e.target.value)}
+              autoFocus={!isTouchDevice}
+              autoCapitalize="off"
+              autoCorrect="off"
+              autoComplete="off"
+              spellCheck="false"
+            />
+          </div>
+          {/* Accept button — visible on touch only when a suggestion is available */}
+          {typeahead && isTouchDevice && (
+            <button
+              type="button"
+              onPointerDown={(e) => { e.preventDefault(); acceptTypeahead(); inputRef.current?.focus(); }}
+              className="shrink-0 font-mono px-1 opacity-50 active:opacity-100"
+              style={{ color: 'var(--colour-text)' }}
+              aria-label="Accept suggestion"
+            >
+              →
+            </button>
+          )}
         </form>
       )}
     </div>
