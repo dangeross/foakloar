@@ -309,14 +309,14 @@ export default function App() {
     if (candidates.length === 0) return null;
     // If URL includes a pubkey prefix, filter to matching author.
     // Fall back to all candidates if none match (graceful degradation).
-    const pinned = pubkeyPrefix
+    const filtered = pubkeyPrefix
       ? candidates.filter((ev) => ev.pubkey.startsWith(pubkeyPrefix))
       : candidates;
-    const pool = pinned.length > 0 ? pinned : candidates;
+    const finalist = filtered.length > 0 ? filtered : candidates;
     // Pick the oldest world event (lowest created_at) as genesis — attacker's
     // newer event won't override the original author
-    pool.sort((a, b) => (a.created_at || 0) - (b.created_at || 0));
-    worldEvent = pool[0];
+    finalist.sort((a, b) => (a.created_at || 0) - (b.created_at || 0));
+    worldEvent = finalist[0];
     if (!worldEvent) return null;
 
     const authorPubkey = worldEvent.pubkey;

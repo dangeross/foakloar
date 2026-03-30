@@ -2583,24 +2583,18 @@ The genesis pubkey is the source of truth — NOSTR event signatures make it cry
 
 ### 6.2 World Loading — URL Model
 
-**Hosted platform** (friendly slug, platform owns the pubkey mapping):
-```
-yoursite.com/the-lake
-```
-The platform resolves the slug to the genesis pubkey server-side. Good for curated worlds with friendly URLs.
-
-**Portable / decentralised** (pubkey in the URL, no platform dependency):
-```
-yoursite.com/the-lake/npub1sn0wdlez...
-```
-A specific author's version of a world slug. The `t` tag is the world name, the pubkey is the author — together they uniquely identify a world instance. Useful for accessing a collaborator's extended version or an author's own world on a shared slug.
+World URLs take the form `/w/<slug>` where the slug optionally includes an 8-character hex pubkey prefix:
 
 ```
-yoursite.com/world/npub1sn0wdlez...
+/w/the-lake               bare slug   — loads oldest world event for that tag (unsafe for sharing)
+/w/the-lake-c08d7b5a      pinned slug — filters to the author whose pubkey starts with c08d7b5a
 ```
-All worlds by a specific author — a world browser for that pubkey.
 
-Both models coexist. The platform provides friendly slugs for its featured worlds; the portable URL works everywhere.
+The prefix is the first 4 bytes (8 hex chars) of the author's pubkey — enough to prevent accidental collision while keeping URLs short and human-readable. The client generates the pinned form automatically via `history.replaceState` once the world event resolves, so bare slug URLs self-pin on first load.
+
+**Curated worlds** (lobby/landing page) reference full a-tags (`30078:<PUBKEY>:<slug>:world`) and are unaffected by the slug scheme — the pubkey is already baked in.
+
+**Sharing:** Copy the URL from the browser after a world loads — it will already be in pinned form. The pinned URL is safe to share; it will always resolve to the same author's world regardless of relay contents.
 
 ---
 
@@ -2644,10 +2638,10 @@ The platform maintains its own canonical list. Anyone can publish their own list
 
 **URL routing:**
 ```
-yoursite.com/worlds              → platform's NIP-51 curated list
-yoursite.com/the-lake            → resolves via platform list to canonical pubkey
-yoursite.com/the-lake/npub1...   → specific author's version of the slug
-yoursite.com/world/npub1...      → all worlds by a specific author
+/w                         → lobby (world browser, search, curated list)
+/w/the-lake                → bare slug (self-pins on load)
+/w/the-lake-c08d7b5a       → pinned slug (safe to share)
+/u/npub1...                → author profile page
 ```
 
 ---
