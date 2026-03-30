@@ -486,13 +486,6 @@ export default function App() {
   // Ghost-text typeahead
   const typeahead = useTypeahead(inputValue, engineRef.current, mergedEvents);
 
-  // Lock body scroll in game mode so the log scrolls internally and the input stays pinned.
-  // Restored when navigating away (route change triggers cleanup).
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, []);
-
   useEffect(() => {
     if (!panelOpen && !isTouchDevice) inputRef.current?.focus();
   }, [status, log, panelOpen]);
