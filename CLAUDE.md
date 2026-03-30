@@ -57,113 +57,34 @@ A decentralised text adventure built on NOSTR (kind 30078). The world is a graph
 
 ---
 
-## Tag Shape Reference (from spec)
+## Tag Shape Reference
+
+The spec is the full reference. These are the shapes most likely to be gotten wrong:
 
 ### requires / requires-not
 
-Always uses event refs (a-tag format `30078:<pubkey>:<d-tag>`), never bare flag strings.
+Always event refs (a-tag format), never bare strings. Always exactly 4 elements:
 
 ```
 ["requires",     "<event-ref>", "<state-or-blank>", "<description-or-blank>"]
 ["requires-not", "<event-ref>", "<state-or-blank>", "<description-or-blank>"]
 ```
 
-- Always exactly 4 elements (tag name + 3 arguments)
-- Blank state on items = player holds it in any state
-- The client resolves the event ref, checks its `type` tag, then checks state
-
-### on-* triggers (spec-defined)
-
-```
-["on-<trigger>", "<trigger-target>", "<action-type>", "<action-target?>"]
-```
-
-`on-interact` has a state guard at position 2:
+### on-interact — state guard at position 2
 
 ```
 ["on-interact", "<verb>", "<state-guard-or-blank>", "<action>", ...action-args]
 ```
 
-State guard blank (`""`) = fires in any state. A specific state value = fires only when the entity is in that state.
+Blank (`""`) = fires in any state. Named state = fires only when entity is in that state.
 
-Spec-defined triggers: `on-interact`, `on-complete`, `on-enter`, `on-encounter`, `on-attacked`, `on-health-zero`, `on-player-health-zero`, `on-move`, `on-counter`
-
-### on-counter
-
-Counter trigger — fires an action when a counter crosses a threshold in a declared direction (`down` or `up`):
+### on-counter — direction field required
 
 ```
-["on-counter", "<direction>", "<counter>", "<threshold>", "<action-type>", "<action-target?>"]
+["on-counter", "<down|up>", "<counter>", "<threshold>", "<action-type>", "<action-target?>"]
 ```
 
-`down` fires when counter crosses at-or-below threshold. `up` fires when counter crosses at-or-above threshold. Message comes from transition text, not from the tag. Example:
-
-```
-["on-counter", "down", "battery", "20", "set-state", "flickering"]
-["transition",  "on", "flickering", "The lantern flickers ominously."]
-```
-
-Spec-defined actions: `set-state`, `traverse`, `give-item`, `consume-item`, `deal-damage`, `deal-damage-npc`, `heal`, `consequence`, `steals-item`, `deposits`, `flees`, `decrement`, `increment`, `set-counter`, `sound`
-
-### state & transition
-
-```
-["state",      "<initial-state>"]
-["transition", "<from>", "<to>", "<optional-text>"]
-```
-
-### counter
-
-```
-["counter", "<name>", "<initial-value>"]
-```
-
----
-
-## Resolved Spec Deviations
-
-All previously tracked deviations have been fixed:
-
-1. **`on-counter`** — unified trigger with direction field (`down`/`up`). Fires actions when counter crosses threshold in declared direction. Message comes from transition text.
-2. **`requires` tags** — all use event refs with 4-element shape. No more bare flag strings.
-3. **`checkRequires`** — resolves events and dispatches on `type` tag (item, feature, puzzle, npc, portal).
-4. **`flags` removed** — all state tracking uses the unified `states` map keyed by d-tag.
-
----
-
-## Implementation Progress
-
-| Phase | Status |
-|-------|--------|
-| 1–14. Core engine (state, parser, NPCs, trust) | Done |
-| 15–18. Builder, themes, effects, validation | Done |
-| 19. Consequence dispatch | Done |
-| 20. Traverse action | Done |
-| 21. Counter threshold crossing | Done |
-| 22. increment/set-counter/decrement | Done |
-| 23. Payment LNURL flow | Done |
-| 24. Flees action | Done |
-| 25. Recipe/crafting | Done |
-| 26. Quest tracking | Done |
-| Combat system | Done |
-| Builder UX (tooltips, InlineList, + new dropdown) | Done |
-| Sound system (Strudel, ambient/layer/effect/bpm) | Done |
-| Sound as action type (on-* dispatchers) | Done |
-| Contains tag (item/feature containers) | Done |
-| Drop command | Done |
-| Vouch UI (contextual vouching) | Done |
-| Place on-enter dispatch | Done |
-| Endgame quests (hard/soft, restart, cascading eval) | Done |
-| Quest on-complete dispatch | Done |
-| Smoke tester + walkthrough runner | Done |
-| Discoverability checks (hint level) | Done |
-| Examine as built-in command | Done |
-| Dialogue text → content field | Done |
-| Puzzle exit (back/leave/cancel) | Done |
-| Multi-relay support | Done (merged) |
-| NPC native inventory (inventory tag, stolen separation, examine display) | Done |
-| Mobile typeahead (ghost text, verb/noun/direction, roaming NPC nouns) | Done |
-| World scaling indexes (portal, recipe, NPC, quest — single-pass rebuild) | Done |
+`down` fires at-or-below threshold; `up` fires at-or-above. Message comes from a `transition` tag, not the trigger.
 
 ---
 
@@ -179,15 +100,9 @@ All previously tracked deviations have been fixed:
 
 ## Combat (spec section 2.12)
 
-Combat is data-driven via `on-*` dispatcher:
-
-- **Weapon:** `["damage", "3"]`, `["on-interact", "attack", "", "deal-damage-npc", ""]` — empty target resolves to combat target NPC
-- **NPC:** `["health", "6"]`, `["damage", "2"]`, `["hit-chance", "0.7"]`, `["on-attacked", "", "deal-damage", "2"]`
-- **Player health:** World event `["health", "10"]`, `["max-health", "10"]`, `["on-player-health-zero", "", "consequence", "<ref>"]`
-- **NPC state sync:** NPC `set-state` writes to both `npcStates` and `player.states` so `requires` can check NPC state
-- **`checkRequires`** handles types: `item`, `feature`, `puzzle`, `npc`, `portal`
-- **`on-health`:** `["on-health", "down", "50%", "set-state", "wounded"]` — fires on NPC health threshold crossing. Supports `%` and absolute. Replaces `on-health-zero`.
-- **`on-player-health`:** `["on-player-health", "down", "0", "consequence", "<ref>"]` — fires on player health crossing. On world event (global) or NPC (local). Replaces `on-player-health-zero`.
+- NPC `set-state` writes to both `npcStates` and `player.states` so `requires` can check NPC state
+- Use `on-health` (not `on-health-zero`) — supports `%` and absolute thresholds, direction field
+- Use `on-player-health` (not `on-player-health-zero`) — on world event (global) or NPC (local)
 
 ---
 
