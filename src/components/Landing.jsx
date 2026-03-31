@@ -101,7 +101,7 @@ export default function Landing({ identity }) {
             lineHeight: 1.3,
           }}
         >
-          Everybody has an adventurer in them
+          Adventures that are yours to keep
         </h1>
         <p style={{ color: T.text, fontSize: '0.8rem', marginBottom: '1rem', maxWidth: 480, lineHeight: 1.6 }}>
           Explore worlds crafted by anyone. Build your own. They're yours to keep.
