@@ -13,6 +13,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { TAG_SCHEMAS, TAGS_BY_EVENT_TYPE, getTagSchema, valuesToTag, tagToValues, ACTION_TARGET_FIELD } from '../tagSchema.js';
 import DOSButton from './ui/DOSButton.jsx';
 import InlineList from './ui/InlineList.jsx';
+import { previewSound, playOneShotRef, stopPreview } from '../../services/sound.js';
 
 // Map event types to guide page IDs
 const EVENT_TYPE_GUIDE_MAP = {
@@ -543,6 +544,53 @@ function SortableTagItem({ id, disabled, children }) {
   );
 }
 
+/** Play button for sound-ref tags — resolves ref, plays loop or one-shot based on role */
+function SoundRefPlayButton({ soundRef, role, volume, events }) {
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => () => { stopPreview(); }, []);
+
+  if (!soundRef) return null;
+
+  const isLoop = role === 'ambient' || role === 'layer' || !role;
+
+  const handleClick = async () => {
+    if (playing) {
+      stopPreview();
+      setPlaying(false);
+      return;
+    }
+    if (isLoop) {
+      const soundEvent = events?.get(soundRef);
+      if (!soundEvent) return;
+      const ok = await previewSound(soundEvent.tags);
+      setPlaying(ok);
+    } else {
+      const vol = parseFloat(volume) || 1.0;
+      await playOneShotRef(soundRef, vol);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      title={playing ? 'Stop' : isLoop ? 'Preview (loop)' : 'Preview (once)'}
+      style={{
+        color: playing ? 'var(--colour-error)' : 'var(--colour-highlight)',
+        background: 'none',
+        border: '1px solid currentColor',
+        font: 'inherit',
+        fontSize: '0.6rem',
+        padding: '1px 4px',
+        cursor: 'pointer',
+        flexShrink: 0,
+      }}
+    >
+      {playing ? '■' : '▶'}
+    </button>
+  );
+}
+
 function TagRow({ tagName, tag, fields, onChange, onRemove, dragListeners, dragAttributes, dragDisabled, events }) {
   const values = tagToValues(tag, fields);
   const schemaDesc = TAG_SCHEMAS[tagName]?.desc;
@@ -556,10 +604,26 @@ function TagRow({ tagName, tag, fields, onChange, onRemove, dragListeners, dragA
     <div className="flex gap-1 items-start mb-1">
       <DragHandle listeners={dragListeners} attributes={dragAttributes} disabled={dragDisabled} />
       <span
-        className="shrink-0 px-1 mt-0.5"
+        className="shrink-0 px-1 mt-0.5 flex flex-col items-start gap-0.5"
         style={{ color: 'var(--colour-text)', minWidth: '8em', fontSize: '0.65rem' }}
       >
-        {tagName}<Tooltip text={schemaDesc} />
+        <span>{tagName}<Tooltip text={schemaDesc} /></span>
+        {tagName === 'sound' && (
+          <SoundRefPlayButton
+            soundRef={values['sound-ref']}
+            role={values['role']}
+            volume={values['volume']}
+            events={events}
+          />
+        )}
+        {values.action === 'sound' && values.target?.startsWith('30078:') && (
+          <SoundRefPlayButton
+            soundRef={values.target}
+            role="effect"
+            volume="1"
+            events={events}
+          />
+        )}
       </span>
       <div className="flex-1 flex flex-col gap-0.5">
         {fields.map((field) => {
@@ -599,9 +663,55 @@ function TagRow({ tagName, tag, fields, onChange, onRemove, dragListeners, dragA
  * @param {function} props.onChange - called with updated tags array
  * @param {Map} props.events - known events for event-ref dropdowns
  */
+// Logical ordering for sound event tags — groups from most to least commonly used
+const SOUND_TAG_ORDER = [
+  // Source (locked at top by schema)
+  'note', 's', 'oscillator', 'noise',
+  // Core playback
+  'gain', 'slow', 'fast', 'pan',
+  // Envelope
+  'attack', 'sustain', 'decay', 'release',
+  // Filters
+  'lpf', 'hpf', 'vowel', 'bpf', 'bpq', 'lpq', 'hpq', 'ftype',
+  // Distortion / bit
+  'crush', 'shape', 'distort', 'coarse',
+  // Reverb
+  'room', 'roomsize', 'roomfade', 'roomlp', 'roomdim',
+  // Delay
+  'delay', 'delaytime', 'delayfeedback',
+  // Effects
+  'rev', 'palindrome', 'jux', 'arp', 'degrade-by',
+  // Phaser
+  'phaser', 'phaserdepth', 'phasercenter', 'phasersweep',
+  // Sample control
+  'n', 'begin', 'end', 'speed', 'cut', 'loop', 'loop-begin', 'loop-end', 'loop-at',
+  'clip', 'chop', 'striate', 'fit',
+  // LP envelope
+  'lpenv', 'lpattack', 'lpdecay', 'lpsustain', 'lprelease',
+  // HP envelope
+  'hpenv', 'hpattack', 'hpdecay', 'hpsustain', 'hprelease',
+  // BP envelope
+  'bpenv', 'bpattack', 'bpdecay', 'bpsustain', 'bprelease',
+  // Pitch envelope
+  'penv', 'pattack', 'pdecay', 'prelease', 'pcurve', 'panchor', 'fanchor',
+  // FM synthesis
+  'fm', 'fmh', 'fmattack', 'fmdecay', 'fmsustain', 'fmenv',
+  // Vibrato / tremolo
+  'vib', 'vibmod', 'tremolodepth', 'tremolosync', 'tremoloskew', 'tremolophase', 'tremoloshape',
+  // Advanced / misc
+  'postgain', 'velocity', 'compressor', 'orbit', 'dry', 'xfade', 'early', 'late',
+  'swing', 'iter', 'ply',
+];
+
+function soundTagOrder(name) {
+  const i = SOUND_TAG_ORDER.indexOf(name);
+  return i === -1 ? SOUND_TAG_ORDER.length : i;
+}
+
 /** Custom themed dropdown for adding tags — portaled to float above panel */
 function AddTagDropdown({ options, onSelect }) {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState('');
   const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
   const [pos, setPos] = useState(null);
@@ -649,6 +759,15 @@ function AddTagDropdown({ options, onSelect }) {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [open]);
 
+  const filteredOptions = useMemo(() => {
+    const q = search.toLowerCase();
+    return options.filter((name) => {
+      if (!q) return true;
+      const label = TAG_SCHEMAS[name]?.label || '';
+      return name.toLowerCase().includes(q) || label.toLowerCase().includes(q);
+    });
+  }, [options, search]);
+
   return (
     <>
       <div
@@ -683,7 +802,13 @@ function AddTagDropdown({ options, onSelect }) {
             boxShadow: '2px -2px 0 var(--colour-dim)',
           }}
         >
-          {options.map((name) => {
+          <DOSInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search tags..."
+            style={{ borderLeft: 'none', borderRight: 'none', borderTop: 'none' }}
+          />
+          {filteredOptions.map((name) => {
             const schema = TAG_SCHEMAS[name];
             const desc = schema?.desc || schema?.label || name;
             return (
@@ -695,7 +820,7 @@ function AddTagDropdown({ options, onSelect }) {
                   backgroundColor: 'transparent',
                 }}
                 onMouseDown={(e) => e.stopPropagation()}
-                onClick={() => { onSelect(name); setOpen(false); }}
+                onClick={() => { onSelect(name); setOpen(false); setSearch(''); }}
                 title={desc}
               >
                 <span style={{ color: 'var(--colour-highlight)' }}>{name}</span>
@@ -703,6 +828,9 @@ function AddTagDropdown({ options, onSelect }) {
               </div>
             );
           })}
+          {filteredOptions.length === 0 && (
+            <div className="px-1 py-1" style={{ color: 'var(--colour-dim)' }}>No matches</div>
+          )}
         </div>,
         document.body
       )}
@@ -711,10 +839,12 @@ function AddTagDropdown({ options, onSelect }) {
 }
 
 export default function TagEditor({ eventType, tags, onChange, events }) {
+  const [tagSearch, setTagSearch] = useState('');
+
   // Available tags for this event type (excluding auto-managed ones)
   const availableTags = useMemo(() => {
     const allowed = TAGS_BY_EVENT_TYPE[eventType] || [];
-    return allowed.filter((name) => {
+    const filtered = allowed.filter((name) => {
       const schema = TAG_SCHEMAS[name];
       if (!schema) return false;
       if (schema.auto) return false; // d, t, type are auto-managed
@@ -725,6 +855,11 @@ export default function TagEditor({ eventType, tags, onChange, events }) {
       }
       return true;
     });
+    // Sort sound tags alphabetically
+    if (eventType === 'sound') {
+      filtered.sort((a, b) => a.localeCompare(b));
+    }
+    return filtered;
   }, [eventType, tags]);
 
   function canMoveTag(tags, index, direction, evType) {
@@ -802,59 +937,119 @@ export default function TagEditor({ eventType, tags, onChange, events }) {
     return SOURCES.has(tags[index]?.[0]);
   }
 
+  const searchActive = eventType === 'sound' && tagSearch.trim().length > 0;
+
+  // When search is active, render filtered plain rows (no drag-and-drop)
+  const renderTagRow = (tag, i) => {
+    const schema = getTagSchema(tag[0], eventType);
+    if (!schema) {
+      return (
+        <div key={i} className="flex gap-1 items-center mb-1">
+          <span className="shrink-0 px-1" style={{ color: 'var(--colour-dim)', minWidth: '8em', fontSize: '0.65rem' }}>
+            {tag[0]}
+          </span>
+          <span className="flex-1 text-xs" style={{ color: 'var(--colour-dim)' }}>
+            {tag.slice(1).join(' | ')}
+          </span>
+          <button
+            onClick={() => removeTag(i)}
+            className="shrink-0 cursor-pointer"
+            style={{ color: 'var(--colour-error)', background: 'none', border: 'none', font: 'inherit', padding: '0 2px' }}
+          >
+            ×
+          </button>
+        </div>
+      );
+    }
+    return (
+      <TagRow
+        key={i}
+        tagName={tag[0]}
+        tag={tag}
+        fields={schema.fields}
+        onChange={(newTag) => updateTag(i, newTag)}
+        onRemove={() => removeTag(i)}
+        dragListeners={null}
+        dragAttributes={null}
+        dragDisabled={true}
+        events={events}
+      />
+    );
+  };
+
   return (
     <div>
+      {/* Tag search — sound events only */}
+      {eventType === 'sound' && (
+        <div className="mb-2">
+          <DOSInput
+            value={tagSearch}
+            onChange={setTagSearch}
+            placeholder="Filter tags..."
+          />
+        </div>
+      )}
+
       {/* Existing tags */}
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={tagIds} strategy={verticalListSortingStrategy}>
+      {searchActive ? (
+        // Filtered plain list — no drag-and-drop while searching
+        <div>
           {tags.map((tag, i) => {
-            const schema = getTagSchema(tag[0], eventType);
-            const disabled = isDragDisabled(i);
-            if (!schema) {
-              // Unknown tag — render raw
+            if (!tag[0].toLowerCase().includes(tagSearch.toLowerCase())) return null;
+            return renderTagRow(tag, i);
+          })}
+        </div>
+      ) : (
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={tagIds} strategy={verticalListSortingStrategy}>
+            {tags.map((tag, i) => {
+              const schema = getTagSchema(tag[0], eventType);
+              const disabled = isDragDisabled(i);
+              if (!schema) {
+                return (
+                  <SortableTagItem key={tagIds[i]} id={tagIds[i]} disabled={disabled}>
+                    {({ listeners, attributes }) => (
+                      <div className="flex gap-1 items-center mb-1">
+                        <DragHandle listeners={listeners} attributes={attributes} disabled={disabled} />
+                        <span className="shrink-0 px-1" style={{ color: 'var(--colour-dim)', minWidth: '8em', fontSize: '0.65rem' }}>
+                          {tag[0]}
+                        </span>
+                        <span className="flex-1 text-xs" style={{ color: 'var(--colour-dim)' }}>
+                          {tag.slice(1).join(' | ')}
+                        </span>
+                        <button
+                          onClick={() => removeTag(i)}
+                          className="shrink-0 cursor-pointer"
+                          style={{ color: 'var(--colour-error)', background: 'none', border: 'none', font: 'inherit', padding: '0 2px' }}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    )}
+                  </SortableTagItem>
+                );
+              }
               return (
                 <SortableTagItem key={tagIds[i]} id={tagIds[i]} disabled={disabled}>
                   {({ listeners, attributes }) => (
-                    <div className="flex gap-1 items-center mb-1">
-                      <DragHandle listeners={listeners} attributes={attributes} disabled={disabled} />
-                      <span className="shrink-0 px-1" style={{ color: 'var(--colour-dim)', minWidth: '8em', fontSize: '0.65rem' }}>
-                        {tag[0]}
-                      </span>
-                      <span className="flex-1 text-xs" style={{ color: 'var(--colour-dim)' }}>
-                        {tag.slice(1).join(' | ')}
-                      </span>
-                      <button
-                        onClick={() => removeTag(i)}
-                        className="shrink-0 cursor-pointer"
-                        style={{ color: 'var(--colour-error)', background: 'none', border: 'none', font: 'inherit', padding: '0 2px' }}
-                      >
-                        ×
-                      </button>
-                    </div>
+                    <TagRow
+                      tagName={tag[0]}
+                      tag={tag}
+                      fields={schema.fields}
+                      onChange={(newTag) => updateTag(i, newTag)}
+                      onRemove={() => removeTag(i)}
+                      dragListeners={listeners}
+                      dragAttributes={attributes}
+                      dragDisabled={disabled}
+                      events={events}
+                    />
                   )}
                 </SortableTagItem>
               );
-            }
-            return (
-              <SortableTagItem key={tagIds[i]} id={tagIds[i]} disabled={disabled}>
-                {({ listeners, attributes }) => (
-                  <TagRow
-                    tagName={tag[0]}
-                    tag={tag}
-                    fields={schema.fields}
-                    onChange={(newTag) => updateTag(i, newTag)}
-                    onRemove={() => removeTag(i)}
-                    dragListeners={listeners}
-                    dragAttributes={attributes}
-                    dragDisabled={disabled}
-                    events={events}
-                  />
-                )}
-              </SortableTagItem>
-            );
-          })}
-        </SortableContext>
-      </DndContext>
+            })}
+          </SortableContext>
+        </DndContext>
+      )}
 
       {/* Add tag — themed dropdown, adds immediately on selection */}
       {availableTags.length > 0 && (
