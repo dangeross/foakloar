@@ -6,7 +6,7 @@ import React from 'react';
 import { nip19 } from 'nostr-tools';
 import { navigateToProfile } from '../services/router.js';
 
-export default function WorldCard({ world, onClick, onZap }) {
+export default function WorldCard({ world, onClick, onZap, bookmarked, onBookmark }) {
   const snippet = world.description?.length > 140
     ? world.description.slice(0, 140) + '...'
     : world.description;
@@ -23,20 +23,44 @@ export default function WorldCard({ world, onClick, onZap }) {
         color: 'var(--colour-text)',
       }}
     >
-      <div className="flex items-baseline gap-2 mb-1">
-        <span style={{ color: 'var(--colour-title)' }}>
-          {world.title}
-        </span>
-        {world.isDraft && (
-          <span style={{ color: 'var(--colour-error)' }}>[DRAFT]</span>
-        )}
-        {world.version && (
-          <span style={{ color: 'var(--colour-dim)' }}>v{world.version}</span>
-        )}
-        {world.collaboration && world.collaboration !== 'closed' && (
-          <span style={{ color: 'var(--colour-dim)' }}>
-            ({world.collaboration === 'vouched' ? 'collaborative' : world.collaboration})
+      <div className="flex items-start justify-between mb-1">
+        <div className="flex items-baseline gap-2 flex-wrap">
+          <span style={{ color: 'var(--colour-title)' }}>
+            {world.title}
           </span>
+          {world.isDraft && (
+            <span style={{ color: 'var(--colour-error)' }}>[DRAFT]</span>
+          )}
+          {world.version && (
+            <span style={{ color: 'var(--colour-dim)' }}>v{world.version}</span>
+          )}
+          {world.collaboration && world.collaboration !== 'closed' && (
+            <span style={{ color: 'var(--colour-dim)' }}>
+              ({world.collaboration === 'vouched' ? 'collaborative' : world.collaboration})
+            </span>
+          )}
+        </div>
+        {onBookmark && world.aTag && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onBookmark(world);
+            }}
+            className="cursor-pointer"
+            title={bookmarked ? 'Remove from saved list' : 'Save to my list'}
+            style={{
+              color: bookmarked ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+              background: 'none',
+              border: '1px solid var(--colour-dim)',
+              font: 'inherit',
+              padding: '1px 6px',
+              fontSize: '0.6rem',
+              flexShrink: 0,
+              marginLeft: '0.5rem',
+            }}
+          >
+            {bookmarked ? 'saved' : '+ save'}
+          </button>
         )}
       </div>
 

@@ -368,10 +368,6 @@
           "0.3"
         ],
         [
-          "puzzle",
-          "30078:<PUBKEY>:cartographer:puzzle:vael-cache"
-        ],
-        [
           "exit",
           "west"
         ]

@@ -693,6 +693,7 @@ export default function App() {
     return (
       <>{noiseOverlay}<Lobby
         identity={identity}
+        pool={pool}
         onSelectWorld={(slug) => navigateToWorld(slug)}
         onImportToWorld={(slug, data) => {
           pendingImportRef.current = { data };

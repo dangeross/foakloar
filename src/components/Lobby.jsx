@@ -16,18 +16,20 @@ import LoginPanel from './ui/LoginPanel.jsx';
 import WorldCard from './WorldCard.jsx';
 import TipPanel from './TipPanel.jsx';
 import { useWorldDiscovery } from '../hooks/useWorldDiscovery.js';
+import { useWorldList } from '../hooks/useWorldList.js';
 import { listDraftWorlds, parseJsonLenient } from '../builder/draftStore.js';
 import { TIDE_THEME } from '../services/guideTheme.js';
 import ImportPreviewPanel from '../builder/components/ImportPreviewPanel.jsx';
 import { APP_PUBKEY } from '../config.js';
 
-const LOBBY_MODES = [
+const BASE_LOBBY_MODES = [
   { value: 'curated', label: 'featured' },
   { value: 'search', label: 'search' },
 ];
 
 export default function Lobby({
   identity,
+  pool,
   onSelectWorld,
   onImportToWorld,
   onCreateWorld,
@@ -45,6 +47,18 @@ export default function Lobby({
   const [zapTarget, setZapTarget] = useState(null);
   const dropdownRef = useRef(null);
 
+  // Modes — include "my list" only when logged in
+  const LOBBY_MODES = useMemo(
+    () => identity?.pubkey
+      ? [...BASE_LOBBY_MODES, { value: 'mylist', label: 'my list' }]
+      : BASE_LOBBY_MODES,
+    [identity?.pubkey]
+  );
+
+  // User's own curated list (bookmark state)
+  const { isCurated, toggle: toggleBookmark, saving: bookmarkSaving } =
+    useWorldList(identity?.pubkey || null, identity?.signer || null);
+
   // Close dropdown on outside click
   useEffect(() => {
     if (!dropdownOpen) return;
@@ -57,9 +71,16 @@ export default function Lobby({
     return () => document.removeEventListener('mousedown', handleClick);
   }, [dropdownOpen]);
 
+  // Map lobby mode to discovery mode + pubkey
+  const discoveryMode = lobbyMode === 'mylist' ? 'curated' : lobbyMode;
+  const discoveryPubkey =
+    lobbyMode === 'curated' ? APP_PUBKEY
+    : lobbyMode === 'mylist' ? identity?.pubkey
+    : undefined;
+
   const { worlds: publishedWorlds, status: discoveryStatus } = useWorldDiscovery(
-    lobbyMode,
-    lobbyMode === 'curated' ? APP_PUBKEY : undefined
+    discoveryMode,
+    discoveryPubkey
   );
   const draftWorlds = useMemo(() => listDraftWorlds(), []);
 
@@ -125,7 +146,7 @@ export default function Lobby({
               padding: 0,
             }}
           >
-            [{LOBBY_MODES.find((m) => m.value === lobbyMode)?.label}]
+            [{LOBBY_MODES.find((m) => m.value === lobbyMode)?.label ?? lobbyMode}]
           </button>
 
           {dropdownOpen && (
@@ -323,8 +344,13 @@ export default function Lobby({
           {discoveryStatus === 'failed' && (
             <div style={{ color: 'var(--colour-error)' }}>Failed to connect to relays.</div>
           )}
-          {discoveryStatus === 'empty' && (
+          {discoveryStatus === 'empty' && lobbyMode !== 'mylist' && (
             <div style={{ color: 'var(--colour-dim)' }}>No worlds found.</div>
+          )}
+          {discoveryStatus === 'empty' && lobbyMode === 'mylist' && (
+            <div style={{ color: 'var(--colour-dim)' }}>
+              Your list is empty.
+            </div>
           )}
           {filter && filteredWorlds.length === 0 && publishedWorlds.length > 0 && (
             <div style={{ color: 'var(--colour-dim)' }}>No matches for "{filter}".</div>
@@ -335,6 +361,8 @@ export default function Lobby({
               world={w}
               onClick={() => handleSelectWorld(w)}
               onZap={(world) => setZapTarget({ eventId: world.eventId, pubkey: world.pubkey, title: world.title })}
+              bookmarked={isCurated(w.aTag)}
+              onBookmark={identity?.signer ? (world) => toggleBookmark(world.aTag) : undefined}
             />
           ))}
           {hasMore && (

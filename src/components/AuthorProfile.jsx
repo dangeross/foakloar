@@ -9,16 +9,24 @@ import React, { useState } from 'react';
 import WorldCard from './WorldCard.jsx';
 import TipPanel from './TipPanel.jsx';
 import { useWorldDiscovery } from '../hooks/useWorldDiscovery.js';
+import { useWorldList } from '../hooks/useWorldList.js';
 import { useProfile } from '../hooks/useProfile.js';
 import PageHeader from './ui/PageHeader.jsx';
 import { navigateToLobby, navigateToWorld } from '../services/router.js';
 
 export default function AuthorProfile({ npub, pubkeyHex, identity, pool }) {
   const { worlds, status } = useWorldDiscovery('author', pubkeyHex);
+  const { worlds: curatedWorlds, status: curatedStatus } = useWorldDiscovery('curated', pubkeyHex);
   const { profile } = useProfile(pubkeyHex, pool);
   const [copied, setCopied] = useState(false);
   const [showTip, setShowTip] = useState(false);
   const [zapTarget, setZapTarget] = useState(null); // { eventId, pubkey }
+  const [profileTab, setProfileTab] = useState('worlds'); // 'worlds' | 'list'
+
+  // Viewer's own bookmark state (so they can add from profile page too)
+  const isOwnProfile = identity?.pubkey === pubkeyHex;
+  const { isCurated, toggle: toggleBookmark } =
+    useWorldList(identity?.pubkey || null, identity?.signer || null);
 
   const shortNpub = npub.length > 20
     ? npub.slice(0, 12) + '...' + npub.slice(-8)
@@ -96,29 +104,82 @@ export default function AuthorProfile({ npub, pubkeyHex, identity, pool }) {
         </div>
       </div>
 
-      {/* Worlds */}
+      {/* Worlds / List tabs */}
       <div className="flex-1 px-6 pb-6">
-        <div className="mb-2" style={{ color: 'var(--colour-dim)' }}>
-          Worlds
+        <div className="mb-3 flex gap-3">
+          {[
+            { key: 'worlds', label: 'Worlds' },
+            { key: 'list', label: 'Curated list' },
+          ].map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => setProfileTab(key)}
+              className="cursor-pointer"
+              style={{
+                color: profileTab === key ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+                background: 'none',
+                border: 'none',
+                font: 'inherit',
+                padding: 0,
+                borderBottom: profileTab === key ? '1px solid var(--colour-highlight)' : '1px solid transparent',
+              }}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
-        {status === 'loading' && (
-          <div style={{ color: 'var(--colour-dim)' }}>Searching relays...</div>
+        {profileTab === 'worlds' && (
+          <>
+            {status === 'loading' && (
+              <div style={{ color: 'var(--colour-dim)' }}>Searching relays...</div>
+            )}
+            {status === 'failed' && (
+              <div style={{ color: 'var(--colour-error)' }}>Failed to connect to relays.</div>
+            )}
+            {status === 'empty' && (
+              <div style={{ color: 'var(--colour-dim)' }}>No worlds found for this author.</div>
+            )}
+            {worlds.map((w) => (
+              <WorldCard
+                key={w.aTag}
+                world={w}
+                onClick={() => navigateToWorld(w.slug)}
+                onZap={(world) => setZapTarget({ eventId: world.eventId, pubkey: world.pubkey, title: world.title })}
+                bookmarked={isCurated(w.aTag)}
+                onBookmark={identity?.signer ? (world) => toggleBookmark(world.aTag) : undefined}
+              />
+            ))}
+          </>
         )}
-        {status === 'failed' && (
-          <div style={{ color: 'var(--colour-error)' }}>Failed to connect to relays.</div>
+
+        {profileTab === 'list' && (
+          <>
+            {curatedStatus === 'loading' && (
+              <div style={{ color: 'var(--colour-dim)' }}>Searching relays...</div>
+            )}
+            {curatedStatus === 'failed' && (
+              <div style={{ color: 'var(--colour-error)' }}>Failed to connect to relays.</div>
+            )}
+            {curatedStatus === 'empty' && (
+              <div style={{ color: 'var(--colour-dim)' }}>
+                {isOwnProfile
+                  ? 'Your list is empty.'
+                  : 'No curated worlds.'}
+              </div>
+            )}
+            {curatedWorlds.map((w) => (
+              <WorldCard
+                key={w.aTag}
+                world={w}
+                onClick={() => navigateToWorld(w.slug)}
+                onZap={(world) => setZapTarget({ eventId: world.eventId, pubkey: world.pubkey, title: world.title })}
+                bookmarked={isCurated(w.aTag)}
+                onBookmark={identity?.signer ? (world) => toggleBookmark(world.aTag) : undefined}
+              />
+            ))}
+          </>
         )}
-        {status === 'empty' && (
-          <div style={{ color: 'var(--colour-dim)' }}>No worlds found for this author.</div>
-        )}
-        {worlds.map((w) => (
-          <WorldCard
-            key={w.aTag}
-            world={w}
-            onClick={() => navigateToWorld(w.slug)}
-            onZap={(world) => setZapTarget({ eventId: world.eventId, pubkey: world.pubkey, title: world.title })}
-          />
-        ))}
       </div>
 
       {/* Tip panel (author) */}
