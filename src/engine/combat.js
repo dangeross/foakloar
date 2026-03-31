@@ -27,8 +27,12 @@ export function mixCombat(Engine) {
 
     const prevHealth = this.player.getHealth();
     this.player.dealDamage(amount);
-    const npcTitle = sourceNpc ? getTag(sourceNpc, 'title') : 'Something';
-    this._emit(`${npcTitle} hits you for ${amount} damage. (HP: ${this.player.getHealth()})`, 'error');
+    if (sourceNpc) {
+      const npcTitle = getTag(sourceNpc, 'title');
+      this._emit(`${npcTitle} hits you for ${amount} damage. (HP: ${this.player.getHealth()})`, 'error');
+    } else {
+      this._emit(`You receive ${amount} damage. (HP: ${this.player.getHealth()})`, 'error');
+    }
 
     // Evaluate on-player-health triggers (threshold crossing)
     this._evalPlayerHealthTriggers(prevHealth, this.player.getHealth());

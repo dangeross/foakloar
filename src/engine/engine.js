@@ -28,6 +28,39 @@ import { mixContainer } from './container.js';
 import { mixInteraction } from './interaction.js';
 import { mixCommand } from './command.js';
 
+/**
+ * Generate natural-language presence text for a feature title.
+ * Handles plurals, "The " prefix, possessives, and vowel articles.
+ */
+function featurePresenceText(title) {
+  const words = title.trim().split(/\s+/);
+  const lastWord = words[words.length - 1];
+
+  // "The X" / "the X" → "There is/are the X here."
+  if (title.startsWith('The ') || title.startsWith('the ')) {
+    const rest = title.slice(4); // strip leading "The "
+    const restLast = rest.trim().split(/\s+/).pop();
+    const restPlural = restLast.endsWith('s') && !restLast.endsWith("'s") && !restLast.endsWith('ss');
+    return restPlural
+      ? `There are the ${rest} here.`
+      : `There is the ${rest} here.`;
+  }
+
+  // Plural: last word ends with 's' (but not possessive "'s" or double-s like "compass")
+  const isPlural = lastWord.endsWith('s') && !lastWord.endsWith("'s") && !lastWord.endsWith('ss');
+  if (isPlural) {
+    return `There are ${title} here.`;
+  }
+
+  // Vowel article: "an"
+  const firstChar = title.charAt(0).toLowerCase();
+  if ('aeiou'.includes(firstChar)) {
+    return `There is an ${title} here.`;
+  }
+
+  return `There is a ${title} here.`;
+}
+
 export class GameEngine {
   /**
    * @param {Object} opts
@@ -452,7 +485,7 @@ export class GameEngine {
       const fCurrentState = this.player.getState(fDTag) ?? fDefaultState;
       if (fCurrentState === 'hidden') continue;
       const fUv = this._uvLabel(fTrust);
-      this._emit(`There is a ${getTag(feature, 'title')} here.${fUv}`, 'feature');
+      this._emit(`${featurePresenceText(getTag(feature, 'title'))}${fUv}`, 'feature');
     }
 
     // Static NPCs (placed by the room)

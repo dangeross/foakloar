@@ -30,7 +30,7 @@
         ],
         [
           "author",
-          "FOAKLOAR"
+          "foakloar"
         ],
         [
           "version",
@@ -141,6 +141,14 @@
         [
           "samples",
           "classic"
+        ],
+        [
+          "health",
+          "10"
+        ],
+        [
+          "max-health",
+          "10"
         ]
       ],
       "content": "The valley has no name on any map.\n\nThat is not an accident.\n\nYou are four days in. Your compass has been unreliable since day two. You have recorded this in your field notes as *observer error, possible heat exhaustion*, because the alternative is not something a working cartographer can afford to believe.\n\nSomething found you on the third morning and decided to trust you.\n\nYou are going to find out what that costs."
@@ -358,6 +366,10 @@
           "30078:<PUBKEY>:cartographer:sound:camp-stillness",
           "ambient",
           "0.3"
+        ],
+        [
+          "puzzle",
+          "30078:<PUBKEY>:cartographer:puzzle:vael-cache"
         ],
         [
           "exit",
@@ -865,7 +877,7 @@
           "requires",
           "30078:<PUBKEY>:cartographer:npc:asha",
           "trusting",
-          "You stand at the cave entrance. Something stops you \u2014 not fear, something more considered. You have the feeling that going in alone would be the wrong kind of wrong. Asha would know the way through."
+          "The entrance is passable. You stand at it anyway. Some thresholds you cross with permission, not just ability."
         ],
         [
           "feature",
@@ -1118,6 +1130,14 @@
         [
           "exit",
           "south"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "set-state",
+          "in-chamber",
+          "30078:<PUBKEY>:cartographer:feature:choice-inscription"
         ]
       ],
       "content": "The Auric Stones are not golden. They are amber \u2014 geological amber, older than anything with eyes \u2014 and they are arranged in a configuration that completes the First Record the way a full stop completes a sentence. Remove them and the sentence becomes a question with no answer. Remove them and the river source loses the only index that tells the valley where it is in relation to itself.\n\nVael is here. He has been here long enough to understand most of this. He is looking at the stones with an expression you have only seen on people who have just understood that they want something they cannot have without becoming someone they hadn't planned to be.\n\nAsha is here too. She has not spoken since you entered.\n\nHe looks at you. You both know what the other knows. The valley is quiet in a way that feels like listening."
@@ -1905,6 +1925,13 @@
           "set-state",
           "visible",
           "30078:<PUBKEY>:cartographer:clue:vael-buyers"
+        ],
+        [
+          "on-interact",
+          "read",
+          "",
+          "activate",
+          "30078:<PUBKEY>:cartographer:puzzle:vael-cache"
         ]
       ],
       "content": "A financial ledger, found in Vael's cache. Three buyers, none named. Payment structures contingent on delivery of geological amber specimens of pre-colonial provenance. The amounts are significant. The buyers are the kind of careful that suggests they've done this before.\n\nVael isn't a treasure hunter. He's a procurement agent."
@@ -2156,7 +2183,9 @@
           "noun",
           "crates",
           "supplies",
-          "boxes"
+          "boxes",
+          "supply crates",
+          "vael crates"
         ],
         [
           "verb",
@@ -2204,7 +2233,9 @@
           "noun",
           "vael notes",
           "notes",
-          "survey"
+          "survey",
+          "survey notes",
+          "vael survey notes"
         ],
         [
           "verb",
@@ -3584,7 +3615,7 @@
           "30078:<PUBKEY>:cartographer:clue:vael-cipher-hint"
         ]
       ],
-      "content": "Vael's ledger uses a simple substitution cipher for the buyer names and target locations. The key is a surveying term \u2014 specifically, the bearing measurement tool that every cartographer carries and that Vael conspicuously doesn't. What is the tool used to measure the angle between two points on a horizontal plane?\n\nEnter the answer in capitals."
+      "content": "Vael's ledger uses a simple substitution cipher for the buyer names and target locations. The key is a surveying term \u2014 the horizontal angle measured clockwise from north to a given point. You record it constantly. It is the most fundamental measurement in field cartography.\n\nEnter the answer in capitals."
     },
     {
       "kind": 30078,
@@ -3667,7 +3698,7 @@
           "dialogue",
           "30078:<PUBKEY>:cartographer:dialogue:asha:chamber",
           "30078:<PUBKEY>:cartographer:feature:choice-inscription",
-          "undecided"
+          "in-chamber"
         ]
       ],
       "content": "She is patient in the way that people are patient when they have been waiting for something for a long time and have made peace with not knowing whether it will arrive. She watches you work without commenting on your methods. She corrects you, when she does, without making it feel like correction."
@@ -4918,7 +4949,7 @@
           "hidden"
         ]
       ],
-      "content": "The compass needle moves rhythmically \u2014 not randomly. Eleven-degree deviation, consistent, patterned. You've been treating it as interference. It is not interference. It is a signal. Something below the valley floor is producing a magnetic field with a frequency, and the frequency is not geological."
+      "content": "The compass needle moves rhythmically \u2014 not randomly. Eleven-degree azimuth deviation, consistent, patterned. You've been treating it as interference. It is not interference. It is a signal. Something below the valley floor is producing a magnetic field with a frequency, and the frequency is not geological."
     },
     {
       "kind": 30078,
@@ -5107,7 +5138,7 @@
           "hidden"
         ]
       ],
-      "content": "The anomaly has a shape: an ellipse, roughly two hundred metres by three hundred, centred on the cairn field. The deviation is consistent at eleven degrees. At the boundary of the ellipse the deviation drops to zero over a distance of approximately five metres \u2014 a hard edge, which is not how geological magnetic anomalies behave. This one is structural. Something below the cairn field is producing it deliberately."
+      "content": "The anomaly has a shape: an ellipse, roughly two hundred metres by three hundred, centred on the cairn field. The azimuth deviation is consistent at eleven degrees. At the boundary of the ellipse the deviation drops to zero over a distance of approximately five metres \u2014 a hard edge, which is not how geological magnetic anomalies behave. This one is structural. Something below the cairn field is producing it deliberately."
     },
     {
       "kind": 30078,
@@ -5620,7 +5651,7 @@
           "hidden"
         ]
       ],
-      "content": "The cipher key is a tool. Vael doesn't carry one \u2014 he hires people who do. The tool measures horizontal angles between two points. Think about what you carry that he doesn't."
+      "content": "The cipher key is a surveying term, not a tool. It describes a horizontal angle \u2014 specifically the one measured clockwise from north. You use this measurement every time you take a bearing."
     },
     {
       "kind": 30078,
