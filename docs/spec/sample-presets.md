@@ -2,6 +2,125 @@
 
 Two sample library presets are available via the `["samples", "<preset>"]` tag on the world event. Each preset loads a collection of named audio samples that can be used in sound event patterns via `["oscillator", "<name>"]` or `s("<name>")` in Strudel code.
 
+**Authoritative sample descriptions:** https://tidalcycles.org/docs/configuration/AudioSamples/default_library/
+This page has one-line human-written descriptions for every Dirt-Samples bank — the only reliable source for what samples actually sound like. Check it before using an unfamiliar sample.
+
+---
+
+## Practical Sound Design Guide
+
+### Strudel built-in noise generators
+
+These are **not** from the Dirt or VCSL sample libraries — they are Strudel's own built-in noise types, available without any preset. Use them via `s("brown")`, `s("pink")`, `s("white")` etc. They respond to `note` for pitch centre and standard envelope/filter parameters.
+
+| Name | Character | Best for |
+|---|---|---|
+| `brown` | Brown noise — low, warm, rumbling. Sounds like deep wind or distant rushing air. | ✅ **Verified:** excellent for wind on exposed ridges/heights. Use with `note` for pitch, `slow`, heavy `room` |
+| `pink` | Pink noise — balanced, less harsh than white. Natural-sounding texture. | General atmosphere, softer air textures |
+| `white` | White noise — full spectrum, harsh. | Best when heavily filtered (`lpf 400–600`) for water/static |
+
+**River/rushing water recipe (verified):**
+```
+s("white").lpf("400 600").hpf("80 100").room("0.7 0.5").roomsize(4).attack("0.2 0.1").release("0.5 0.7").gain(0.45)
+```
+Pure white noise band-passed = rushing water without metallic artifacts. Cycling values (space-separated strings) alternate per trigger — this works in the tag schema and is the best available substitute for `rand`/`perlin` which cannot be used. Each parameter cycles independently, creating natural variation.
+
+---
+
+### Sample types
+Most Dirt samples are **one-shot hits**, not loops. This matters for patterning:
+- **One-shot hits** need a rhythmic pattern: `s("birds birds:1 ~ birds:2")` — silence gaps (`~`) feel natural
+- **Loops/textures** (fire, wind, outdoor, seawolf) play as a continuous stream — they are still triggered as hits in Strudel but the sample is long enough to sustain; use `slow` to stretch and avoid choppy retriggering
+- **Pitched** samples (ocarina, recorder, sax, tabla) respond to `note` — use this to set root pitch and melody
+
+### Key parameters for ambient/atmospheric sounds
+
+| Parameter | Effect | Example |
+|---|---|---|
+| `slow N` | Stretches the pattern N× — fewer triggers per second | `slow 8` for sparse atmosphere |
+| `room N` | Adds reverb send (0–1) | `room 0.5` |
+| `roomsize N` | Reverb decay length (1–10+) | `roomsize 6` for cave/hall |
+| `lpf N` | Low-pass filter cutoff in Hz — removes harshness | `lpf 800` for muffled/distant |
+| `hpf N` | High-pass filter — removes low rumble | `hpf 60` to clean sub |
+| `gain N` | Overall volume (default 1.0) | `gain 0.3` for background layer |
+| `crush N` | Bit-crush depth (bits) — adds lo-fi grit/warmth | `crush 12` on fire gives crackling warmth; lower = more destruction |
+| `degrade-by N` | Random drop probability (0–1) — removes hits randomly | `degrade-by 0.7` on fire*4 gives organic stop-start crackle |
+| `delay N` | Delay send amount | `delay 0.4` |
+| `delaytime N` | Delay time in seconds | `delaytime 0.3` |
+| `speed N` | Playback speed (pitch-shifts too) | `speed 0.7` for lower/slower |
+| `begin N` | Start position in sample (0–1) | `begin 0.2` skips the attack |
+
+### Quick-reference: ambient samples for world building
+
+These are the most useful samples for atmosphere and ambience in a text adventure world:
+
+| Sample | Type | Best for | Pattern notes |
+|---|---|---|---|
+| `birds` | one-shot (short calls) | Forest, dawn, open sky | Sparse pattern with rests; `slow 8–12`, `room 0.3` |
+| `birds3` | one-shot (calls) | Denser birdsong, canopy | Works similarly to `birds` |
+| `insect` | one-shot (buzz) | Jungle, night, warmth | Dense pattern `insect*6`, `slow 3–5`, `lpf 700` |
+| `fire` | texture/loop-like | Camp, hearth, warmth | Slow trigger `slow 4–6`; sounds crackling |
+| `wind` | ⚠️ NOT real wind | Filtered white noise hits (per TidalCycles docs) — sounds hollow/owl-like when slowed. Not suitable for sustained wind atmosphere | Caution with `slow 8+`; better for short gusts |
+| `outdoor` | texture/field recording | Open landscape, general nature — "odd ambient hits" (per docs) | Try with heavy `room` |
+| `seawolf` | ⚠️ NOT water | "Noise hits" (per TidalCycles docs) — percussive, metallic impacts, not flowing water | Dense pattern `seawolf*32` gives rushing texture but stays metallic |
+| `bubble` | one-shot | ⚠️ **NOT water** — docs say "sounds more like kicks". Avoid for water ambience | — |
+| `breath` | one-shot | Presence, intimacy — "one breath sound, pretty pointless" (per docs) — minimal material | Very slow, `room 0.6`; only 1 sample so no variation |
+| `crow` | one-shot | Ravens, dark atmosphere — "two crow sounds twice" (per docs) | Sparse, `room 0.4` |
+| `pebbles` | texture (long) | ⚠️ Verified: sounds like pebbles being **shaken** — good for hail or rattling debris, not flowing water. Docs say "very long, maybe pebbles on a beach" | Sparse trigger, or dense for hail effect |
+| `em2` | longer sounds (mixed) | **Kalimba, flute, loon** — "six longer sounds" (per docs) — excellent for nature/world ambience | Try sparse patterns; loon calls are especially useful for wild atmosphere |
+| `koy` | texture (long) | Long ambient — "two koyaanisqatsi long samples" (per docs) — atmospheric drone textures | Very `slow`, heavy `room`; cinematic |
+| `tabla` | pitched one-shot | Ancient, ceremonial, South Asian | Use `note` for pitch; `slow 4–6` |
+| `tabla2` | pitched one-shot | Variation on tabla | More articulate, try alongside `tabla` |
+| `sitar` | pitched one-shot | Ancient, exotic, mystery | Needs `note` tag; long resonance |
+| `east` | pitched one-shot | Modal, ancient Middle-East/Asia | Try with `note` for tonal colour |
+| `noise` | one-shot (burst) | Rushing water, wind, static — pure white noise, no metallic character | Dense `noise*32`, `lpf 400–700` for river/rush texture |
+| `noise2` | one-shot (burst) | Variation on noise — "8 short noise hits" (per docs) | Similar use to `noise` |
+| `space` | texture | Void, cave, alien — "strange mix of long/short sounds" (per docs) | Heavy `room`, `lpf 400` |
+| `pad` | texture | Gentle drone, presence | Sustained; needs slow retriggering |
+
+### Verified listener notes (from playtesting)
+
+Notes accumulated from actual audio testing — truth beats the manual.
+
+| Sample | Verdict | Notes |
+|---|---|---|
+| `seawolf` | ⚠️ Misleading name | TidalCycles docs say "noise hits" — confirmed: sounds like water hitting a metal sheet, percussive not flowing. Dense patterns (`*32`) give a rushing texture but retain the metallic quality. Not suitable for smooth river ambience. |
+| `wind` | ⚠️ Not real wind | TidalCycles docs say "actually filtered white noise hits" — confirmed: sounds hollow and owl-like when slowed, due to filtered noise character rather than real wind recordings. Better for brief gusts than sustained atmosphere. |
+| `fire` | ✅ Works well | Crackling, organic texture. `slow 4–6` works for campfire feel. |
+| `birds` | ✅ Works well | Short, distinct bird calls — sparse patterns feel natural. |
+| `insect` | ✅ Works well | High-frequency chirping buzz — dense patterns create jungle chorus. |
+| `tabla` | ✅ Works well | Complex, warm, pitched. Responds well to `note` and `slow`. |
+| `ocarina_vib` | ✅ Works well | Warm, wavering, ancient. Melodic use with `note` patterns effective for leitmotifs. |
+| `didgeridoo` | ✅ Works well | Very low, droning, overtone-rich. Heavy `room`/`roomsize` creates cave/ritual atmosphere. |
+| `hh` | ⚠️ Varies by variant | Some variants (`:0`) are good for metallic ticking; others have too much sustain. Try `:0`, `:1`, `:2` — character differs significantly. |
+
+### Strudel pattern recipes (known-good)
+
+Copy-paste starting points for common sound targets. Tune `gain`, `slow`, and filter values to taste.
+
+```
+# Sparse birdsong — open forest, dawn
+s("birds ~ birds:1 ~ ~ birds:2 ~ ~").slow(10).room(0.3).gain(0.25)
+
+# Jungle insect chorus — warm, alive, layered
+s("insect*6").slow(4).lpf(700).room(0.2).gain(0.3)
+
+# Campfire — sheltered, intimate
+s("fire").slow(6).room(0.25).gain(0.35)
+
+# Ancient melody — ocarina leitmotif
+s("ocarina_vib").note("c3 ~ eb3 ~ ~ ~ g3 ~").slow(16).room(0.5).delay(0.3).delaytime(0.25)
+
+# Didgeridoo drone — cave, ritual, weight
+s("didgeridoo").slow(8).room(0.9).roomsize(10).lpf(600).gain(0.6)
+
+# Tabla pulse — ceremonial, ancient
+s("tabla ~ tabla:1 ~ tabla:2 ~ ~ ~").slow(6).room(0.35).gain(0.5)
+
+# Metallic compass tick
+s("hh:0 ~ ~ ~ hh:0 ~ ~ ~").slow(3).room(0.1).gain(0.4)
+```
+
 ---
 
 ## Preset: "dirt"
@@ -120,7 +239,7 @@ Two sample library presets are available via the `["samples", "<preset>"]` tag o
 | `hardkick` | Hard-hitting kick | Powerful, punchy, impactful |
 | `haw` | Hawaiian novelty vocals | Tropical, playful, quirky |
 | `hc` | High/closed hat or conga | Tight, short, bright |
-| `hh` | Hi-hat samples | Metallic, rhythmic, crisp |
+| `hh` | Mixed drum sounds | ⚠️ Docs say "mix of drum sounds, quiet" — not reliably hi-hats; character varies by variant number |
 | `hh27` | Hi-hat set with 27 variations | Varied, metallic, detailed |
 | `hit` | Orchestral hit stabs | Bold, cinematic, powerful |
 | `hmm` | Humming vocal | Soft, contemplative, human |

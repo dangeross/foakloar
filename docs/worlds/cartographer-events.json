@@ -219,7 +219,7 @@
           "0.2"
         ]
       ],
-      "content": "The valley announces itself as a wall of green so dense it reads as solid. There is a gap — barely — where a previous survey party cut through and didn't bother to mark properly. You found it because you were looking for exactly this kind of carelessness. Someone else's failure to be thorough.\n\nYour survey kit is where you left it, beside the marker stone. The work starts here."
+      "content": "The valley announces itself as a wall of green so dense it reads as solid. There is a gap \u2014 barely \u2014 where a previous survey party cut through and didn't bother to mark properly. You found it because you were looking for exactly this kind of carelessness. Someone else's failure to be thorough.\n\nYour survey kit is where you left it, beside the marker stone. The work starts here."
     },
     {
       "kind": 30078,
@@ -263,7 +263,7 @@
           "exit",
           "30078:<PUBKEY>:cartographer:place:vaels-cache",
           "east",
-          "Something catches your eye — a line too straight to be natural."
+          "Something catches your eye \u2014 a line too straight to be natural."
         ],
         [
           "feature",
@@ -364,7 +364,7 @@
           "west"
         ]
       ],
-      "content": "Hidden badly — the kind of badly that suggests Vael didn't expect anyone competent to be looking. Three supply crates stacked against a tree that has a blaze mark cut into it at eye height. The blaze faces west. He's oriented toward the interior.\n\nHe's closer than you thought."
+      "content": "Hidden badly \u2014 the kind of badly that suggests Vael didn't expect anyone competent to be looking. Three supply crates stacked against a tree that has a blaze mark cut into it at eye height. The blaze faces west. He's oriented toward the interior.\n\nHe's closer than you thought."
     },
     {
       "kind": 30078,
@@ -474,7 +474,7 @@
           "exit",
           "30078:<PUBKEY>:cartographer:place:cairn-field",
           "north",
-          "The terrain opens slightly — a clearing of some kind ahead."
+          "The terrain opens slightly \u2014 a clearing of some kind ahead."
         ],
         [
           "exit",
@@ -519,7 +519,7 @@
           "east"
         ]
       ],
-      "content": "The sky disappears here. The canopy closes thirty metres up and the light that reaches the floor is green and diffuse and sourceless — it could be any time of day. Your compass needle moves without provocation. You've stopped trusting it and started trusting the moss, the slope of the ground, the way sound behaves differently to the north.\n\nYou are not alone here. The valley has a quality of attention that you have no clinical term for and have stopped trying to find one."
+      "content": "The sky disappears here. The canopy closes thirty metres up and the light that reaches the floor is green and diffuse and sourceless \u2014 it could be any time of day. Your compass needle moves without provocation. You've stopped trusting it and started trusting the moss, the slope of the ground, the way sound behaves differently to the north.\n\nYou are not alone here. The valley has a quality of attention that you have no clinical term for and have stopped trying to find one."
     },
     {
       "kind": 30078,
@@ -659,7 +659,7 @@
           "east"
         ]
       ],
-      "content": "A structure that has grown rather than been built — woven into the living canopy over decades, additions accreted as need required. It is the most comfortable place you have found in four days and you do not say this out loud because comfort feels like the wrong thing to acknowledge here.\n\nThe walls hold things: tools, dried plants, and a cartographic record unlike anything in any archive you have studied. The Kael-Sura have been mapping this valley for longer than your discipline has existed."
+      "content": "A structure that has grown rather than been built \u2014 woven into the living canopy over decades, additions accreted as need required. It is the most comfortable place you have found in four days and you do not say this out loud because comfort feels like the wrong thing to acknowledge here.\n\nThe walls hold things: tools, dried plants, and a cartographic record unlike anything in any archive you have studied. The Kael-Sura have been mapping this valley for longer than your discipline has existed."
     },
     {
       "kind": 30078,
@@ -697,7 +697,7 @@
           "exit",
           "30078:<PUBKEY>:cartographer:place:drowned-survey",
           "north",
-          "The ground descends steeply on the far side — and then drops further."
+          "The ground descends steeply on the far side \u2014 and then drops further."
         ],
         [
           "feature",
@@ -732,7 +732,7 @@
           "north"
         ]
       ],
-      "content": "The canopy breaks here and for the first time in days you can see sky. The valley spreads below you — much larger than your current map suggests, and differently shaped. What you thought was the valley floor is a shelf. The real interior is lower, older, darker.\n\nThere are bearing stones along the ridge crest. Cut, positioned, deliberate. They are oriented toward something specific in the interior that you cannot yet see from here.\n\nYour compass works on the ridge. You have written this down twice."
+      "content": "The canopy breaks here and for the first time in days you can see sky. The valley spreads below you \u2014 much larger than your current map suggests, and differently shaped. What you thought was the valley floor is a shelf. The real interior is lower, older, darker.\n\nThere are bearing stones along the ridge crest. Cut, positioned, deliberate. They are oriented toward something specific in the interior that you cannot yet see from here.\n\nYour compass works on the ridge. You have written this down twice."
     },
     {
       "kind": 30078,
@@ -820,7 +820,7 @@
           "0.15"
         ]
       ],
-      "content": "Someone came here before you. They came prepared, they came professional, and they did not come back out.\n\nThe equipment is expensive and rotting — two seasons in this humidity. The field notes are partially legible. They got further than you would have expected given what they apparently understood about where they were going, which was: almost nothing.\n\nVael has been here. Recently. He took some of the notes."
+      "content": "Someone came here before you. They came prepared, they came professional, and they did not come back out.\n\nThe equipment is expensive and rotting \u2014 two seasons in this humidity. The field notes are partially legible. They got further than you would have expected given what they apparently understood about where they were going, which was: almost nothing.\n\nVael has been here. Recently. He took some of the notes."
     },
     {
       "kind": 30078,
@@ -865,7 +865,7 @@
           "requires",
           "30078:<PUBKEY>:cartographer:npc:asha",
           "trusting",
-          "You stand at the cave entrance. Something stops you — not fear, something more considered. You have the feeling that going in alone would be the wrong kind of wrong. Asha would know the way through."
+          "You stand at the cave entrance. Something stops you \u2014 not fear, something more considered. You have the feeling that going in alone would be the wrong kind of wrong. Asha would know the way through."
         ],
         [
           "feature",
@@ -900,7 +900,7 @@
           "down"
         ]
       ],
-      "content": "The cave entrance is almost invisible — growth has reclaimed it to within a body-width of passable. Inside: darkness that adjusts slowly, and markings on every surface. Not pictographs. Not decoration. Survey notation in a system you have never seen, so dense and precise it stops your breath.\n\nThe Kael-Sura have been mapping the interior of this cave for as long as they have been mapping the valley above it. The map goes down."
+      "content": "The cave entrance is almost invisible \u2014 growth has reclaimed it to within a body-width of passable. Inside: darkness that adjusts slowly, and markings on every surface. Not pictographs. Not decoration. Survey notation in a system you have never seen, so dense and precise it stops your breath.\n\nThe Kael-Sura have been mapping the interior of this cave for as long as they have been mapping the valley above it. The map goes down."
     },
     {
       "kind": 30078,
@@ -974,7 +974,7 @@
           "north"
         ]
       ],
-      "content": "The gallery is vast enough that your lamp doesn't reach the ceiling. The walls are continuous survey notation — the same system as above, but here complete, coherent, layered over centuries of addition. Your hands move to your instruments before your mind has caught up.\n\nThis is the First Record. Not a metaphor, not an archive. A living survey of a living place, updated by generation after generation of Kael-Sura cartographers who understood that the most durable document is one that never stops being written.\n\nYou are the first outsider to read it. You can feel the weight of that."
+      "content": "The gallery is vast enough that your lamp doesn't reach the ceiling. The walls are continuous survey notation \u2014 the same system as above, but here complete, coherent, layered over centuries of addition. Your hands move to your instruments before your mind has caught up.\n\nThis is the First Record. Not a metaphor, not an archive. A living survey of a living place, updated by generation after generation of Kael-Sura cartographers who understood that the most durable document is one that never stops being written.\n\nYou are the first outsider to read it. You can feel the weight of that."
     },
     {
       "kind": 30078,
@@ -1048,7 +1048,7 @@
           "north"
         ]
       ],
-      "content": "The river begins here. Not from rainfall, not from snowmelt — from the rock itself, from a fissure that has been producing the same flow for longer than the valley has had people in it. The Kael-Sura know this. It is the first sentence of the First Record.\n\nThe inscription around the basin is not notation. It is the only part of the First Record written in language rather than survey marks. You can read fragments of it. The fragments are enough to understand what the Auric Stones actually are.\n\nYou sit with this for a moment."
+      "content": "The river begins here. Not from rainfall, not from snowmelt \u2014 from the rock itself, from a fissure that has been producing the same flow for longer than the valley has had people in it. The Kael-Sura know this. It is the first sentence of the First Record.\n\nThe inscription around the basin is not notation. It is the only part of the First Record written in language rather than survey marks. You can read fragments of it. The fragments are enough to understand what the Auric Stones actually are.\n\nYou sit with this for a moment."
     },
     {
       "kind": 30078,
@@ -1120,7 +1120,7 @@
           "south"
         ]
       ],
-      "content": "The Auric Stones are not golden. They are amber — geological amber, older than anything with eyes — and they are arranged in a configuration that completes the First Record the way a full stop completes a sentence. Remove them and the sentence becomes a question with no answer. Remove them and the river source loses the only index that tells the valley where it is in relation to itself.\n\nVael is here. He has been here long enough to understand most of this. He is looking at the stones with an expression you have only seen on people who have just understood that they want something they cannot have without becoming someone they hadn't planned to be.\n\nAsha is here too. She has not spoken since you entered.\n\nHe looks at you. You both know what the other knows. The valley is quiet in a way that feels like listening."
+      "content": "The Auric Stones are not golden. They are amber \u2014 geological amber, older than anything with eyes \u2014 and they are arranged in a configuration that completes the First Record the way a full stop completes a sentence. Remove them and the sentence becomes a question with no answer. Remove them and the river source loses the only index that tells the valley where it is in relation to itself.\n\nVael is here. He has been here long enough to understand most of this. He is looking at the stones with an expression you have only seen on people who have just understood that they want something they cannot have without becoming someone they hadn't planned to be.\n\nAsha is here too. She has not spoken since you entered.\n\nHe looks at you. You both know what the other knows. The valley is quiet in a way that feels like listening."
     },
     {
       "kind": 30078,
@@ -1507,7 +1507,7 @@
           "requires",
           "30078:<PUBKEY>:cartographer:puzzle:cairn-sequence",
           "solved",
-          "Something stops you — not physical, not fear. The sense that you are not ready. The cairn field was trying to tell you something."
+          "Something stops you \u2014 not physical, not fear. The sense that you are not ready. The cairn field was trying to tell you something."
         ]
       ],
       "content": ""
@@ -1613,7 +1613,7 @@
           "vial"
         ]
       ],
-      "content": "A sealed vial of water from the spring basin at the river source. It is the same temperature as the rock it emerges from — cold enough that it shouldn't be liquid, which is a geological observation you have written down and underlined twice."
+      "content": "A sealed vial of water from the spring basin at the river source. It is the same temperature as the rock it emerges from \u2014 cold enough that it shouldn't be liquid, which is a geological observation you have written down and underlined twice."
     },
     {
       "kind": 30078,
@@ -1698,7 +1698,7 @@
           "30078:<PUBKEY>:cartographer:clue:first-record-1"
         ]
       ],
-      "content": "Your transcription and partial translation of the cairn field notation. The cairns are not monuments. They are survey stations — a network of fixed reference points that make the valley's shifting terrain navigable because they record not where things are but *how they move*. The First Record is a dynamic map. You have never seen one before."
+      "content": "Your transcription and partial translation of the cairn field notation. The cairns are not monuments. They are survey stations \u2014 a network of fixed reference points that make the valley's shifting terrain navigable because they record not where things are but *how they move*. The First Record is a dynamic map. You have never seen one before."
     },
     {
       "kind": 30078,
@@ -1740,7 +1740,7 @@
           "30078:<PUBKEY>:cartographer:clue:first-record-2"
         ]
       ],
-      "content": "The bearing stones on the ridge are fixed orientation markers — but what they orient toward changes with the season. At dawn in the wet season they point to the river source. At dusk in the dry they point to the Auric Chamber. The ridge is a calendar as much as a viewpoint. The Kael-Sura read time from the valley the way you read coordinates from a map."
+      "content": "The bearing stones on the ridge are fixed orientation markers \u2014 but what they orient toward changes with the season. At dawn in the wet season they point to the river source. At dusk in the dry they point to the Auric Chamber. The ridge is a calendar as much as a viewpoint. The Kael-Sura read time from the valley the way you read coordinates from a map."
     },
     {
       "kind": 30078,
@@ -1782,7 +1782,7 @@
           "30078:<PUBKEY>:cartographer:clue:first-record-3"
         ]
       ],
-      "content": "The previous expedition's notes, partially recovered and partially translated. They understood the cairn field as landmarks rather than stations — they were using it as a navigation aid rather than reading it. They got further than they should have without understanding. The valley let them in and then stopped letting them in. Their last entry describes sounds in the cave system that they could not locate or explain. There is no entry after that."
+      "content": "The previous expedition's notes, partially recovered and partially translated. They understood the cairn field as landmarks rather than stations \u2014 they were using it as a navigation aid rather than reading it. They got further than they should have without understanding. The valley let them in and then stopped letting them in. Their last entry describes sounds in the cave system that they could not locate or explain. There is no entry after that."
     },
     {
       "kind": 30078,
@@ -1824,7 +1824,7 @@
           "30078:<PUBKEY>:cartographer:clue:first-record-4"
         ]
       ],
-      "content": "Asha's translation of the cave markings — given to you without you asking, which means she decided you were ready. The cave system is a three-dimensional extension of the surface map. The Kael-Sura have been charting its relationship to the water table for six generations. The acoustic chamber is not a natural feature. It was shaped, over decades, to amplify the sound of the river source so that you can hear it from anywhere in the system. The valley listens to itself."
+      "content": "Asha's translation of the cave markings \u2014 given to you without you asking, which means she decided you were ready. The cave system is a three-dimensional extension of the surface map. The Kael-Sura have been charting its relationship to the water table for six generations. The acoustic chamber is not a natural feature. It was shaped, over decades, to amplify the sound of the river source so that you can hear it from anywhere in the system. The valley listens to itself."
     },
     {
       "kind": 30078,
@@ -1866,7 +1866,7 @@
           "30078:<PUBKEY>:cartographer:clue:first-record-5"
         ]
       ],
-      "content": "The inscription around the spring basin, fully translated. It is the founding document of the First Record — the statement of purpose written by the Kael-Sura who began the project.\n\n*We map this place so that the place does not have to map itself. Every mark we make is a mark the valley does not have to make. The record is our gift to a place that does not need us, offered in gratitude for being allowed to stay.*\n\nThe Auric Stones are the final punctuation of that document. They are not treasure. They are a full stop. Remove them and every sentence in the First Record becomes a fragment."
+      "content": "The inscription around the spring basin, fully translated. It is the founding document of the First Record \u2014 the statement of purpose written by the Kael-Sura who began the project.\n\n*We map this place so that the place does not have to map itself. Every mark we make is a mark the valley does not have to make. The record is our gift to a place that does not need us, offered in gratitude for being allowed to stay.*\n\nThe Auric Stones are the final punctuation of that document. They are not treasure. They are a full stop. Remove them and every sentence in the First Record becomes a fragment."
     },
     {
       "kind": 30078,
@@ -1956,7 +1956,7 @@
           "30078:<PUBKEY>:cartographer:clue:marker-history"
         ]
       ],
-      "content": "A cairn of five stones with a metal stake driven through the centre — not Kael-Sura work, not old enough. Someone planted this marker within the last decade. The survey notation scratched into the stake is in a shorthand you recognise from academic cartography. Whoever was here before you was trained."
+      "content": "A cairn of five stones with a metal stake driven through the centre \u2014 not Kael-Sura work, not old enough. Someone planted this marker within the last decade. The survey notation scratched into the stake is in a shorthand you recognise from academic cartography. Whoever was here before you was trained."
     },
     {
       "kind": 30078,
@@ -2130,7 +2130,7 @@
           "30078:<PUBKEY>:cartographer:clue:compass-behaviour"
         ]
       ],
-      "content": "Your primary compass. The needle moves without input — not randomly, but rhythmically, as if responding to something that isn't magnetic north. You have written this down. You have not written down what it might mean."
+      "content": "Your primary compass. The needle moves without input \u2014 not randomly, but rhythmically, as if responding to something that isn't magnetic north. You have written this down. You have not written down what it might mean."
     },
     {
       "kind": 30078,
@@ -2178,7 +2178,7 @@
           "30078:<PUBKEY>:cartographer:clue:vael-equipment"
         ]
       ],
-      "content": "Three crates, professionally packed. The equipment inside is better than yours — newer instruments, more supplies, a radio transceiver that you cannot use because you don't have the frequency. And tucked into the packing material, a ledger he should have kept closer. Search them."
+      "content": "Three crates, professionally packed. The equipment inside is better than yours \u2014 newer instruments, more supplies, a radio transceiver that you cannot use because you don't have the frequency. And tucked into the packing material, a ledger he should have kept closer. Search them."
     },
     {
       "kind": 30078,
@@ -2227,7 +2227,7 @@
           "30078:<PUBKEY>:cartographer:clue:vael-knowledge"
         ]
       ],
-      "content": "Pinned to the inside of a crate lid: a partial copy of the pre-colonial survey fragment from the auction. Vael got more of it than you did. He has the entrance coordinates and something you don't — a partial key to the cairn field's notation, enough to navigate but not enough to understand. He will find the chamber eventually. The question is when."
+      "content": "Pinned to the inside of a crate lid: a partial copy of the pre-colonial survey fragment from the auction. Vael got more of it than you did. He has the entrance coordinates and something you don't \u2014 a partial key to the cairn field's notation, enough to navigate but not enough to understand. He will find the chamber eventually. The question is when."
     },
     {
       "kind": 30078,
@@ -2281,7 +2281,7 @@
           "You'd need your survey kit to read this properly."
         ]
       ],
-      "content": "Built into the bank at the ford's safest crossing point. Unlike the cairns you'll find later, this one is a single purpose: mark the crossing. But the way it's marked — the orientation, the material — tells you this is part of a larger system you don't yet understand. File it and cross the river. Survey it with your instruments."
+      "content": "Built into the bank at the ford's safest crossing point. Unlike the cairns you'll find later, this one is a single purpose: mark the crossing. But the way it's marked \u2014 the orientation, the material \u2014 tells you this is part of a larger system you don't yet understand. File it and cross the river. Survey it with your instruments."
     },
     {
       "kind": 30078,
@@ -2331,7 +2331,7 @@
           "30078:<PUBKEY>:cartographer:clue:water-level"
         ]
       ],
-      "content": "A notched stake driven into the bank, with current water level marked by a strip of bark tied at the high-water line. Someone checks this regularly. The current level is well below the high-water mark — the valley is drier than usual, which may explain why the cave entrance is accessible. In a wet season it might not be."
+      "content": "A notched stake driven into the bank, with current water level marked by a strip of bark tied at the high-water line. Someone checks this regularly. The current level is well below the high-water mark \u2014 the valley is drier than usual, which may explain why the cave entrance is accessible. In a wet season it might not be."
     },
     {
       "kind": 30078,
@@ -2380,7 +2380,7 @@
           "You need your survey kit to measure this properly."
         ]
       ],
-      "content": "The canopy floor has a quality of wrongness that your instruments confirm and your training cannot explain. Magnetic declination is off by a consistent eleven degrees — consistent enough that it's a feature, not interference. You are in the middle of a magnetic anomaly large enough to have a shape. You do not yet know what that shape is. Survey it carefully."
+      "content": "The canopy floor has a quality of wrongness that your instruments confirm and your training cannot explain. Magnetic declination is off by a consistent eleven degrees \u2014 consistent enough that it's a feature, not interference. You are in the middle of a magnetic anomaly large enough to have a shape. You do not yet know what that shape is. Survey it carefully."
     },
     {
       "kind": 30078,
@@ -2418,7 +2418,7 @@
           "30078:<PUBKEY>:cartographer:clue:root-observation"
         ]
       ],
-      "content": "The trees here share a root system that makes the ground unreliable underfoot — spongy in places, solid unexpectedly in others. More interesting: the roots are oriented. Not randomly, not following water. Following something else. Consistently, across a large area, the root systems angle toward the interior. You write this down and then stare at what you've written for longer than you intended."
+      "content": "The trees here share a root system that makes the ground unreliable underfoot \u2014 spongy in places, solid unexpectedly in others. More interesting: the roots are oriented. Not randomly, not following water. Following something else. Consistently, across a large area, the root systems angle toward the interior. You write this down and then stare at what you've written for longer than you intended."
     },
     {
       "kind": 30078,
@@ -2498,7 +2498,7 @@
           "You need your survey kit to decode this properly."
         ]
       ],
-      "content": "The central cairn is taller than the others and covered in notation so dense it took you an hour to recognise it as notation rather than weathering. You need to survey it properly — this is the index entry for everything else in the field."
+      "content": "The central cairn is taller than the others and covered in notation so dense it took you an hour to recognise it as notation rather than weathering. You need to survey it properly \u2014 this is the index entry for everything else in the field."
     },
     {
       "kind": 30078,
@@ -2548,7 +2548,7 @@
           "30078:<PUBKEY>:cartographer:clue:outer-cairn-pattern"
         ]
       ],
-      "content": "Forty-two cairns arranged in a pattern that isn't concentric — it's something more complex, a relationship between the cairns and the terrain features rather than a geometric form imposed on them. They fit the landscape rather than sitting on it. This took a long time to build and a longer time to understand."
+      "content": "Forty-two cairns arranged in a pattern that isn't concentric \u2014 it's something more complex, a relationship between the cairns and the terrain features rather than a geometric form imposed on them. They fit the landscape rather than sitting on it. This took a long time to build and a longer time to understand."
     },
     {
       "kind": 30078,
@@ -2618,7 +2618,7 @@
           "The central cairn holds the key to reading this platform. Start there."
         ]
       ],
-      "content": "A flat stone platform, low to the ground, positioned at the geometric centre of the cairn field. It's a survey station — built to take readings from. The notation on the edge tells you what instrument is needed."
+      "content": "A flat stone platform, low to the ground, positioned at the geometric centre of the cairn field. It's a survey station \u2014 built to take readings from. The notation on the edge tells you what instrument is needed."
     },
     {
       "kind": 30078,
@@ -2668,7 +2668,7 @@
           "30078:<PUBKEY>:cartographer:clue:kael-sura-cartography"
         ]
       ],
-      "content": "The wall holds a cartographic record that makes your field notes look like a sketch on a napkin. Generations of additions in different hands, all working within a consistent notation system. The map is alive in the sense that living things are alive — it is still being updated. There are marks here that are less than a year old. Study it."
+      "content": "The wall holds a cartographic record that makes your field notes look like a sketch on a napkin. Generations of additions in different hands, all working within a consistent notation system. The map is alive in the sense that living things are alive \u2014 it is still being updated. There are marks here that are less than a year old. Study it."
     },
     {
       "kind": 30078,
@@ -2706,7 +2706,7 @@
           "30078:<PUBKEY>:cartographer:clue:memory-stones-meaning"
         ]
       ],
-      "content": "A shelf of river stones, each marked with a single symbol. Not the complex notation of the maps — something simpler, personal. Asha picks one up when she talks about the valley. She puts it back precisely where it was. You understand without asking that each stone is a record of a decision."
+      "content": "A shelf of river stones, each marked with a single symbol. Not the complex notation of the maps \u2014 something simpler, personal. Asha picks one up when she talks about the valley. She puts it back precisely where it was. You understand without asking that each stone is a record of a decision."
     },
     {
       "kind": 30078,
@@ -2826,7 +2826,7 @@
           "30078:<PUBKEY>:cartographer:clue:bearing-stone-system"
         ]
       ],
-      "content": "Seven stones along the ridge crest, each placed with deliberate orientation. They are sighting stones — you look along them as you would look along a transit. Each points somewhere specific in the interior. Two have shifted from their original bearing — frost heave, or something more deliberate. Their lines no longer converge where they should."
+      "content": "Seven stones along the ridge crest, each placed with deliberate orientation. They are sighting stones \u2014 you look along them as you would look along a transit. Each points somewhere specific in the interior. Two have shifted from their original bearing \u2014 frost heave, or something more deliberate. Their lines no longer converge where they should."
     },
     {
       "kind": 30078,
@@ -2875,7 +2875,7 @@
           "30078:<PUBKEY>:cartographer:clue:previous-team"
         ]
       ],
-      "content": "Two seasons of humidity have done significant work. The equipment is identifiable — good quality, academic provenance — but not functional. The shelter structure has collapsed into the canopy. Someone got this far on professional competence and not enough understanding of where they were. Search the wreckage."
+      "content": "Two seasons of humidity have done significant work. The equipment is identifiable \u2014 good quality, academic provenance \u2014 but not functional. The shelter structure has collapsed into the canopy. Someone got this far on professional competence and not enough understanding of where they were. Search the wreckage."
     },
     {
       "kind": 30078,
@@ -2968,7 +2968,7 @@
           "30078:<PUBKEY>:cartographer:clue:vael-was-here"
         ]
       ],
-      "content": "Boot prints in the soft ground near the expedition remains. Recent — two days, maybe three. He came, he looked at what was here, he took some of the notes. The prints lead north. He knows about the caves."
+      "content": "Boot prints in the soft ground near the expedition remains. Recent \u2014 two days, maybe three. He came, he looked at what was here, he took some of the notes. The prints lead north. He knows about the caves."
     },
     {
       "kind": 30078,
@@ -3032,7 +3032,7 @@
           "The notation here is in a variant you haven't seen before. You need Asha to translate it."
         ]
       ],
-      "content": "Every surface of the cave entrance corridor is covered in notation. Not graffiti — systematic, layered, a continuous record extending back as far as your lamp will illuminate and, presumably, further. The density increases as you go deeper. Someone has been doing this for a very long time. Study them carefully."
+      "content": "Every surface of the cave entrance corridor is covered in notation. Not graffiti \u2014 systematic, layered, a continuous record extending back as far as your lamp will illuminate and, presumably, further. The density increases as you go deeper. Someone has been doing this for a very long time. Study them carefully."
     },
     {
       "kind": 30078,
@@ -3080,7 +3080,7 @@
           "0.5"
         ]
       ],
-      "content": "A widening in the upper cave that is not natural — the walls have been worked, over a very long period, to produce a specific acoustic property. Standing here you can hear the river source, clearly, from somewhere far below. The valley is listening to itself. You are inside its ear."
+      "content": "A widening in the upper cave that is not natural \u2014 the walls have been worked, over a very long period, to produce a specific acoustic property. Standing here you can hear the river source, clearly, from somewhere far below. The valley is listening to itself. You are inside its ear."
     },
     {
       "kind": 30078,
@@ -3130,7 +3130,7 @@
           "0.85"
         ]
       ],
-      "content": "The gallery walls are the First Record in its primary form — everything above, the cairn field, the ridge, the caves, encoded here at a scale and completeness that makes your own map feel like a rumour of a map. You could spend months here. You do not have months. You take what you can understand and mark the rest for what it is: beyond current comprehension, which is different from beyond comprehension entirely. Study them. Take your time."
+      "content": "The gallery walls are the First Record in its primary form \u2014 everything above, the cairn field, the ridge, the caves, encoded here at a scale and completeness that makes your own map feel like a rumour of a map. You could spend months here. You do not have months. You take what you can understand and mark the rest for what it is: beyond current comprehension, which is different from beyond comprehension entirely. Study them. Take your time."
     },
     {
       "kind": 30078,
@@ -3194,7 +3194,7 @@
           "You need your survey kit to survey the pillar properly."
         ]
       ],
-      "content": "A natural limestone pillar that reaches the ceiling, covered from base to capital in notation that is denser and more complex than anything on the walls. This is the index to the gallery. And it contains, you realise, the key to the cairn field sequence that you needed to get here — which means the valley has been teaching you to read it in the right order."
+      "content": "A natural limestone pillar that reaches the ceiling, covered from base to capital in notation that is denser and more complex than anything on the walls. This is the index to the gallery. And it contains, you realise, the key to the cairn field sequence that you needed to get here \u2014 which means the valley has been teaching you to read it in the right order."
     },
     {
       "kind": 30078,
@@ -3244,7 +3244,7 @@
           "30078:<PUBKEY>:cartographer:clue:spring-geology"
         ]
       ],
-      "content": "The spring emerges from the rock face into a basin that the Kael-Sura have shaped over generations to distribute the flow evenly. The water is clear enough to see the bottom at three metres. The temperature is consistent regardless of season — you know this because the inscription says so, in the fragments you can already read. The inscription says quite a lot more besides. Sample the water."
+      "content": "The spring emerges from the rock face into a basin that the Kael-Sura have shaped over generations to distribute the flow evenly. The water is clear enough to see the bottom at three metres. The temperature is consistent regardless of season \u2014 you know this because the inscription says so, in the fragments you can already read. The inscription says quite a lot more besides. Sample the water."
     },
     {
       "kind": 30078,
@@ -3313,7 +3313,7 @@
           "requires",
           "30078:<PUBKEY>:cartographer:npc:asha",
           "trusting",
-          "You can read fragments. The rest requires Asha's translation — a dialect of the notation system you haven't encountered yet."
+          "You can read fragments. The rest requires Asha's translation \u2014 a dialect of the notation system you haven't encountered yet."
         ],
         [
           "requires",
@@ -3363,7 +3363,7 @@
           "transition",
           "in-place",
           "disturbed",
-          "You touch one. It is warm — not from ambient temperature, from something else. The resonance you've been hearing in the cave system changes pitch. You put it down immediately."
+          "You touch one. It is warm \u2014 not from ambient temperature, from something else. The resonance you've been hearing in the cave system changes pitch. You put it down immediately."
         ],
         [
           "on-interact",
@@ -3396,7 +3396,7 @@
           "0.9"
         ]
       ],
-      "content": "Seven stones of geological amber, each the size of a fist, arranged in a configuration that matches the final notation in the gallery — the closing punctuation of the First Record. They are not beautiful in the way treasure is beautiful. They are beautiful in the way a correctly resolved bearing is beautiful: they are *right*, and their rightness is structural, and removing them would make the whole edifice wrong."
+      "content": "Seven stones of geological amber, each the size of a fist, arranged in a configuration that matches the final notation in the gallery \u2014 the closing punctuation of the First Record. They are not beautiful in the way treasure is beautiful. They are beautiful in the way a correctly resolved bearing is beautiful: they are *right*, and their rightness is structural, and removing them would make the whole edifice wrong."
     },
     {
       "kind": 30078,
@@ -3523,7 +3523,7 @@
           "0.9"
         ]
       ],
-      "content": "The cairn field, the survey platform, the ridge — three elements of a sequence that the central cairn indexes. When all three are read in the correct order with the correct instruments, they produce a bearing. The bearing points to the river source. The river source is the first word of the First Record.\n\nThe word the bearing spells, in the Kael-Sura notation, is the answer."
+      "content": "The cairn field, the survey platform, the ridge \u2014 three elements of a sequence that the central cairn indexes. When all three are read in the correct order with the correct instruments, they produce a bearing. The bearing points to the river source. The river source is the first word of the First Record.\n\nThe word the bearing spells, in the Kael-Sura notation, is the answer."
     },
     {
       "kind": 30078,
@@ -3584,7 +3584,7 @@
           "30078:<PUBKEY>:cartographer:clue:vael-cipher-hint"
         ]
       ],
-      "content": "Vael's ledger uses a simple substitution cipher for the buyer names and target locations. The key is a surveying term — specifically, the bearing measurement tool that every cartographer carries and that Vael conspicuously doesn't. What is the tool used to measure the angle between two points on a horizontal plane?\n\nEnter the answer in capitals."
+      "content": "Vael's ledger uses a simple substitution cipher for the buyer names and target locations. The key is a surveying term \u2014 specifically, the bearing measurement tool that every cartographer carries and that Vael conspicuously doesn't. What is the tool used to measure the angle between two points on a horizontal plane?\n\nEnter the answer in capitals."
     },
     {
       "kind": 30078,
@@ -3799,7 +3799,7 @@
           "30078:<PUBKEY>:cartographer:dialogue:vael-final:greeting"
         ]
       ],
-      "content": "This version of Vael has had time to understand what he's looking at. The confidence is still there but it has a different quality — the confidence of someone who has revised their position and is deciding whether to admit it."
+      "content": "This version of Vael has had time to understand what he's looking at. The confidence is still there but it has a different quality \u2014 the confidence of someone who has revised their position and is deciding whether to admit it."
     },
     {
       "kind": 30078,
@@ -4430,7 +4430,7 @@
           ""
         ]
       ],
-      "content": "She has read the inscription alongside you. She has said nothing since. Now she looks at you — not with expectation, not with hope, just with attention.\n\nWhat do you decide?"
+      "content": "She has read the inscription alongside you. She has said nothing since. Now she looks at you \u2014 not with expectation, not with hope, just with attention.\n\nWhat do you decide?"
     },
     {
       "kind": 30078,
@@ -4457,7 +4457,7 @@
           "30078:<PUBKEY>:cartographer:feature:choice-inscription"
         ]
       ],
-      "content": "She nods. A single, slow movement. She does not look surprised and she does not look approving — she looks like someone who has just seen a choice made cleanly, whatever the choice is."
+      "content": "She nods. A single, slow movement. She does not look surprised and she does not look approving \u2014 she looks like someone who has just seen a choice made cleanly, whatever the choice is."
     },
     {
       "kind": 30078,
@@ -4484,7 +4484,7 @@
           "30078:<PUBKEY>:cartographer:feature:choice-inscription"
         ]
       ],
-      "content": "She exhales. Not relief — something slower than that, something she has been carrying for long enough that putting it down takes a moment."
+      "content": "She exhales. Not relief \u2014 something slower than that, something she has been carrying for long enough that putting it down takes a moment."
     },
     {
       "kind": 30078,
@@ -4810,7 +4810,7 @@
           ""
         ]
       ],
-      "content": "*He looks at you for a long time.* You're going to make this very difficult. *Not a complaint. An observation.* Fine. *He sits down against the wall.* I'll wait. But Voss — whatever you decide in there, make sure it's actually your decision. Not hers. Not the valley's. Yours."
+      "content": "*He looks at you for a long time.* You're going to make this very difficult. *Not a complaint. An observation.* Fine. *He sits down against the wall.* I'll wait. But Voss \u2014 whatever you decide in there, make sure it's actually your decision. Not hers. Not the valley's. Yours."
     },
     {
       "kind": 30078,
@@ -4837,7 +4837,7 @@
           "hidden"
         ]
       ],
-      "content": "Academic survey notation — post-colonial, trained, careful. The stake is from a manufacturer that went out of business seven years ago. The previous expedition planted this marker, which means they were here before they were at the drowned survey site. They started here and went in. You are following their path."
+      "content": "Academic survey notation \u2014 post-colonial, trained, careful. The stake is from a manufacturer that went out of business seven years ago. The previous expedition planted this marker, which means they were here before they were at the drowned survey site. They started here and went in. You are following their path."
     },
     {
       "kind": 30078,
@@ -4918,7 +4918,7 @@
           "hidden"
         ]
       ],
-      "content": "The compass needle moves rhythmically — not randomly. Eleven-degree deviation, consistent, patterned. You've been treating it as interference. It is not interference. It is a signal. Something below the valley floor is producing a magnetic field with a frequency, and the frequency is not geological."
+      "content": "The compass needle moves rhythmically \u2014 not randomly. Eleven-degree deviation, consistent, patterned. You've been treating it as interference. It is not interference. It is a signal. Something below the valley floor is producing a magnetic field with a frequency, and the frequency is not geological."
     },
     {
       "kind": 30078,
@@ -4945,7 +4945,7 @@
           "hidden"
         ]
       ],
-      "content": "The blaze is fresh — sap still wet. He cut this marker yesterday at the earliest. He is not three days behind you. He is one day behind you. Possibly less."
+      "content": "The blaze is fresh \u2014 sap still wet. He cut this marker yesterday at the earliest. He is not three days behind you. He is one day behind you. Possibly less."
     },
     {
       "kind": 30078,
@@ -4972,7 +4972,7 @@
           "hidden"
         ]
       ],
-      "content": "Better instruments than yours, more supplies, a radio transceiver. He came prepared for a longer expedition than you did — which means either he knows something you don't, or he plans to be here until he finds what he's looking for regardless of how long it takes. Both possibilities are concerning for different reasons."
+      "content": "Better instruments than yours, more supplies, a radio transceiver. He came prepared for a longer expedition than you did \u2014 which means either he knows something you don't, or he plans to be here until he finds what he's looking for regardless of how long it takes. Both possibilities are concerning for different reasons."
     },
     {
       "kind": 30078,
@@ -4999,7 +4999,7 @@
           "hidden"
         ]
       ],
-      "content": "He has a partial key to the cairn field notation. Enough to navigate the field as a set of landmarks. Not enough to read it. He knows where the stones are without knowing what they are. This is more dangerous than not knowing where they are at all — he will reach the chamber without the context that might make him hesitate."
+      "content": "He has a partial key to the cairn field notation. Enough to navigate the field as a set of landmarks. Not enough to read it. He knows where the stones are without knowing what they are. This is more dangerous than not knowing where they are at all \u2014 he will reach the chamber without the context that might make him hesitate."
     },
     {
       "kind": 30078,
@@ -5026,7 +5026,7 @@
           "hidden"
         ]
       ],
-      "content": "Three buyers. The payment structures are contingent on delivery of amber specimens with specific dimensional requirements — dimensions that match the Auric Stones precisely, which means Vael has seen a description of them, which means someone who has been in the chamber has already talked to Vael's buyers. There is a leak in the Kael-Sura's protection of this place. You do not know from which direction."
+      "content": "Three buyers. The payment structures are contingent on delivery of amber specimens with specific dimensional requirements \u2014 dimensions that match the Auric Stones precisely, which means Vael has seen a description of them, which means someone who has been in the chamber has already talked to Vael's buyers. There is a leak in the Kael-Sura's protection of this place. You do not know from which direction."
     },
     {
       "kind": 30078,
@@ -5053,7 +5053,7 @@
           "hidden"
         ]
       ],
-      "content": "The river cairn is oriented true north — not magnetic north, true north, corrected for the local anomaly. Whoever built it knew about the magnetic deviation and accounted for it. The Kael-Sura survey system works from true north, not magnetic. Every bearing in the First Record is corrected. Your compass is wrong; their cairns are right."
+      "content": "The river cairn is oriented true north \u2014 not magnetic north, true north, corrected for the local anomaly. Whoever built it knew about the magnetic deviation and accounted for it. The Kael-Sura survey system works from true north, not magnetic. Every bearing in the First Record is corrected. Your compass is wrong; their cairns are right."
     },
     {
       "kind": 30078,
@@ -5080,7 +5080,7 @@
           "hidden"
         ]
       ],
-      "content": "The water is lower than it has been in several years. The cave entrance that the previous expedition couldn't access — possibly because of seasonal flooding — is accessible now. The valley is letting you in during a specific window. Whether that is coincidence is not a question you can answer with a clinometer."
+      "content": "The water is lower than it has been in several years. The cave entrance that the previous expedition couldn't access \u2014 possibly because of seasonal flooding \u2014 is accessible now. The valley is letting you in during a specific window. Whether that is coincidence is not a question you can answer with a clinometer."
     },
     {
       "kind": 30078,
@@ -5107,7 +5107,7 @@
           "hidden"
         ]
       ],
-      "content": "The anomaly has a shape: an ellipse, roughly two hundred metres by three hundred, centred on the cairn field. The deviation is consistent at eleven degrees. At the boundary of the ellipse the deviation drops to zero over a distance of approximately five metres — a hard edge, which is not how geological magnetic anomalies behave. This one is structural. Something below the cairn field is producing it deliberately."
+      "content": "The anomaly has a shape: an ellipse, roughly two hundred metres by three hundred, centred on the cairn field. The deviation is consistent at eleven degrees. At the boundary of the ellipse the deviation drops to zero over a distance of approximately five metres \u2014 a hard edge, which is not how geological magnetic anomalies behave. This one is structural. Something below the cairn field is producing it deliberately."
     },
     {
       "kind": 30078,
@@ -5188,7 +5188,7 @@
           "hidden"
         ]
       ],
-      "content": "The outer cairns are not arranged geometrically — they are arranged relationally. Each cairn's position records its relationship to the terrain features around it: the slope, the drainage, the tree density, the soil type. Together they form a profile of the valley floor that is more complete than any map you could produce with your instruments. You are looking at two hundred years of accumulated observation rendered in stone."
+      "content": "The outer cairns are not arranged geometrically \u2014 they are arranged relationally. Each cairn's position records its relationship to the terrain features around it: the slope, the drainage, the tree density, the soil type. Together they form a profile of the valley floor that is more complete than any map you could produce with your instruments. You are looking at two hundred years of accumulated observation rendered in stone."
     },
     {
       "kind": 30078,
@@ -5242,7 +5242,7 @@
           "hidden"
         ]
       ],
-      "content": "Each stone records a decision: a moment when a Kael-Sura cartographer had to choose between accuracy and protection, between recording something and leaving it unrecorded. The marks are not explanations — they are acknowledgements. *I was here. I chose. The choice was this.* There are forty-seven stones on the shelf. Asha is not the first person to face what you are about to face."
+      "content": "Each stone records a decision: a moment when a Kael-Sura cartographer had to choose between accuracy and protection, between recording something and leaving it unrecorded. The marks are not explanations \u2014 they are acknowledgements. *I was here. I chose. The choice was this.* There are forty-seven stones on the shelf. Asha is not the first person to face what you are about to face."
     },
     {
       "kind": 30078,
@@ -5269,7 +5269,7 @@
           "hidden"
         ]
       ],
-      "content": "The bearing stones are a calendar and a compass simultaneously. At different times of day and different seasons they align with different features of the interior. You can only see two targets currently. A third stone is oriented toward something below the current sightline — something underground that the stone has been pointing at for as long as it has been standing here."
+      "content": "The bearing stones are a calendar and a compass simultaneously. At different times of day and different seasons they align with different features of the interior. You can only see two targets currently. A third stone is oriented toward something below the current sightline \u2014 something underground that the stone has been pointing at for as long as it has been standing here."
     },
     {
       "kind": 30078,
@@ -5296,7 +5296,7 @@
           "hidden"
         ]
       ],
-      "content": "Two people, by the equipment. Academic cartographers — the instruments are university specification. They were thorough and they were not arrogant, which makes what happened to them more sobering rather than less. Carefulness was not enough. They needed something more than carefulness, and they didn't have it, and the valley responded accordingly."
+      "content": "Two people, by the equipment. Academic cartographers \u2014 the instruments are university specification. They were thorough and they were not arrogant, which makes what happened to them more sobering rather than less. Carefulness was not enough. They needed something more than carefulness, and they didn't have it, and the valley responded accordingly."
     },
     {
       "kind": 30078,
@@ -5350,7 +5350,7 @@
           "hidden"
         ]
       ],
-      "content": "The prints confirm it and so does the disturbed equipment — someone went through the notes systematically, taking specific pages and leaving others. Vael knows how to read a partial survey. He took the sections that described the cave entrance and left the sections that described the acoustic chamber, which means he doesn't know the acoustic chamber exists yet. You have a small advantage. It is temporary."
+      "content": "The prints confirm it and so does the disturbed equipment \u2014 someone went through the notes systematically, taking specific pages and leaving others. Vael knows how to read a partial survey. He took the sections that described the cave entrance and left the sections that described the acoustic chamber, which means he doesn't know the acoustic chamber exists yet. You have a small advantage. It is temporary."
     },
     {
       "kind": 30078,
@@ -5377,7 +5377,7 @@
           "hidden"
         ]
       ],
-      "content": "The cave notation is the same system as the cairn field but three-dimensional — it accounts for depth, acoustic properties, and hydrological relationships in a way the surface notation cannot. You can read the basic structure but the variant used here has conventions you haven't encountered. Asha's translation opens the rest. Without it you would have accurate data and no framework to put it in."
+      "content": "The cave notation is the same system as the cairn field but three-dimensional \u2014 it accounts for depth, acoustic properties, and hydrological relationships in a way the surface notation cannot. You can read the basic structure but the variant used here has conventions you haven't encountered. Asha's translation opens the rest. Without it you would have accurate data and no framework to put it in."
     },
     {
       "kind": 30078,
@@ -5431,7 +5431,7 @@
           "hidden"
         ]
       ],
-      "content": "The gallery represents, at minimum, two hundred and forty years of continuous survey work by multiple Kael-Sura cartographers working in a consistent notation system across generations. The most recent addition is less than six months old. Asha's handwriting, you think, though you cannot be certain — she has not confirmed it and you have not asked."
+      "content": "The gallery represents, at minimum, two hundred and forty years of continuous survey work by multiple Kael-Sura cartographers working in a consistent notation system across generations. The most recent addition is less than six months old. Asha's handwriting, you think, though you cannot be certain \u2014 she has not confirmed it and you have not asked."
     },
     {
       "kind": 30078,
@@ -5458,7 +5458,7 @@
           "hidden"
         ]
       ],
-      "content": "The pillar's notation contains, embedded in its index function, the solution to the cairn field sequence: the correct order is determined by the magnetic anomaly's orientation at true north, which gives a bearing of confluence — the point where the river source's underground path meets the spring basin's overflow. The answer is a word in the Kael-Sura notation system. In English it translates as: *confluence*."
+      "content": "The pillar's notation contains, embedded in its index function, the solution to the cairn field sequence: the correct order is determined by the magnetic anomaly's orientation at true north, which gives a bearing of confluence \u2014 the point where the river source's underground path meets the spring basin's overflow. The answer is a word in the Kael-Sura notation system. In English it translates as: *confluence*."
     },
     {
       "kind": 30078,
@@ -5485,7 +5485,7 @@
           "hidden"
         ]
       ],
-      "content": "The spring should not exist at this elevation with this flow rate — the hydrology is wrong by every model you were taught. The water comes from below the limestone bedrock, from a source that predates the valley's current topography. Whatever produces it has been producing it for longer than the Kael-Sura have been mapping it, and possibly longer than the valley has had its current shape. The First Record is a document sitting on top of something much older."
+      "content": "The spring should not exist at this elevation with this flow rate \u2014 the hydrology is wrong by every model you were taught. The water comes from below the limestone bedrock, from a source that predates the valley's current topography. Whatever produces it has been producing it for longer than the Kael-Sura have been mapping it, and possibly longer than the valley has had its current shape. The First Record is a document sitting on top of something much older."
     },
     {
       "kind": 30078,
@@ -5512,7 +5512,7 @@
           "hidden"
         ]
       ],
-      "content": "The stones are geological amber — pre-Holocene, inclusions consistent with a forest ecosystem that no longer exists anywhere in this region. They are scientifically extraordinary. They are also, you understand from the gallery notation, the resonance anchors for the acoustic chamber — their molecular structure produces the frequency that carries the river source's sound through three hundred metres of rock. Remove them and the chamber goes silent. The valley stops listening to itself."
+      "content": "The stones are geological amber \u2014 pre-Holocene, inclusions consistent with a forest ecosystem that no longer exists anywhere in this region. They are scientifically extraordinary. They are also, you understand from the gallery notation, the resonance anchors for the acoustic chamber \u2014 their molecular structure produces the frequency that carries the river source's sound through three hundred metres of rock. Remove them and the chamber goes silent. The valley stops listening to itself."
     },
     {
       "kind": 30078,
@@ -5566,7 +5566,7 @@
           "hidden"
         ]
       ],
-      "content": "He sees you. He doesn't stop moving. He's covering ground efficiently — he knows where he's going. He's been here long enough to have a route."
+      "content": "He sees you. He doesn't stop moving. He's covering ground efficiently \u2014 he knows where he's going. He's been here long enough to have a route."
     },
     {
       "kind": 30078,
@@ -5593,7 +5593,7 @@
           "hidden"
         ]
       ],
-      "content": "The cipher resolves to three buyer names and a delivery location. The buyers are private collectors — the kind whose collections are never publicly catalogued. The delivery location is an intermediary storage facility in a country with no cultural heritage protection laws. Vael is not a treasure hunter. He is a dismantler. What he delivers is never seen again."
+      "content": "The cipher resolves to three buyer names and a delivery location. The buyers are private collectors \u2014 the kind whose collections are never publicly catalogued. The delivery location is an intermediary storage facility in a country with no cultural heritage protection laws. Vael is not a treasure hunter. He is a dismantler. What he delivers is never seen again."
     },
     {
       "kind": 30078,
@@ -5620,7 +5620,7 @@
           "hidden"
         ]
       ],
-      "content": "The cipher key is a tool. Vael doesn't carry one — he hires people who do. The tool measures horizontal angles between two points. Think about what you carry that he doesn't."
+      "content": "The cipher key is a tool. Vael doesn't carry one \u2014 he hires people who do. The tool measures horizontal angles between two points. Think about what you carry that he doesn't."
     },
     {
       "kind": 30078,
@@ -5647,7 +5647,7 @@
           "hidden"
         ]
       ],
-      "content": "The sequence resolves. The bearing is true. The cairn field, the platform, the ridge — three points producing a single direction, consistent across all three instruments, pointing to something below the valley floor that every element of the First Record has been orienting toward. You know where to go. You have always known where to go. The valley has been telling you since you arrived."
+      "content": "The sequence resolves. The bearing is true. The cairn field, the platform, the ridge \u2014 three points producing a single direction, consistent across all three instruments, pointing to something below the valley floor that every element of the First Record has been orienting toward. You know where to go. You have always known where to go. The valley has been telling you since you arrived."
     },
     {
       "kind": 30078,
@@ -5755,7 +5755,7 @@
           "hidden"
         ]
       ],
-      "content": "Entry two confirmed: the ridge bearing stones function as a seasonal calendar. You now know what time of year it is relative to the valley's internal rhythm — and it is not the same season the outside world thinks it is. The valley runs on its own calendar. The stones have been tracking it for longer than anyone remembers setting them."
+      "content": "Entry two confirmed: the ridge bearing stones function as a seasonal calendar. You now know what time of year it is relative to the valley's internal rhythm \u2014 and it is not the same season the outside world thinks it is. The valley runs on its own calendar. The stones have been tracking it for longer than anyone remembers setting them."
     },
     {
       "kind": 30078,
@@ -5863,7 +5863,7 @@
           "hidden"
         ]
       ],
-      "content": "She watches you work the way you watch terrain — carefully, without intervening, noting what you notice and what you don't. You have the feeling that she has been waiting for someone like you for a long time, and that *like you* is a very specific category that very few people fit."
+      "content": "She watches you work the way you watch terrain \u2014 carefully, without intervening, noting what you notice and what you don't. You have the feeling that she has been waiting for someone like you for a long time, and that *like you* is a very specific category that very few people fit."
     },
     {
       "kind": 30078,
@@ -5890,7 +5890,7 @@
           "hidden"
         ]
       ],
-      "content": "Your instruments are calibrated and ready. The survey kit works in the valley's conditions better than you expected — the theodolite handles the diffuse light, the clinometer gives reliable readings despite the terrain. You are equipped for this. You have always been equipped for this."
+      "content": "Your instruments are calibrated and ready. The survey kit works in the valley's conditions better than you expected \u2014 the theodolite handles the diffuse light, the clinometer gives reliable readings despite the terrain. You are equipped for this. You have always been equipped for this."
     },
     {
       "kind": 30078,
@@ -6135,35 +6135,27 @@
         ],
         [
           "s",
-          "perc ~ ~ ~ ~ ~ perc:2 ~ ~ ~ ~ ~ ~ ~ perc:1 ~ ~ ~ ~ ~ ~ ~"
+          "fire*4"
+        ],
+        [
+          "lpf",
+          "1000"
         ],
         [
           "slow",
-          "9"
+          "2.5"
         ],
         [
-          "room",
-          "0.6"
+          "degrade-by",
+          "0.7"
         ],
         [
-          "roomsize",
-          "4"
+          "crush",
+          "12"
         ],
         [
           "gain",
           "0.18"
-        ],
-        [
-          "lpf",
-          "900"
-        ],
-        [
-          "attack",
-          "0.05"
-        ],
-        [
-          "release",
-          "2"
         ]
       ],
       "content": ""
@@ -6186,35 +6178,35 @@
         ],
         [
           "s",
-          "hh*32"
+          "white"
         ],
         [
           "lpf",
-          "380"
+          "400 600"
         ],
         [
           "hpf",
-          "40"
+          "80 100"
         ],
         [
           "room",
-          "0.5"
+          "0.7 0.5"
         ],
         [
           "roomsize",
-          "3"
-        ],
-        [
-          "gain",
-          "0.38"
+          "4"
         ],
         [
           "attack",
-          "0.3"
+          "0.2 0.1"
         ],
         [
           "release",
-          "0.25"
+          "0.5 0.7"
+        ],
+        [
+          "gain",
+          "0.45"
         ]
       ],
       "content": ""
@@ -6331,27 +6323,35 @@
         ],
         [
           "s",
-          "wind ~ ~ ~ ~ wind:1 ~ ~ ~ ~ ~ ~ wind:2 ~ ~ ~ ~ wind:0 ~ ~ ~ ~ ~ ~ ~ wind:1 ~ ~ ~ ~ ~"
+          "brown"
+        ],
+        [
+          "note",
+          "d3 ~ ~ ~ ~ ~ ~ ~ e3 ~ ~ ~ ~ ~ ~ ~"
         ],
         [
           "slow",
-          "8"
+          "6"
         ],
         [
           "room",
-          "0.3"
+          "0.34"
         ],
         [
-          "gain",
-          "0.38"
+          "roomsize",
+          "10"
         ],
         [
           "attack",
-          "1"
+          "3"
         ],
         [
           "release",
-          "2"
+          "4"
+        ],
+        [
+          "gain",
+          "0.4"
         ]
       ],
       "content": ""
@@ -7095,7 +7095,7 @@
         ],
         [
           "s",
-          "hh ~ ~ hh ~ ~ ~ hh ~ ~ hh ~ ~ ~ ~ ~"
+          "tink ~ ~ ~ tink ~ ~ ~ tink ~ ~ ~ tink ~ ~ ~"
         ],
         [
           "slow",
@@ -7103,7 +7103,7 @@
         ],
         [
           "gain",
-          "0.22"
+          "0.28"
         ],
         [
           "room",
@@ -7115,7 +7115,7 @@
         ],
         [
           "release",
-          "0.06"
+          "0.05"
         ]
       ],
       "content": ""
@@ -7158,7 +7158,7 @@
           "0.7"
         ]
       ],
-      "content": "You published it.\n\nThe First Record is now in the cartographic literature — translated, annotated, cross-referenced. The valley has coordinates. The Auric Stones are in a secure collection. The Kael-Sura have been contacted by three university departments and a heritage foundation and they are navigating this with the careful exhaustion of people who expected it and had hoped to be wrong.\n\nYour map is accurate. It is the best work of your career. It will be cited for decades.\n\nAsha has not responded to your letters. You did not expect her to. You write them anyway, because you are not sure what else to do with the knowledge that you made the right professional decision and the wrong human one, and that these are sometimes the same decision and this was one of those times.\n\nThe valley is on the map now. You put it there. You were the best person who could have done it, which means you were also the person who should have known not to.\n\nYou are already looking at the next survey. The work doesn't stop. You have learned to be grateful for that.\n\n**You made the map. The valley is known. You will wonder, for the rest of your career, whether known was what it needed to be.**"
+      "content": "You published it.\n\nThe First Record is now in the cartographic literature \u2014 translated, annotated, cross-referenced. The valley has coordinates. The Auric Stones are in a secure collection. The Kael-Sura have been contacted by three university departments and a heritage foundation and they are navigating this with the careful exhaustion of people who expected it and had hoped to be wrong.\n\nYour map is accurate. It is the best work of your career. It will be cited for decades.\n\nAsha has not responded to your letters. You did not expect her to. You write them anyway, because you are not sure what else to do with the knowledge that you made the right professional decision and the wrong human one, and that these are sometimes the same decision and this was one of those times.\n\nThe valley is on the map now. You put it there. You were the best person who could have done it, which means you were also the person who should have known not to.\n\nYou are already looking at the next survey. The work doesn't stop. You have learned to be grateful for that.\n\n**You made the map. The valley is known. You will wonder, for the rest of your career, whether known was what it needed to be.**"
     },
     {
       "kind": 30078,
@@ -7198,7 +7198,7 @@
           "0.5"
         ]
       ],
-      "content": "You walked out with nothing written down.\n\nYour field notes from the interior describe rock formations, moisture levels, unreliable instrument readings. Nothing that would tell anyone where to go or what they would find. You cited equipment failure, difficult terrain, inconclusive results. Your professional reputation absorbed it. People who know your work raised an eyebrow. You let them.\n\nVael filed a competing expedition report six months later. It was credible and almost entirely wrong — he understood what the Stones were worth but not what they were for, and his navigation notes had enough errors that no one who followed them would find the chamber. You read it carefully and did not correct it.\n\nAsha sent you something. Not a letter — a small stone, smoothed by the river, with a single mark on it that you recognise from the First Record. You looked it up. It means, approximately: the water remembers the path even when the path is not visible.\n\nYou keep it on your desk. You do not explain it to anyone.\n\nYou still do cartography. You are still good at it. You have simply become the kind of cartographer who knows that some places are described most accurately by the decision not to describe them.\n\nThe valley has no name on any map.\n\n**That is not an accident. You made sure of it.**"
+      "content": "You walked out with nothing written down.\n\nYour field notes from the interior describe rock formations, moisture levels, unreliable instrument readings. Nothing that would tell anyone where to go or what they would find. You cited equipment failure, difficult terrain, inconclusive results. Your professional reputation absorbed it. People who know your work raised an eyebrow. You let them.\n\nVael filed a competing expedition report six months later. It was credible and almost entirely wrong \u2014 he understood what the Stones were worth but not what they were for, and his navigation notes had enough errors that no one who followed them would find the chamber. You read it carefully and did not correct it.\n\nAsha sent you something. Not a letter \u2014 a small stone, smoothed by the river, with a single mark on it that you recognise from the First Record. You looked it up. It means, approximately: the water remembers the path even when the path is not visible.\n\nYou keep it on your desk. You do not explain it to anyone.\n\nYou still do cartography. You are still good at it. You have simply become the kind of cartographer who knows that some places are described most accurately by the decision not to describe them.\n\nThe valley has no name on any map.\n\n**That is not an accident. You made sure of it.**"
     },
     {
       "kind": 30078,
