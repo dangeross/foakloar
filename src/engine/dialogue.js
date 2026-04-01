@@ -113,6 +113,15 @@ export function mixDialogue(Engine) {
     const selected = visibleOptions[choice - 1];
     this._emit(`> ${selected.label}`, 'command');
 
+    // Fire on-option actions matching this label
+    for (const tag of getTags(node, 'on-option')) {
+      if (tag[1] !== selected.label) continue;
+      const action = tag[2];
+      const target = tag[3];
+      const extRef = tag[4];
+      this._dispatchAction({ action, target, extRef, selfDtag: this.dialogueActive.nodeDtag, selfEvent: node });
+    }
+
     if (!selected.nextDtag) {
       this._emit('The conversation ends.', 'narrative');
       this.dialogueActive = null;

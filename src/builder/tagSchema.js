@@ -369,6 +369,17 @@ export const TAG_SCHEMAS = {
       { name: 'next-ref', type: 'event-ref', required: false, eventTypeFilter: 'dialogue' },
     ],
   },
+  'on-option': {
+    label: 'On Option',
+    desc: 'Fire an action when the player selects a specific dialogue option. Matches by option label.',
+    repeatable: true,
+    fields: [
+      { name: 'option-label', type: 'text', required: true, placeholder: 'Exact option label text' },
+      { name: 'action', type: 'select', required: true, options: ['set-state', 'give-item', 'consume-item', 'consequence', 'sound', 'deal-damage', 'heal', 'increment', 'decrement', 'set-counter'] },
+      { name: 'target', type: 'text', required: false },
+      { name: 'ext-ref', type: 'event-ref', required: false },
+    ],
+  },
   text: { label: 'Dialogue Text', desc: 'The NPC\'s spoken text in this dialogue node', fields: [{ name: 'value', type: 'textarea', required: true, placeholder: 'NPC dialogue text' }] },
 
   // ── Puzzle ───────────────────────────────────────────────────────────────
@@ -636,7 +647,7 @@ export const TAGS_BY_EVENT_TYPE = {
   recipe:      ['title', 'noun', 'verb', 'state', 'transition', 'requires', 'on-complete', 'on-fail', 'counter', 'on-counter', 'ordered', 'content-type', 'sound'],
   payment:     ['title', 'amount', 'unit', 'lnurl', 'on-complete', 'content-type', 'sound'],
   npc:         ['title', 'noun', 'verb', 'state', 'transition', 'dialogue', 'on-interact', 'on-encounter', 'on-attacked', 'on-health', 'on-player-health', 'on-enter', 'on-move', 'on-counter', 'counter', 'speed', 'roam-type', 'order', 'route', 'stash', 'roams-when', 'inventory', 'health', 'damage', 'hit-chance', 'requires', 'requires-not', 'content-type', 'sound'],
-  dialogue:    ['option', 'requires', 'requires-not', 'on-enter', 'content-type', 'sound'],
+  dialogue:    ['option', 'on-option', 'requires', 'requires-not', 'on-enter', 'content-type', 'sound'],
   consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage', 'set-state', 'content-type', 'sound'],
   sound:       ['note', 's', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan', 'lpf', 'hpf', 'bpf', 'bpq', 'lpq', 'hpq', 'ftype', 'vowel', 'crush', 'shape', 'distort', 'coarse', 'room', 'roomsize', 'roomfade', 'roomlp', 'roomdim', 'delay', 'delaytime', 'delayfeedback', 'phaser', 'phaserdepth', 'phasercenter', 'phasersweep', 'rev', 'palindrome', 'degrade-by', 'jux', 'arp', 'sustain', 'attack', 'decay', 'release', 'lpenv', 'lpattack', 'lpdecay', 'lpsustain', 'lprelease', 'hpenv', 'hpattack', 'hpdecay', 'hpsustain', 'hprelease', 'bpenv', 'bpattack', 'bpdecay', 'bpsustain', 'bprelease', 'fanchor', 'penv', 'pattack', 'pdecay', 'prelease', 'pcurve', 'panchor', 'fm', 'fmh', 'fmattack', 'fmdecay', 'fmsustain', 'fmenv', 'vib', 'vibmod', 'tremolodepth', 'tremolosync', 'tremoloskew', 'tremolophase', 'tremoloshape', 'velocity', 'postgain', 'compressor', 'n', 'begin', 'end', 'speed', 'cut', 'loop', 'loop-begin', 'loop-end', 'loop-at', 'clip', 'chop', 'striate', 'fit', 'orbit', 'dry', 'xfade', 'early', 'late', 'swing', 'iter', 'ply', 'sample'],
   world:       ['title', 'author', 'version', 'lang', 'voice', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'max-inventory', 'on-player-health', 'on-interact', 'on-inventory-full', 'on-move', 'counter', 'on-counter', 'hud', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'bpm', 'samples', 'content-type', 'media', 'w'],
