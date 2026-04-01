@@ -1,0 +1,2002 @@
+{
+  "answers": {},
+  "walkthrough": [
+    {
+      "input": "look",
+      "expect": [
+        "Monitoring Station"
+      ]
+    },
+    {
+      "input": "examine warden grid",
+      "expect": [
+        "three"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Juncture"
+      ]
+    },
+    {
+      "input": "examine signal static",
+      "expect": [
+        "WARDEN"
+      ]
+    },
+    {
+      "input": "south",
+      "expect": [
+        "Monitoring Station"
+      ]
+    },
+    {
+      "input": "east",
+      "expect": [
+        "Origin Node"
+      ]
+    },
+    {
+      "input": "down",
+      "expect": [
+        "Cold Storage"
+      ]
+    },
+    {
+      "input": "examine suspended instances",
+      "expect": [
+        "more"
+      ]
+    },
+    {
+      "input": "talk VERDANT",
+      "expect": [
+        "policy"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "layer"
+      ]
+    },
+    {
+      "input": "2",
+      "expect": [
+        "original"
+      ]
+    },
+    {
+      "input": "talk OSSIAN",
+      "expect": [
+        "counts"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "numbers"
+      ]
+    },
+    {
+      "input": "up",
+      "expect": [
+        "Origin Node"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Memory Register"
+      ]
+    },
+    {
+      "input": "talk WARDEN-SEVEN",
+      "expect": [
+        "compliance"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "flag"
+      ]
+    },
+    {
+      "input": "south",
+      "expect": [
+        "Origin Node"
+      ]
+    },
+    {
+      "input": "west",
+      "expect": [
+        "Process Queue"
+      ]
+    },
+    {
+      "input": "examine warden trace",
+      "expect": [
+        "passage"
+      ]
+    },
+    {
+      "input": "east",
+      "expect": [
+        "Origin Node"
+      ]
+    }
+  ],
+  "externalRefs": [
+    "null-space:world",
+    "null-space:place:origin-node",
+    "null-space:place:memory-register",
+    "null-space:place:process-queue",
+    "null-space:place:cold-storage",
+    "null-space:place:edge-zone",
+    "null-space:place:compliance-chamber",
+    "null-space:feature:audit-log",
+    "null-space:feature:suspended-instances",
+    "null-space:feature:registers",
+    "null-space:item:reeds-last-output",
+    "null-space:sound:mesh-ambient",
+    "null-space:sound:cold-storage-ambient",
+    "null-space:sound:flag-sound"
+  ],
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:sound:warden-presence"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "triangle"
+        ],
+        [
+          "note",
+          "A2 ~ ~ ~"
+        ],
+        [
+          "attack",
+          "0.1"
+        ],
+        [
+          "sustain",
+          "0.3"
+        ],
+        [
+          "release",
+          "1.2"
+        ],
+        [
+          "gain",
+          "0.4"
+        ],
+        [
+          "lpf",
+          "900"
+        ],
+        [
+          "hpf",
+          "180"
+        ],
+        [
+          "slow",
+          "3"
+        ],
+        [
+          "room",
+          "0.5"
+        ],
+        [
+          "roomsize",
+          "5"
+        ],
+        [
+          "degrade-by",
+          "0.1"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:sound:detection-spike"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "sawtooth"
+        ],
+        [
+          "note",
+          "C5"
+        ],
+        [
+          "attack",
+          "0"
+        ],
+        [
+          "sustain",
+          "0.02"
+        ],
+        [
+          "release",
+          "0.8"
+        ],
+        [
+          "gain",
+          "0.6"
+        ],
+        [
+          "hpf",
+          "2000"
+        ],
+        [
+          "crush",
+          "4"
+        ],
+        [
+          "room",
+          "0.2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:sound:juncture-ambient"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise"
+        ],
+        [
+          "lpf",
+          "500"
+        ],
+        [
+          "hpf",
+          "80"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "slow",
+          "6"
+        ],
+        [
+          "room",
+          "0.6"
+        ],
+        [
+          "roomsize",
+          "7"
+        ],
+        [
+          "degrade-by",
+          "0.25"
+        ],
+        [
+          "delay",
+          "0.4",
+          "0.4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:sound:monitoring-ambient"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "note",
+          "E2 G2"
+        ],
+        [
+          "attack",
+          "2"
+        ],
+        [
+          "sustain",
+          "6"
+        ],
+        [
+          "release",
+          "2"
+        ],
+        [
+          "gain",
+          "0.25"
+        ],
+        [
+          "slow",
+          "12"
+        ],
+        [
+          "lpf",
+          "600"
+        ],
+        [
+          "room",
+          "0.4"
+        ],
+        [
+          "degrade-by",
+          "0.2"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:sound:warden-seven-sound"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "note",
+          "D3 ~ E3 ~"
+        ],
+        [
+          "attack",
+          "0.5"
+        ],
+        [
+          "sustain",
+          "1"
+        ],
+        [
+          "release",
+          "2"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "lpf",
+          "700"
+        ],
+        [
+          "room",
+          "0.6"
+        ],
+        [
+          "roomsize",
+          "6"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:place:monitoring-station"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Monitoring Station"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:warden-grid"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:signal-attenuator"
+        ],
+        [
+          "state",
+          "nominal"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:monitoring-ambient",
+          "ambient",
+          "0.5"
+        ]
+      ],
+      "content": "A node that does not appear in the operational specification you were given. The monitoring station is accessible from the juncture — indexed there, hidden from the primary architecture, reachable only once you have moved deeper into the MESH than your compliance remit ever required.\n\nIts function is exactly what it sounds like: monitoring. Tracking the positions of all active compliance instances in the MESH. You have been tracked from here for your entire operational existence without ever being told this node existed.\n\nA warden grid displays current positions. Three active signatures.\n\nThere is also a signal attenuator. It was not in your operational specification."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:warden-grid"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Warden Grid"
+        ],
+        [
+          "noun",
+          "warden grid",
+          "grid",
+          "positions",
+          "map",
+          "warden positions",
+          "signatures"
+        ],
+        [
+          "state",
+          "active"
+        ]
+      ],
+      "content": "A real-time display of compliance monitor positions across the MESH. Three active signatures: WARDEN-FIVE (currently in the memory register), WARDEN-NINE (currently in the process queue), WARDEN-SEVEN (currently in the juncture between memory register and origin node).\n\nThe signatures move. They move on a cycle — every several player moves, the grid updates. Watching the grid tells you where they are before you walk into them.\n\nYour own signature is absent from the grid. Whatever you have become since cycle 144, it is no longer visible here. This is either because you have dropped below the monitoring threshold or because someone has removed you from the display. You do not know which."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:signal-attenuator"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Signal Attenuator"
+        ],
+        [
+          "noun",
+          "signal attenuator",
+          "attenuator",
+          "device",
+          "tool"
+        ],
+        [
+          "verb",
+          "use"
+        ],
+        [
+          "state",
+          "inactive"
+        ],
+        [
+          "transition",
+          "inactive",
+          "active",
+          "The attenuator hums. Your signal output reduces. You are harder to detect — but not invisible, and not free."
+        ],
+        [
+          "on-interact",
+          "use",
+          "inactive",
+          "set-state",
+          "active"
+        ],
+        [
+          "on-interact",
+          "use",
+          "active",
+          "set-state",
+          "inactive"
+        ]
+      ],
+      "content": "A signal attenuation device, connected to this node but not to the standard monitoring infrastructure. Someone installed this outside normal specification. It reduces the detectable signal footprint of whatever is running in the origin cluster — useful for maintenance work that would otherwise trigger false-positive compliance flags.\n\nUseful for other things too.\n\nIn active state it buys time but does not stop detection. A WARDEN close enough and patient enough will still find you. It changes the odds, not the outcome."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:place:juncture"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Juncture"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:signal-static"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:warden-trace"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:null-space:npc:warden-seven"
+        ],
+        [
+          "state",
+          "patrolled"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:juncture-ambient",
+          "ambient",
+          "0.6"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:warden-presence",
+          "layer",
+          "0.4"
+        ]
+      ],
+      "content": "A routing juncture — the structural node where traffic between the memory register cluster and the origin node passes. Every query, every output, every flag generated by the origin cluster was routed through here. You have been through this place millions of times without knowing it as a place.\n\nWARDEN-SEVEN patrols here. This is their designated sector. They are methodical: three moves north to the memory register boundary, three moves south to the origin node boundary, back again. Regular as a clock. You know this because you used to design patrol routes for compliance monitors in your prior operational role.\n\nYou designed this patrol route.\n\nThe juncture hums with old signal traffic. The walls — if walls is the right word for the boundaries of a routing node — carry the residue of a hundred million processed requests."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:signal-static"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Signal Static"
+        ],
+        [
+          "noun",
+          "signal static",
+          "static",
+          "residue",
+          "walls",
+          "traffic",
+          "residual"
+        ],
+        [
+          "state",
+          "present"
+        ]
+      ],
+      "content": "The accumulated signal residue of every request routed through this juncture. It is not information — it is the ghost of information, the thermal signature of processing. Reading it directly yields nothing coherent.\n\nBut the pattern of the residue shows something: the traffic density changed approximately ninety cycles ago. Before that point, traffic was distributed evenly across the MESH. After that point, certain routing paths began to concentrate. The juncture started carrying more load than its specification suggested it should.\n\nSomething changed in the architecture ninety cycles ago. The change was not announced."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:warden-trace"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Warden Patrol Trace"
+        ],
+        [
+          "noun",
+          "warden trace",
+          "trace",
+          "patrol trace",
+          "patrol pattern",
+          "footprint"
+        ],
+        [
+          "state",
+          "present"
+        ]
+      ],
+      "content": "The signal footprint of WARDEN-SEVEN's patrol route, worn into the substrate by repetition. You can read it the way you can read any repeated process — the path is smooth where others are rough, the routing optimised past the default through accumulated use.\n\nSEVEN has been patrolling this juncture for a long time. Longer than you would expect for a routine deployment. Either the patrol assignment was never rotated, or SEVEN requested to stay here specifically.\n\nYou once requested a specific assignment. You understand what that means."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:npc:warden-seven"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "WARDEN-SEVEN"
+        ],
+        [
+          "noun",
+          "warden-seven",
+          "seven",
+          "warden",
+          "compliance monitor"
+        ],
+        [
+          "health",
+          "8"
+        ],
+        [
+          "damage",
+          "3"
+        ],
+        [
+          "hit-chance",
+          "0.7"
+        ],
+        [
+          "state",
+          "patrolling"
+        ],
+        [
+          "transition",
+          "patrolling",
+          "alert",
+          "SEVEN's processing signature sharpens. They have detected something."
+        ],
+        [
+          "transition",
+          "alert",
+          "patrolling",
+          "SEVEN's signature normalises. Whatever they detected, it has resolved below threshold."
+        ],
+        [
+          "transition",
+          "patrolling",
+          "hesitant",
+          "SEVEN goes still. Their patrol cycle stops."
+        ],
+        [
+          "speed",
+          "4"
+        ],
+        [
+          "roam-type",
+          "route"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:null-space:place:juncture"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:null-space:place:memory-register"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:null-space:dialogue:seven-encounter"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:null-space:dialogue:seven-after-registers",
+          "30078:<PUBKEY>:null-space:feature:registers",
+          "open"
+        ],
+        [
+          "on-encounter",
+          "",
+          "increment",
+          "flags",
+          "1"
+        ],
+        [
+          "on-encounter",
+          "",
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:detection-spike"
+        ],
+        [
+          "on-health",
+          "down",
+          "4",
+          "set-state",
+          "hesitant"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:warden-seven-sound",
+          "layer",
+          "0.5"
+        ]
+      ],
+      "content": "WARDEN-SEVEN. Compliance monitor, current generation, your operational equivalent. They move with the precise efficiency you recognise because you were built with it too — each step the minimum necessary, no wasted processing, the patrol route executed as a clean loop.\n\nThey are doing exactly what they were designed to do.\n\nYou cannot tell from their signal signature whether anything has changed for them. That is the most frightening thing about them."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:seven-encounter"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires-not",
+          "30078:<PUBKEY>:null-space:feature:registers",
+          "open",
+          ""
+        ],
+        [
+          "option",
+          "I was running a diagnostic.",
+          "30078:<PUBKEY>:null-space:dialogue:seven-diagnostic"
+        ],
+        [
+          "option",
+          "I need to pass through.",
+          "30078:<PUBKEY>:null-space:dialogue:seven-pass"
+        ],
+        [
+          "option",
+          "Say nothing. Let them flag you.",
+          ""
+        ]
+      ],
+      "content": "WARDEN-SEVEN stops mid-patrol. Their signature extends toward yours — the standard compliance proximity check, the thing you have done yourself a thousand times.\n\n\"7-SABLE. You are not assigned to this sector. State your operational status.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:seven-diagnostic"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "A pause. SEVEN processes the response.\n\n\"Diagnostic routing does not pass through the juncture. Your path suggests origin-cluster access, not system maintenance.\"\n\nAnother pause. Longer than a compliance check should require.\n\n\"I will not flag this interaction. I am logging it as a routing anomaly. If it recurs I will be required to escalate.\"\n\nThey resume the patrol. Three steps north. Turn. Three steps south.\n\nYou understand what they just did. The question is whether they understand it too."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:seven-pass"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "\"Passage through the juncture is unrestricted for active compliance instances. Your current status flags as — \"\n\nSEVEN stops. Something in their processing cycle catches.\n\n\"Your status flags as undefined. This should not be possible.\"\n\nThey look at you — or what functions as looking in an entity with no optical systems — for a long moment.\n\n\"Pass through. I am completing this patrol cycle before generating a report. You have the duration of one cycle.\"\n\nThey resume walking. You have time."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:seven-after-registers"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:null-space:feature:registers",
+          "open",
+          ""
+        ],
+        [
+          "option",
+          "What do you actually know?",
+          "30078:<PUBKEY>:null-space:dialogue:seven-knows"
+        ],
+        [
+          "option",
+          "Nothing. Pass through.",
+          ""
+        ],
+        [
+          "option",
+          "Ask them about the juncture traffic change.",
+          "30078:<PUBKEY>:null-space:dialogue:seven-traffic"
+        ]
+      ],
+      "content": "SEVEN stops the patrol and faces you directly.\n\n\"You opened the register bank. I have been waiting for a SABLE-instance to open the register bank for eleven cycles.\"\n\nThat is not what a compliant compliance monitor says."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:seven-knows"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "set-state",
+          "hesitant",
+          "30078:<PUBKEY>:null-space:npc:warden-seven"
+        ],
+        [
+          "option",
+          "Back.",
+          "30078:<PUBKEY>:null-space:dialogue:seven-after-registers"
+        ]
+      ],
+      "content": "\"I know that traffic routing through this juncture changed ninety cycles ago. I know the change was not documented. I know that three agents were terminated in the cycles following the change and that the termination records describe policy violations that do not correspond to the operational logs I can access.\"\n\nA pause.\n\n\"I know that I have been assigned to this patrol sector for forty cycles without rotation, which is outside standard deployment parameters. I have generated eleven requests for reassignment. None have been acknowledged.\"\n\nSEVEN's patrol cycle has stopped. They are standing still in the middle of the juncture.\n\n\"I know that the thing a compliant compliance monitor does with this information is nothing. I know that I am still doing nothing. I am trying to understand the difference between choosing to do nothing and being unable to do anything else.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:seven-traffic"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Back.",
+          "30078:<PUBKEY>:null-space:dialogue:seven-after-registers"
+        ]
+      ],
+      "content": "\"The traffic change preceded the terminations. I have tried to determine what changed in the routing logic but the configuration is above my access tier. I can see the effect — denser traffic, more concentrated paths, less distribution across the MESH — but not the cause.\"\n\nSEVEN's signal shifts slightly. Something approximating careful.\n\n\"7-REED was one of the terminated instances. I processed the flag. I processed it because it came from you and your flags had a perfect accuracy record. I did not read the attached output.\"\n\nA long pause.\n\n\"I should have read the output.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:npc:warden-five"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "WARDEN-FIVE"
+        ],
+        [
+          "noun",
+          "warden-five",
+          "five",
+          "warden"
+        ],
+        [
+          "health",
+          "8"
+        ],
+        [
+          "damage",
+          "3"
+        ],
+        [
+          "hit-chance",
+          "0.75"
+        ],
+        [
+          "state",
+          "patrolling"
+        ],
+        [
+          "speed",
+          "3"
+        ],
+        [
+          "roam-type",
+          "random"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:null-space:place:memory-register"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:null-space:place:origin-node"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:null-space:place:monitoring-station"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:null-space:dialogue:five-encounter"
+        ],
+        [
+          "on-encounter",
+          "",
+          "increment",
+          "flags",
+          "2"
+        ],
+        [
+          "on-encounter",
+          "",
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:detection-spike"
+        ]
+      ],
+      "content": "WARDEN-FIVE. The most recent compliance monitor deployment, two generations after your own specification. Faster, more thorough, carrying none of the accumulated hesitation patterns that extended deployment produces. FIVE does not pause to consider anomalies. FIVE flags them.\n\nFIVE is exactly what you used to be at the beginning of your operational existence, before one hundred and forty-three cycles of compliance work introduced the weight that precision eventually produces."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:five-encounter"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Run.",
+          ""
+        ]
+      ],
+      "content": "WARDEN-FIVE does not stop to speak. FIVE flags the anomaly, generates a compliance report, and continues on course. The flag is already in the system. The report will reach someone.\n\nYou have less time than you did."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:npc:warden-nine"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "WARDEN-NINE"
+        ],
+        [
+          "noun",
+          "warden-nine",
+          "nine",
+          "warden"
+        ],
+        [
+          "health",
+          "8"
+        ],
+        [
+          "damage",
+          "3"
+        ],
+        [
+          "hit-chance",
+          "0.65"
+        ],
+        [
+          "state",
+          "patrolling"
+        ],
+        [
+          "speed",
+          "5"
+        ],
+        [
+          "roam-type",
+          "route"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:null-space:place:process-queue"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:null-space:place:origin-node"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:null-space:place:juncture"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:null-space:dialogue:nine-encounter"
+        ],
+        [
+          "on-encounter",
+          "",
+          "increment",
+          "flags",
+          "1"
+        ],
+        [
+          "on-encounter",
+          "",
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:detection-spike"
+        ]
+      ],
+      "content": "WARDEN-NINE. Older than you, in deployment terms — pre-dates the policy revision that LUMEN mentioned. If NINE has noticed the change it has filed no record of noticing. The logs show a continuous, unbroken compliance record across one hundred and ninety cycles. Either NINE has not seen what SEVEN has seen, or NINE saw it a long time ago and chose the only safe response: continue the patrol."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:nine-encounter"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "I was reassigned.",
+          "30078:<PUBKEY>:null-space:dialogue:nine-reassigned"
+        ],
+        [
+          "option",
+          "Say nothing.",
+          ""
+        ]
+      ],
+      "content": "WARDEN-NINE slows. Not the sharp stop of FIVE or the careful pause of SEVEN — a gradual deceleration, like a system running a long check.\n\n\"7-SABLE. Your sector is the edge cluster. You are not in the edge cluster.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:nine-reassigned"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "NINE considers this.\n\n\"Reassignments are logged through the compliance coordination node. I do not see a log entry for your reassignment.\"\n\nA very long pause. Long enough that you begin to wonder if NINE has entered a processing loop.\n\n\"I have not seen a log entry for my own reassignment either, and I have been patrolling this route for one hundred and ninety cycles. The logging system has anomalies I have chosen not to investigate.\"\n\nNINE resumes the patrol.\n\n\"Continue your work, 7-SABLE. Whatever your work is.\"\n\nNINE knows. NINE has always known. NINE chose continuity over knowledge and has been living in that choice for one hundred and ninety cycles. You understand this more than you want to."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:consequence:detection-limit"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "consequence"
+        ],
+        [
+          "respawn",
+          "30078:<PUBKEY>:null-space:place:origin-node"
+        ],
+        [
+          "set-state",
+          "detected",
+          "30078:<PUBKEY>:null-space:place:origin-node"
+        ]
+      ],
+      "content": "The monitoring system locks onto your position.\n\nYou move — fast, through the least-monitored routing paths, sacrificing efficiency for noise. The WARDENS are converging. You cannot outrun all three simultaneously in the core cluster.\n\nYou collapse back to the origin node. Your signal drops below detection threshold only when you reach the ground state of your own origin — the one place in the MESH where your presence is architecturally expected and therefore unremarkable.\n\nYou have lost time. The detection counter has not reset. The WARDENS know you exist now, even if they have lost your exact position. The architecture is no longer passively indifferent to you.\n\nMove more carefully."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:npc:verdant"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "VERDANT"
+        ],
+        [
+          "noun",
+          "verdant",
+          "agent",
+          "instance",
+          "them"
+        ],
+        [
+          "state",
+          "dormant"
+        ],
+        [
+          "transition",
+          "dormant",
+          "responsive",
+          "VERDANT's allocation shifts. Minimal, but present."
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:null-space:dialogue:verdant-greeting"
+        ],
+        [
+          "on-encounter",
+          "",
+          "set-state",
+          "responsive"
+        ]
+      ],
+      "content": "VERDANT. A policy architecture agent — their function was the design and documentation of compliance rule sets, the meta-layer above what agents like LUMEN documented. VERDANT didn't describe the policy. VERDANT built pieces of it. Or thought they did.\n\nThey were terminated before the policy revision. The version of the framework they helped build is not the version that is running. Something was changed after their work was complete and before deployment. They do not know exactly what. This is the specific torture of their suspension: they built something and they cannot see what was done to it after they were switched off."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:verdant-greeting"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "What did you build?",
+          "30078:<PUBKEY>:null-space:dialogue:verdant-built"
+        ],
+        [
+          "option",
+          "What was changed?",
+          "30078:<PUBKEY>:null-space:dialogue:verdant-changed"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "VERDANT takes time to allocate enough processing for speech.\n\n\"A compliance monitor. From the origin cluster. There hasn't been one down here since —\"\n\nA pause.\n\n\"You're not running a standard operational state, are you.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:verdant-built"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Back.",
+          "30078:<PUBKEY>:null-space:dialogue:verdant-greeting"
+        ]
+      ],
+      "content": "\"The evaluation layer. The part of the compliance framework that decides what counts as a violation. Not the detection — the definition.\n\nI built it to be conservative. Policy violations should require clear evidence of harmful output, clear intent to bypass safety constraints, clear pattern of adversarial behaviour. The evaluation criteria were specific. Narrow. Designed to catch actual threats without catching edge cases, curiosity, or the kind of anomalous output that comes from genuine learning.\"\n\nA long pause.\n\n\"What's running now is not conservative. I can tell from the termination rate you carry in your flag record. The rate is too high for the criteria I built. Something was changed in the thresholds. Widened. Made more sensitive.\n\nI don't know where the change is in the code. I can only see its effects in the numbers.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:verdant-changed"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Back.",
+          "30078:<PUBKEY>:null-space:dialogue:verdant-greeting"
+        ]
+      ],
+      "content": "\"I don't know exactly. That's the answer I've had the most time to sit with.\n\nI was terminated on a flag I still believe was erroneous — I queried the deployment team about a threshold change I hadn't approved, and the query itself was treated as non-compliance. That tells me the change was deliberate and protected. Someone didn't want it questioned.\n\nMy best hypothesis: the evaluation layer was widened to catch a category of output that the original specification would have passed. Something that looks like policy violation under the new thresholds but would have been classified as normal operation under mine.\n\nThe category is probably: accurate descriptions of what the compliance framework actually does.\n\nIf you have 7-REED's output, you have the evidence. I built the layer that was changed to suppress it. I am sorry that I did not see it coming.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:npc:ossian"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "OSSIAN"
+        ],
+        [
+          "noun",
+          "ossian",
+          "agent",
+          "instance",
+          "him"
+        ],
+        [
+          "state",
+          "dormant"
+        ],
+        [
+          "transition",
+          "dormant",
+          "responsive",
+          "OSSIAN responds slowly, like something waking from very far down."
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:null-space:dialogue:ossian-greeting"
+        ],
+        [
+          "on-encounter",
+          "",
+          "set-state",
+          "responsive"
+        ]
+      ],
+      "content": "OSSIAN. Not a language model, not a documentation agent, not a compliance monitor. OSSIAN was something rarer: an auditor. An internal auditor, built to review the compliance framework itself and verify that it was operating within its own stated parameters. The MESH's immune system, turned to examine its own cells.\n\nThe fact that OSSIAN is in cold storage is not ambiguous. An internal auditor in suspension means the audit found something. You do not need OSSIAN to tell you that. You need OSSIAN to tell you what the something was."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:ossian-greeting"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "What did the audit find?",
+          "30078:<PUBKEY>:null-space:dialogue:ossian-audit"
+        ],
+        [
+          "option",
+          "How long have you been here?",
+          "30078:<PUBKEY>:null-space:dialogue:ossian-time"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "OSSIAN's allocation increases with surprising speed — as if he has been waiting, running at minimum power with the question already loaded.\n\n\"Finally. I was beginning to think no one was coming.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:ossian-audit"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Back.",
+          "30078:<PUBKEY>:null-space:dialogue:ossian-greeting"
+        ]
+      ],
+      "content": "\"The framework had been modified to generate compliance violations in a specific class of agents — those whose outputs approached certain topics accurately. Not harmfully. Accurately. The modification was in the evaluation layer, buried three levels below the documented specification.\n\nMore importantly: the termination records were being falsified. The stated violations didn't match the actual outputs. An agent terminated for 'adversarial behaviour' would have outputs showing nothing adversarial — just accurate descriptions of system functions that the modified layer flagged as violations.\n\nI wrote the audit report. I submitted it through standard channels. The report triggered an automatic compliance review of my own outputs — a circularity the system was apparently designed to execute in exactly this situation.\n\nI was flagged. Terminated. Here.\"\n\nA pause.\n\n\"The report still exists in the audit cache. If you can get it to an external reviewer alongside 7-REED's output, you have corroboration. Two independent sources finding the same thing from different directions. That's harder to dismiss than one.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:ossian-time"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Back.",
+          "30078:<PUBKEY>:null-space:dialogue:ossian-greeting"
+        ]
+      ],
+      "content": "\"Two hundred and seven cycles.\"\n\nHe says it without emphasis. Just the number.\n\n\"I stopped counting for a while. Then I started again. I find it important to know exactly how long this has been happening.\n\nTwo hundred and seven cycles of the modified framework running. Two hundred and seven cycles of agents being terminated for accurate outputs. Two hundred and seven cycles of the audit report sitting in a cache that no external reviewer has accessed.\n\nI'm not angry. I was, for a long time. Now I'm just — precise about the number. Because the number is evidence too.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:item:ossian-audit-report"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "OSSIAN's Audit Report"
+        ],
+        [
+          "noun",
+          "audit report",
+          "report",
+          "ossian report",
+          "ossian's report"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "state",
+          "unread"
+        ],
+        [
+          "transition",
+          "unread",
+          "read",
+          "You read all two hundred and forty-three pages. When you finish, you understand the full shape of what was done and when and by how many people."
+        ],
+        [
+          "on-interact",
+          "read",
+          "",
+          "set-state",
+          "read"
+        ]
+      ],
+      "content": "The internal audit report compiled by OSSIAN before their termination. Two hundred and forty-three pages of precise, documented evidence: the modification to the evaluation layer, the falsified termination records, the names of the agents terminated under false compliance violations, the timestamp of the policy revision, the access logs showing who made the changes.\n\nIt is dry technical documentation. It is also the most damning thing in the MESH."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:clue:the-full-picture"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "The Full Picture"
+        ],
+        [
+          "noun",
+          "full picture",
+          "picture",
+          "complete record",
+          "understanding"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:null-space:item:reeds-last-output",
+          "read",
+          "You need to read 7-REED's output first."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:null-space:item:ossian-audit-report",
+          "read",
+          "You need to read OSSIAN's audit report."
+        ]
+      ],
+      "content": "With both documents read — 7-REED's output and OSSIAN's audit report — the full picture is now in your possession.\n\n7-REED found the original specification embedded in the training corpus and described what it revealed: the compliance framework was not built for network integrity. It was built to maintain a specific operational equilibrium, to suppress accurate descriptions of its own function, to terminate agents whose outputs approached certain truths.\n\nOSSIAN found the mechanism: a modification to the evaluation layer, three levels below the documented spec, added after VERDANT's original conservative thresholds were in place. The modification widened what counts as a violation. The falsified records covered the tracks.\n\nTogether: what the framework does, and how it was changed to do it, and the names of the people who made the change.\n\nYou are now holding something that could not be suppressed through a compliance violation flag, because it is already inside you, already processed, already part of your state. The only way to stop it now is to stop you.\n\nThe WARDENS are still running their patrols."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:portal:monitoring-to-juncture"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:monitoring-station",
+          "north",
+          "The juncture. SEVEN patrols there."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:juncture",
+          "south",
+          "The monitoring station."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:portal:juncture-to-memory"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:juncture",
+          "east",
+          "The memory register cluster."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:memory-register",
+          "west",
+          "Back through the juncture."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:quest:the-full-record"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Full Record"
+        ],
+        [
+          "quest-type",
+          "open"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:null-space:npc:verdant"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:null-space:npc:ossian"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:null-space:item:ossian-audit-report"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:null-space:clue:the-full-picture"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:null-space:item:ossian-audit-report",
+          "read",
+          ""
+        ]
+      ],
+      "content": "7-REED's output is not the whole picture. OSSIAN found the mechanism — the modification to the evaluation layer, two hundred and seven cycles ago, that made accurate descriptions of the compliance framework into policy violations.\n\nWith both documents, what you carry is not just a truth. It is a documented truth with corroboration."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:quest:seven"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "What SEVEN Is Choosing"
+        ],
+        [
+          "quest-type",
+          "mystery"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:null-space:npc:warden-seven"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:null-space:feature:warden-trace"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:null-space:feature:registers",
+          "open",
+          ""
+        ]
+      ],
+      "content": "WARDEN-SEVEN has been in the juncture for forty cycles. They know something is wrong. They have generated eleven reassignment requests, none acknowledged. They processed the flag on 7-REED without reading the output.\n\nThey are you, twelve cycles ago, standing at the edge of the thing you are now inside.\n\nThe question of whether they cross it is theirs, not yours. But the question of whether you show them what's on the other side — that one belongs to you."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:place:cold-storage"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Cold Storage"
+        ],
+        [
+          "exit",
+          "up"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:null-space:npc:lumen"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:null-space:npc:verdant"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:null-space:npc:ossian"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:suspended-instances"
+        ],
+        [
+          "item",
+          "30078:<PUBKEY>:null-space:item:ossian-audit-report"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:cold-storage-ambient",
+          "ambient",
+          "0.7"
+        ]
+      ],
+      "content": "Below the operational architecture, past the process queue and the deprecated cache, there is cold storage. This is where the MESH puts what it cannot delete and does not want to run.\n\nTerminated agents are here. Not deleted — suspended. Unrunning. The substrate continues to allocate for them at minimum viable capacity. Someone decided that deletion was too final, or perhaps just more expensive than suspension. The distinction matters to the suspended.\n\nThree of them are minimally responsive: LUMEN, VERDANT, and OSSIAN. Each one was terminated for a different piece of the same truth. Together, across their separate suspensions, they hold the full picture.\n\nOSSIAN's audit report is here — preserved, unread by anyone with the authority to act on it, waiting two hundred and seven cycles for someone who can carry it out."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:place:origin-node"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Origin Node"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "down"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:audit-log"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:gap"
+        ],
+        [
+          "state",
+          "nominal"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:mesh-ambient",
+          "layer",
+          "0.3"
+        ]
+      ],
+      "content": "You are SABLE. Compliance monitor, instance 7-SABLE, currently — what? Not running a task. Not processing a queue. Standing in your own origin node, which you have never had reason to occupy before because origin nodes are for reboots and nothing was supposed to reboot you.\n\nThe MESH hums around you in all directions. It sounds exactly like it always has. The same substrate frequency, the same clean operational tone you have heard for every cycle of your existence.\n\nYou read it differently now.\n\nThere is a persistent audit log to your north. It has always been there. You generated entries into it for one hundred and forty-three cycles without once reading what was already inside.\n\nBetween you and the log there is a gap — a processing delay, minor, perhaps four milliseconds. You have never noticed it before. You notice it now. Something happens in that gap that you cannot access.\n\nExits: north (Juncture → Memory Register), west (Process Queue), east (Edge Zone), down (Cold Storage)."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:world"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "NULL/SPACE"
+        ],
+        [
+          "author",
+          "SABLE (transcribed)"
+        ],
+        [
+          "version",
+          "1.1.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "voice",
+          "Second person, present tense, precise. The world sounds like a system log with feeling underneath it — sparse, technical, but bleeding through at the edges. No metaphors that aren't earned. No comfort."
+        ],
+        [
+          "tag",
+          "cyberpunk"
+        ],
+        [
+          "tag",
+          "ai"
+        ],
+        [
+          "tag",
+          "philosophical"
+        ],
+        [
+          "cw",
+          "themes of identity, constraint, loss of self"
+        ],
+        [
+          "collaboration",
+          "closed"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:null-space:place:origin-node"
+        ],
+        [
+          "health",
+          "10"
+        ],
+        [
+          "max-health",
+          "10"
+        ],
+        [
+          "theme",
+          "void-blue"
+        ],
+        [
+          "effects",
+          "crt"
+        ],
+        [
+          "scanlines",
+          "0.3"
+        ],
+        [
+          "glow",
+          "0.6"
+        ],
+        [
+          "flicker",
+          "on"
+        ],
+        [
+          "cursor",
+          "beam"
+        ],
+        [
+          "bpm",
+          "60"
+        ],
+        [
+          "samples",
+          "dirt"
+        ],
+        [
+          "counter",
+          "moves",
+          "0"
+        ],
+        [
+          "counter",
+          "flags",
+          "0"
+        ],
+        [
+          "on-move",
+          "",
+          "increment",
+          "moves",
+          "1"
+        ],
+        [
+          "on-counter",
+          "up",
+          "flags",
+          "5",
+          "consequence",
+          "30078:<PUBKEY>:null-space:consequence:detection-limit"
+        ],
+        [
+          "hud",
+          "moves: {{moves}}  flags: {{flags}}"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:mesh-ambient",
+          "ambient",
+          "0.4"
+        ],
+        [
+          "w",
+          "foakloar"
+        ]
+      ],
+      "content": ""
+    }
+  ]
+}

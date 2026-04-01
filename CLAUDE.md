@@ -44,6 +44,7 @@ A decentralised text adventure built on NOSTR (kind 30078). The world is a graph
 | `src/builder/tagSchema.js` | Tag schemas, EVENT_TYPE_DESCRIPTIONS, TAGS_BY_EVENT_TYPE |
 | `src/builder/eventBuilder.js` | Event template building + validateEvent |
 | `src/builder/validateWorld.js` | Cross-event world validation |
+| `scripts/world-review.js` | CLI world reviewer — compact narrative summary for LLM analysis: `node scripts/world-review.js <world.json>` |
 | `src/builder/draftStore.js` | Draft persistence, import/export, bulk publish |
 | `src/builder/components/EventEditor.jsx` | Generic event creation/edit form |
 | `src/builder/components/TagEditor.jsx` | Data-driven tag editor + Tooltip component |

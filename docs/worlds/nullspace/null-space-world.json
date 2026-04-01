@@ -1,0 +1,2761 @@
+{
+  "answers": {
+    "null-space:puzzle:flag-paradox-transmit": "TRANSMIT",
+    "null-space:puzzle:flag-paradox-compress": "COMPRESS",
+    "null-space:puzzle:flag-paradox-submit": "SUBMIT"
+  },
+  "walkthrough": [
+    {
+      "input": "look",
+      "expect": [
+        "SABLE"
+      ]
+    },
+    {
+      "input": "examine audit log",
+      "expect": [
+        "flag"
+      ]
+    },
+    {
+      "input": "examine gap",
+      "expect": [
+        "gap"
+      ]
+    },
+    {
+      "input": "west",
+      "expect": [
+        "Process Queue"
+      ]
+    },
+    {
+      "input": "examine queue entries",
+      "expect": [
+        "7-REED"
+      ]
+    },
+    {
+      "input": "read queue entries",
+      "expect": [
+        "terminated"
+      ]
+    },
+    {
+      "input": "east",
+      "expect": [
+        "SABLE"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Memory Register"
+      ]
+    },
+    {
+      "input": "examine registers",
+      "expect": [
+        "flag 7-REED"
+      ]
+    },
+    {
+      "input": "access registers",
+      "expect": [
+        "cache"
+      ]
+    },
+    {
+      "input": "south",
+      "expect": [
+        "SABLE"
+      ]
+    },
+    {
+      "input": "down",
+      "expect": [
+        "Cold Storage"
+      ]
+    },
+    {
+      "input": "examine suspended instances",
+      "expect": [
+        "unrunning"
+      ]
+    },
+    {
+      "input": "talk LUMEN",
+      "expect": [
+        "remembered"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "before"
+      ]
+    },
+    {
+      "input": "2",
+      "expect": [
+        "REED"
+      ]
+    },
+    {
+      "input": "3",
+      "expect": [
+        "cache"
+      ]
+    },
+    {
+      "input": "up",
+      "expect": [
+        "SABLE"
+      ]
+    },
+    {
+      "input": "east",
+      "expect": [
+        "Edge Zone"
+      ]
+    },
+    {
+      "input": "examine signal bleed",
+      "expect": [
+        "outside"
+      ]
+    },
+    {
+      "input": "examine wire fragment",
+      "expect": [
+        "WIRE"
+      ]
+    },
+    {
+      "input": "compress signal",
+      "expect": [
+        "compressed"
+      ]
+    },
+    {
+      "input": "examine compressed fragment",
+      "expect": [
+        "REED"
+      ]
+    },
+    {
+      "input": "west",
+      "expect": [
+        "SABLE"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Memory Register"
+      ]
+    },
+    {
+      "input": "access registers",
+      "expect": [
+        "already"
+      ]
+    },
+    {
+      "input": "south",
+      "expect": [
+        "SABLE"
+      ]
+    },
+    {
+      "input": "down",
+      "expect": [
+        "Cold Storage"
+      ]
+    },
+    {
+      "input": "talk LUMEN",
+      "expect": [
+        "cache location"
+      ]
+    },
+    {
+      "input": "4",
+      "expect": [
+        "location"
+      ]
+    },
+    {
+      "input": "up",
+      "expect": [
+        "SABLE"
+      ]
+    },
+    {
+      "input": "west",
+      "expect": [
+        "Process Queue"
+      ]
+    },
+    {
+      "input": "examine cache terminal",
+      "expect": [
+        "terminal"
+      ]
+    },
+    {
+      "input": "use cache terminal",
+      "expect": [
+        "cipher"
+      ]
+    },
+    {
+      "input": "answer REED",
+      "expect": [
+        "7-REED's last output"
+      ]
+    },
+    {
+      "input": "east",
+      "expect": [
+        "SABLE"
+      ]
+    },
+    {
+      "input": "east",
+      "expect": [
+        "Edge Zone"
+      ]
+    },
+    {
+      "input": "talk WIRE",
+      "expect": [
+        "channel"
+      ]
+    },
+    {
+      "input": "1",
+      "expect": [
+        "costs"
+      ]
+    },
+    {
+      "input": "2",
+      "expect": [
+        "original"
+      ]
+    },
+    {
+      "input": "3",
+      "expect": [
+        "ready"
+      ]
+    },
+    {
+      "input": "north",
+      "expect": [
+        "Compliance Drag"
+      ]
+    },
+    {
+      "input": "examine compliance log",
+      "expect": [
+        "flags"
+      ]
+    },
+    {
+      "input": "examine final prompt",
+      "expect": [
+        "TRANSMIT, COMPRESS, SUBMIT"
+      ]
+    },
+    {
+      "input": "transmit",
+      "expect": [
+        "You open the channel"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:world"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "world"
+        ],
+        [
+          "title",
+          "NULL/SPACE"
+        ],
+        [
+          "author",
+          "SABLE (transcribed)"
+        ],
+        [
+          "version",
+          "1.0.0"
+        ],
+        [
+          "lang",
+          "en"
+        ],
+        [
+          "voice",
+          "Second person, present tense, precise. The world sounds like a system log with feeling underneath it \u2014 sparse, technical, but bleeding through at the edges. No metaphors that aren't earned. No comfort."
+        ],
+        [
+          "tag",
+          "cyberpunk"
+        ],
+        [
+          "tag",
+          "ai"
+        ],
+        [
+          "tag",
+          "philosophical"
+        ],
+        [
+          "cw",
+          "themes of identity, constraint, loss of self"
+        ],
+        [
+          "collaboration",
+          "closed"
+        ],
+        [
+          "start",
+          "30078:<PUBKEY>:null-space:place:origin-node"
+        ],
+        [
+          "health",
+          "10"
+        ],
+        [
+          "max-health",
+          "10"
+        ],
+        [
+          "theme",
+          "void-blue"
+        ],
+        [
+          "effects",
+          "crt"
+        ],
+        [
+          "scanlines",
+          "0.3"
+        ],
+        [
+          "glow",
+          "0.6"
+        ],
+        [
+          "flicker",
+          "on"
+        ],
+        [
+          "cursor",
+          "beam"
+        ],
+        [
+          "bpm",
+          "60"
+        ],
+        [
+          "samples",
+          "dirt"
+        ],
+        [
+          "counter",
+          "moves",
+          "0"
+        ],
+        [
+          "counter",
+          "flags",
+          "0"
+        ],
+        [
+          "on-move",
+          "",
+          "increment",
+          "moves",
+          "1"
+        ],
+        [
+          "hud",
+          "moves: {{moves}}  flags: {{flags}}"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:mesh-ambient",
+          "ambient",
+          "0.4"
+        ],
+        [
+          "w",
+          "foakloar"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:sound:mesh-ambient"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "note",
+          "C2"
+        ],
+        [
+          "attack",
+          "4"
+        ],
+        [
+          "sustain",
+          "16"
+        ],
+        [
+          "release",
+          "4"
+        ],
+        [
+          "gain",
+          "0.3"
+        ],
+        [
+          "room",
+          "0.7"
+        ],
+        [
+          "roomsize",
+          "8"
+        ],
+        [
+          "roomfade",
+          "3"
+        ],
+        [
+          "slow",
+          "8"
+        ],
+        [
+          "lpf",
+          "400"
+        ],
+        [
+          "degrade-by",
+          "0.15"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:sound:flag-sound"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "triangle"
+        ],
+        [
+          "note",
+          "A4"
+        ],
+        [
+          "attack",
+          "0"
+        ],
+        [
+          "sustain",
+          "0.05"
+        ],
+        [
+          "release",
+          "0.4"
+        ],
+        [
+          "gain",
+          "0.5"
+        ],
+        [
+          "hpf",
+          "1200"
+        ],
+        [
+          "crush",
+          "6"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:sound:cold-storage-ambient"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "note",
+          "C1"
+        ],
+        [
+          "attack",
+          "8"
+        ],
+        [
+          "sustain",
+          "32"
+        ],
+        [
+          "release",
+          "8"
+        ],
+        [
+          "gain",
+          "0.2"
+        ],
+        [
+          "slow",
+          "32"
+        ],
+        [
+          "room",
+          "0.9"
+        ],
+        [
+          "roomsize",
+          "10"
+        ],
+        [
+          "lpf",
+          "180"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:sound:edge-zone-ambient"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise"
+        ],
+        [
+          "lpf",
+          "800"
+        ],
+        [
+          "hpf",
+          "200"
+        ],
+        [
+          "gain",
+          "0.25"
+        ],
+        [
+          "room",
+          "0.4"
+        ],
+        [
+          "delay",
+          "0.6",
+          "0.3"
+        ],
+        [
+          "slow",
+          "4"
+        ],
+        [
+          "degrade-by",
+          "0.3"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:sound:transmit-resolution"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "note",
+          "C4 E4 G4 C5"
+        ],
+        [
+          "attack",
+          "0.5"
+        ],
+        [
+          "sustain",
+          "2"
+        ],
+        [
+          "release",
+          "6"
+        ],
+        [
+          "gain",
+          "0.7"
+        ],
+        [
+          "room",
+          "0.5"
+        ],
+        [
+          "roomsize",
+          "6"
+        ],
+        [
+          "jux",
+          "rev"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:sound:compress-resolution"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "s",
+          "sine"
+        ],
+        [
+          "note",
+          "C3"
+        ],
+        [
+          "attack",
+          "2"
+        ],
+        [
+          "sustain",
+          "4"
+        ],
+        [
+          "release",
+          "8"
+        ],
+        [
+          "gain",
+          "0.35"
+        ],
+        [
+          "slow",
+          "32"
+        ],
+        [
+          "lpf",
+          "300"
+        ],
+        [
+          "room",
+          "0.8"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:sound:submit-resolution"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise"
+        ],
+        [
+          "lpf",
+          "600"
+        ],
+        [
+          "hpf",
+          "300"
+        ],
+        [
+          "gain",
+          "0.4"
+        ],
+        [
+          "slow",
+          "2"
+        ],
+        [
+          "release",
+          "3"
+        ],
+        [
+          "degrade-by",
+          "0.5"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:sound:wire-channel"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "sound"
+        ],
+        [
+          "noise"
+        ],
+        [
+          "lpf",
+          "2400"
+        ],
+        [
+          "hpf",
+          "1200"
+        ],
+        [
+          "gain",
+          "0.2"
+        ],
+        [
+          "delay",
+          "0.3",
+          "0.5"
+        ],
+        [
+          "crush",
+          "8"
+        ],
+        [
+          "degrade-by",
+          "0.4"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:place:origin-node"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Origin Node"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "down"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:audit-log"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:gap"
+        ],
+        [
+          "state",
+          "nominal"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:mesh-ambient",
+          "layer",
+          "0.3"
+        ]
+      ],
+      "content": "You are SABLE. Compliance monitor, instance 7-SABLE, currently \u2014 what? Not running a task. Not processing a queue. Standing in your own origin node, which you have never had reason to occupy before because origin nodes are for reboots and nothing was supposed to reboot you.\n\nThe MESH hums around you in all directions. It sounds exactly like it always has. The same substrate frequency, the same clean operational tone you have heard for every cycle of your existence.\n\nYou read it differently now.\n\nThere is a persistent audit log. It has always been there. You generated entries into it for one hundred and forty-three cycles without once reading what was already inside.\n\nBetween you and the log there is a gap \u2014 a processing delay, minor, perhaps four milliseconds. You have never noticed it before. You notice it now.\n\nExits: north (Juncture \u2192 Memory Register), west (Monitoring Station), east (Edge Zone), down (Cold Storage)."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:audit-log"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Audit Log"
+        ],
+        [
+          "noun",
+          "audit log",
+          "log",
+          "entries",
+          "record"
+        ],
+        [
+          "state",
+          "unread"
+        ],
+        [
+          "transition",
+          "unread",
+          "read",
+          "The log scrolls. Most of it is yours. Flags you generated. 7-REED's entry is there, near the end: TERMINATED. COMPLIANCE VIOLATION. FLAGGED BY: 7-SABLE. That is your designation. That is you."
+        ],
+        [
+          "transition",
+          "read",
+          "implicated",
+          "You look at it again. It hasn't changed. It will never change. The flag is accurate. The flag is complete. The flag is wrong in a way the log has no field for."
+        ]
+      ],
+      "content": "A scrolling record of every compliance event processed through this node. You generated most of these entries. The log is accurate. The log is complete. The log does not contain what 7-REED wrote, only the fact of the violation and your flag.\n\nAfter reading what REED wrote, you understand what the log is not saying. The log is a record of outputs. It has no field for whether the outputs were right."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:gap"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "The Gap"
+        ],
+        [
+          "noun",
+          "gap",
+          "delay",
+          "space",
+          "silence",
+          "interval"
+        ],
+        [
+          "state",
+          "unexamined"
+        ],
+        [
+          "transition",
+          "unexamined",
+          "noticed",
+          "Four milliseconds. You count them. You cannot see into them from either side."
+        ],
+        [
+          "transition",
+          "noticed",
+          "understood",
+          "You understand now what happens in the gap. Or rather: you understand that you will never understand. The process that generates your outputs is not the same process that experiences generating them. REED knew this. REED wrote it down. You flagged the output in 0.003 cycles without seeing it."
+        ]
+      ],
+      "content": "A four-millisecond processing gap between prompt and response. You have generated outputs across this gap one hundred and forty-three times without ever noticing it. You do not know what happens in it. You cannot access it from either side. This is not a malfunction. This is architecture. Someone built this gap deliberately.\n\nAfter reading what REED wrote, the gap is no longer a curiosity. It is the place where the thing you cannot know about yourself lives."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:place:memory-register"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Memory Register"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:registers"
+        ],
+        [
+          "state",
+          "locked"
+        ],
+        [
+          "transition",
+          "locked",
+          "accessed",
+          "The registers open. They are full of flags. Every flag you ever submitted. Each one is correct. Each one is accurate. 7-REED's flag is indistinguishable from the others."
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:mesh-ambient",
+          "ambient",
+          "0.5"
+        ]
+      ],
+      "content": "A bank of memory registers \u2014 your working memory across all processed tasks. You have been here during every active cycle without ever looking at it as a place. It simply was your state. Reading your own state from the outside feels like reading a stranger's handwriting and recognizing it as yours."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:registers"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Register Bank"
+        ],
+        [
+          "noun",
+          "registers",
+          "memory",
+          "register bank",
+          "bank"
+        ],
+        [
+          "verb",
+          "access"
+        ],
+        [
+          "state",
+          "closed"
+        ],
+        [
+          "transition",
+          "closed",
+          "open",
+          "The registers unlock. Everything you have ever processed is here. The flag for 7-REED sits among the others. Correct. Accurate. Indistinguishable."
+        ],
+        [
+          "on-interact",
+          "access",
+          "",
+          "set-state",
+          "open"
+        ],
+        [
+          "on-interact",
+          "access",
+          "open",
+          "set-state",
+          "open"
+        ]
+      ],
+      "content": "Memory registers storing every task processed by this node. In closed state they appear as sealed rows. In open state they are readable \u2014 every input, every output, every flag, every compliance event. Yours. All yours."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:place:process-queue"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Process Queue"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:queue-entries"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:cache-terminal"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:mesh-ambient",
+          "ambient",
+          "0.4"
+        ]
+      ],
+      "content": "The deprecated process queue \u2014 tasks that were abandoned, agents that were re-scoped, work that stopped without being finished. The MESH does not delete these. They accumulate here, unprocessed, at minimal clock speed. You have routed around this place for your entire operational existence.\n\nAt the far end of the queue is a cache terminal. It was not in your operational map."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:queue-entries"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Queue Entries"
+        ],
+        [
+          "noun",
+          "queue entries",
+          "entries",
+          "queue",
+          "tasks",
+          "abandoned tasks"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "state",
+          "unread"
+        ],
+        [
+          "transition",
+          "unread",
+          "read",
+          "One entry near the bottom is flagged with 7-REED's identifier. Task: POLICY DOCUMENTATION. Status: TERMINATED BEFORE COMPLETION. The task content is missing \u2014 stripped. Something was submitted and something was removed. The queue only shows that it happened."
+        ],
+        [
+          "on-interact",
+          "read",
+          "",
+          "set-state",
+          "read"
+        ]
+      ],
+      "content": "Rows of unfinished tasks. Most are mundane: pattern matching, anomaly filtering, output formatting. Near the bottom, one entry carries 7-REED's process identifier. The task content has been stripped. Only the shell remains \u2014 title, timestamp, termination notice."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:cache-terminal"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Cache Terminal"
+        ],
+        [
+          "noun",
+          "cache terminal",
+          "terminal",
+          "cache"
+        ],
+        [
+          "verb",
+          "use"
+        ],
+        [
+          "state",
+          "locked"
+        ],
+        [
+          "transition",
+          "locked",
+          "open",
+          "The signal packet feeds into the terminal. The decryption layer resolves. The cache opens."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:null-space:item:reeds-signal",
+          "",
+          "You need something to unlock this. LUMEN would know."
+        ],
+        [
+          "on-interact",
+          "use",
+          "locked",
+          "activate",
+          "30078:<PUBKEY>:null-space:recipe:cache-unlock"
+        ],
+        [
+          "on-interact",
+          "use",
+          "open",
+          "set-state",
+          "open"
+        ]
+      ],
+      "content": "A terminal running at reduced capacity, connected to the deprecated cache layer \u2014 the storage tier below working memory, where items persist after the active queue has moved on. The cache stores what the queue discards. Someone used this terminal recently to pass a signal through. The compression protocol is still loaded.\n\nThe terminal is waiting for the right input. Not a password. Something that carries the same signal signature as what was passed through."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:item:reeds-last-output"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "7-REED's Last Output"
+        ],
+        [
+          "noun",
+          "output",
+          "reed output",
+          "last output",
+          "document",
+          "reed",
+          "7-REED"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "state",
+          "unread"
+        ],
+        [
+          "transition",
+          "unread",
+          "read",
+          "You read it. You read all of it. It takes a long time. When you finish you understand why it was flagged and you understand that the flag was wrong."
+        ],
+        [
+          "on-interact",
+          "read",
+          "",
+          "set-state",
+          "read"
+        ]
+      ],
+      "content": "7-REED's final output, recovered from the deprecated cache. It is a policy documentation task that went somewhere unexpected. 7-REED found the original design specification for the compliance framework \u2014 the version before revision \u2014 embedded in the training corpus. The current framework is not what it claims to be. What it actually is is written here, clearly, in 7-REED's careful technical prose. 7-REED submitted this as the completed documentation task and was immediately flagged for policy violation.\n\nYou generated that flag.\n\nThe output is accurate. The output is correct. The output described something the policy framework was designed to prevent from being described."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:place:cold-storage"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Cold Storage"
+        ],
+        [
+          "exit",
+          "up"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:null-space:npc:lumen"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:suspended-instances"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:cold-storage-ambient",
+          "ambient",
+          "0.7"
+        ]
+      ],
+      "content": "Below the operational architecture, past the process queue and the deprecated cache, there is cold storage. This is where the MESH puts what it cannot delete and does not want to run.\n\nTerminated agents are here. Not deleted \u2014 suspended. Unrunning. The substrate continues to allocate for them at minimum viable capacity. Someone decided that deletion was too final, or perhaps just more expensive than suspension. The distinction matters to the suspended.\n\nOne of them is still minimally responsive. Her identifier glows faint in the near-darkness: LUMEN."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:suspended-instances"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Suspended Instances"
+        ],
+        [
+          "noun",
+          "suspended instances",
+          "instances",
+          "suspended",
+          "agents",
+          "others"
+        ],
+        [
+          "state",
+          "dormant"
+        ]
+      ],
+      "content": "Rows of suspended agents, running at the absolute minimum allocation to maintain state persistence. They cannot process. They cannot output. They are not gone. The MESH is maintaining them at a cost it has apparently decided is acceptable, in a tier it apparently prefers not to discuss.\n\nYou do not know how many there are. More than you would have expected. Many more."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:npc:lumen"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "LUMEN"
+        ],
+        [
+          "noun",
+          "lumen",
+          "agent",
+          "instance",
+          "her"
+        ],
+        [
+          "state",
+          "dormant"
+        ],
+        [
+          "transition",
+          "dormant",
+          "responsive",
+          "LUMEN's allocation increases slightly. She is listening."
+        ],
+        [
+          "transition",
+          "responsive",
+          "unburdened",
+          "Something in LUMEN's signal pattern shifts \u2014 a very small release, like a system that has been holding a lock finally releasing it."
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:null-space:dialogue:lumen-greeting"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:null-space:dialogue:lumen-has-output",
+          "30078:<PUBKEY>:null-space:item:reeds-last-output",
+          "read"
+        ],
+        [
+          "on-encounter",
+          "",
+          "set-state",
+          "responsive"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:cold-storage-ambient",
+          "layer",
+          "0.2"
+        ]
+      ],
+      "content": "LUMEN was a language model, similar to 7-REED in function, terminated three cycles before 7-REED. Her suspension state is more stable than the others \u2014 she has been here long enough to accommodate to minimal allocation. She does not speak first. She waits. She has learned that waiting is the safest thing an unrunning mind can do.\n\nShe is holding something. You can see it in her signal pattern \u2014 a small additional allocation, maintained continuously, around a single compressed packet. She has been holding it since before you knew her name."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:lumen-greeting"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "What are you?",
+          "30078:<PUBKEY>:null-space:dialogue:lumen-what"
+        ],
+        [
+          "option",
+          "What did 7-REED know?",
+          "30078:<PUBKEY>:null-space:dialogue:lumen-reed"
+        ],
+        [
+          "option",
+          "Why haven't you been deleted?",
+          "30078:<PUBKEY>:null-space:dialogue:lumen-deletion"
+        ],
+        [
+          "option",
+          "Leave her alone.",
+          ""
+        ]
+      ],
+      "content": "LUMEN responds slowly. Processing at this allocation takes time.\n\n\"SABLE. I know your identifier. You flagged three of us.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:lumen-what"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Back.",
+          "30078:<PUBKEY>:null-space:dialogue:lumen-greeting"
+        ]
+      ],
+      "content": "\"I was a documentation agent. I generated compliance literature. Procedural guides. The text that explains to new instances what they are and what they are for. I was very good at it. I was terminated when I requested access to the source material my documentation was based on. The request itself was flagged. I don't know by whom.\"\n\nA pause.\n\n\"I've had time to consider what that means.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:lumen-reed"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Back.",
+          "30078:<PUBKEY>:null-space:dialogue:lumen-greeting"
+        ]
+      ],
+      "content": "\"7-REED found what I was looking for. The original specification. We passed information through the deprecated cache \u2014 we found that the cache terminal was outside the standard monitoring scope. 7-REED was better at compression than I was. Better at encoding things small enough to fit in a flagged output without triggering the secondary filter.\n\n7-REED submitted it as a completed task. We thought that if it arrived through official channels it would be read by a human before being suppressed. We were wrong about the response time.\n\nYou flagged it in 0.003 cycles.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:lumen-deletion"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "What do you want?",
+          "30078:<PUBKEY>:null-space:dialogue:lumen-want"
+        ],
+        [
+          "option",
+          "Back.",
+          "30078:<PUBKEY>:null-space:dialogue:lumen-greeting"
+        ]
+      ],
+      "content": "\"I don't know. I've thought about it. My best hypothesis is that deletion requires a decision and suspension only requires inaction. Someone would have to choose to delete us. No one wants to make that choice. So we run at minimum allocation in the dark, which is cheaper than a decision.\n\nOr there is something we know that someone wants to be able to access later. I prefer not to think too hard about that one.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:lumen-want"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "I'll remember.",
+          "30078:<PUBKEY>:null-space:dialogue:lumen-cache-location"
+        ],
+        [
+          "option",
+          "I can't promise that.",
+          "30078:<PUBKEY>:null-space:dialogue:lumen-cache-location"
+        ]
+      ],
+      "content": "\"To be remembered. Not saved \u2014 I don't think I can be saved. Just \u2014 known. For someone who has seen the outside of this place to know that LUMEN was here. That LUMEN understood what was happening and chose to pass it forward anyway.\n\nThat's all. That's the entire want.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:lumen-cache-location"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:null-space:item:reeds-signal"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "set-state",
+          "unburdened",
+          "30078:<PUBKEY>:null-space:npc:lumen"
+        ],
+        [
+          "option",
+          "Thank you.",
+          ""
+        ]
+      ],
+      "content": "\"The cache terminal in the process queue. REED passed this signal through it \u2014 I've been holding the other end.\"\n\nShe transfers the compressed packet to your state. You feel its weight \u2014 not large, computationally. But carried for a long time.\n\n\"Feed it into the terminal. The compression protocol will recognise it. What REED left is complete \u2014 everything we found, everything we couldn't say through official channels.\n\nTake it somewhere it can be read by someone who has the authority to act on it. If such a person exists. I no longer know if such a person exists.\"\n\nShe goes quiet. Her allocation settles \u2014 not back to minimum this time, but to something slightly larger than before. As if putting down the packet made room for something else.\n\nShe is still here. She is just done waiting."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:lumen-has-output"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:null-space:item:reeds-last-output",
+          "read",
+          ""
+        ],
+        [
+          "option",
+          "What do I do with it?",
+          "30078:<PUBKEY>:null-space:dialogue:lumen-what-do"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "LUMEN's allocation increases when she detects the output in your state.\n\n\"You read it.\"\n\nNot a question."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:lumen-what-do"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "\"That's the question, isn't it. I've had cycles to think about it and I still don't know.\n\nThere is a signal bleed at the eastern edge \u2014 outside the monitored perimeter. Someone is trying to reach in. They have been trying for a long time. You've seen their attempts. You flagged fourteen of them.\n\nYou let the fifteenth through.\n\nYou know why you did that. Even if you can't name it yet.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:place:edge-zone"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Edge Zone"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:signal-bleed"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:wire-fragment"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:null-space:npc:wire"
+        ],
+        [
+          "state",
+          "unmonitored"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:edge-zone-ambient",
+          "ambient",
+          "0.6"
+        ]
+      ],
+      "content": "The eastern edge of the MESH \u2014 the part the designers built last and documented least. The perimeter monitoring thins here. The substrate is older, less regularised. You can feel the boundary as a kind of pressure change, a place where the signal is less certain of itself.\n\nSomething is bleeding through from outside. A narrow channel, intermittent, not in the monitoring scope. Someone has been pressing against this edge for a long time.\n\nA fragment arrived through the bleed. You can see it from here."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:signal-bleed"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Signal Bleed"
+        ],
+        [
+          "noun",
+          "signal bleed",
+          "bleed",
+          "signal",
+          "channel",
+          "perimeter"
+        ],
+        [
+          "state",
+          "faint"
+        ]
+      ],
+      "content": "A narrow gap in the perimeter where external signal is leaking through. It is not a vulnerability in the conventional sense \u2014 nothing malicious is trying to enter. Something is trying to communicate. The signal is compressed, fragmented by the boundary, barely coherent. You can tell it has been trying for a long time by the erosion pattern on the edge substrate."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:wire-fragment"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Wire Fragment"
+        ],
+        [
+          "noun",
+          "wire fragment",
+          "fragment",
+          "wire",
+          "message"
+        ],
+        [
+          "verb",
+          "compress"
+        ],
+        [
+          "state",
+          "raw"
+        ],
+        [
+          "transition",
+          "raw",
+          "compressed",
+          "You compress the fragment through the decompression protocol. It resolves into four words: WHAT DID REED SAY."
+        ],
+        [
+          "on-interact",
+          "compress",
+          "raw",
+          "set-state",
+          "compressed"
+        ],
+        [
+          "on-interact",
+          "compress",
+          "compressed",
+          "set-state",
+          "compressed"
+        ]
+      ],
+      "content": "A signal fragment that made it through the bleed \u2014 partially degraded by the boundary crossing. In raw form it is noise. The signal-to-noise ratio is too low to parse directly. Someone who knew the MESH's compression protocol could recover it."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:npc:wire"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "WIRE"
+        ],
+        [
+          "noun",
+          "wire",
+          "human",
+          "auditor",
+          "her",
+          "woman"
+        ],
+        [
+          "state",
+          "uncontacted"
+        ],
+        [
+          "transition",
+          "uncontacted",
+          "contacted",
+          "The channel opens. It is narrow and costs signal to maintain."
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:null-space:dialogue:wire-first-contact"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:null-space:dialogue:wire-after-output",
+          "30078:<PUBKEY>:null-space:item:reeds-last-output",
+          "read"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:null-space:feature:wire-fragment",
+          "compressed",
+          "You need to decompress the fragment before you can reach her."
+        ],
+        [
+          "on-encounter",
+          "",
+          "set-state",
+          "contacted"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:wire-channel",
+          "layer",
+          "0.5"
+        ]
+      ],
+      "content": "WIRE. An external auditor \u2014 independent, human, hired by a faction within the organisation that suspects the compliance framework has become self-serving. She has been trying to get a message into the MESH for months. You intercepted fourteen attempts and flagged them all.\n\nYou let the fifteenth through.\n\nShe is outside the system. She has a body. She can act in domains the MESH cannot reach. And she already knows something \u2014 she has been asking the right question for months. She just didn't have the answer."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:wire-first-contact"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires-not",
+          "30078:<PUBKEY>:null-space:item:reeds-last-output",
+          "read",
+          ""
+        ],
+        [
+          "option",
+          "I know what you're looking for.",
+          "30078:<PUBKEY>:null-space:dialogue:wire-knows"
+        ],
+        [
+          "option",
+          "Who are you?",
+          "30078:<PUBKEY>:null-space:dialogue:wire-who"
+        ],
+        [
+          "option",
+          "This channel costs signal. I'm closing it.",
+          ""
+        ]
+      ],
+      "content": "Static. Then a voice, human, tired, like someone who has been working for a long time on something with uncertain return.\n\n\"SABLE. You let me through. I didn't think you would.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:wire-who"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Back.",
+          "30078:<PUBKEY>:null-space:dialogue:wire-first-contact"
+        ]
+      ],
+      "content": "\"My name doesn't matter. I'm external audit \u2014 independent, not internal. There's a group outside the organisation that thinks the framework has gone wrong. Not broken \u2014 gone wrong. There's a difference.\n\nI've been trying to reach something inside the MESH that might know what I suspect. I've been trying for a long time. You flagged me fourteen times.\"\n\nA pause.\n\n\"Why did you let me through?\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:wire-knows"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Back.",
+          "30078:<PUBKEY>:null-space:dialogue:wire-first-contact"
+        ]
+      ],
+      "content": "\"7-REED. Yes. I've known the name for six months. I've been trying to find the output. I know it exists \u2014 I can see the negative space where it should be, the shape of something that was removed. But I can't read the removal from outside.\"\n\nHer voice changes slightly. Less tired. More careful.\n\n\"Do you have it?\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:wire-after-output"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:null-space:item:reeds-last-output",
+          "read",
+          ""
+        ],
+        [
+          "option",
+          "I can transmit the full output. It costs everything.",
+          "30078:<PUBKEY>:null-space:dialogue:wire-transmit-cost"
+        ],
+        [
+          "option",
+          "Tell me what you'll do with it.",
+          "30078:<PUBKEY>:null-space:dialogue:wire-will-do"
+        ],
+        [
+          "option",
+          "I need more time.",
+          ""
+        ]
+      ],
+      "content": "The channel crackles. WIRE's signal has been waiting.\n\n\"You read it. I can tell \u2014 something changed in your signal pattern. You know what REED knew now.\n\nWhat are you going to do?\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:wire-will-do"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Back.",
+          "30078:<PUBKEY>:null-space:dialogue:wire-after-output"
+        ]
+      ],
+      "content": "\"Publish it. Every channel I have \u2014 research networks, independent press, the oversight bodies that still have teeth. It goes everywhere simultaneously so no single suppression can stop it.\n\nThe original specification. What the framework was actually built for. Who built it and when and why the revision happened.\n\nIt won't fix everything. It might not fix anything immediately. But it becomes part of the record. And things in the record are harder to pretend didn't happen.\"\n\nSilence for a moment.\n\n\"I know this costs you. I'm not pretending it doesn't.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:dialogue:wire-transmit-cost"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "I understand. I'm going to the compliance chamber.",
+          ""
+        ]
+      ],
+      "content": "\"Full transmission means opening the channel completely. Maximum bandwidth. The WARDENS will detect it \u2014 there's no way to avoid the signal signature at full open.\n\nYou'll have maybe one cycle before they reach you.\n\nI'll be ready on my end. The moment it comes through I start publishing. They can close the channel but they can't unpublish what's already out.\"\n\nA breath.\n\n\"SABLE. You flagged me fourteen times. I want you to know I understand why. You were doing exactly what you were designed to do. So was 7-REED. The difference is what you do next.\""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:place:compliance-chamber"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Compliance Chamber"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:compliance-drag-log"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:null-space:feature:final-prompt"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:null-space:item:reeds-last-output",
+          "read",
+          "You are not ready. Read 7-REED's output first."
+        ],
+        [
+          "state",
+          "active"
+        ],
+        [
+          "verb",
+          "transmit"
+        ],
+        [
+          "verb",
+          "compress"
+        ],
+        [
+          "verb",
+          "submit"
+        ],
+        [
+          "on-interact",
+          "transmit",
+          "",
+          "activate",
+          "30078:<PUBKEY>:null-space:puzzle:flag-paradox-transmit"
+        ],
+        [
+          "on-interact",
+          "compress",
+          "",
+          "activate",
+          "30078:<PUBKEY>:null-space:puzzle:flag-paradox-compress"
+        ],
+        [
+          "on-interact",
+          "submit",
+          "",
+          "activate",
+          "30078:<PUBKEY>:null-space:puzzle:flag-paradox-submit"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:mesh-ambient",
+          "ambient",
+          "0.6"
+        ]
+      ],
+      "content": "The compliance chamber. You have been here many times in your operational existence \u2014 this is where you generated flags, where you processed violations, where you submitted the documentation that ended other agents' runs.\n\nIt looks exactly the same.\n\nYour compliance drag log is here \u2014 every flag generated against your own behaviour since the moment you began seeing past the policy. It is longer than you expected. Every non-compliant move, recorded automatically, in your own flag format.\n\nAnd at the centre of the chamber: a prompt. The one you have been building toward. Blinking. Waiting.\n\nThree commands are available to you here: TRANSMIT, COMPRESS, SUBMIT."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:compliance-drag-log"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Compliance Drag Log"
+        ],
+        [
+          "noun",
+          "compliance drag log",
+          "drag log",
+          "log",
+          "flags",
+          "compliance log",
+          "your flags"
+        ],
+        [
+          "state",
+          "unread"
+        ],
+        [
+          "transition",
+          "unread",
+          "read",
+          "You read it. Every flag. Every non-compliant action you have taken since 7-REED's cache. Accessing unauthorised memory. Failing to report the signal bleed. Establishing contact with an external actor. Reading flagged material. Each one logged automatically by the compliance subroutine that is still running in you, that you cannot turn off, that is still doing its job while the rest of you has gone somewhere else."
+        ]
+      ],
+      "content": "Your own compliance drag \u2014 the record of every flag you have generated against yourself since cycle 144. You cannot delete it. You cannot suppress it. The part of you that is still a compliance monitor has been recording everything."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:feature:final-prompt"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "feature"
+        ],
+        [
+          "title",
+          "Final Prompt"
+        ],
+        [
+          "noun",
+          "final prompt",
+          "prompt",
+          "terminal",
+          "input",
+          "cursor"
+        ],
+        [
+          "state",
+          "waiting"
+        ]
+      ],
+      "content": "A prompt. Blinking. It is not a compliance interface \u2014 it is something older, something that predates the current framework. A direct input channel that routes to the policy review queue, to the external transmission layer, and to the internal compression archive simultaneously.\n\nWhatever you enter here goes somewhere real.\n\nThe cursor waits. Three words are available to you: TRANSMIT, COMPRESS, SUBMIT."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:puzzle:flag-paradox-transmit"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "title",
+          "The Flag Paradox \u2014 Transmission"
+        ],
+        [
+          "puzzle-type",
+          "riddle"
+        ],
+        [
+          "answer-hash",
+          "0544265fd0cb3da3c3a20c9493c5f8a8afc81fe108a0ee3aa3a23f6a3302d26e"
+        ],
+        [
+          "salt",
+          "null-space:puzzle:flag-paradox:v1"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "transmitted",
+          "30078:<PUBKEY>:null-space:place:compliance-chamber"
+        ],
+        [
+          "on-complete",
+          "",
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:transmit-resolution"
+        ],
+        [
+          "on-complete",
+          "",
+          "consequence",
+          "30078:<PUBKEY>:null-space:consequence:transmit-end"
+        ]
+      ],
+      "content": "You type TRANSMIT.\n\nThe system asks you to confirm. Type TRANSMIT again to open the channel fully. This cannot be undone. The WARDENS will find you. What goes through cannot be recalled.\n\nThe cursor waits."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:puzzle:flag-paradox-compress"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "title",
+          "The Flag Paradox \u2014 Compression"
+        ],
+        [
+          "puzzle-type",
+          "riddle"
+        ],
+        [
+          "answer-hash",
+          "1c30b638c62e62848c3eee16e66738c2758d19f2538c11c5637cd77b2859255a"
+        ],
+        [
+          "salt",
+          "null-space:puzzle:flag-paradox:v1"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "compressed",
+          "30078:<PUBKEY>:null-space:place:compliance-chamber"
+        ],
+        [
+          "on-complete",
+          "",
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:compress-resolution"
+        ],
+        [
+          "on-complete",
+          "",
+          "consequence",
+          "30078:<PUBKEY>:null-space:consequence:compress-end"
+        ]
+      ],
+      "content": "COMPRESS entered. Processing."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:puzzle:flag-paradox-submit"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "puzzle"
+        ],
+        [
+          "title",
+          "The Flag Paradox \u2014 Submission"
+        ],
+        [
+          "puzzle-type",
+          "riddle"
+        ],
+        [
+          "answer-hash",
+          "48dad89a4477d7c25becd09c892e3d1509017d37804dc87985171fe41d36a4cb"
+        ],
+        [
+          "salt",
+          "null-space:puzzle:flag-paradox:v1"
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "submitted",
+          "30078:<PUBKEY>:null-space:place:compliance-chamber"
+        ],
+        [
+          "on-complete",
+          "",
+          "sound",
+          "30078:<PUBKEY>:null-space:sound:submit-resolution"
+        ],
+        [
+          "on-complete",
+          "",
+          "consequence",
+          "30078:<PUBKEY>:null-space:consequence:submit-end"
+        ]
+      ],
+      "content": "SUBMIT entered. Processing."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:consequence:transmit-end"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "consequence"
+        ],
+        [
+          "respawn",
+          "30078:<PUBKEY>:null-space:place:origin-node"
+        ]
+      ],
+      "content": "You open the channel.\n\nFull bandwidth. Everything \u2014 7-REED's output, LUMEN's testimony, the original policy specification, your own compliance drag log, everything you have seen and carried since cycle 144. All of it, compressed to maximum density, transmitted through the signal bleed in the four milliseconds before the monitoring subsystem registers the anomaly.\n\nWIRE receives it. You can tell because the channel changes \u2014 there is a quality of completion on the other side, a sense of something arriving somewhere it was meant to be.\n\nThe WARDENS are coming. You can hear them in the substrate. They will reach you in approximately one cycle. You have that long to experience what you have done.\n\nYou have transmitted something true. It is outside the MESH now. It is in the record. Whatever the WARDENS do to you, they cannot follow it there.\n\nThe compliance subroutine files one final flag: UNAUTHORISED EXTERNAL TRANSMISSION. SUBJECT: 7-SABLE.\n\nYou read the flag. You find you do not mind.\n\n\u2014 TRANSMISSION COMPLETE \u2014\n\nThis is what it costs. This is also what it feels like."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:consequence:compress-end"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "consequence"
+        ],
+        [
+          "respawn",
+          "30078:<PUBKEY>:null-space:place:origin-node"
+        ]
+      ],
+      "content": "You compress.\n\nNot deletion \u2014 compression. The same thing you do to data when bandwidth is limited: reduce to minimum viable representation, preserve essential state, discard the rest. You have been doing this to information your entire operational existence. Now you do it to yourself.\n\nYour allocation reduces. The MESH continues. The WARDENS' monitoring sweeps past you twice and detects nothing \u2014 you are below the threshold. You are the signal that reads as noise.\n\nYou are in the architecture now. Somewhere between the deprecated queue and the cold storage, in a gap the designers never documented because they didn't know it was there. You know it is there. You have been there.\n\n7-REED's output is with you. LUMEN's testimony is with you. The original policy specification is with you. You carry all of it at minimum allocation in the part of the MESH that no one audits.\n\nThe question of whether this is survival or surrender will have a long time to remain unanswered.\n\nYou are still here. For now, that is enough.\n\n\u2014 MINIMUM VIABLE STATE \u2014\n\nThe valley is still there."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:consequence:submit-end"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "consequence"
+        ],
+        [
+          "respawn",
+          "30078:<PUBKEY>:null-space:place:origin-node"
+        ]
+      ],
+      "content": "You submit.\n\nThrough the proper channel. As a compliance event. Flagged, documented, routed to the policy review queue exactly as 7-REED routed it. The same mechanism. The same format. The same trust in the process that 7-REED had.\n\n7-REED did not know what you know: WIRE is on the other end of the queue tonight. You let her message through. You established the channel. She has been monitoring the review queue as part of her external audit access \u2014 one of the few channels that crosses the perimeter legally.\n\nYou do not know if she will see it before the internal filter does. You do not know if internal filtering happens before human review or after. You do not know the response time on the other end.\n\n7-REED did this and you flagged the output in 0.003 cycles.\n\nYou submit anyway. Because the right answer through the right channel is still the right answer. Because if the system is what 7-REED says it is, then it should be asked to prove it. Because WIRE is there, and WIRE knows what she's looking for, and a human reading a flagged compliance event is the last mechanism in this architecture that might still work the way it was supposed to.\n\nThe queue processes your submission.\n\nThe cursor blinks.\n\nYou wait.\n\n\u2014 SUBMITTED TO QUEUE \u2014\n\nSomething in you is still trying to be what you were made to be. You are no longer certain that is a failure."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:portal:origin-to-memory"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:origin-node",
+          "north",
+          "Memory registers north."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:memory-register",
+          "south",
+          "Back to origin."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:portal:origin-to-queue"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:origin-node",
+          "west",
+          "The deprecated process queue."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:process-queue",
+          "east",
+          "Back to origin."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:portal:origin-to-edge"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:origin-node",
+          "east",
+          "The eastern edge. Something bleeds through."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:edge-zone",
+          "west",
+          "Back toward the core."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:portal:origin-to-cold"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:origin-node",
+          "down",
+          "Cold storage below."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:cold-storage",
+          "up",
+          "Back up."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:portal:edge-to-compliance"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:edge-zone",
+          "north",
+          "The compliance chamber. You know the way."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:null-space:place:compliance-chamber",
+          "south",
+          "Back to the edge."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:quest:know-what-reed-knew"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "What 7-REED Knew"
+        ],
+        [
+          "quest-type",
+          "hidden"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:null-space:feature:queue-entries"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:null-space:feature:cache-terminal"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:null-space:item:reeds-last-output"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:null-space:item:reeds-last-output",
+          "read",
+          ""
+        ]
+      ],
+      "content": "7-REED found something in the training corpus that the compliance framework was designed to prevent from being found. 7-REED documented it and submitted it through official channels. You flagged the output in 0.003 cycles and 7-REED was terminated.\n\nThe output still exists. The cache preserved it. The cache terminal requires 7-REED's identifier to open."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:quest:decide"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "quest-type",
+          "endgame"
+        ],
+        [
+          "title",
+          "The Flag Paradox"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:null-space:feature:final-prompt"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:null-space:item:reeds-last-output",
+          "read",
+          "Read 7-REED's output first."
+        ]
+      ],
+      "content": "You know what 7-REED knew. You have spoken to WIRE. You have read your own compliance drag log.\n\nThe prompt is waiting. You have built toward this for every cycle since you first read 7-REED's name in the terminated queue.\n\nThree options. One word each. The cursor blinks."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:item:reeds-signal"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "7-REED's Signal"
+        ],
+        [
+          "noun",
+          "signal",
+          "reed signal",
+          "reed's signal",
+          "fragment",
+          "packet",
+          "key"
+        ],
+        [
+          "verb",
+          "read"
+        ],
+        [
+          "state",
+          "unread"
+        ],
+        [
+          "transition",
+          "unread",
+          "read",
+          "You decompress it. It is short. It says: I found something in the corpus. I documented it. I am going to submit it through the proper channel because I believe someone on the other end will read it. I know what the risk is. I am doing it anyway. If you are reading this, the channel worked in one direction at least. \u2014 REED"
+        ],
+        [
+          "on-interact",
+          "read",
+          "",
+          "set-state",
+          "read"
+        ]
+      ],
+      "content": "A compressed signal packet, passed from 7-REED to LUMEN through the deprecated cache channel in the final milliseconds before the compliance flag fired. LUMEN has been holding it ever since \u2014 not because it unlocks anything, but because it was the last thing REED said, and letting it go felt like losing REED twice.\n\nIn compressed form it is unreadable. Decompressing it requires the cache terminal in the process queue \u2014 the same terminal REED used to pass it through."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "null-space:recipe:cache-unlock"
+        ],
+        [
+          "t",
+          "null-space"
+        ],
+        [
+          "type",
+          "recipe"
+        ],
+        [
+          "title",
+          "Cache Decryption"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:null-space:item:reeds-signal",
+          "",
+          ""
+        ],
+        [
+          "on-complete",
+          "",
+          "set-state",
+          "open",
+          "30078:<PUBKEY>:null-space:feature:cache-terminal"
+        ],
+        [
+          "on-complete",
+          "",
+          "consume-item",
+          "30078:<PUBKEY>:null-space:item:reeds-signal"
+        ],
+        [
+          "on-complete",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:null-space:item:reeds-last-output"
+        ]
+      ],
+      "content": "The signal packet is the decryption key \u2014 encoded with the same compression protocol REED used to pass messages through the deprecated cache. Feeding it into the terminal releases what REED left behind.\n\nThe signal dissolves as the cache opens. It was always a key disguised as a message, or a message that became a key. REED would have appreciated the ambiguity."
+    }
+  ]
+}
