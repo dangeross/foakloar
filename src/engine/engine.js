@@ -324,7 +324,8 @@ export class GameEngine {
           if (this.player.isPuzzleSolved(activateRef)) {
             this._emit('You have already solved this.', 'narrative');
           } else {
-            this._emit(`\nA riddle appears:`, 'puzzle-title');
+            const puzzleTitle = getTag(activateEvent, 'title');
+            this._emit(`\n${puzzleTitle ? puzzleTitle + ':' : 'A riddle appears:'}`, 'puzzle-title');
             this._emit(activateEvent.content, 'puzzle');
             this._emit('Type your answer (or "back" to leave)...', 'hint');
             this.puzzleActive = activateRef;

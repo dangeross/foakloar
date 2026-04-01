@@ -43,7 +43,8 @@ export function applyExternalSetState(targetRef, targetState, events, player, em
     if (player.isPuzzleSolved(targetRef)) {
       emit('You have already solved this.', 'narrative');
     } else {
-      emit(`\nA riddle appears:`, 'puzzle-title');
+      const puzzleTitle = getTag(targetEvent, 'title');
+      emit(`\n${puzzleTitle ? puzzleTitle + ':' : 'A riddle appears:'}`, 'puzzle-title');
       emit(targetEvent.content, 'puzzle');
       emit('Type your answer (or "back" to leave)...', 'hint');
       return { acted: true, puzzleActivated: targetRef };

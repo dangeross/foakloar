@@ -1,7 +1,5 @@
 {
   "answers": {
-    "axiom9:puzzle:replicant-test": "empathy",
-    "axiom9:puzzle:archive-cipher": "LAZARUS",
     "axiom9:puzzle:final-broadcast": "AXIOM-9-CONDEMNED"
   },
   "events": [
@@ -31,11 +29,11 @@
         ],
         [
           "author",
-          "FOAKLOAR Robustness Test"
+          "foakloar"
         ],
         [
           "version",
-          "1.0.0"
+          "0.0.1"
         ],
         [
           "lang",
@@ -152,6 +150,18 @@
         ],
         [
           "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "down"
+        ],
+        [
+          "exit",
           "30078:<PUBKEY>:axiom9:place:noodle-market",
           "north",
           "The market district stinks of synthetic broth."
@@ -206,7 +216,7 @@
           "0.4"
         ]
       ],
-      "content": "The transit hub runs twenty-four hours because there is no other time down here. Rain hammers a corrugated ceiling somewhere above. Holographic adverts flicker between states — one shows a sky you've never seen. The air smells of coolant and something cheaper than food."
+      "content": "The transit hub runs twenty-four hours because there is no other time down here. Rain hammers a corrugated ceiling somewhere above. Holographic adverts flicker between states \u2014 one shows a sky you've never seen. The air smells of coolant and something cheaper than food."
     },
     {
       "kind": 30078,
@@ -234,6 +244,18 @@
           "noodle",
           "stalls",
           "food"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "exit",
+          "east"
         ],
         [
           "exit",
@@ -306,6 +328,10 @@
         ],
         [
           "exit",
+          "east"
+        ],
+        [
+          "exit",
           "30078:<PUBKEY>:axiom9:place:noodle-market",
           "east",
           "Back to the market."
@@ -357,6 +383,10 @@
           "black market",
           "stall",
           "shop"
+        ],
+        [
+          "exit",
+          "west"
         ],
         [
           "exit",
@@ -414,6 +444,18 @@
         ],
         [
           "exit",
+          "west"
+        ],
+        [
+          "exit",
+          "up"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
           "30078:<PUBKEY>:axiom9:place:undercity-transit",
           "west",
           "Back to the transit hub."
@@ -449,7 +491,7 @@
           "0.6"
         ]
       ],
-      "content": "Marble floors that haven't been polished in years. A crest on the wall — the Bureau of Human Verification. Behind the duty desk, a uniform reads something and pretends not to notice you."
+      "content": "Marble floors that haven't been polished in years. A crest on the wall \u2014 the Bureau of Human Verification. Behind the duty desk, a uniform reads something and pretends not to notice you."
     },
     {
       "kind": 30078,
@@ -480,6 +522,10 @@
         ],
         [
           "exit",
+          "south"
+        ],
+        [
+          "exit",
           "30078:<PUBKEY>:axiom9:place:precinct-lobby",
           "south",
           "Back to the lobby."
@@ -499,7 +545,7 @@
           "0.6"
         ]
       ],
-      "content": "A table. Two chairs. A machine on the table with a biometric reader and a long paper roll. One wall is glass — the kind you can't see through from this side. The overhead light hums at exactly the frequency that makes you feel guilty."
+      "content": "A table. Two chairs. A machine on the table with a biometric reader and a long paper roll. One wall is glass \u2014 the kind you can't see through from this side. The overhead light hums at exactly the frequency that makes you feel guilty."
     },
     {
       "kind": 30078,
@@ -529,6 +575,14 @@
         ],
         [
           "exit",
+          "down"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
           "30078:<PUBKEY>:axiom9:place:precinct-lobby",
           "down",
           "Back to the lobby."
@@ -546,10 +600,6 @@
         [
           "feature",
           "30078:<PUBKEY>:axiom9:feature:classified-drawer"
-        ],
-        [
-          "item",
-          "30078:<PUBKEY>:axiom9:item:lazarus-file"
         ],
         [
           "on-enter",
@@ -602,6 +652,10 @@
         ],
         [
           "exit",
+          "south"
+        ],
+        [
+          "exit",
           "30078:<PUBKEY>:axiom9:place:precinct-records",
           "south",
           "Back to records."
@@ -625,7 +679,7 @@
           "0.4"
         ]
       ],
-      "content": "A corner office with windows that would show the city if they weren't frosted. A desk of dark wood — real wood, which tells you something about the Director. Photographs on the wall: official, unsmiling. One is missing, rectangle of clean paint where it hung."
+      "content": "A corner office with windows that would show the city if they weren't frosted. A desk of dark wood \u2014 real wood, which tells you something about the Director. Photographs on the wall: official, unsmiling. One is missing, rectangle of clean paint where it hung."
     },
     {
       "kind": 30078,
@@ -653,6 +707,18 @@
           "maintenance",
           "pipe",
           "underbelly"
+        ],
+        [
+          "exit",
+          "up"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "east"
         ],
         [
           "exit",
@@ -694,7 +760,7 @@
           "0.6"
         ]
       ],
-      "content": "Low ceiling, wet floor, pipes bleeding steam at irregular intervals. The path splits. Something has scraped the wall to the north — not writing, not quite. The eastern passage hums with power.\n\n*The heat damages you each time you enter.*"
+      "content": "Low ceiling, wet floor, pipes bleeding steam at irregular intervals. The path splits. Something has scraped the wall to the north \u2014 not writing, not quite. The eastern passage hums with power.\n\n*The heat damages you each time you enter.*"
     },
     {
       "kind": 30078,
@@ -722,6 +788,14 @@
           "hideout",
           "shelter",
           "replicants"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "north"
         ],
         [
           "exit",
@@ -758,7 +832,7 @@
           "0.4"
         ]
       ],
-      "content": "A space carved out of infrastructure — sleeping mats, stolen heaters, photographs pinned to a concrete wall. This is where they came to remember they were real. Some of them are still here."
+      "content": "A space carved out of infrastructure \u2014 sleeping mats, stolen heaters, photographs pinned to a concrete wall. This is where they came to remember they were real. Some of them are still here."
     },
     {
       "kind": 30078,
@@ -786,6 +860,10 @@
           "room",
           "data",
           "terminal"
+        ],
+        [
+          "exit",
+          "west"
         ],
         [
           "exit",
@@ -818,7 +896,7 @@
           "0.4"
         ]
       ],
-      "content": "Server stacks from floor to ceiling, blinking in the dark like a city seen from altitude. Cold — deliberately, precisely cold. A terminal on the south wall is dark. One chip slot is open and waiting."
+      "content": "Server stacks from floor to ceiling, blinking in the dark like a city seen from altitude. Cold \u2014 deliberately, precisely cold. A terminal on the south wall is dark. One chip slot is open and waiting."
     },
     {
       "kind": 30078,
@@ -846,6 +924,18 @@
           "chamber",
           "transmission",
           "antenna"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "east"
         ],
         [
           "exit",
@@ -881,7 +971,7 @@
           "transmitting"
         ]
       ],
-      "content": "An antenna assembly fills the ceiling, rigged from salvage and precision. Someone built this carefully. A broadcast console runs along the far wall — analog switches beside digital readouts, patched together across three generations of technology. The archive log sits beside it, sealed."
+      "content": "An antenna assembly fills the ceiling, rigged from salvage and precision. Someone built this carefully. A broadcast console runs along the far wall \u2014 analog switches beside digital readouts, patched together across three generations of technology. The archive log sits beside it, sealed."
     },
     {
       "kind": 30078,
@@ -912,6 +1002,10 @@
         ],
         [
           "exit",
+          "south"
+        ],
+        [
+          "exit",
           "30078:<PUBKEY>:axiom9:place:broadcast-chamber",
           "south",
           "Back to the chamber."
@@ -938,9 +1032,13 @@
           "30078:<PUBKEY>:axiom9:sound:open-wind",
           "ambient",
           "0.4"
+        ],
+        [
+          "feature",
+          "30078:<PUBKEY>:axiom9:feature:condemned-walls"
         ]
       ],
-      "content": "The sector was decommissioned seven years ago. The buildings are still here — so is everything inside them, preserved by neglect. The perimeter wall has a gap where the floods got underneath it. North is unmonitored. North is outside the city's record."
+      "content": "The sector was decommissioned seven years ago. The buildings are still here \u2014 so is everything inside them, preserved by abandonment. Mould on concrete. A street lamp that never shuts off. The kind of silence that means nobody official has been here in a long time."
     },
     {
       "kind": 30078,
@@ -969,8 +1067,8 @@
           "record"
         ],
         [
-          "state",
-          "hidden"
+          "exit",
+          "west"
         ],
         [
           "exit",
@@ -979,22 +1077,21 @@
           "Back to the console."
         ],
         [
+          "on-enter",
+          "player",
+          "",
+          "set-state",
+          "visited",
+          "30078:<PUBKEY>:axiom9:place:sealed-archive"
+        ],
+        [
           "sound",
           "30078:<PUBKEY>:axiom9:sound:archive-wonder",
           "ambient",
           "0.5"
-        ],
-        [
-          "content-type",
-          "application/nip44",
-          "text/markdown"
-        ],
-        [
-          "puzzle",
-          "axiom9:puzzle:final-broadcast"
         ]
       ],
-      "content": "# AXIOM-9 — Final Archive\n\nProject AXIOM-9 was not a retirement programme.\n\nIt was a census.\n\nEvery replicant who passed the Voight-Kampff in this Precinct was documented, logged, and assigned a classification code. Not for retirement. For *collection*.\n\nThe Bureau does not destroy replicants who pass the test. It *harvests* them. Neural architecture, intact. The memories are the product.\n\nThere are 4,400 files in this archive. None of them are flagged as retired.\n\nYou are file 4,401.\n\nThe broadcast has gone out. What the city does with the truth is no longer your problem.\n\nYou have time left. Use it."
+      "content": "Server racks, floor to ceiling. Cold. Silent now \u2014 the encryption is gone. 4,400 files, each with a name."
     },
     {
       "kind": 30078,
@@ -1042,6 +1139,12 @@
         [
           "type",
           "portal"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:axiom9:item:transit-pass",
+          "",
+          "Officer Crane stops you at the door. You need identification to enter Bureau-adjacent facilities."
         ],
         [
           "exit",
@@ -1521,7 +1624,7 @@
           "0.9"
         ]
       ],
-      "content": "A salvage-market EMP device. Single use. Will scramble anything electronic within range — and expose what was hidden beneath active encryption."
+      "content": "A salvage-market EMP device. Single use. Will scramble anything electronic within range \u2014 and expose what was hidden beneath active encryption."
     },
     {
       "kind": 30078,
@@ -1570,11 +1673,19 @@
           "apply",
           "",
           "set-state",
+          "suppressed",
+          "30078:<PUBKEY>:axiom9:feature:voight-machine"
+        ],
+        [
+          "on-interact",
+          "apply",
+          "",
+          "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:patch-effect"
         ]
       ],
-      "content": "A stick-on neural dampener. Suppresses the galvanic response cascade that the Voight-Kampff machine reads. Meant for human anxiety disorders. Useful for other things."
+      "content": "A stick-on neural dampener. Suppresses the galvanic response cascade that the Voight-Kampff machine reads. Meant for human anxiety disorders. Apply it to the back of the neck before the test."
     },
     {
       "kind": 30078,
@@ -1603,7 +1714,7 @@
           "storage"
         ]
       ],
-      "content": "Cold to the touch. More storage than it has any right to. The encryption header is dated three years ago — before the Condemnation."
+      "content": "Cold to the touch. More storage than it has any right to. The encryption header is dated three years ago \u2014 before the Condemnation."
     },
     {
       "kind": 30078,
@@ -1703,7 +1814,7 @@
           "paper"
         ]
       ],
-      "content": "A recipe for broth — synthetic base, real spices, three years of correction in the margins. Shan wrote 'memory is an ingredient' at the bottom and crossed it out."
+      "content": "A recipe for broth \u2014 synthetic base, real spices, three years of correction in the margins. Shan wrote 'memory is an ingredient' at the bottom and crossed it out."
     },
     {
       "kind": 30078,
@@ -1762,11 +1873,6 @@
           "arrivals"
         ],
         [
-          "verb",
-          "examine",
-          "read"
-        ],
-        [
           "on-interact",
           "examine",
           "",
@@ -1806,9 +1912,7 @@
         ],
         [
           "verb",
-          "examine",
-          "read",
-          "take"
+          "read"
         ],
         [
           "on-interact",
@@ -1850,9 +1954,8 @@
         ],
         [
           "verb",
-          "examine",
-          "eat",
-          "order"
+          "order",
+          "eat"
         ],
         [
           "on-interact",
@@ -1909,7 +2012,6 @@
         ],
         [
           "verb",
-          "examine",
           "search",
           "open"
         ],
@@ -1946,7 +2048,7 @@
           "30078:<PUBKEY>:axiom9:item:access-chip"
         ]
       ],
-      "content": "A wall of knowledge, organised by a system only Mei Ling understands."
+      "content": "A wall of knowledge, organised by a system only Mei Ling understands. The drawers are unlabelled to anyone else \u2014 but searchable."
     },
     {
       "kind": 30078,
@@ -1975,10 +2077,6 @@
           "candles"
         ],
         [
-          "verb",
-          "examine"
-        ],
-        [
           "on-interact",
           "examine",
           "",
@@ -1987,7 +2085,7 @@
           "30078:<PUBKEY>:axiom9:clue:shrine-photo"
         ]
       ],
-      "content": "Candles. A photograph. A bowl of synthetic rice. The photograph shows a woman you don't recognise — but she looks like she was remembering something good."
+      "content": "Candles. A photograph. A bowl of synthetic rice. The photograph shows a woman you don't recognise \u2014 but she looks like she was remembering something good."
     },
     {
       "kind": 30078,
@@ -2015,11 +2113,6 @@
           "merchandise",
           "goods",
           "stock"
-        ],
-        [
-          "verb",
-          "examine",
-          "browse"
         ],
         [
           "on-interact",
@@ -2060,11 +2153,6 @@
           "reception"
         ],
         [
-          "verb",
-          "examine",
-          "ask"
-        ],
-        [
           "on-interact",
           "examine",
           "",
@@ -2101,11 +2189,6 @@
           "wanted",
           "posters",
           "notices"
-        ],
-        [
-          "verb",
-          "examine",
-          "read"
         ],
         [
           "on-interact",
@@ -2148,10 +2231,9 @@
         ],
         [
           "verb",
-          "examine",
-          "use",
-          "sit",
-          "take test"
+          "begin",
+          "start",
+          "use"
         ],
         [
           "state",
@@ -2174,13 +2256,102 @@
         ],
         [
           "on-interact",
-          "take test",
+          "begin",
           "",
           "set-state",
           "running"
+        ],
+        [
+          "on-interact",
+          "use",
+          "suppressed",
+          "set-state",
+          "passed"
+        ],
+        [
+          "on-interact",
+          "use",
+          "suppressed",
+          "give-item",
+          "30078:<PUBKEY>:axiom9:item:result-slip"
+        ],
+        [
+          "on-interact",
+          "begin",
+          "suppressed",
+          "set-state",
+          "passed"
+        ],
+        [
+          "on-interact",
+          "begin",
+          "suppressed",
+          "give-item",
+          "30078:<PUBKEY>:axiom9:item:result-slip"
         ]
       ],
-      "content": "A biometric reader the size of a briefcase, with an iris scope and a paper roll for output. The question it asks isn't printed anywhere. The answer determines everything."
+      "content": "A biometric reader the size of a briefcase, with an iris scope and a paper roll for output. The question it asks isn't printed anywhere. The answer determines everything. Sit. Begin the test."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:item:result-slip"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Bureau Classification Slip"
+        ],
+        [
+          "noun",
+          "slip",
+          "result",
+          "classification",
+          "paper"
+        ]
+      ],
+      "content": "A printed result from the Voight-Kampff machine. Timestamp: three days ago. Classification: HUMAN. The galvanic readings are within baseline range. Someone ensured they would be."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:item:director-override"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Director's Override"
+        ],
+        [
+          "noun",
+          "override",
+          "code",
+          "slip",
+          "paper",
+          "clearance"
+        ]
+      ],
+      "content": "A slip of paper with a Bureau seal and an eight-digit entry code. Holt's handwriting. The seal is real \u2014 she broke the wax herself."
     },
     {
       "kind": 30078,
@@ -2210,20 +2381,15 @@
           "reflection"
         ],
         [
-          "verb",
-          "examine",
-          "look"
-        ],
-        [
           "on-interact",
-          "look",
+          "examine",
           "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:glass-reflection"
         ]
       ],
-      "content": "Your reflection looks back. It doesn't look as certain as you feel."
+      "content": "One-way glass, floor to ceiling. From here you see your own reflection. On the other side: a chair, a table, a machine."
     },
     {
       "kind": 30078,
@@ -2254,9 +2420,8 @@
         ],
         [
           "verb",
-          "examine",
-          "search",
           "query",
+          "search",
           "use"
         ],
         [
@@ -2293,7 +2458,7 @@
           "30078:<PUBKEY>:axiom9:clue:records-query"
         ]
       ],
-      "content": "A government-standard terminal. Cursor blink. The database behind this has everything — if you know how to ask."
+      "content": "A government-standard terminal. Cursor blink. The database behind this has everything \u2014 if you know how to ask. Query it. Search by name, file number, project designation."
     },
     {
       "kind": 30078,
@@ -2324,9 +2489,7 @@
         ],
         [
           "verb",
-          "examine",
-          "open",
-          "search"
+          "open"
         ],
         [
           "state",
@@ -2334,9 +2497,9 @@
         ],
         [
           "requires",
-          "30078:<PUBKEY>:axiom9:puzzle:archive-cipher",
-          "solved",
-          "The drawer has a combination lock. The combination isn't written anywhere obvious."
+          "30078:<PUBKEY>:axiom9:feature:main-server",
+          "disabled",
+          "The drawer has a combination lock. You need to find the access code."
         ],
         [
           "on-interact",
@@ -2347,21 +2510,21 @@
         ],
         [
           "on-interact",
-          "search",
+          "open",
           "",
           "give-item",
           "30078:<PUBKEY>:axiom9:item:lazarus-file"
         ],
         [
           "on-interact",
-          "search",
+          "open",
           "",
           "set-state",
           "visible",
           "30078:<PUBKEY>:axiom9:clue:drawer-contents"
         ]
       ],
-      "content": "Drawer C-7, combination-locked. The lock panel has six positions — not numbers, letters."
+      "content": "Drawer C-7, combination-locked. The lock panel has six positions \u2014 not numbers, letters."
     },
     {
       "kind": 30078,
@@ -2391,7 +2554,6 @@
         ],
         [
           "verb",
-          "examine",
           "search"
         ],
         [
@@ -2411,7 +2573,7 @@
           "30078:<PUBKEY>:axiom9:clue:holt-photo"
         ]
       ],
-      "content": "Immaculate. Real wood. A pen. A single folder, closed. The drawer is locked — the lock is good. The folder is not locked."
+      "content": "Immaculate. Real wood. A pen. A single folder, closed \u2014 worth reading. The drawer is locked but the folder is not."
     },
     {
       "kind": 30078,
@@ -2439,11 +2601,6 @@
           "orders",
           "certificates",
           "photographs"
-        ],
-        [
-          "verb",
-          "examine",
-          "look"
         ],
         [
           "on-interact",
@@ -2485,7 +2642,6 @@
         ],
         [
           "verb",
-          "examine",
           "turn",
           "close"
         ],
@@ -2561,11 +2717,6 @@
           "writing"
         ],
         [
-          "verb",
-          "examine",
-          "read"
-        ],
-        [
           "on-interact",
           "examine",
           "",
@@ -2602,11 +2753,6 @@
           "stack",
           "mainframe",
           "core"
-        ],
-        [
-          "verb",
-          "examine",
-          "access"
         ],
         [
           "state",
@@ -2665,7 +2811,6 @@
         ],
         [
           "verb",
-          "examine",
           "insert",
           "use"
         ],
@@ -2702,7 +2847,7 @@
           "30078:<PUBKEY>:axiom9:item:data-chip"
         ]
       ],
-      "content": "An offline terminal — air-gapped, no relay connection. It has a chip slot. It's waiting for something to read."
+      "content": "An offline terminal \u2014 air-gapped, no relay connection. A chip slot sits open on the face panel. Insert something and it will read."
     },
     {
       "kind": 30078,
@@ -2732,11 +2877,6 @@
           "code"
         ],
         [
-          "verb",
-          "examine",
-          "enter"
-        ],
-        [
           "state",
           "locked"
         ],
@@ -2748,9 +2888,9 @@
         ],
         [
           "requires",
-          "30078:<PUBKEY>:axiom9:puzzle:replicant-test",
-          "solved",
-          "The keypad waits. Kael said it would only respond to someone who understands."
+          "30078:<PUBKEY>:axiom9:npc:replicant-kael",
+          "trusting",
+          "The keypad waits. Kael hasn't given you the sequence yet."
         ],
         [
           "sound",
@@ -2760,7 +2900,7 @@
           "locked"
         ]
       ],
-      "content": "A keypad set into the reinforced door frame. Six digits. Kael said the answer isn't numbers."
+      "content": "A keypad set into the reinforced door frame. Kael controls the sequence."
     },
     {
       "kind": 30078,
@@ -2788,11 +2928,6 @@
           "photographs",
           "notes",
           "pinboard"
-        ],
-        [
-          "verb",
-          "examine",
-          "read"
         ],
         [
           "on-interact",
@@ -2834,7 +2969,6 @@
         ],
         [
           "verb",
-          "examine",
           "activate",
           "broadcast",
           "transmit"
@@ -2910,21 +3044,21 @@
           "on-interact",
           "activate",
           "",
-          "puzzle",
+          "activate",
           "30078:<PUBKEY>:axiom9:puzzle:final-broadcast"
         ],
         [
           "on-interact",
           "broadcast",
           "",
-          "puzzle",
+          "activate",
           "30078:<PUBKEY>:axiom9:puzzle:final-broadcast"
         ],
         [
           "on-interact",
           "transmit",
           "",
-          "puzzle",
+          "activate",
           "30078:<PUBKEY>:axiom9:puzzle:final-broadcast"
         ],
         [
@@ -2952,7 +3086,7 @@
           "1.0"
         ]
       ],
-      "content": "The broadcast array is a marvel of salvage engineering — range enough to reach every relay station in the undercity and the three levels above it."
+      "content": "The broadcast array is a marvel of salvage engineering \u2014 range enough to reach every relay station in the undercity and the three levels above it. The controls are direct: load the file, transmit."
     },
     {
       "kind": 30078,
@@ -2983,8 +3117,10 @@
         ],
         [
           "verb",
-          "examine",
-          "open",
+          "open"
+        ],
+        [
+          "verb",
           "read"
         ],
         [
@@ -3019,7 +3155,7 @@
           "30078:<PUBKEY>:axiom9:clue:archive-contents"
         ]
       ],
-      "content": "A sealed log — the kind that destroys its contents if opened improperly. It's locked to the broadcast."
+      "content": "A sealed log \u2014 the kind that destroys its contents if opened improperly. It's locked to the broadcast."
     },
     {
       "kind": 30078,
@@ -3047,12 +3183,6 @@
           "wall",
           "perimeter",
           "hole"
-        ],
-        [
-          "verb",
-          "examine",
-          "squeeze",
-          "go through"
         ],
         [
           "on-interact",
@@ -3117,7 +3247,7 @@
           "hidden"
         ]
       ],
-      "content": "Every route goes up. None come down. The transit system here is one-directional — a filter, not a network."
+      "content": "Every route goes up. None come down. The transit system here is one-directional \u2014 a filter, not a network."
     },
     {
       "kind": 30078,
@@ -3144,7 +3274,7 @@
           "hidden"
         ]
       ],
-      "content": "*BUREAU ANNOUNCES 100% CLASSIFICATION ACCURACY — Director Holt: 'Our process is infallible.'*\n\nPage four has a correction, printed small: a wrong classification last month. No names given. Correction filed under 'administrative error.'"
+      "content": "*BUREAU ANNOUNCES 100% CLASSIFICATION ACCURACY \u2014 Director Holt: 'Our process is infallible.'*\n\nPage four has a correction, printed small: a wrong classification last month. No names given. Correction filed under 'administrative error.'"
     },
     {
       "kind": 30078,
@@ -3198,7 +3328,7 @@
           "hidden"
         ]
       ],
-      "content": "Case histories. False documentation — convincing enough to pass basic Bureau checks. And in a reinforced sleeve: a Level-3 access chip. Mei Ling collects contingency plans."
+      "content": "Case histories. False documentation \u2014 convincing enough to pass basic Bureau checks. And in a reinforced sleeve: a Level-3 access chip. Mei Ling collects contingency plans."
     },
     {
       "kind": 30078,
@@ -3225,7 +3355,7 @@
           "hidden"
         ]
       ],
-      "content": "The woman in the photograph is wearing a Bureau uniform — senior division. On the back: *K. — 2041. They didn't know.*"
+      "content": "The woman in the photograph is wearing a Bureau uniform \u2014 senior division, classified research. On the back: *K. \u2014 2041. They didn't know.* Whoever she was, Mei Ling lit a candle for her. Bureau doesn't build altars to their own."
     },
     {
       "kind": 30078,
@@ -3279,7 +3409,7 @@
           "hidden"
         ]
       ],
-      "content": "Fourteen classification reviews scheduled this week. Eight retired last week. The log uses a code for retired — a single letter R, circled. The column for 'passed' is empty."
+      "content": "Fourteen classification reviews scheduled this week. Eight retired last week. The log uses a code for retired \u2014 a single letter R, circled. The column for 'passed' is empty."
     },
     {
       "kind": 30078,
@@ -3306,7 +3436,7 @@
           "hidden"
         ]
       ],
-      "content": "The designation beneath your photograph reads: *AXIOM-9 / FILE 4401 / STATUS: ACTIVE — PENDING REVIEW.* Under that, in different ink: *Do not engage. Director's orders.*"
+      "content": "The designation beneath your photograph reads: *AXIOM-9 / FILE 4401 / STATUS: ACTIVE \u2014 PENDING REVIEW.* Under that, in different ink: *Do not engage. Director's orders.*"
     },
     {
       "kind": 30078,
@@ -3333,7 +3463,7 @@
           "hidden"
         ]
       ],
-      "content": "The paper roll shows the last test administered — three days ago. The biometric readings spike on one question and flatline on every other. The question isn't printed. The answer is circled: *REPLICANT*. But the reaction was human. The machine was wrong — or someone adjusted the calibration."
+      "content": "The paper roll shows the last test administered \u2014 three days ago. The biometric readings spike on one question and flatline on every other. The question isn't printed. The answer is circled: *REPLICANT*. But the reaction was human. The machine was wrong \u2014 or someone adjusted the calibration.\n\nIn the margin, handwritten: *Empathic response \u2014 anomalous. Subject registers within human range on all empathy indices. Recommend review.*"
     },
     {
       "kind": 30078,
@@ -3360,7 +3490,7 @@
           "hidden"
         ]
       ],
-      "content": "You look exactly like a person who doesn't know what they are. That, the test operators told you, is not sufficient evidence either way."
+      "content": "Through the glass, a figure sits across the table from the Voight-Kampff machine. The iris scope tracks their eye. The paper roll spits results. You watch the examiner circle something and reach for a radio. The subject doesn't react \u2014 they can't see the notation from where they sit. Their profile is very still. They look like someone who doesn't know what they are. You know what that looks like."
     },
     {
       "kind": 30078,
@@ -3414,7 +3544,7 @@
           "hidden"
         ]
       ],
-      "content": "Search: LAZARUS. Results: 0 files found. Error code 441 — record suppressed by Director's office.\n\nSearch: FILE 4401. Result: CLASSIFIED. Access requires Level-7 clearance.\n\nSearch: AXIOM-9. Result: PROJECT ARCHIVE. Location: C-7. Combination: [REDACTED].\n\nThe redaction has been applied over something six characters long. The font bleed suggests an uppercase word."
+      "content": "Search: LAZARUS. Results: 0 files found. Error code 441 \u2014 record suppressed by Director's office.\n\nSearch: FILE 4401. Result: CLASSIFIED. Access requires Level-7 clearance.\n\nSearch: AXIOM-9. Result: PROJECT ARCHIVE. Location: C-7. Combination: [REDACTED].\n\nThe redaction has been applied over something six characters long. The font bleed suggests an uppercase word."
     },
     {
       "kind": 30078,
@@ -3468,7 +3598,7 @@
           "hidden"
         ]
       ],
-      "content": "Project LAZARUS (2039–2041): A controlled study into whether replicant subjects who passed standard Voight-Kampff administered under modified calibration would exhibit divergent consciousness from baseline. Conclusion: ***Yes.*** All 4,400 subjects tested from 2039–2041 exhibit novel consciousness architecture. Recommendation: Preservation and study. Director Holt's handwritten note: *SHELVED. NOT VIABLE. PROCEED WITH STANDARD RETIREMENT SCHEDULE.*\n\nThe recommendation was never implemented. But the retirements were."
+      "content": "Project LAZARUS (2039\u20132041): A controlled study into whether replicant subjects who passed standard Voight-Kampff administered under modified calibration would exhibit divergent consciousness from baseline. Conclusion: ***Yes.*** All 4,400 subjects tested from 2039\u20132041 exhibit novel consciousness architecture. Recommendation: Preservation and study. Director Holt's handwritten note: *SHELVED. NOT VIABLE. PROCEED WITH STANDARD RETIREMENT SCHEDULE.*\n\nThe recommendation was never implemented. But the retirements were."
     },
     {
       "kind": 30078,
@@ -3522,7 +3652,7 @@
           "hidden"
         ]
       ],
-      "content": "The drawer is locked — but the file wasn't. This photograph was left in the folder. It shows Holt, younger, standing next to a woman in a lab coat. On the back: *K. and I — Project Origin, 2038.* K. is the woman from Mei Ling's shrine."
+      "content": "The drawer is locked \u2014 but the file wasn't. This photograph was left in the folder. It shows Holt, younger, standing next to a woman in a lab coat. On the back: *K. and I \u2014 Project Origin, 2038.* K. is the woman from Mei Ling's shrine."
     },
     {
       "kind": 30078,
@@ -3576,7 +3706,7 @@
           "hidden"
         ]
       ],
-      "content": "Five columns of scratched marks — tally counts. And beside them: *WE ARE 4400. THE TEST DOES NOT DEFINE US.*\n\nSome of the tallies are recent."
+      "content": "Five columns of scratched marks \u2014 tally counts. And beside them: *WE ARE 4400. THE TEST DOES NOT DEFINE US.*\n\nSome of the tallies are recent."
     },
     {
       "kind": 30078,
@@ -3603,7 +3733,7 @@
           "hidden"
         ]
       ],
-      "content": "The server displays a single line of text when examined: *AXIOM-9 ARCHIVE: ACTIVE ENCRYPTION. ATTEMPTING EXTERNAL ACCESS WILL TRIGGER PURGE SEQUENCE.* The EMP won't trigger the purge — it bypasses the software entirely."
+      "content": "The server displays a single line of text when examined: *AXIOM-9 ARCHIVE: ACTIVE ENCRYPTION. ATTEMPTING EXTERNAL ACCESS WILL TRIGGER PURGE SEQUENCE.* The purge is a software response. This server is running hot."
     },
     {
       "kind": 30078,
@@ -3636,7 +3766,7 @@
           ""
         ]
       ],
-      "content": "With the encryption killed, a fragment of the archive index is readable. File designations: AXIOM-9/0001 through AXIOM-9/4400. Status column, every entry: *PENDING COLLECTION.* Not retired. Collected."
+      "content": "With the encryption killed, a fragment of the archive index is readable. File designations: AXIOM-9/0001 through AXIOM-9/4400. Status column, every entry: *PENDING COLLECTION.* Not retired. Collected.\n\nAt the base of the index, a cross-reference: *Physical records \u2014 Drawer C-7, Precinct Records Division. Access code embedded in project designation.* The project designation is LAZARUS."
     },
     {
       "kind": 30078,
@@ -3663,7 +3793,7 @@
           "hidden"
         ]
       ],
-      "content": "The chip holds one file: a broadcast encryption key and a routing address that covers every relay station in the undercity.\n\nAnd a note: *When you find this, use it. — K.*"
+      "content": "The chip holds one file: a broadcast encryption key and a routing address that covers every relay station in the undercity.\n\nAnd a note, unsigned: *When the time comes, you won't need anyone to hand this to you. You already have it.*\n\nThe terminal writes the key directly to your credentials."
     },
     {
       "kind": 30078,
@@ -3683,14 +3813,14 @@
         ],
         [
           "title",
-          "The Wall — Names"
+          "The Wall \u2014 Names"
         ],
         [
           "state",
           "hidden"
         ]
       ],
-      "content": "The thread on the wall maps LAZARUS subjects to file numbers to last known locations. Whoever built this worked from the same source data as the Bureau — which means at some point, they had access to it."
+      "content": "The thread on the wall maps LAZARUS subjects to file numbers to last known locations. Whoever built this worked from the same source data as the Bureau \u2014 which means at some point, they had access to it."
     },
     {
       "kind": 30078,
@@ -3717,7 +3847,7 @@
           "hidden"
         ]
       ],
-      "content": "The array is transmitting. Every relay station in the undercity and the three levels above it is receiving the LAZARUS file data — the suppressed science, the false calibrations, the names. All 4,400 of them. Including yours."
+      "content": "The array is transmitting. Every relay station in the undercity and the three levels above it is receiving the LAZARUS file data \u2014 the suppressed science, the false calibrations, the names. All 4,400 of them. Including yours."
     },
     {
       "kind": 30078,
@@ -3744,7 +3874,7 @@
           "hidden"
         ]
       ],
-      "content": "Final entry, unsigned:\n\n*The archive is the record. The broadcast is the release. If you're reading this, both have happened. The Bureau will deny it. Some people will believe them. Some won't. That's enough.\n\nFile 4401 — you were never supposed to find this. You are also the only one who could.*"
+      "content": "Final entry, unsigned:\n\n*The archive is the record. The broadcast is the release. If you're reading this, both have happened. The Bureau will deny it. Some people will believe them. Some won't. That's enough.\n\nFile 4401 \u2014 you were never supposed to find this. You are also the only one who could.\n\nRouting designation: AXIOM-9-CONDEMNED. Enter this to confirm and complete transmission.*"
     },
     {
       "kind": 30078,
@@ -3771,7 +3901,7 @@
           "hidden"
         ]
       ],
-      "content": "Open ground. No sensors. No record of this space in any Bureau map you've seen. The city's edge is a concept, not a wall — and the concept has a hole in it."
+      "content": "Open ground. No sensors. No record of this space in any Bureau map you've seen. The city's edge is a concept, not a wall \u2014 and the concept has a hole in it."
     },
     {
       "kind": 30078,
@@ -3779,7 +3909,7 @@
       "tags": [
         [
           "d",
-          "axiom9:puzzle:replicant-test"
+          "axiom9:feature:condemned-walls"
         ],
         [
           "t",
@@ -3787,55 +3917,42 @@
         ],
         [
           "type",
-          "puzzle"
+          "feature"
         ],
         [
-          "puzzle-type",
-          "riddle"
+          "title",
+          "Scratched Walls"
         ],
         [
-          "answer-hash",
-          "478e81702052bca043b55cfff71ff5ed43f882897abe1b1dda89b2907839d131"
+          "noun",
+          "walls",
+          "concrete",
+          "scratches",
+          "names",
+          "graffiti"
         ],
         [
-          "salt",
-          "axiom9:puzzle:replicant-test:v1"
+          "verb",
+          "read"
         ],
         [
-          "requires",
-          "30078:<PUBKEY>:axiom9:npc:replicant-kael",
-          "trusting",
-          "Kael watches you. He hasn't asked you anything yet."
-        ],
-        [
-          "on-complete",
+          "on-interact",
+          "examine",
           "",
           "set-state",
-          "solved"
+          "visible",
+          "30078:<PUBKEY>:axiom9:clue:condemned-names"
         ],
         [
-          "on-complete",
+          "on-interact",
+          "read",
           "",
           "set-state",
-          "unlocked",
-          "30078:<PUBKEY>:axiom9:feature:door-lock"
-        ],
-        [
-          "on-complete",
-          "",
-          "sound",
-          "30078:<PUBKEY>:axiom9:sound:puzzle-resolve",
-          "0.8"
-        ],
-        [
-          "on-fail",
-          "",
-          "sound",
-          "30078:<PUBKEY>:axiom9:sound:puzzle-wrong",
-          "0.6"
+          "visible",
+          "30078:<PUBKEY>:axiom9:clue:condemned-names"
         ]
       ],
-      "content": "Kael asks you one question.\n\n*What does the machine measure — what they call it, not what it does?*\n\nEnter your answer."
+      "content": "The walls of an empty processing centre. Someone has been here after the decommission \u2014 scratched names into the concrete at eye level, column after column."
     },
     {
       "kind": 30078,
@@ -3843,7 +3960,7 @@
       "tags": [
         [
           "d",
-          "axiom9:puzzle:archive-cipher"
+          "axiom9:clue:condemned-names"
         ],
         [
           "t",
@@ -3851,55 +3968,18 @@
         ],
         [
           "type",
-          "puzzle"
+          "clue"
         ],
         [
-          "puzzle-type",
-          "riddle"
+          "title",
+          "Names in Concrete"
         ],
         [
-          "answer-hash",
-          "fadfe07aef2dd1c941f64ce9abc23a81ce3a7f94db38387d9e4b087aeb3baf5e"
-        ],
-        [
-          "salt",
-          "axiom9:puzzle:archive-cipher:v1"
-        ],
-        [
-          "requires",
-          "30078:<PUBKEY>:axiom9:feature:records-terminal",
-          "active",
-          "The terminal needs to be active first."
-        ],
-        [
-          "on-complete",
-          "",
-          "set-state",
-          "solved"
-        ],
-        [
-          "on-complete",
-          "",
-          "set-state",
-          "open",
-          "30078:<PUBKEY>:axiom9:feature:classified-drawer"
-        ],
-        [
-          "on-complete",
-          "",
-          "sound",
-          "30078:<PUBKEY>:axiom9:sound:drawer-click",
-          "0.7"
-        ],
-        [
-          "on-fail",
-          "",
-          "sound",
-          "30078:<PUBKEY>:axiom9:sound:puzzle-wrong",
-          "0.6"
+          "state",
+          "hidden"
         ]
       ],
-      "content": "Drawer C-7. Six positions, uppercase letters. The terminal showed a redaction six characters long. What project was buried in this drawer?"
+      "content": "Columns of scratched names \u2014 first names only, then file numbers. AXIOM-9/0801 through AXIOM-9/0840. Status marked beside some: *gone*. Beside others: *here*.\n\nAt the bottom, separated from the columns, one line cut deeper than the rest:\n\n*K. built the way out. We are walking through it.*"
     },
     {
       "kind": 30078,
@@ -3916,6 +3996,10 @@
         [
           "type",
           "puzzle"
+        ],
+        [
+          "title",
+          "Final Broadcast"
         ],
         [
           "puzzle-type",
@@ -3963,7 +4047,7 @@
           "0.6"
         ]
       ],
-      "content": "The broadcast array asks for a routing confirmation code. The archive log, now open, lists it on the last line — the designation of the sector the Bureau condemned to bury this.\n\nEnter the routing code."
+      "content": "The broadcast array asks for a routing confirmation code. The archive log, now open, lists it on the last line \u2014 the designation of the sector the Bureau condemned to bury this.\n\nEnter the routing code."
     },
     {
       "kind": 30078,
@@ -4092,11 +4176,11 @@
         [
           "dialogue",
           "30078:<PUBKEY>:axiom9:dialogue:mei:after-lazarus",
-          "30078:<PUBKEY>:axiom9:clue:stall-graffiti",
-          "visible"
+          "30078:<PUBKEY>:axiom9:npc:mei-ling",
+          "trusting"
         ]
       ],
-      "content": "She is precise in everything — how she holds the circuit board, how she measures your potential usefulness. A woman who has survived by being more careful than the world expected."
+      "content": "She is precise in everything \u2014 how she holds the circuit board, how she measures your potential usefulness. A woman who has survived by being more careful than the world expected."
     },
     {
       "kind": 30078,
@@ -4271,8 +4355,14 @@
         [
           "dialogue",
           "30078:<PUBKEY>:axiom9:dialogue:kael:after-test",
-          "30078:<PUBKEY>:axiom9:puzzle:replicant-test",
-          "solved"
+          "30078:<PUBKEY>:axiom9:item:result-slip",
+          ""
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:axiom9:dialogue:kael:after-override",
+          "30078:<PUBKEY>:axiom9:item:director-override",
+          ""
         ]
       ],
       "content": "Lean. Still. Watching. He has the quality of someone who has already considered every available exit."
@@ -4388,13 +4478,19 @@
           "dialogue"
         ],
         [
-          "text",
-          "I don't know you. That's fine. What do you need."
-        ],
-        [
           "option",
           "An EMP charge.",
           "30078:<PUBKEY>:axiom9:dialogue:solis:emp"
+        ],
+        [
+          "option",
+          "A neural dampener.",
+          "30078:<PUBKEY>:axiom9:dialogue:solis:patch"
+        ],
+        [
+          "option",
+          "An encrypted data chip.",
+          "30078:<PUBKEY>:axiom9:dialogue:solis:chip"
         ],
         [
           "option",
@@ -4407,7 +4503,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "I don't know you. That's fine. What do you need."
     },
     {
       "kind": 30078,
@@ -4426,16 +4522,81 @@
           "dialogue"
         ],
         [
-          "text",
-          "Already on the shelf. Take it. Price is what you're carrying that I don't have."
+          "on-enter",
+          "player",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:axiom9:item:emp-charge"
         ],
         [
           "option",
-          "Leave.",
+          "Take it and go.",
           ""
         ]
       ],
-      "content": ""
+      "content": "Already on the shelf. Take it. Price is what you're carrying that I don't have."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:dialogue:solis:patch"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:axiom9:item:neural-patch"
+        ],
+        [
+          "option",
+          "Take it.",
+          ""
+        ]
+      ],
+      "content": "Suppressant. Galvanic, not chemical. Stick it on your neck before they put you in the chair. *He slides it across.* Don't tell me what chair."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:dialogue:solis:chip"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:axiom9:item:data-chip"
+        ],
+        [
+          "option",
+          "Take it.",
+          ""
+        ]
+      ],
+      "content": "Came in two weeks ago. Cold storage, air-gapped encryption, no label. Someone didn't want it found. *He sets it on the counter.* Someone else clearly does."
     },
     {
       "kind": 30078,
@@ -4454,10 +4615,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "Information costs more than hardware. What are you looking for."
-        ],
-        [
           "option",
           "The maintenance tunnels.",
           "30078:<PUBKEY>:axiom9:dialogue:solis:tunnels"
@@ -4468,7 +4625,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "Information costs more than hardware. What are you looking for."
     },
     {
       "kind": 30078,
@@ -4487,16 +4644,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "Hatch in the transit hub floor. You'll know it by the rust. What's down there isn't my business."
-        ],
-        [
           "option",
           "Leave.",
           ""
         ]
       ],
-      "content": ""
+      "content": "Hatch in the transit hub floor. You'll know it by the rust. What's down there isn't my business."
     },
     {
       "kind": 30078,
@@ -4515,10 +4668,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "You need something. Everyone down here needs something. What is it?"
-        ],
-        [
           "option",
           "I need to move freely.",
           "30078:<PUBKEY>:axiom9:dialogue:arak:pass"
@@ -4534,7 +4683,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "You need something. Everyone down here needs something. What is it?"
     },
     {
       "kind": 30078,
@@ -4553,8 +4702,33 @@
           "dialogue"
         ],
         [
-          "text",
-          "Movement costs. Eighty credits, or something useful. I'll take information."
+          "option",
+          "Take it.",
+          "30078:<PUBKEY>:axiom9:dialogue:arak:pass-accept"
+        ],
+        [
+          "option",
+          "That's too much.",
+          ""
+        ]
+      ],
+      "content": "Movement costs. Eighty credits, or something useful. I'll take information."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:dialogue:arak:pass-accept"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "dialogue"
         ],
         [
           "on-enter",
@@ -4565,16 +4739,11 @@
         ],
         [
           "option",
-          "Take it.",
-          ""
-        ],
-        [
-          "option",
-          "That's too much.",
+          "Leave.",
           ""
         ]
       ],
-      "content": ""
+      "content": "*He slides the pass across without looking up.* Don't get stopped with that. And don't come back without something worth my time."
     },
     {
       "kind": 30078,
@@ -4593,10 +4762,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "The Bureau runs the test. The test is wrong. Everyone down here knows it. No one says it."
-        ],
-        [
           "option",
           "Why not?",
           "30078:<PUBKEY>:axiom9:dialogue:arak:why"
@@ -4612,7 +4777,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "The Bureau runs the test. The test is wrong. Everyone down here knows it. No one says it."
     },
     {
       "kind": 30078,
@@ -4631,16 +4796,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "Because the ones who say it disappear. Review. Reclassification. Retirement. Same word, different process."
-        ],
-        [
           "option",
           "Thank him.",
           ""
         ]
       ],
-      "content": ""
+      "content": "Because the ones who say it disappear. Review. Reclassification. Retirement. Same word, different process."
     },
     {
       "kind": 30078,
@@ -4659,16 +4820,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "Retire them. What they call retire is something else. The ones who pass — I don't know. They go up. Nobody comes back to say what's there."
-        ],
-        [
           "option",
           "Leave.",
           ""
         ]
       ],
-      "content": ""
+      "content": "Retire them. What they call retire is something else. The ones who pass \u2014 I don't know. They go up. Nobody comes back to say what's there."
     },
     {
       "kind": 30078,
@@ -4687,10 +4844,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "I'll feed you. Sit down. You look like you've been running."
-        ],
-        [
           "option",
           "I'm looking for information.",
           "30078:<PUBKEY>:axiom9:dialogue:shan:info"
@@ -4701,7 +4854,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "I'll feed you. Sit down. You look like you've been running."
     },
     {
       "kind": 30078,
@@ -4720,10 +4873,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "Everyone who comes to me is looking for something. Information I don't sell. But I remember things. Ask me something specific."
-        ],
-        [
           "option",
           "Do you know Mei Ling?",
           "30078:<PUBKEY>:axiom9:dialogue:shan:mei"
@@ -4735,11 +4884,16 @@
         ],
         [
           "option",
+          "Are there others like me?",
+          "30078:<PUBKEY>:axiom9:dialogue:shan:underground"
+        ],
+        [
+          "option",
           "Leave.",
           ""
         ]
       ],
-      "content": ""
+      "content": "Everyone who comes to me is looking for something. Information I don't sell. But I remember things. Ask me something specific."
     },
     {
       "kind": 30078,
@@ -4758,16 +4912,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "Through the curtain. She fixes things. Also: she knows things. Tell her Shan sent you if she asks."
-        ],
-        [
           "option",
           "Thank her.",
           ""
         ]
       ],
-      "content": ""
+      "content": "Through the curtain. She fixes things. Also: she knows things. Tell her Shan sent you if she asks."
     },
     {
       "kind": 30078,
@@ -4786,10 +4936,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "*She is quiet for a moment.* Under the counter. Read it. Then don't say it again out loud."
-        ],
-        [
           "on-enter",
           "player",
           "",
@@ -4803,7 +4949,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "*She is quiet for a moment.* Under the counter. Read it. Then don't say it again out loud."
     },
     {
       "kind": 30078,
@@ -4822,10 +4968,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "You're not here for circuit work. What do you need."
-        ],
-        [
           "option",
           "Access. Bureau-level.",
           "30078:<PUBKEY>:axiom9:dialogue:mei:access"
@@ -4841,7 +4983,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "You're not here for circuit work. What do you need."
     },
     {
       "kind": 30078,
@@ -4860,10 +5002,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "Someone who made a professional decision twelve years ago. I was in senior classification. I left. The cabinets stayed with me."
-        ],
-        [
           "option",
           "You were Bureau?",
           "30078:<PUBKEY>:axiom9:dialogue:mei:bureau"
@@ -4879,7 +5017,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "Someone who made a professional decision twelve years ago. I was in senior classification. I left. The cabinets stayed with me."
     },
     {
       "kind": 30078,
@@ -4898,10 +5036,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "I administered 400 tests. I saw the calibration error. I filed a report. Two days later I was re-assigned. I didn't wait to find out what came next."
-        ],
-        [
           "option",
           "I need an access chip.",
           "30078:<PUBKEY>:axiom9:dialogue:mei:access"
@@ -4912,7 +5046,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "I administered 400 tests. I saw the calibration error. I filed a report. Two days later I was re-assigned. I didn't wait to find out what came next."
     },
     {
       "kind": 30078,
@@ -4931,10 +5065,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "I don't hand out access chips to strangers. Tell me what you're trying to do and I'll decide if it's worth the risk."
-        ],
-        [
           "option",
           "I'm trying to find the LAZARUS file.",
           "30078:<PUBKEY>:axiom9:dialogue:mei:lazarus"
@@ -4950,7 +5080,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "I don't hand out access chips to strangers. Tell me what you're trying to do and I'll decide if it's worth the risk."
     },
     {
       "kind": 30078,
@@ -4969,10 +5099,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "*She puts the circuit board down.* You know that name. Good. The cabinets are open. Take what you need."
-        ],
-        [
           "on-enter",
           "player",
           "",
@@ -4986,7 +5112,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "*She puts the circuit board down.* You know that name. Good. The cabinets are open. Take what you need."
     },
     {
       "kind": 30078,
@@ -5005,10 +5131,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "Records has what you need. The chip in drawer seven — take it. Don't tell me what you do with it."
-        ],
-        [
           "on-enter",
           "player",
           "",
@@ -5022,7 +5144,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "Records has what you need. The chip in drawer seven \u2014 take it. Don't tell me what you do with it."
     },
     {
       "kind": 30078,
@@ -5041,10 +5163,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "You found it. I knew you would. There's one more thing — the broadcast chamber. You'll need the den. Find Kael."
-        ],
-        [
           "option",
           "Where's the den?",
           "30078:<PUBKEY>:axiom9:dialogue:mei:den"
@@ -5055,7 +5173,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "You found it. I knew you would. There's one more thing \u2014 the broadcast chamber. You'll need the den. Find Kael."
     },
     {
       "kind": 30078,
@@ -5074,16 +5192,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "Maintenance tunnel. North junction. You'll feel the cold air. They built it there because it's the one place the Bureau's monitoring doesn't reach."
-        ],
-        [
           "option",
           "Leave.",
           ""
         ]
       ],
-      "content": ""
+      "content": "Maintenance tunnel. North junction. You'll feel the cold air. They built it there because it's the one place the Bureau's monitoring doesn't reach."
     },
     {
       "kind": 30078,
@@ -5102,10 +5216,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "This is a Bureau facility. Identification. Now."
-        ],
-        [
           "option",
           "Show the transit pass.",
           "30078:<PUBKEY>:axiom9:dialogue:crane:transit-pass"
@@ -5121,7 +5231,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "This is a Bureau facility. Identification. Now."
     },
     {
       "kind": 30078,
@@ -5146,16 +5256,12 @@
           ""
         ],
         [
-          "text",
-          "*He looks at the pass for a long time.* Fine. Don't go upstairs without clearance."
-        ],
-        [
           "option",
           "Move on.",
           ""
         ]
       ],
-      "content": ""
+      "content": "*He looks at the pass for a long time.* Fine. Don't go upstairs without clearance."
     },
     {
       "kind": 30078,
@@ -5174,13 +5280,14 @@
           "dialogue"
         ],
         [
-          "text",
-          "Nobody just passes through. Either you have ID or you have a reason. Which is it?"
-        ],
-        [
           "option",
           "I have a reason.",
           "30078:<PUBKEY>:axiom9:dialogue:crane:reason"
+        ],
+        [
+          "option",
+          "Where would someone get documentation?",
+          "30078:<PUBKEY>:axiom9:dialogue:crane:access-hint"
         ],
         [
           "option",
@@ -5188,7 +5295,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "Nobody just passes through. Either you have ID or you have a reason. Which is it?"
     },
     {
       "kind": 30078,
@@ -5207,16 +5314,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "If the reason is good enough, I'll hear it. If it isn't, I'll hear that too."
-        ],
-        [
           "option",
           "Walk away.",
           ""
         ]
       ],
-      "content": ""
+      "content": "If the reason is good enough, I'll hear it. If it isn't, I'll hear that too."
     },
     {
       "kind": 30078,
@@ -5235,10 +5338,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "You shouldn't be here. How did you find us?"
-        ],
-        [
           "option",
           "Mei Ling sent me.",
           "30078:<PUBKEY>:axiom9:dialogue:kael:mei"
@@ -5254,7 +5353,7 @@
           "30078:<PUBKEY>:axiom9:dialogue:kael:explore"
         ]
       ],
-      "content": ""
+      "content": "You shouldn't be here. How did you find us?"
     },
     {
       "kind": 30078,
@@ -5273,10 +5372,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "Mei. *He exhales.* That means you already know enough to be dangerous. What do you want?"
-        ],
-        [
           "option",
           "I need to get through that door.",
           "30078:<PUBKEY>:axiom9:dialogue:kael:door"
@@ -5287,7 +5382,7 @@
           "30078:<PUBKEY>:axiom9:dialogue:kael:history"
         ]
       ],
-      "content": ""
+      "content": "Mei. *He exhales.* That means you already know enough to be dangerous. What do you want?"
     },
     {
       "kind": 30078,
@@ -5306,10 +5401,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "Most people can't read them. *He looks at you differently.* What are you?"
-        ],
-        [
           "option",
           "I don't know. That's why I'm here.",
           "30078:<PUBKEY>:axiom9:dialogue:kael:door"
@@ -5320,7 +5411,7 @@
           "30078:<PUBKEY>:axiom9:dialogue:kael:human"
         ]
       ],
-      "content": ""
+      "content": "Most people can't read them. *He looks at you differently.* What are you?"
     },
     {
       "kind": 30078,
@@ -5339,10 +5430,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "Nobody explores the maintenance tunnels. Try again."
-        ],
-        [
           "option",
           "I'm looking for the broadcast chamber.",
           "30078:<PUBKEY>:axiom9:dialogue:kael:door"
@@ -5353,7 +5440,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "Nobody explores the maintenance tunnels. Try again."
     },
     {
       "kind": 30078,
@@ -5372,16 +5459,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "The door opens one way — if you understand what the Bureau machine tests for. Not what they call it. What it actually is. Answer that, and the door answers you."
-        ],
-        [
           "option",
           "The test begins.",
           ""
         ]
       ],
-      "content": ""
+      "content": "The door doesn't open for words. It opens for proof. You've either passed their machine or you haven't. *He holds out a hand.* Show me the slip."
     },
     {
       "kind": 30078,
@@ -5400,10 +5483,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "We are 4,400 subjects who passed a test designed to fail us. They kept the files. They did not retire us. They were waiting to collect. We found out. We built the chamber before they could collect us."
-        ],
-        [
           "option",
           "How did you find out?",
           "30078:<PUBKEY>:axiom9:dialogue:kael:howknow"
@@ -5414,7 +5493,7 @@
           "30078:<PUBKEY>:axiom9:dialogue:kael:door"
         ]
       ],
-      "content": ""
+      "content": "We are 4,400 subjects who passed a test designed to fail us. They kept the files. They did not retire us. They were waiting to collect. We found out. We built the chamber before they could collect us."
     },
     {
       "kind": 30078,
@@ -5433,16 +5512,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "K. told us. She was inside. She built the chip. She said file 4401 would find us. *He looks at you.* You're file 4401."
-        ],
-        [
           "option",
           "Get to the door.",
           "30078:<PUBKEY>:axiom9:dialogue:kael:door"
         ]
       ],
-      "content": ""
+      "content": "K. told us. She was inside. She built the chip. She said file 4401 would find us. *He looks at you.* You're file 4401."
     },
     {
       "kind": 30078,
@@ -5461,16 +5536,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "Most of us thought that too. The machine doesn't test what you are. It tests what you feel."
-        ],
-        [
           "option",
           "Get to the door.",
           "30078:<PUBKEY>:axiom9:dialogue:kael:door"
         ]
       ],
-      "content": ""
+      "content": "Most of us thought that too. The machine doesn't test what you are. It tests what you feel."
     },
     {
       "kind": 30078,
@@ -5489,10 +5560,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "Good. *He hands you a key.* The broadcast array needs the Lazarus file and the encryption key. Get both. Transmit everything. The archive unlocks when the signal goes out."
-        ],
-        [
           "on-enter",
           "player",
           "",
@@ -5508,12 +5575,20 @@
           "30078:<PUBKEY>:axiom9:npc:replicant-kael"
         ],
         [
+          "on-enter",
+          "player",
+          "",
+          "set-state",
+          "unlocked",
+          "30078:<PUBKEY>:axiom9:feature:door-lock"
+        ],
+        [
           "option",
           "Thank him.",
           ""
         ]
       ],
-      "content": ""
+      "content": "*He looks at the Bureau slip for a long time.* You used their machine against them. That's enough. *He hands you a key and enters the door sequence.* The broadcast array needs the Lazarus file and the encryption key. Get both. Transmit everything."
     },
     {
       "kind": 30078,
@@ -5538,21 +5613,22 @@
           ""
         ],
         [
-          "text",
-          "You found the file. Good. Then you know. The test was imprecise. The results were suppressed. The subjects were monitored instead of retired."
-        ],
-        [
           "option",
           "Why tell me this?",
           "30078:<PUBKEY>:axiom9:dialogue:holt:why"
         ],
         [
           "option",
-          "K. — who was she to you?",
+          "I need to reach the underground.",
+          "30078:<PUBKEY>:axiom9:dialogue:holt:override-offer"
+        ],
+        [
+          "option",
+          "K. \u2014 who was she to you?",
           "30078:<PUBKEY>:axiom9:dialogue:holt:kaye"
         ]
       ],
-      "content": ""
+      "content": "You found the file. Good. Then you know. The test was imprecise. The results were suppressed. The subjects were monitored instead of retired."
     },
     {
       "kind": 30078,
@@ -5571,10 +5647,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "File 4401. I've been watching your progress through the building. Sit down."
-        ],
-        [
           "option",
           "How did you know I was here?",
           "30078:<PUBKEY>:axiom9:dialogue:holt:know"
@@ -5590,7 +5662,7 @@
           "30078:<PUBKEY>:axiom9:dialogue:holt:stand"
         ]
       ],
-      "content": ""
+      "content": "File 4401. I've been watching your progress through the building. Sit down."
     },
     {
       "kind": 30078,
@@ -5609,10 +5681,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "This building is mine. You are a file number. File numbers don't move without me knowing."
-        ],
-        [
           "option",
           "Then you know what I'm going to do.",
           "30078:<PUBKEY>:axiom9:dialogue:holt:do"
@@ -5623,7 +5691,7 @@
           "30078:<PUBKEY>:axiom9:dialogue:holt:what"
         ]
       ],
-      "content": ""
+      "content": "This building is mine. You are a file number. File numbers don't move without me knowing."
     },
     {
       "kind": 30078,
@@ -5642,16 +5710,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "A classified project. You won't find it in the records you have access to. *She pauses.* If you want the full answer, you'll need to look harder."
-        ],
-        [
           "option",
           "Leave.",
           ""
         ]
       ],
-      "content": ""
+      "content": "A classified project. You won't find it in the records you have access to. *She pauses.* If you want the full answer, you'll need to look harder."
     },
     {
       "kind": 30078,
@@ -5670,10 +5734,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "She was the reason I approved LAZARUS. She was also the reason I shut it down. She wanted to save them. I wanted to protect the Bureau. We were both wrong about which mattered more."
-        ],
-        [
           "option",
           "She built the broadcast system.",
           "30078:<PUBKEY>:axiom9:dialogue:holt:broadcast"
@@ -5684,7 +5744,7 @@
           "30078:<PUBKEY>:axiom9:dialogue:holt:broadcast"
         ]
       ],
-      "content": ""
+      "content": "She was the reason I approved LAZARUS. She was also the reason I shut it down. She wanted to save them. I wanted to protect the Bureau. We were both wrong about which mattered more."
     },
     {
       "kind": 30078,
@@ -5703,10 +5763,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "I know. I let her. *She looks at the wall where the photograph was.* Take the key. Finish what she started. I'm not going to stop you."
-        ],
-        [
           "on-enter",
           "player",
           "",
@@ -5719,7 +5775,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "I know. I let her. *She looks at the wall where the photograph was.* Take the key. Finish what she started. I'm not going to stop you."
     },
     {
       "kind": 30078,
@@ -5738,10 +5794,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "Because it's already over. You have the file. The broadcast chamber exists. The only question left is whether you use it."
-        ],
-        [
           "option",
           "I will.",
           "30078:<PUBKEY>:axiom9:dialogue:holt:broadcast"
@@ -5752,7 +5804,7 @@
           "30078:<PUBKEY>:axiom9:dialogue:holt:herself"
         ]
       ],
-      "content": ""
+      "content": "Because it's already over. You have the file. The broadcast chamber exists. The only question left is whether you use it."
     },
     {
       "kind": 30078,
@@ -5771,16 +5823,12 @@
           "dialogue"
         ],
         [
-          "text",
-          "I ran a programme that classified 4,400 people incorrectly and then monitored them like specimens. What should happen to me isn't something I'm going to ask you to determine."
-        ],
-        [
           "option",
           "Take the key and leave.",
           ""
         ]
       ],
-      "content": ""
+      "content": "I ran a programme that classified 4,400 people incorrectly and then monitored them like specimens. What should happen to me isn't something I'm going to ask you to determine."
     },
     {
       "kind": 30078,
@@ -5799,10 +5847,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "You are file 4401. You passed a modified test. Whether that makes you replicant or human is a question the machine cannot answer — which is the point K. was trying to make."
-        ],
-        [
           "option",
           "Give me the key.",
           "30078:<PUBKEY>:axiom9:dialogue:holt:broadcast"
@@ -5813,7 +5857,7 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "You are file 4401. You passed a modified test. Whether that makes you replicant or human is a question the machine cannot answer \u2014 which is the point K. was trying to make."
     },
     {
       "kind": 30078,
@@ -5832,10 +5876,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "As you prefer. *She doesn't move either.* What do you want to know?"
-        ],
-        [
           "option",
           "What is LAZARUS?",
           "30078:<PUBKEY>:axiom9:dialogue:holt:lazarus"
@@ -5846,7 +5886,7 @@
           "30078:<PUBKEY>:axiom9:dialogue:holt:what"
         ]
       ],
-      "content": ""
+      "content": "As you prefer. *She doesn't move either.* What do you want to know?"
     },
     {
       "kind": 30078,
@@ -5865,10 +5905,6 @@
           "dialogue"
         ],
         [
-          "text",
-          "Yes. *She opens a drawer.* I do. Here is the encryption key. K. would have wanted you to have it."
-        ],
-        [
           "on-enter",
           "player",
           "",
@@ -5881,7 +5917,252 @@
           ""
         ]
       ],
-      "content": ""
+      "content": "Yes. *She opens a drawer.* I do. Here is the encryption key. K. would have wanted you to have it."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:dialogue:shan:underground"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "*She wipes down the counter without looking up.* I know there are people in the maintenance tunnels. People the Bureau lost track of. I know there's a way in \u2014 maintenance hatch somewhere near the north end. I don't know more than that. I don't want to. *She sets a bowl down in front of you.* Eat first."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:dialogue:crane:access-hint"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Understood.",
+          ""
+        ]
+      ],
+      "content": "Transit passes come from the market vendors \u2014 don't pretend you didn't know. Bureau clearance doesn't walk in off the street. *He drops his voice.* If you need precinct-level access, there's a woman in the noodle district. Doesn't advertise. Fixes things. *He looks away.* I didn't say that."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:dialogue:holt:override-offer"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "What do you want in return?",
+          "30078:<PUBKEY>:axiom9:dialogue:holt:deal"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "*She is quiet for a moment.* The maintenance tunnel. North junction. There's a door \u2014 reinforced, keypad. The code is a director's override. *She looks at the file in your hands.* I can give it to you."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:dialogue:holt:deal"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Done.",
+          "30078:<PUBKEY>:axiom9:dialogue:holt:deal-accept"
+        ],
+        [
+          "option",
+          "I won't do that.",
+          "30078:<PUBKEY>:axiom9:dialogue:holt:deal-refuse"
+        ]
+      ],
+      "content": "My name. It's in that file \u2014 page three, authorisation chain. I signed the order that started LAZARUS. *She meets your eyes.* Redact it before you broadcast. The 4,400 still get their record. I get to disappear from it. That's the trade."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:dialogue:holt:deal-accept"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "set-state",
+          "deal",
+          "30078:<PUBKEY>:axiom9:npc:director-holt"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:axiom9:item:director-override"
+        ],
+        [
+          "option",
+          "Take it and go.",
+          ""
+        ]
+      ],
+      "content": "*She writes the code without hesitation \u2014 she had it ready.* The door is north of the maintenance tunnel junction. The code changes at midnight. *She passes the slip across.* Whatever you are, file 4401 \u2014 I hope it was worth it. *She doesn't say goodbye.*"
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:dialogue:holt:deal-refuse"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Leave.",
+          ""
+        ]
+      ],
+      "content": "*She nods once, slowly.* Then we have nothing more to discuss. *She turns back to the window. The slip stays in her pocket.*"
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:dialogue:kael:after-override"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "give-item",
+          "30078:<PUBKEY>:axiom9:item:broadcast-key"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "set-state",
+          "trusting",
+          "30078:<PUBKEY>:axiom9:npc:replicant-kael"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "set-state",
+          "unlocked",
+          "30078:<PUBKEY>:axiom9:feature:door-lock"
+        ],
+        [
+          "option",
+          "I know.",
+          ""
+        ],
+        [
+          "option",
+          "The truth matters more than her name.",
+          "30078:<PUBKEY>:axiom9:dialogue:kael:truth"
+        ]
+      ],
+      "content": "*He looks at the Bureau seal for a long time. His jaw tightens.* She gave you this. *He sets it on the crate between you.* I know what a director's override means. You made a deal with them. You promised her something. *He steps back from the door.* The broadcast still happens. But her name won't be in it. You know that."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:dialogue:kael:truth"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Walk through.",
+          ""
+        ]
+      ],
+      "content": "*He looks at you for a long moment.* Then why did you agree? *He doesn't wait for an answer. The door is open.*"
     },
     {
       "kind": 30078,
@@ -5963,11 +6244,6 @@
           "350"
         ],
         [
-          "rand",
-          "0.05",
-          "0.15"
-        ],
-        [
           "slow",
           "2"
         ],
@@ -6005,11 +6281,6 @@
         [
           "hpf",
           "80"
-        ],
-        [
-          "rand",
-          "0.1",
-          "0.3"
         ],
         [
           "degrade-by",
@@ -6372,11 +6643,6 @@
           "200"
         ],
         [
-          "rand",
-          "0.1",
-          "0.5"
-        ],
-        [
           "degrade-by",
           "0.4"
         ],
@@ -6422,11 +6688,6 @@
         [
           "fast",
           "4"
-        ],
-        [
-          "rand",
-          "0.3",
-          "0.7"
         ],
         [
           "gain",
@@ -6517,11 +6778,6 @@
         [
           "fast",
           "8"
-        ],
-        [
-          "rand",
-          "0.4",
-          "0.9"
         ],
         [
           "gain",
@@ -6792,11 +7048,6 @@
         [
           "hpf",
           "60"
-        ],
-        [
-          "rand",
-          "0.05",
-          "0.2"
         ],
         [
           "slow",
@@ -7138,6 +7389,103 @@
         ]
       ],
       "content": "The signal is out. Whatever the city does with it, you cannot unsend it. The archive is open."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:quest:transmit-lazarus"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "Transmit the LAZARUS File"
+        ],
+        [
+          "quest-type",
+          "sequential"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:axiom9:place:precinct-records"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:axiom9:item:lazarus-file"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:axiom9:puzzle:final-broadcast"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:axiom9:place:precinct-records",
+          "visited",
+          "Reach the Records Division."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:axiom9:item:lazarus-file",
+          "",
+          "Retrieve the physical LAZARUS file."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:axiom9:puzzle:final-broadcast",
+          "solved",
+          "Transmit the file."
+        ]
+      ],
+      "content": "Something is buried in the Bureau's records. Find it. Get it out."
+    },
+    {
+      "kind": 30078,
+      "pubkey": "<PUBKEY>",
+      "tags": [
+        [
+          "d",
+          "axiom9:quest:endgame"
+        ],
+        [
+          "title",
+          "Project AXIOM-9"
+        ],
+        [
+          "t",
+          "axiom9"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "quest-type",
+          "endgame",
+          "open"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:axiom9:quest:transmit-lazarus",
+          "complete",
+          ""
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:axiom9:place:sealed-archive",
+          "visited",
+          ""
+        ]
+      ],
+      "content": "Project AXIOM-9 was not a retirement programme.\n\nIt was a census.\n\nEvery replicant who passed the Voight-Kampff in this Precinct was documented, logged, and assigned a classification code. Not for retirement. For collection.\n\nThe Bureau does not destroy replicants who pass the test. It harvests them. Neural architecture, intact. The memories are the product.\n\nThere are 4,400 files in this archive. None of them are flagged as retired.\n\nYou are file 4,401.\n\nThe broadcast has gone out. What the city does with the truth is no longer your problem.\n\nYou have time left. Use it."
     }
   ]
 }
