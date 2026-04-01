@@ -58,11 +58,32 @@ export async function initAudio() {
     if (import.meta.env.DEV) window.__strudelEval = strudelModule.evaluate;
     state = State.IDLE;
     localStorage.setItem(MUTE_KEY, 'false');
+    _setupVisibilityHandling();
     return true;
   } catch (e) {
     console.warn('Sound init failed:', e);
     return false;
   }
+}
+
+/** Suspend/resume AudioContext when the page is hidden (background, screen off). */
+let _visibilityListenerAdded = false;
+function _setupVisibilityHandling() {
+  if (_visibilityListenerAdded) return;
+  _visibilityListenerAdded = true;
+  document.addEventListener('visibilitychange', () => {
+    try {
+      const ctx = strudelModule?.getAudioContext?.();
+      if (!ctx) return;
+      if (document.hidden) {
+        ctx.suspend();
+      } else if (state !== State.MUTED) {
+        ctx.resume();
+      }
+    } catch (e) {
+      if (import.meta.env.DEV) console.warn('[sound] visibility suspend/resume error:', e.message);
+    }
+  });
 }
 
 export function isAudioReady() { return state !== State.UNINIT; }
