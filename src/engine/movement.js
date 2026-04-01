@@ -188,8 +188,6 @@ export function mixMovement(Engine) {
       let indicator;
       if (exit.trustLevel === 'trusted') {
         indicator = '(trusted)';
-      } else if (exit.trustLevel === 'unverified') {
-        indicator = '(unverified)';
       } else {
         indicator = '(unverified)';
       }

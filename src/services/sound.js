@@ -17,6 +17,7 @@ import {
   parseSoundEventParams,
   decompileStrudelCode,
 } from './sound-builder.js';
+import { getTag, getTags, getDefaultState, aTagOf } from '../engine/world.js';
 
 // Re-export pure functions so existing importers don't break
 export { buildStrudelCodeFromTags, decompileStrudelCode };
@@ -229,8 +230,8 @@ export function evaluateSoundTags(events, currentPlace, playerState, npcStates =
     const ref = tag[1];
     const event = events.get(ref);
     if (!event) continue;
-    // Clue is "in scope" if it's been seen
-    const seen = playerState.cluesSeen?.[ref];
+    // Clue is "in scope" if it's been seen (unified states map, phase 11)
+    const seen = playerState.states?.[ref] === 'seen';
     if (seen) collectSoundTags(event, ref, null, inScope);
   }
 
@@ -239,7 +240,7 @@ export function evaluateSoundTags(events, currentPlace, playerState, npcStates =
     const ref = tag[1];
     const event = events.get(ref);
     if (!event) continue;
-    const solved = playerState.puzzlesSolved?.includes?.(ref);
+    const solved = playerState.states?.[ref] === 'solved';
     collectSoundTags(event, ref, solved ? 'solved' : 'unsolved', inScope);
   }
 
@@ -338,23 +339,7 @@ export async function playOneShotRef(soundRef, volume = 1.0) {
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────
-
-function getTag(event, name) {
-  return event.tags?.find((t) => t[0] === name)?.[1] ?? null;
-}
-
-function getTags(event, name) {
-  return (event.tags || []).filter((t) => t[0] === name);
-}
-
-function getDefaultState(event) {
-  return event.tags?.find((t) => t[0] === 'state')?.[1] ?? null;
-}
-
-function aTagOf(event) {
-  const d = getTag(event, 'd');
-  return d ? `30078:${event.pubkey}:${d}` : '';
-}
+// getTag, getTags, getDefaultState, aTagOf imported from ../engine/world.js
 
 function collectBpm(event) {
   const bpm = getTag(event, 'bpm');

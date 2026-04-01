@@ -6,17 +6,7 @@
  */
 import { GameEngine } from './engine.js';
 import { PlayerStateMutator } from './player-state.js';
-
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
-function getTag(event, name) {
-  return event.tags?.find((t) => t[0] === name)?.[1];
-}
-
-function getTags(event, name) {
-  return event.tags?.filter((t) => t[0] === name) || [];
-}
+import { getTag, getTags } from './world.js';
 
 /** Extract world config from events map. */
 function extractWorldConfig(events) {

@@ -42,7 +42,7 @@ export function mixCrafting(Engine) {
       }
     }
     if (this.player.isPuzzleSolved(dtag)) {
-      this._emit('You aleady did that.', 'narrative');
+      this._emit('You already did that.', 'narrative');
     }
   };
 
