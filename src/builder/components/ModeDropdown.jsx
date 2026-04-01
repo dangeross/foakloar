@@ -28,6 +28,8 @@ export default function ModeDropdown({
   // Relay status
   relayStatus,
   onOpenRelaySettings,
+  // Share
+  onShare,
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -196,6 +198,19 @@ export default function ModeDropdown({
                 </button>
               </div>
             </>
+          )}
+
+          {/* Share */}
+          {onShare && (
+            <div style={{ borderTop: '1px solid var(--colour-dim)' }}>
+              <button
+                onClick={() => { onShare(); setOpen(false); }}
+                className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                style={{ color: 'var(--colour-text)', background: 'none', border: 'none', font: 'inherit' }}
+              >
+                {'  '}share on nostr
+              </button>
+            </div>
           )}
         </div>
       )}

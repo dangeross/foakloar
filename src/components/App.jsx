@@ -27,6 +27,7 @@ import { publishReport, publishRevoke, deletePublishedEvent } from '../builder/e
 import Lobby from './Lobby.jsx';
 import AuthorProfile from './AuthorProfile.jsx';
 import TipPanel from './TipPanel.jsx';
+import SharePanel from './SharePanel.jsx';
 import IdentityButton from './ui/IdentityButton.jsx';
 import LoginPanel from './ui/LoginPanel.jsx';
 import ProfileEditor from './ui/ProfileEditor.jsx';
@@ -174,6 +175,7 @@ export default function App() {
   const draftAnswers = useMemo(() => loadAnswers(worldTag || ''), [worldTag, drafts]); // eslint-disable-line react-hooks/exhaustive-deps
   const [publishResult, setPublishResult] = useState(null); // { published, failed, errors, details }
   const [showRelaySettings, setShowRelaySettings] = useState(false);
+  const [showShare, setShowShare] = useState(false);
   const [showTrust, setShowTrust] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const engineRef = useRef(null);
@@ -767,6 +769,7 @@ export default function App() {
             onOpenDrafts={() => setShowDrafts(true)}
             relayStatus={relayStatus}
             onOpenRelaySettings={() => setShowRelaySettings(true)}
+            onShare={identity?.signer ? () => setShowShare(true) : null}
           />
           <SoundToggle onAudioReady={async () => {
             if (engineRef.current) {
@@ -927,6 +930,21 @@ export default function App() {
           nip65Write={nip65.writeRelays}
           onRelayChange={updateRelays}
           onClose={() => setShowRelaySettings(false)}
+        />
+      )}
+
+      {/* Share on NOSTR */}
+      {showShare && (
+        <SharePanel
+          worldSlug={worldTag}
+          worldTitle={worldConfig?.title}
+          worldContent={worldConfig?.worldEvent?.content}
+          worldAuthorPubkey={worldConfig?.authorPubkey}
+          identity={identity}
+          pool={pool}
+          writeRelays={nip65.writeRelays}
+          publishUrls={publishUrls}
+          onClose={() => setShowShare(false)}
         />
       )}
 
