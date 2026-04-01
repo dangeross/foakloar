@@ -106,7 +106,7 @@
       [
         "counter",
         "flags",
-        "3"
+        "0"
       ],
       [
         "on-move",
@@ -117,9 +117,9 @@
       ],
       [
         "on-counter",
-        "down",
+        "up",
         "flags",
-        "0",
+        "3",
         "consequence",
         "30078:<PUBKEY>:null-space:consequence:detection-limit"
       ],
@@ -2919,8 +2919,9 @@
       [
         "on-encounter",
         "",
-        "decrement",
-        "flags"
+        "increment",
+        "flags",
+        "1"
       ],
       [
         "on-encounter",
@@ -3190,8 +3191,9 @@
       [
         "on-encounter",
         "",
-        "decrement",
-        "flags"
+        "increment",
+        "flags",
+        "2"
       ],
       [
         "on-encounter",
@@ -3293,8 +3295,9 @@
       [
         "on-encounter",
         "",
-        "decrement",
-        "flags"
+        "increment",
+        "flags",
+        "1"
       ],
       [
         "on-encounter",
