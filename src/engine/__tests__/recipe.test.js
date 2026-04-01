@@ -335,3 +335,76 @@ describe('recipe index cache', () => {
     expect(engine._findRecipeByVerb('forge')).not.toBeNull();
   });
 });
+
+describe('recipe scope (verb not available outside target room)', () => {
+  it('recipe verb is absent from verb map when feature is not in current place', async () => {
+    // A mechanism in room B with a "use" verb; player is in room A (clearing).
+    // Recipe verb "use" must NOT appear in the verb map when in the clearing.
+    const amulet = makeItem('serpent-amulet', { nouns: [['amulet']] });
+    const mechanism = makeFeature('mechanism', {
+      verbs: [['use', 'activate']],
+      nouns: [['mechanism']],
+      onInteract: [['use', 'activate', ref(`${WORLD}:recipe:activate-mechanism`)]],
+    });
+    const recipe = makeRecipe('activate-mechanism', {
+      verbs: [['use', 'activate', 'place']],
+      nouns: [['mechanism']],
+      requires: [[ref(`${WORLD}:item:serpent-amulet`), '', '']],
+      onComplete: [['', 'set-state', 'activated', ref(`${WORLD}:feature:mechanism`)]],
+    });
+    const chamberRoom = makePlace('mechanism-chamber', {
+      features: [`${WORLD}:feature:mechanism`],
+    });
+    const clearingRoom = makePlace('clearing');
+
+    const events = buildEvents(amulet, mechanism, recipe, chamberRoom, clearingRoom);
+
+    // Player is in the clearing with the amulet in inventory
+    const engine = makeEngine(events, {
+      place: ref(`${WORLD}:place:clearing`),
+      inventory: [ref(`${WORLD}:item:serpent-amulet`)],
+    });
+    engine.currentPlace = ref(`${WORLD}:place:clearing`);
+
+    // "use mechanism" from the clearing should fail — mechanism is not here
+    await engine.handleCommand('use mechanism');
+    const output = engine.output.map((o) => o.text);
+    // Should NOT start crafting — either "don't see that here" or "don't understand"
+    expect(output.some((t) => t.toLowerCase().includes("don't see") || t.toLowerCase().includes("don't understand"))).toBe(true);
+    expect(engine.craftingActive).toBeNull();
+  });
+
+  it('recipe verb fires correctly when feature IS in current place', async () => {
+    const amulet = makeItem('serpent-amulet', { nouns: [['amulet']] });
+    const mechanism = makeFeature('mechanism', {
+      verbs: [['use', 'activate']],
+      nouns: [['mechanism']],
+      onInteract: [['use', 'activate', ref(`${WORLD}:recipe:activate-mechanism`)]],
+    });
+    const recipe = makeRecipe('activate-mechanism', {
+      verbs: [['use', 'activate', 'place']],
+      nouns: [['mechanism']],
+      requires: [[ref(`${WORLD}:item:serpent-amulet`), '', '']],
+      onComplete: [['', 'set-state', 'activated', ref(`${WORLD}:feature:mechanism`)]],
+      content: 'The mechanism activates.',
+    });
+    const chamberRoom = makePlace('mechanism-chamber', {
+      features: [`${WORLD}:feature:mechanism`],
+    });
+
+    const events = buildEvents(amulet, mechanism, recipe, chamberRoom);
+
+    // Player is in the mechanism chamber with the amulet
+    const engine = makeEngine(events, {
+      place: ref(`${WORLD}:place:mechanism-chamber`),
+      inventory: [ref(`${WORLD}:item:serpent-amulet`)],
+    });
+    engine.currentPlace = ref(`${WORLD}:place:mechanism-chamber`);
+
+    await engine.handleCommand('use mechanism');
+    // Recipe requires the amulet — player has it, so crafting should attempt
+    // (ordered=false, single item → completes immediately)
+    const output = engine.output.map((o) => o.text);
+    expect(output.some((t) => t.includes('The mechanism activates.'))).toBe(true);
+  });
+});

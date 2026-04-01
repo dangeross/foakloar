@@ -39,8 +39,7 @@ export function mixCommand(Engine) {
       this._getRoamingNpcList(),
     );
     const roamingEvents = roamingHere.map((r) => r.npcEvent);
-    const recipeEvents = this._findRecipes().map((r) => r.event);
-    const verbMap = buildVerbMap(this.events, this.place, this.player.state.inventory, [...roamingEvents, ...recipeEvents]);
+    const verbMap = buildVerbMap(this.events, this.place, this.player.state.inventory, roamingEvents);
 
     // Collect unique canonical verbs (exclude built-ins)
     const builtIns = new Set(['examine', 'look', 'talk']);
@@ -297,8 +296,11 @@ export function mixCommand(Engine) {
       this._getRoamingNpcList(),
     );
     const roamingEvents = roamingHere.map((r) => r.npcEvent);
-    const recipeEvents = this._findRecipes().map((r) => r.event);
-    const verbMap = buildVerbMap(this.events, this.place, this.player.state.inventory, [...roamingEvents, ...recipeEvents]);
+    // Recipe events are NOT added as extra verb sources — recipe verbs should only
+    // be available when a feature in the current place explicitly declares them via
+    // a verb tag. Adding recipes globally caused e.g. "use mechanism" to fire from
+    // any room because the recipe title matched the noun.
+    const verbMap = buildVerbMap(this.events, this.place, this.player.state.inventory, roamingEvents);
     const parsed = parseInput(trimmed, verbMap);
 
     if (parsed && parsed.noun1) {
