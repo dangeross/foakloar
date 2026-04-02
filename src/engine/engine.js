@@ -653,6 +653,9 @@ export class GameEngine {
           // Fall back to default state when player hasn't set it yet
           const currentState = this.player.getState(requiresRef) ?? getDefaultState(reqEvent);
           passes = requiresState && currentState === requiresState;
+        } else if (reqType === 'quest') {
+          const currentState = this.player.getState(requiresRef);
+          passes = requiresState && currentState === requiresState;
         }
 
         if (passes) entryRef = nodeRef;

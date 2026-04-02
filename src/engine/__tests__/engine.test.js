@@ -845,6 +845,7 @@ describe('quest display types', () => {
     const engine = new GameEngine({ events, player, config: CONFIG });
     engine.enterRoom(ref(`${WORLD}:place:start`));
     engine.flush();
+    player.setState(ref(`${WORLD}:quest:test-quest`), 'active');
 
     const lines = getQuestOutput(engine);
     expect(lines.some((l) => l.includes('✗ Riddle'))).toBe(true);
@@ -859,6 +860,7 @@ describe('quest display types', () => {
     const engine = new GameEngine({ events, player, config: CONFIG });
     engine.enterRoom(ref(`${WORLD}:place:start`));
     engine.flush();
+    player.setState(ref(`${WORLD}:quest:test-quest`), 'active');
 
     const lines = getQuestOutput(engine);
     expect(lines.some((l) => l.includes('✓ Riddle'))).toBe(true);
@@ -873,6 +875,7 @@ describe('quest display types', () => {
     const engine = new GameEngine({ events, player, config: CONFIG });
     engine.enterRoom(ref(`${WORLD}:place:start`));
     engine.flush();
+    player.setState(ref(`${WORLD}:quest:test-quest`), 'active');
 
     const lines = getQuestOutput(engine);
     expect(lines.some((l) => l.includes('✓ Riddle'))).toBe(true);
@@ -888,6 +891,7 @@ describe('quest display types', () => {
     const engine = new GameEngine({ events, player, config: CONFIG });
     engine.enterRoom(ref(`${WORLD}:place:start`));
     engine.flush();
+    player.setState(ref(`${WORLD}:quest:test-quest`), 'active');
 
     const lines = getQuestOutput(engine);
     expect(lines.some((l) => l.includes('✓ Riddle'))).toBe(true);
@@ -903,6 +907,7 @@ describe('quest display types', () => {
     const engine = new GameEngine({ events, player, config: CONFIG });
     engine.enterRoom(ref(`${WORLD}:place:start`));
     engine.flush();
+    player.setState(ref(`${WORLD}:quest:test-quest`), 'active');
 
     const lines = getQuestOutput(engine);
     expect(lines.some((l) => l.includes('✓ Riddle'))).toBe(true);
@@ -918,6 +923,7 @@ describe('quest display types', () => {
     const engine = new GameEngine({ events, player, config: CONFIG });
     engine.enterRoom(ref(`${WORLD}:place:start`));
     engine.flush();
+    player.setState(ref(`${WORLD}:quest:test-quest`), 'active');
 
     const lines = getQuestOutput(engine);
     // Only first undone step shown

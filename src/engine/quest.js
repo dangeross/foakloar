@@ -85,11 +85,13 @@ export function mixQuest(Engine) {
     const completed = [];
     for (const { event, dtag } of quests) {
       const title = getTag(event, 'title') || dtag;
-      if (this.player.getState(dtag) === 'complete') {
+      const state = this.player.getState(dtag);
+      if (state === 'complete') {
         completed.push({ title, event, dtag });
-      } else {
+      } else if (state === 'active') {
         active.push({ title, event, dtag });
       }
+      // quests with no state (not yet activated) are not shown
     }
 
     if (active.length > 0) {

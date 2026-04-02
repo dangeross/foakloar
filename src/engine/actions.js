@@ -92,6 +92,14 @@ export function applyExternalSetState(targetRef, targetState, events, player, em
     return { acted: true, puzzleActivated: null };
   }
 
+  if (targetType === 'quest') {
+    const currentState = player.getState(targetRef);
+    if (currentState !== targetState) {
+      player.setState(targetRef, targetState);
+    }
+    return { acted: true, puzzleActivated: null };
+  }
+
   return { acted: false, puzzleActivated: null };
 }
 
