@@ -162,7 +162,7 @@ const GUIDE_CSS = `
 
 `;
 
-function Sidebar({ currentPage, onNavigate, open, onToggle }) {
+function Sidebar({ currentPage, onNavigate, open, onToggle, onImport }) {
   return (
     <>
       {/* Mobile toggle — only visible on small screens */}
@@ -306,6 +306,20 @@ function Sidebar({ currentPage, onNavigate, open, onToggle }) {
             </div>
           </>
         )}
+
+        {/* Import world button */}
+        <div style={{ borderTop: `1px solid ${THEME.tableBorder}`, marginTop: '0.75rem', paddingTop: '0.75rem' }}>
+          <button
+            onClick={() => { onImport(); if (window.innerWidth < 640) onToggle(); }}
+            className="block w-full text-left cursor-pointer hover:opacity-80 px-2 py-1"
+            style={{
+              color: THEME.accent, background: 'none', border: 'none',
+              font: 'inherit', fontSize: '0.65rem',
+            }}
+          >
+            ↑ import world
+          </button>
+        </div>
 
       </div>
 
@@ -707,7 +721,27 @@ export default function Guide({ guidePage, identity }) {
   const [buildOpen, setBuildOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showProfileEditor, setShowProfileEditor] = useState(false);
+  const [importPreview, setImportPreview] = useState(null);
+  const importFileRef = React.useRef(null);
   const buildRef = React.useRef(null);
+
+  function handleImportFile(e) {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = parseJsonLenient(reader.result);
+          const worldEvent = data.events?.find((ev) => ev.tags?.find((t) => t[0] === 'type')?.[1] === 'world');
+          const detectedSlug = worldEvent?.tags?.find((t) => t[0] === 't')?.[1] || '';
+          const validation = validateImport(detectedSlug || 'unknown', data);
+          setImportPreview({ validation, data, worldSlug: detectedSlug });
+        } catch { /* invalid JSON */ }
+      };
+      reader.readAsText(file);
+    }
+    e.target.value = '';
+  }
 
   // Close build dropdown on outside click
   React.useEffect(() => {
@@ -743,6 +777,14 @@ export default function Guide({ guidePage, identity }) {
         onNavigate={handleNavigate}
         open={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
+        onImport={() => importFileRef.current?.click()}
+      />
+      <input
+        ref={importFileRef}
+        type="file"
+        accept=".json"
+        className="hidden"
+        onChange={handleImportFile}
       />
       <div className="guide-main" style={{ marginLeft: '200px' }}>
         {/* Header bar */}
@@ -767,25 +809,34 @@ export default function Guide({ guidePage, identity }) {
               [build]
             </button>
             {buildOpen && (
-              <div style={{
-                position: 'absolute', right: 0, top: '100%', marginTop: '4px',
-                background: THEME.sidebarBg, border: `1px solid ${THEME.tableBorder}`,
-                padding: '0.25rem 0', zIndex: 50, minWidth: '120px',
+              <div className="font-mono text-xs" style={{
+                position: 'absolute', right: 0, top: '100%', marginTop: '0.25rem',
+                backgroundColor: 'var(--colour-bg)', border: '1px solid var(--colour-dim)',
+                boxShadow: '2px 2px 0 var(--colour-dim)', zIndex: 100, minWidth: '10em',
               }}>
                 <button
                   onClick={() => { setBuildOpen(false); navigateToLobby(); }}
-                  className="block w-full text-left cursor-pointer hover:opacity-80 px-3 py-1 text-sm"
+                  className="block w-full text-left cursor-pointer hover:opacity-80 px-2 py-1"
                   style={{ color: THEME.accent, background: 'none', border: 'none', font: 'inherit' }}
                 >
-                  explore
+                  {'  '}explore
                 </button>
-                <button
-                  onClick={() => { setBuildOpen(false); setShowCreator(true); }}
-                  className="block w-full text-left cursor-pointer hover:opacity-80 px-3 py-1 text-sm"
-                  style={{ color: THEME.highlight, background: 'none', border: 'none', font: 'inherit' }}
-                >
-                  + world
-                </button>
+                <div style={{ borderTop: '1px solid var(--colour-dim)' }}>
+                  <button
+                    onClick={() => { setBuildOpen(false); setShowCreator(true); }}
+                    className="block w-full text-left cursor-pointer hover:opacity-80 px-2 py-1"
+                    style={{ color: THEME.highlight, background: 'none', border: 'none', font: 'inherit' }}
+                  >
+                    {'  '}+ world
+                  </button>
+                  <button
+                    onClick={() => { setBuildOpen(false); importFileRef.current?.click(); }}
+                    className="block w-full text-left cursor-pointer hover:opacity-80 px-2 py-1"
+                    style={{ color: THEME.highlight, background: 'none', border: 'none', font: 'inherit' }}
+                  >
+                    {'  '}import
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -803,6 +854,19 @@ export default function Guide({ guidePage, identity }) {
           )}
         </div>
       </div>
+
+      {/* Import preview panel */}
+      {importPreview && (
+        <ImportPreviewPanel
+          validation={importPreview.validation}
+          onConfirm={() => {
+            importEvents(importPreview.worldSlug, importPreview.data);
+            setImportPreview(null);
+            navigateToWorld(importPreview.worldSlug);
+          }}
+          onClose={() => setImportPreview(null)}
+        />
+      )}
 
       {/* World Creator panel */}
       {showCreator && (
