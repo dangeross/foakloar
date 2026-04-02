@@ -1297,7 +1297,7 @@ A roaming NPC with autonomous behaviour:
     ["route",        "30078:<pubkey>:the-lake:place:gallery"],
     ["route",        "30078:<pubkey>:the-lake:place:cyclops-room"],
     ["on-encounter", "player",    "steals-treasure"],
-    ["on-enter",    "30078:<pubkey>:the-lake:place:treasure-room", "deposits"],
+    ["on-enter",    "30078:<pubkey>:the-lake:place:treasure-room", "", "deposits"],
     ["on-attacked",  "consequence","30078:<pubkey>:the-lake:consequence:thief-flees"],
     ["stash",        "30078:<pubkey>:the-lake:place:treasure-room"],
     ["dialogue",     "30078:<pubkey>:the-lake:dialogue:thief-tree"]

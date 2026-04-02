@@ -248,7 +248,7 @@ A roaming NPC with a `stash` tag will deposit stolen items at that place when it
 ```json
 // On the NPC event:
 ["stash",    "30078:<PUBKEY>:my-world:place:hideout"],
-["on-enter", "30078:<PUBKEY>:my-world:place:hideout", "deposits"]
+["on-enter", "30078:<PUBKEY>:my-world:place:hideout", "", "deposits"]
 ```
 
 The stolen items then appear on the ground at the hideout, where the player can retrieve them.

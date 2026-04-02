@@ -388,7 +388,7 @@ One-way portal (1 exit tag) or two-way (2 exit tags):
 | `on-attacked` | `["on-attacked", "<weapon-filter>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | fires when NPC takes damage |
 | `on-health` | `["on-health", "<dir>", "<threshold>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | — |
 | `on-player-health` | `["on-player-health", "<dir>", "<threshold>", "<action>", "<target>"]` (repeatable) | opt | — |
-| `on-enter` | `["on-enter", "<place-ref>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | — |
+| `on-enter` | `["on-enter", "<place-ref>", "<state-guard-or-''>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | State guard blank = any state |
 | `on-move` | `["on-move", "<state-guard>", "<action>", "<target>", "<ext-ref?>"]` (repeatable) | opt | fires each player move |
 | `on-counter` | `["on-counter", "<dir>", "<counter>", "<threshold>", "<action>", "<target?>"]` (repeatable) | opt | — |
 | `counter` | `["counter", "<name>", "<initial>"]` (repeatable) | opt | — |
@@ -735,7 +735,7 @@ Player-submitted report for open world moderation. Published by the player, visi
 | `on-interact` | `["on-interact", "<verb>", "<state-guard-or-''>", "<action>", "<target>", "<ext-ref?>"]` |
 | `on-complete` | `["on-complete", "", "<action>", "<target>"]` |
 | `on-fail` | `["on-fail", "", "<action>", "<target>", "<ext-ref?>"]` |
-| `on-enter` | `["on-enter", "<trigger>", "<action>", "<target>", "<ext-ref?>"]` |
+| `on-enter` | `["on-enter", "<trigger>", "<state-guard-or-''>", "<action>", "<target>", "<ext-ref?>"]` |
 | `on-encounter` | `["on-encounter", "<filter>", "<action>", "<target>", "<ext-ref?>"]` |
 | `on-attacked` | `["on-attacked", "<weapon-filter>", "<action>", "<target>", "<ext-ref?>"]` |
 | `on-move` | `["on-move", "<state-guard>", "<action>", "<target>", "<ext-ref?>"]` |

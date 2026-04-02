@@ -931,7 +931,7 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["transition",   "fled",    "fled",    "The thief is gone."],
     ["transition",   "dead",    "dead",    "The thief is dead."],
     ["on-encounter", "player",  "steals-item",  "any"],
-    ["on-enter",     "30078:<ZA>:zork1:place:treasure-room", "deposits"],
+    ["on-enter",     "30078:<ZA>:zork1:place:treasure-room", "", "deposits"],
     ["on-attacked",  "player",  "deal-damage",  "3"],
     ["on-health", "down", "0", "30078:<ZA>:zork1:consequence:thief-dies"],
     ["stash",        "30078:<ZA>:zork1:place:treasure-room"],
@@ -991,7 +991,7 @@ A-tag format: `30078:<ZA>:zork1:<type>:<name>`
     ["route",        "30078:<ZA>:zork1:place:gallery"],
     ["requires-not", "30078:<ZA>:zork1:item:garlic", "", ""],
     ["on-encounter", "player",   "steals-item", "any"],
-    ["on-enter",     "30078:<ZA>:zork1:place:bat-room", "deposits"],
+    ["on-enter",     "30078:<ZA>:zork1:place:bat-room", "", "deposits"],
     ["stash",        "30078:<ZA>:zork1:place:bat-room"]
   ],
   "content": "A large bat circles overhead."
