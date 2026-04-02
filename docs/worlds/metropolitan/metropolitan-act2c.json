@@ -1,0 +1,1616 @@
+{
+  "answers": {},
+  "walkthrough": [],
+  "events": [
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:place:gower-street-platform"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Gower Street \u2014 Platform"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "exit",
+          "out"
+        ],
+        [
+          "noun",
+          "platform",
+          "gower street",
+          "station",
+          "euston square"
+        ],
+        [
+          "noun",
+          "passengers",
+          "students"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:metropolitan:item:third-class-ticket",
+          "",
+          "The guard holds out his hand."
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:metropolitan:sound:platform-ambient",
+          "ambient",
+          "0.7"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:metropolitan:sound:underground-ambient",
+          "layer",
+          "0.25"
+        ]
+      ],
+      "content": "Gower Street station. The platform has a different quality to Baker Street: younger passengers, men carrying instrument cases, the particular restlessness of people who spend their days thinking.\n\nUCL is five minutes north. The medical school is across the road. This is the station of people who work with their minds, which Ida finds both interesting and alienating in roughly equal measure."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:place:gower-street-exit"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Gower Street"
+        ],
+        [
+          "exit",
+          "in"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "west"
+        ],
+        [
+          "noun",
+          "gower street",
+          "street"
+        ],
+        [
+          "noun",
+          "medical practice",
+          "practice"
+        ],
+        [
+          "noun",
+          "students",
+          "people"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:metropolitan:sound:saffron-hill-ambient",
+          "ambient",
+          "0.4"
+        ]
+      ],
+      "content": "Gower Street. Wide, institutional, lined with buildings that mean to be taken seriously. A medical practice occupies a Georgian terrace across from the station exit. A pharmacy at street level, consulting rooms above. A brass plate on the door: *Dr. E. Voss, M.D.*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:place:medical-practice"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Dr. Voss's Practice"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "noun",
+          "practice",
+          "surgery",
+          "doctor",
+          "office"
+        ],
+        [
+          "noun",
+          "desk",
+          "papers",
+          "files"
+        ],
+        [
+          "noun",
+          "cabinet",
+          "filing cabinet"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:metropolitan:npc:dr-voss"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:metropolitan:sound:saffron-hill-ambient",
+          "ambient",
+          "0.2"
+        ]
+      ],
+      "content": "A consulting room above the pharmacy. Clean, spare, the smell of carbolic and something underneath it that is harder to name. A desk with a leather top, papers arranged with professional exactness. Two filing cabinets against the wall, both locked.\n\nDr. Voss receives patients on Mondays, Wednesdays, and Fridays. On other days the room is sometimes occupied by a different kind of business."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:place:ucl-courtyard"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "UCL Courtyard"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "noun",
+          "courtyard",
+          "quad",
+          "ucl"
+        ],
+        [
+          "noun",
+          "students",
+          "men",
+          "people"
+        ],
+        [
+          "noun",
+          "buildings",
+          "portico"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:metropolitan:npc:ucl-student"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:metropolitan:sound:saffron-hill-ambient",
+          "ambient",
+          "0.4"
+        ]
+      ],
+      "content": "The courtyard of University College London. Students cross at speed, carrying books, arguing in pairs. Nobody asks Ida what she is doing here \u2014 there are enough people moving through that one more is invisible.\n\nThis is the most educated place she has ever stood. She is aware of this the way you are aware of cold \u2014 not unpleasantly, but as a fact about the world."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:place:ucl-library-approach"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Library Corridor"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "noun",
+          "corridor",
+          "library",
+          "books"
+        ],
+        [
+          "noun",
+          "cases",
+          "shelves",
+          "volumes"
+        ],
+        [
+          "clue",
+          "30078:<PUBKEY>:metropolitan:clue:ucl-geology-notes"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:metropolitan:sound:saffron-hill-ambient",
+          "ambient",
+          "0.1"
+        ]
+      ],
+      "content": "A corridor leading toward the library, lined with glass-fronted cases of journals and bound reports. Clean north light through tall windows.\n\nShe stops in front of a case of geological survey reports. One catches her: *Metropolitan Railway Subterranean Survey, 1860. Preliminary Findings.* The spine is uncracked. No one has opened it since it was shelved."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:place:middle-faction-safe-house"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "The Safe House"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "noun",
+          "safe house",
+          "room",
+          "house"
+        ],
+        [
+          "noun",
+          "table",
+          "chairs",
+          "window"
+        ],
+        [
+          "npc",
+          "30078:<PUBKEY>:metropolitan:npc:middle-faction-contact-2"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:metropolitan:quest:quill-job-4",
+          "complete",
+          "She has been told this address only once. She does not yet have reason to go."
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:metropolitan:sound:saffron-hill-ambient",
+          "ambient",
+          "0.2"
+        ]
+      ],
+      "content": "A rented room in a terraced house near Fitzrovia. Plain walls, a table, two chairs, a window with the curtain half-drawn. The kind of room that has housed many temporary arrangements without accumulating any permanent character.\n\nThe woman at the table has no name that Ida has been given. She handles the more complex Quill operations. She looks at Ida with the specific attention of someone assessing a tool's condition."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:place:fitzrovia-street"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "place"
+        ],
+        [
+          "title",
+          "Fitzrovia"
+        ],
+        [
+          "exit",
+          "north"
+        ],
+        [
+          "exit",
+          "east"
+        ],
+        [
+          "exit",
+          "south"
+        ],
+        [
+          "noun",
+          "fitzrovia",
+          "street",
+          "houses"
+        ],
+        [
+          "sound",
+          "30078:<PUBKEY>:metropolitan:sound:saffron-hill-ambient",
+          "ambient",
+          "0.4"
+        ]
+      ],
+      "content": "Streets between Gower Street and Portland Road. Not quite either neighbourhood, carrying the slightly provisional quality of areas that have not yet decided what they are. Lodging houses, a few respectable terraces, a pub on the corner.\n\nIda has begun to know this part of London the way she knows Saffron Hill \u2014 not as home, but as territory."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:npc:dr-voss"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "Dr. Voss"
+        ],
+        [
+          "noun",
+          "voss",
+          "doctor",
+          "dr voss"
+        ],
+        [
+          "state",
+          "professional"
+        ],
+        [
+          "transition",
+          "professional",
+          "uneasy",
+          ""
+        ],
+        [
+          "transition",
+          "uneasy",
+          "candid",
+          ""
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:metropolitan:dialogue:voss-default"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:metropolitan:dialogue:voss-uneasy",
+          "30078:<PUBKEY>:metropolitan:quest:quill-job-3",
+          "complete"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:metropolitan:dialogue:voss-candid",
+          "30078:<PUBKEY>:metropolitan:quest:quill-job-5",
+          "complete"
+        ]
+      ],
+      "content": "A man in his fifties with a careful, unhurried manner. His practice is legitimate \u2014 he treats patients, keeps proper records, has a good reputation in the neighbourhood.\n\nHe also does other things. He has told himself for years that the other things are a small part of his work. He has been telling himself this for long enough that he is no longer certain it is true."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:npc:middle-faction-contact-2"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "The Handler"
+        ],
+        [
+          "noun",
+          "handler",
+          "woman",
+          "contact"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:metropolitan:dialogue:handler-default"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:metropolitan:dialogue:handler-job5",
+          "30078:<PUBKEY>:metropolitan:quest:quill-job-4",
+          "complete"
+        ]
+      ],
+      "content": "A woman of about forty, plainly dressed in a way that suggests choice rather than constraint. She has the stillness of someone always listening to more than the current conversation.\n\nShe gives Ida no name. Ida does not ask for one. They understand each other in the specific way of people who operate in the same world without having chosen to be in it together."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:npc:ucl-student"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "A Student"
+        ],
+        [
+          "noun",
+          "student",
+          "man",
+          "young man"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:metropolitan:dialogue:student-default"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:metropolitan:dialogue:student-notebook",
+          "30078:<PUBKEY>:metropolitan:quest:side-ucl-notebook",
+          "active"
+        ]
+      ],
+      "content": "A young man of about twenty, ink on his hands, carrying more books than he can comfortably manage. He has the slightly stunned quality of someone in their first year of serious study.\n\nHe dropped his notebook somewhere between the library and the courtyard. He has not yet noticed."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:npc:blackmail-carrier-1"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "A Man with a Package"
+        ],
+        [
+          "noun",
+          "man",
+          "carrier",
+          "passenger"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:metropolitan:dialogue:carrier-1-default"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:metropolitan:quest:quill-job-5",
+          "active",
+          ""
+        ],
+        [
+          "speed",
+          "4"
+        ],
+        [
+          "roam-type",
+          "route"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:metropolitan:place:kings-cross-metro-platform"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:metropolitan:place:train-third-class"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:metropolitan:place:baker-street-platform"
+        ]
+      ],
+      "content": "A nondescript man who boards at King's Cross and rides to Baker Street. He carries a small package under his arm with the slightly over-casual manner of someone trying not to look like he is carrying anything important.\n\nHe is the first hand."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:npc:blackmail-carrier-2"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "A Woman with a Basket"
+        ],
+        [
+          "noun",
+          "woman",
+          "carrier",
+          "passenger"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:metropolitan:dialogue:carrier-2-default"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:metropolitan:quest:quill-job-5",
+          "active",
+          ""
+        ],
+        [
+          "speed",
+          "4"
+        ],
+        [
+          "roam-type",
+          "route"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:metropolitan:place:baker-street-platform"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:metropolitan:place:train-third-class"
+        ],
+        [
+          "route",
+          "30078:<PUBKEY>:metropolitan:place:edgware-road-platform"
+        ]
+      ],
+      "content": "A woman who receives the package at Baker Street and carries it west to Edgware Road. The exchange at the platform column looks like nothing. She is entirely ordinary.\n\nShe is the second hand."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:npc:blackmail-receiver"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "npc"
+        ],
+        [
+          "title",
+          "A Man at the Inn"
+        ],
+        [
+          "noun",
+          "man",
+          "receiver"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "dialogue",
+          "30078:<PUBKEY>:metropolitan:dialogue:receiver-default"
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:metropolitan:quest:quill-job-5",
+          "active",
+          ""
+        ]
+      ],
+      "content": "The package ends here \u2014 at a man in the Lamb and Flag on Edgware Road. He takes it without acknowledgement, pockets it, returns to his drink.\n\nHe has a Smithfield accent. He is the third hand. He is also someone Rook knows by name."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:voss-default"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "I have an appointment.",
+          "30078:<PUBKEY>:metropolitan:dialogue:voss-appointment"
+        ],
+        [
+          "option",
+          "I was sent by the Quill.",
+          "30078:<PUBKEY>:metropolitan:dialogue:voss-quill"
+        ]
+      ],
+      "content": "He looks up from the desk. A brief professional assessment \u2014 patient or not patient \u2014 and then the practised neutrality settles over his face.\n\n*Yes?* he says."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:voss-appointment"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "He checks a book on the desk. Finds nothing. Looks at her.\n\n*There's no appointment under your name.* He returns to his papers. The conversation is over, as far as he is concerned."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:voss-quill"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "Something shifts. Not alarm \u2014 he is too practised for that \u2014 but a recalibration. He puts down the pen.\n\n*What do you need?* The professional warmth has gone and what remains is more honest: careful, watchful, slightly tired.\n\nHe has been waiting for someone to come."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:voss-uneasy"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "What do you know about Harwick?",
+          "30078:<PUBKEY>:metropolitan:dialogue:voss-harwick"
+        ],
+        [
+          "option",
+          "What does the Quill ask of you?",
+          "30078:<PUBKEY>:metropolitan:dialogue:voss-quill-asks"
+        ]
+      ],
+      "content": "He looks at Ida with the particular attention of someone who has worked out that the girl running errands is more observant than errands require.\n\n*You've been doing this a while*, he says. It contains something almost like relief \u2014 as though someone paying attention is, in itself, useful."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:voss-harwick"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "He is quiet for a moment.\n\n*Harwick engaged this practice three years ago*, he says. *To certify certain individuals. Certify them as \u2014 unsuitable to manage their own affairs.* He looks at the locked filing cabinet. *The individuals were not unsuitable. They were inconvenient.*\n\nHe stops. His hands are flat on the desk. *I signed the papers*, he says. *That is what I know about Harwick.*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:voss-quill-asks"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "*Information*, he says. *Medical information about people whose health it would be useful to know about. Occasionally a certification.* He pauses. *I told myself it was a small part of what I do.*\n\nHe looks at her steadily.\n\n*I'm not sure I believe that anymore.*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:voss-candid"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "What's in the locked cabinet?",
+          "30078:<PUBKEY>:metropolitan:dialogue:voss-cabinet"
+        ],
+        [
+          "option",
+          "The Quill is using you.",
+          "30078:<PUBKEY>:metropolitan:dialogue:voss-using"
+        ]
+      ],
+      "content": "He does not bother with the professional manner when she comes in for the third time.\n\n*You've found the money*, he says. *Where it goes.* Not a question. *Which means you know more than Fenn intended you to.*\n\nSomething has resolved in him \u2014 not peace, but a decision."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:voss-cabinet"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "set-state",
+          "visible",
+          "30078:<PUBKEY>:metropolitan:clue:voss-records"
+        ]
+      ],
+      "content": "*Names*, he says. *People I certified. My real assessments \u2014 before the Quill's version was written over them.* He looks at the cabinet. *I kept them. I don't know why. Some remnant of a principle I had.*\n\nHe takes a key from his waistcoat pocket and places it on the desk between them. He does not push it toward her.\n\n*I can't use them myself*, he says. *If someone else could\u2014* He doesn't finish."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:voss-using"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "*Yes*, he says. Simply.\n\n*And so are you*, he says. *The difference is you know it.* He pauses. *That's more than I managed for the first two years.*\n\nIt is not unkind. It is the most honest thing anyone has said to her in months."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:handler-default"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Fenn sent me.",
+          "30078:<PUBKEY>:metropolitan:dialogue:handler-fenn"
+        ]
+      ],
+      "content": "She looks at Ida without expression. Waiting."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:handler-fenn"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "*I know*, she says. *He told me you were thorough.* Not a compliment or a criticism \u2014 purely information. *Sit down.*\n\nShe tells Ida about the blackmail money. Three hands, three journeys. The Quill wants to know where it ends. Not to stop it \u2014 to know. Knowledge is the only currency that compounds."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:handler-job5"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "It ends at the Lamb and Flag, Edgware Road.",
+          "30078:<PUBKEY>:metropolitan:dialogue:handler-report"
+        ],
+        [
+          "option",
+          "I'm still watching.",
+          "30078:<PUBKEY>:metropolitan:dialogue:handler-still-watching"
+        ]
+      ],
+      "content": "She looks up when Ida comes back.\n\n*Well?* she says."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:handler-report"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "set-state",
+          "complete",
+          "30078:<PUBKEY>:metropolitan:quest:quill-job-5"
+        ]
+      ],
+      "content": "The handler writes it down. Three lines. She underlines something.\n\n*The Lamb and Flag*, she says. *That's Shambles territory.* She looks at Ida steadily. *Which means someone in the Shambles is blackmailing a Quill clerk. Which means\u2014*\n\n*The factions are already touching each other*, Ida says.\n\nThe handler looks at her for a long moment. *Yes*, she says. *They are.*"
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:handler-still-watching"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "*Come back when you have it*, the handler says. She closes the notebook. The meeting is over."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:student-default"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "He looks up briefly from the stack of books. *Sorry \u2014 do you need to get past?* He moves aside without waiting for an answer, already back in whatever he was thinking about."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:student-notebook"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "option",
+          "Return the notebook.",
+          "30078:<PUBKEY>:metropolitan:dialogue:student-returned"
+        ],
+        [
+          "option",
+          "Keep it.",
+          "30078:<PUBKEY>:metropolitan:dialogue:student-kept"
+        ]
+      ],
+      "content": "He stops when she holds it up. His face goes through three expressions: confusion, recognition, relief.\n\n*That's mine. I've been looking \u2014 where did you\u2014*\n\nHe reaches for it."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:student-returned"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "consume-item",
+          "30078:<PUBKEY>:metropolitan:item:ucl-notebook"
+        ],
+        [
+          "on-enter",
+          "player",
+          "",
+          "set-state",
+          "complete",
+          "30078:<PUBKEY>:metropolitan:quest:side-ucl-notebook"
+        ]
+      ],
+      "content": "She gives it back. He takes it with both hands.\n\n*Thank you. These are my field notes \u2014 the railway geology survey. I'd have had to redo the whole thing.* He looks at her with sudden curiosity. *Are you a student here?*\n\nShe says no. He accepts this without judgment and tucks the notebook under his arm. *Well. Thank you*, he says again, and walks away.\n\nHe will not remember her face. She is used to this."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:student-kept"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "She says she found nothing. He frowns and sighs. *Must have left it in the library*, he says, and turns back.\n\nThe notebook is in Ida's pocket. Dense with observations about what the railway tunnellers found underground \u2014 geological notes, sketches, a reference to an unexplained chamber near King's Cross that was sealed and not recorded in the official survey.\n\nThis will matter later."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:carrier-1-default"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "He does not look at Ida. He watches the tunnel mouth and waits for Baker Street. The package shifts slightly under his arm when the carriage jolts. He steadies it."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:carrier-2-default"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "She boards at Baker Street from the opposite end of the platform. She does not acknowledge the first man. The package is in the basket, beneath a cloth. She sits. She looks out the window. She is entirely ordinary."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:dialogue:receiver-default"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "dialogue"
+        ]
+      ],
+      "content": "He takes the basket from the woman at the Lamb and Flag with the ease of a regular transaction. He lifts the cloth, removes the package, tucks it away. He hands the basket back.\n\nHe has a Smithfield accent. He orders another drink without looking at anyone. The money ends here."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:item:ucl-notebook"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "item"
+        ],
+        [
+          "title",
+          "Field Notebook"
+        ],
+        [
+          "noun",
+          "notebook",
+          "field notes",
+          "book"
+        ],
+        [
+          "state",
+          "default"
+        ],
+        [
+          "on-interact",
+          "examine",
+          "",
+          "sound",
+          "30078:<PUBKEY>:metropolitan:sound:document-sting"
+        ]
+      ],
+      "content": "A student's field notebook, densely written. Pages of geological observation from the Metropolitan Railway dig \u2014 soil strata, depth records, structural notes.\n\nNear the back: a sketch of an unexplained chamber encountered near King's Cross during the 1860 dig. Annotated: *sealed on instruction, not recorded in survey log. reason not given.*\n\nThe student does not know what this means. Ida is beginning to."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:clue:ucl-geology-notes"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "The Survey Report"
+        ],
+        [
+          "noun",
+          "survey",
+          "report",
+          "geology",
+          "railway"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "The spine uncracked. No one has opened it since it was shelved.\n\nThe preliminary survey for the Metropolitan Railway, 1860. The findings are listed methodically \u2014 until a gap, three pages sealed together with a paper band. Someone bound these pages shut after the report was written.\n\nOn the outside of the band, in pencil: *See supplementary record. Restricted.*\n\nThere is no supplementary record on this shelf."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:clue:voss-records"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "clue"
+        ],
+        [
+          "title",
+          "The Real Assessments"
+        ],
+        [
+          "noun",
+          "records",
+          "files",
+          "assessments",
+          "cabinet"
+        ],
+        [
+          "state",
+          "hidden"
+        ],
+        [
+          "transition",
+          "hidden",
+          "visible",
+          ""
+        ]
+      ],
+      "content": "Six folders. She opens the first: a medical assessment in Voss's handwriting \u2014 careful, clinical, concluding the patient is in full possession of their faculties. Clipped to it, the Quill's version of the same assessment. Different conclusion, different signature.\n\nHarwick.\n\nAll six folders. The same signature on every Quill document. The same name from the green ledger.\n\nShe puts the folders back exactly as she found them. She locks the drawer. She hands Voss the key.\n\nShe does not tell him what she found. He already knows."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:quest:side-ucl-notebook"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "quest"
+        ],
+        [
+          "title",
+          "The Notebook"
+        ],
+        [
+          "quest-type",
+          "hidden"
+        ],
+        [
+          "involves",
+          "30078:<PUBKEY>:metropolitan:npc:ucl-student"
+        ]
+      ],
+      "content": "A student dropped his field notebook in the UCL courtyard. Ida found it. She can return it or keep it. The notebook contains geological notes from the railway dig \u2014 including a reference to a sealed chamber near King's Cross."
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:portal:gower-street-platform-to-exit"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:gower-street-platform",
+          "out",
+          "Up to Gower Street."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:gower-street-exit",
+          "in",
+          "Back down to the platform."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:portal:gower-street-east"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:gower-street-platform",
+          "east",
+          "Board the eastbound train toward Portland Road."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:portland-road-platform",
+          "west",
+          "Alight at Gower Street."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:metropolitan:item:third-class-ticket",
+          "",
+          "The guard holds out his hand."
+        ],
+        [
+          "transition-effect",
+          "blackout"
+        ],
+        [
+          "transition-duration",
+          "800"
+        ],
+        [
+          "transition-clear",
+          "true"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:portal:gower-street-west"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:gower-street-platform",
+          "west",
+          "Board the westbound train toward Edgware Road."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:edgware-road-platform",
+          "east",
+          "Alight at Gower Street."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:metropolitan:item:third-class-ticket",
+          "",
+          "The guard holds out his hand."
+        ],
+        [
+          "transition-effect",
+          "blackout"
+        ],
+        [
+          "transition-duration",
+          "800"
+        ],
+        [
+          "transition-clear",
+          "true"
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:portal:gower-street-exit-to-medical"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:gower-street-exit",
+          "east",
+          "Into the medical practice."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:medical-practice",
+          "south",
+          "Back to Gower Street."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:portal:gower-street-exit-to-ucl"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:gower-street-exit",
+          "north",
+          "North toward UCL."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:ucl-courtyard",
+          "south",
+          "Back to Gower Street."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:portal:ucl-to-library"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:ucl-courtyard",
+          "north",
+          "Toward the library."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:ucl-library-approach",
+          "south",
+          "Back to the courtyard."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:portal:gower-street-exit-to-fitzrovia"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:gower-street-exit",
+          "west",
+          "West into Fitzrovia."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:fitzrovia-street",
+          "east",
+          "Back to Gower Street."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:portal:fitzrovia-to-safe-house"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:fitzrovia-street",
+          "north",
+          "To the safe house."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:middle-faction-safe-house",
+          "south",
+          "Back to Fitzrovia."
+        ],
+        [
+          "requires",
+          "30078:<PUBKEY>:metropolitan:quest:quill-job-4",
+          "complete",
+          "She has been given this address. She does not yet have reason to go."
+        ]
+      ],
+      "content": ""
+    },
+    {
+      "kind": 30078,
+      "tags": [
+        [
+          "d",
+          "metropolitan:portal:fitzrovia-to-portland"
+        ],
+        [
+          "t",
+          "metropolitan"
+        ],
+        [
+          "type",
+          "portal"
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:fitzrovia-street",
+          "south",
+          "South toward Portland Road."
+        ],
+        [
+          "exit",
+          "30078:<PUBKEY>:metropolitan:place:portland-road-exit",
+          "east",
+          "North into Fitzrovia."
+        ]
+      ],
+      "content": ""
+    }
+  ]
+}

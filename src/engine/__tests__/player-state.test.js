@@ -204,6 +204,30 @@ describe('PlayerStateMutator', () => {
     });
   });
 
+  // ── portalsUsed ───────────────────────────────────────────────────────
+
+  describe('recordPortalUsed', () => {
+    it('records a portal ref', () => {
+      const m = new PlayerStateMutator(freshState());
+      m.recordPortalUsed('30078:pk:world:portal:a');
+      expect(m.state.portalsUsed).toEqual(['30078:pk:world:portal:a']);
+    });
+
+    it('is idempotent — same portal ref not recorded twice', () => {
+      const m = new PlayerStateMutator(freshState());
+      m.recordPortalUsed('30078:pk:world:portal:a');
+      m.recordPortalUsed('30078:pk:world:portal:a');
+      expect(m.state.portalsUsed).toHaveLength(1);
+    });
+
+    it('records multiple distinct portals', () => {
+      const m = new PlayerStateMutator(freshState());
+      m.recordPortalUsed('30078:pk:world:portal:a');
+      m.recordPortalUsed('30078:pk:world:portal:b');
+      expect(m.state.portalsUsed).toHaveLength(2);
+    });
+  });
+
   // ── Reset ─────────────────────────────────────────────────────────────
 
   it('reset clears all state', () => {

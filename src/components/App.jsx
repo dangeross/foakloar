@@ -23,6 +23,7 @@ import WorldCreator from '../builder/components/WorldCreator.jsx';
 import VouchPanel from '../builder/components/VouchPanel.jsx';
 import TrustPanel from '../builder/components/TrustPanel.jsx';
 import EventGraph from '../builder/components/EventGraph.jsx';
+import MapOverlay from './MapOverlay.jsx';
 import { publishReport, publishRevoke, deletePublishedEvent } from '../builder/eventBuilder.js';
 import Lobby from './Lobby.jsx';
 import AuthorProfile from './AuthorProfile.jsx';
@@ -177,6 +178,7 @@ export default function App() {
   const [showRelaySettings, setShowRelaySettings] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [showTrust, setShowTrust] = useState(false);
+  const [showMap, setShowMap] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const engineRef = useRef(null);
   const inputRef = useRef(null);
@@ -442,6 +444,8 @@ export default function App() {
         if (entry.clear) shouldClear = true;
       } else if (entry.type === 'theme-override') {
         themeOverride = entry;
+      } else if (entry.type === 'map') {
+        setShowMap((prev) => !prev);
       } else {
         logEntries.push(entry);
       }
@@ -726,7 +730,7 @@ export default function App() {
     {noiseOverlay}
     <div ref={gameContainerRef}
          className={`max-w-2xl mx-auto p-6 flex flex-col h-dvh game-text game-container${transitionEffect ? ` transition-${transitionEffect}` : ''}`}
-         style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)' }}>
+         style={{ backgroundColor: 'var(--colour-bg)', color: 'var(--colour-text)', position: 'relative' }}>
       <div className="text-sm mb-2 flex justify-between items-center shrink-0" style={{ color: 'var(--colour-dim)' }}>
         <span className="flex items-center min-w-0">
           <button
@@ -862,6 +866,17 @@ export default function App() {
             </div>
           )}
         </LoginPanel>
+      )}
+
+      {/* Map overlay */}
+      {showMap && worldConfig?.worldEvent && (
+        <MapOverlay
+          events={mergedEvents}
+          playerState={player.state}
+          mapMode={getTag(worldConfig.worldEvent, 'map')}
+          currentPlace={engine?.currentPlace}
+          onClose={() => setShowMap(false)}
+        />
       )}
 
       {paymentActive && (

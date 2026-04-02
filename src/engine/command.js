@@ -234,6 +234,18 @@ export function mixCommand(Engine) {
       return;
     }
 
+    // Built-in: map — only if world has ["map", ...] tag
+    // "map" bare → always toggle overlay
+    // "map <noun>" → verb/noun lookup first; if nothing resolves, toggle overlay
+    if (trimmed === 'map') {
+      const worldEvent = this._findWorldEvent?.();
+      const mapMode = worldEvent?.tags?.find((t) => t[0] === 'map')?.[1];
+      if (mapMode) {
+        this._emit({ type: 'map-toggle' }, 'map');
+        return;
+      }
+    }
+
     // Built-in: help
     if (trimmed === 'help' || trimmed === 'h' || trimmed === '?') {
       this._showHelp();

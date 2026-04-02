@@ -148,6 +148,14 @@ export class PlayerStateMutator {
     }
   }
 
+  /** Record a portal traversal for the map. */
+  recordPortalUsed(portalRef) {
+    if (!this.state.portalsUsed) this.state.portalsUsed = [];
+    if (!this.state.portalsUsed.includes(portalRef)) {
+      this.state.portalsUsed = [...this.state.portalsUsed, portalRef];
+    }
+  }
+
   // ── NPC State ───────────────────────────────────────────────────────────
 
   getNpcState(npcDtag) {
@@ -233,6 +241,7 @@ export class PlayerStateMutator {
       dialogueVisited: {},
       paymentAttempts: {},
       visited: [],
+      portalsUsed: [],
       moveCount: 0,
       health: null,
       maxHealth: null,

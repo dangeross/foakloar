@@ -805,6 +805,26 @@ Health triggers mirror the `on-counter` system — same direction model, same cr
 | `{{max-health}}` | Maximum player health |
 | `{{inventory-count}}` | Number of items carried |
 
+**Map** — opt-in player map overlay on the world event:
+
+```json
+["map", "fog"]
+["map", "full"]
+```
+
+`map` enables an in-game map overlay toggled by the `map` built-in command. Two modes:
+
+- `fog` — shows only places the player has visited (named nodes) and portals they have traversed (edges). Unknown territory is invisible.
+- `full` — additionally shows adjacent unvisited places as unnamed dim nodes, giving a sense of world extent without spoiling content.
+
+The map is rendered as a force-directed graph, seeded from d-tag hashes for stable layout across sessions. Nodes are compact; edges are the portals the player has used. The current place is highlighted. Node names are truncated to fit the compact display.
+
+The `map` command is **built-in and reserved** when the world has a `map` tag. `map` with no noun opens the overlay. `map <noun>` performs a verb/noun lookup first (so `map cairns` works if there is a map item with that noun) and falls through to the overlay only if no match is found.
+
+Player state tracks:
+- `visited` — place refs visited (already tracked)
+- `portalsUsed` — portal refs traversed, stored as `{ portal, from, to }` triples. Written on every portal traversal (directional move and `traverse` action).
+
 #### state & transition
 
 `state` declares the initial state of an event. `transition` defines the legal edges of the state graph — the client only executes a `set-state` action if a matching transition exists. If no `transition` tags are present, any state change is permitted (opt-in enforcement).
@@ -1983,6 +2003,7 @@ All state stored under the world slug as the localStorage key. Player, NPCs, and
     "dialogueVisited": { "the-lake:dialogue:hermit:cave": "visited" },
     "paymentAttempts": {},
     "visited":         ["the-lake:place:clearing"],
+    "portalsUsed":     ["the-lake:portal:clearing-to-cave"],
     "moveCount":       8
   },
   "the-lake:npc:collector": {
@@ -2019,6 +2040,7 @@ All state stored under the world slug as the localStorage key. Player, NPCs, and
 - **`player.dialogueVisited`** — dialogue nodes visited, for entry point evaluation
 - **`player.paymentAttempts`** — payment hashes and status for recovery on reload
 - **`player.visited`** — place d-tags visited, for place inventory seeding and map rendering
+- **`player.portalsUsed`** — portal refs traversed (array of strings). Written on every directional move and `traverse` action. Idempotent — each ref recorded once regardless of how many times the portal is used. Map overlay derives edge endpoints from the portal's `exit` tags at render time.
 - **`player.moveCount`** — total moves taken, for NPC position calculation
 
 ---

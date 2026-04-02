@@ -3,6 +3,25 @@
 
 ---
 
+## [Unreleased] — April 2026
+
+### Added — `map` world event tag + `portalsUsed` player state
+
+**World event:** `["map", "fog"|"full"]` opts a world into the in-game map overlay.
+
+- `fog` — shows only visited places (named nodes) and portals the player has traversed (edges).
+- `full` — additionally shows adjacent unvisited places as unnamed dim nodes.
+
+The map is toggled by the `map` built-in command (reserved when the world has a `map` tag). `map` bare opens/closes the overlay. `map <noun>` performs verb/noun lookup first and falls through to the overlay only if nothing resolves.
+
+**Player state:** `portalsUsed` array added — a flat array of portal refs (strings). Written on every directional move and `traverse` action. Idempotent — each portal ref recorded once. Map derives edge endpoints from the portal's `exit` tags at render time.
+
+**Spec:** `on-encounter` now supports `increment` and `set-counter` (same rationale as `decrement`, which was already permitted).
+
+**Spec:** `on-option` tag added to dialogue events — fires actions when a player selects a specific dialogue choice without requiring a separate leaf node.
+
+---
+
 ## [Unreleased] — March 2026
 
 ### Added — `on-move` on world events

@@ -1,0 +1,464 @@
+{
+  "answers": {},
+  "walkthrough": [],
+  "events": [
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:place:portland-road-platform"],
+        ["t", "metropolitan"],
+        ["type", "place"],
+        ["title", "Portland Road — Platform"],
+        ["exit", "east"],
+        ["exit", "west"],
+        ["exit", "out"],
+        ["noun", "platform", "portland road", "station"],
+        ["noun", "tunnel", "passengers"],
+        ["requires", "30078:<PUBKEY>:metropolitan:item:third-class-ticket", "", "The guard at the gate holds out his hand."],
+        ["sound", "30078:<PUBKEY>:metropolitan:sound:platform-ambient", "ambient", "0.7"],
+        ["sound", "30078:<PUBKEY>:metropolitan:sound:underground-ambient", "layer", "0.25"]
+      ],
+      "content": "Portland Road station. Between Baker Street and Gower Street on the line — a through-point more than a destination, which means the platform is never busy. A handful of commuters, a porter with nothing to do.\n\nThe air down here is the same as everywhere on the Metropolitan line — warm, sulphurous, tasting of the engine. Ida has stopped noticing it. That happened somewhere around the third week."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:place:portland-road-exit"],
+        ["t", "metropolitan"],
+        ["type", "place"],
+        ["title", "Portland Road"],
+        ["exit", "in"],
+        ["exit", "north"],
+        ["exit", "south"],
+        ["noun", "portland road", "street", "road"],
+        ["noun", "workshops", "trades", "craftsmen"],
+        ["noun", "people", "workers"],
+        ["sound", "30078:<PUBKEY>:metropolitan:sound:saffron-hill-ambient", "ambient", "0.5"]
+      ],
+      "content": "Portland Road itself. Wider than the streets around Saffron Hill, cleaner than Smithfield, quieter than Baker Street. The buildings here have workshops at ground level — a furniture maker, a printer, a glazier. The smell of different trades layered on top of each other: sawdust, ink, hot glass.\n\nNot wealthy, not poor. The street of people who make things with their hands and are paid reasonably for it."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:place:instrument-makers-street"],
+        ["t", "metropolitan"],
+        ["type", "place"],
+        ["title", "Instrument Makers' Street"],
+        ["exit", "south"],
+        ["exit", "east"],
+        ["noun", "instrument makers", "street", "workshops"],
+        ["noun", "clocks", "instruments", "tools"],
+        ["noun", "signs", "doors"],
+        ["sound", "30078:<PUBKEY>:metropolitan:sound:saffron-hill-ambient", "ambient", "0.4"]
+      ],
+      "content": "A short street running north of Portland Road, both sides given over to small specialist workshops. Clockmakers, instrument repairers, a man who makes surgical tools. The street has the concentrated quiet of skilled work being done — not silent, but purposeful.\n\nThe workshops here have small signs above their doors. One of them, third from the east end, has no sign at all."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:place:forgers-workshop"],
+        ["t", "metropolitan"],
+        ["type", "place"],
+        ["title", "The Clockmaker's Shop"],
+        ["exit", "west"],
+        ["noun", "shop", "workshop", "clockmaker"],
+        ["noun", "clocks", "workbench", "tools"],
+        ["noun", "counter", "glass"],
+        ["feature", "30078:<PUBKEY>:metropolitan:feature:clockmaker-counter"],
+        ["feature", "30078:<PUBKEY>:metropolitan:feature:instrument-display"],
+        ["npc", "30078:<PUBKEY>:metropolitan:npc:the-clockmaker"],
+        ["requires", "30078:<PUBKEY>:metropolitan:quest:quill-introduction", "complete", "She has been told about this place but not when to come. Not yet."],
+        ["sound", "30078:<PUBKEY>:metropolitan:sound:saffron-hill-ambient", "ambient", "0.2"]
+      ],
+      "content": "Small, low-ceilinged, smelling of machine oil and the particular sharpness of metal being worked. A glass counter holds pocket watches in various states of repair. Behind it, a workbench covered in components — springs, escapements, tiny screws in ordered rows.\n\nThe clockmaker is at the bench. He does not look up when the door opens. He will look up when he is ready."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:place:portland-road-south"],
+        ["t", "metropolitan"],
+        ["type", "place"],
+        ["title", "Portland Road South"],
+        ["exit", "north"],
+        ["exit", "south"],
+        ["noun", "road", "street", "south"],
+        ["noun", "people", "figures"],
+        ["npc", "30078:<PUBKEY>:metropolitan:npc:upper-faction-observer"],
+        ["sound", "30078:<PUBKEY>:metropolitan:sound:saffron-hill-ambient", "ambient", "0.4"]
+      ],
+      "content": "The southern end of Portland Road, where it begins to meet the wider streets toward Baker Street. A cut-through Ida uses for deliveries.\n\nOn one occasion — during a specific window in Act II — a man in a good coat is observed here, watching the instrument makers' street from a distance. He does not appear to be waiting for anyone. He appears to be observing.\n\nIda files it. She does not yet know what it means."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:place:train-second-class"],
+        ["t", "metropolitan"],
+        ["type", "place"],
+        ["title", "Second Class Carriage"],
+        ["exit", "alight"],
+        ["noun", "carriage", "car", "train"],
+        ["noun", "seat", "seats", "passengers"],
+        ["noun", "window"],
+        ["noun", "journalist", "man", "notebook"],
+        ["feature", "30078:<PUBKEY>:metropolitan:feature:train-window"],
+        ["npc", "30078:<PUBKEY>:metropolitan:npc:journalist"],
+        ["sound", "30078:<PUBKEY>:metropolitan:sound:train-moving", "ambient", "0.8"],
+        ["sound", "30078:<PUBKEY>:metropolitan:sound:underground-ambient", "layer", "0.2"]
+      ],
+      "content": "The second-class carriage. Better seats than third, less silence than first. The professional classes in motion — solicitors, journalists, minor officials. They read or look out the window or review papers in their laps.\n\nThe journalist is in the corner seat by the door, facing the direction of travel. He has a notebook open on his knee. He writes periodically, pauses, writes again."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:feature:clockmaker-counter"],
+        ["t", "metropolitan"],
+        ["type", "feature"],
+        ["title", "The Counter"],
+        ["noun", "counter", "glass case", "watches"],
+        ["state", "default"],
+        ["verb", "ask"],
+        ["on-interact", "ask", "", "sound", "30078:<PUBKEY>:metropolitan:sound:lift-effect"]
+      ],
+      "content": "A glass-topped counter holding six pocket watches in various states of completion. Beside them, a small card in Felix's hand: *Repairs undertaken. Instruments calibrated. Enquire within.*\n\nThe counter is between Ida and the clockmaker. That is probably deliberate. *Ask* if you have business here."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:feature:instrument-display"],
+        ["t", "metropolitan"],
+        ["type", "feature"],
+        ["title", "The Display"],
+        ["noun", "display", "instruments", "tools", "cases"]
+      ],
+      "content": "A shelf behind the counter holds instruments that are not clocks — surveying tools, a small brass compass, what appears to be a navigational device of some kind. They are clean and well-maintained. They have the quality of things that have been used seriously.\n\nNone of them are for sale. They are not labelled. Their presence is a statement of competence rather than commerce."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:npc:the-clockmaker"],
+        ["t", "metropolitan"],
+        ["type", "npc"],
+        ["title", "The Clockmaker"],
+        ["noun", "clockmaker", "felix", "man"],
+        ["state", "default"],
+        ["dialogue", "30078:<PUBKEY>:metropolitan:dialogue:clockmaker-default"],
+        ["dialogue", "30078:<PUBKEY>:metropolitan:dialogue:clockmaker-papers", "30078:<PUBKEY>:metropolitan:quest:quill-job-2", "complete"]
+      ],
+      "content": "A man of about fifty, small-framed, with the steady hands and dense focus of someone who has spent decades working at the scale of watch movements. He wears a glass loupe pushed up on his forehead like a second set of eyes.\n\nHe makes documents as well as he makes everything else. The Quill uses him because he has never made a mistake and because he asks nothing about the purpose of what he produces."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:npc:upper-faction-observer"],
+        ["t", "metropolitan"],
+        ["type", "npc"],
+        ["title", "A Man Watching"],
+        ["noun", "man", "observer", "figure"],
+        ["state", "watching"],
+        ["dialogue", "30078:<PUBKEY>:metropolitan:dialogue:observer-default"],
+        ["requires", "30078:<PUBKEY>:metropolitan:quest:concern-job-3", "active", ""]
+      ],
+      "content": "A man in a well-cut coat, standing at the south end of Portland Road with the stillness of someone who has learned to be inconspicuous without quite managing it. The clothes are too good for this street. He is not a craftsman or a tradesman. He is watching the instrument makers' street from a distance.\n\nHe does not know Ida is watching him watch."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:npc:journalist"],
+        ["t", "metropolitan"],
+        ["type", "npc"],
+        ["title", "A Journalist"],
+        ["noun", "journalist", "man", "writer"],
+        ["state", "writing"],
+        ["dialogue", "30078:<PUBKEY>:metropolitan:dialogue:journalist-writing"],
+        ["dialogue", "30078:<PUBKEY>:metropolitan:dialogue:journalist-observed", "30078:<PUBKEY>:metropolitan:quest:quill-job-2", "active"],
+        ["speed", "3"],
+        ["roam-type", "route"],
+        ["route", "30078:<PUBKEY>:metropolitan:place:train-second-class"],
+        ["route", "30078:<PUBKEY>:metropolitan:place:portland-road-platform"],
+        ["route", "30078:<PUBKEY>:metropolitan:place:train-second-class"],
+        ["route", "30078:<PUBKEY>:metropolitan:place:gower-street-platform"]
+      ],
+      "content": "A man in his thirties with ink-stained fingers and a notebook he has not put down since boarding. He mutters occasionally — testing a phrase, discarding it. He has the distracted certainty of someone following a story he knows is real but cannot yet prove.\n\nHe boards at Portland Road. He rides to Gower Street and back. He does this on Thursdays."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:dialogue:clockmaker-default"],
+        ["t", "metropolitan"],
+        ["type", "dialogue"],
+        ["option", "I was sent by Fenn.", "30078:<PUBKEY>:metropolitan:dialogue:clockmaker-fenn"],
+        ["option", "I need a repair.", "30078:<PUBKEY>:metropolitan:dialogue:clockmaker-repair"]
+      ],
+      "content": "He looks up from the workbench. The loupe catches the light. He says nothing, waiting to learn what kind of visit this is."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:dialogue:clockmaker-fenn"],
+        ["t", "metropolitan"],
+        ["type", "dialogue"]
+      ],
+      "content": "He nods. That is all — a nod, as though this is unremarkable, which for him it is. He opens a drawer beneath the counter and removes a small folded card.\n\n*For reading purposes*, he says. He places it on the counter. He does not explain what it reads. He goes back to the workbench.\n\nThe conversation is over."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:dialogue:clockmaker-repair"],
+        ["t", "metropolitan"],
+        ["type", "dialogue"]
+      ],
+      "content": "He looks at her for a moment. Then at the counter. *Leave it there*, he says. *Come back Thursday.*\n\nHe goes back to the workbench. He will not look up again."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:dialogue:clockmaker-papers"],
+        ["t", "metropolitan"],
+        ["type", "dialogue"],
+        ["option", "I need the service papers.", "30078:<PUBKEY>:metropolitan:dialogue:clockmaker-gives-papers"]
+      ],
+      "content": "He looks up when she enters. Something has shifted in his assessment since the last visit — not warmth, but a slight expansion of interest. Fenn will have told him she has done two jobs cleanly.\n\n*Fenn said you'd be back*, he says. *Said you'd need something more substantial.*"
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:dialogue:clockmaker-gives-papers"],
+        ["t", "metropolitan"],
+        ["type", "dialogue"],
+        ["on-enter", "player", "", "give-item", "30078:<PUBKEY>:metropolitan:item:service-girl-papers"],
+        ["on-enter", "player", "", "set-state", "papers-acquired", "30078:<PUBKEY>:metropolitan:world"]
+      ],
+      "content": "He opens a different drawer. The papers are in a slim envelope, sealed. He places them on the counter.\n\n*Letter of domestic service*, he says. *Household of a Mrs. Alderton, Mayfair. She doesn't exist, but she exists thoroughly — address, references, two previous employers, all verifiable to a quick check.* He looks at her steadily. *Don't make it need a slow check.*\n\nHe goes back to the bench. The transaction is complete."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:dialogue:observer-default"],
+        ["t", "metropolitan"],
+        ["type", "dialogue"]
+      ],
+      "content": "He does not notice Ida. His attention is entirely on the instrument makers' street — specifically on the workshop with no sign above the door.\n\nHe has been here for twenty minutes. He has not moved toward the street. He is gathering information, not acting on it.\n\nSomeone has sent him to watch. The question is who."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:dialogue:journalist-writing"],
+        ["t", "metropolitan"],
+        ["type", "dialogue"]
+      ],
+      "content": "He is writing. He does not look up. Whatever is in the notebook is absorbing enough that the movement of passengers around him goes unregistered.\n\nHe is not someone to approach. Not yet."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:dialogue:journalist-observed"],
+        ["t", "metropolitan"],
+        ["type", "dialogue"],
+        ["on-enter", "player", "", "set-state", "visible", "30078:<PUBKEY>:metropolitan:clue:journalist-subject"],
+        ["on-enter", "player", "", "set-state", "complete", "30078:<PUBKEY>:metropolitan:quest:quill-job-2"]
+      ],
+      "content": "She has ridden two full journeys beside him, or near him, without drawing notice. She has heard enough.\n\nA street name in Clerkenwell. The words *compulsory purchase*. A date, six months from now.\n\nHe closes the notebook at Gower Street and tucks it inside his coat. He looks out the window. For a moment he looks tired — the particular tiredness of someone who knows more than they can yet say.\n\nIda looks away before he turns."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:item:service-girl-papers"],
+        ["t", "metropolitan"],
+        ["type", "item"],
+        ["title", "Service Papers"],
+        ["noun", "service papers", "papers", "letter", "documents"],
+        ["state", "default"],
+        ["on-interact", "examine", "", "sound", "30078:<PUBKEY>:metropolitan:sound:document-sting"]
+      ],
+      "content": "A letter of domestic service, headed notepaper, the clockmaker's hand indistinguishable from the genuine article. Mrs. Alderton of Mayfair, who does not exist, has employed Ida as a household assistant and speaks well of her reliability and discretion.\n\nWith this paper, Ida can go anywhere a servant might plausibly go — and servants go everywhere. The first-class waiting room. The private offices. The houses where decisions are made.\n\nShe reads it twice. She folds it carefully. The city has just become larger."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:item:quill-delivery-letter"],
+        ["t", "metropolitan"],
+        ["type", "item"],
+        ["title", "A Letter to Deliver"],
+        ["noun", "letter", "envelope", "delivery"],
+        ["state", "sealed"],
+        ["on-interact", "examine", "", "sound", "30078:<PUBKEY>:metropolitan:sound:document-sting"],
+        ["verb", "open", "read"],
+        ["on-interact", "open", "sealed", "set-state", "opened"],
+        ["on-interact", "open", "sealed", "set-state", "visible", "30078:<PUBKEY>:metropolitan:clue:love-letter"]
+      ],
+      "content": "A sealed envelope, addressed in a careful hand to a woman's name, no address — delivery by hand only. Fenn gave it to her with specific instructions: into the woman's hand, no one else's, Portland Road station, Wednesday morning.\n\nThe seal is good wax. It would be noticeable if broken. *Open* it if you choose — but Fenn will know."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:clue:love-letter"],
+        ["t", "metropolitan"],
+        ["type", "clue"],
+        ["title", "What Was in the Letter"],
+        ["noun", "letter", "contents", "love letter"],
+        ["state", "hidden"],
+        ["transition", "hidden", "visible", ""]
+      ],
+      "content": "Not a document of power. Not instructions or intelligence or anything the Quill should care about.\n\nA love letter. From someone inside the Quill's orbit — the handwriting is an educated man's — to a woman he cannot write to openly. The letter is careful and precise and entirely personal. The kind of letter people burn after reading.\n\nIda refolds it. She delivers it anyway. She says nothing to Fenn. He will know she opened it. He says nothing either. The delivery arrives three minutes late."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:quest:quill-job-3-prep"],
+        ["t", "metropolitan"],
+        ["type", "quest"],
+        ["title", "The Clockmaker"],
+        ["quest-type", "open"],
+        ["involves", "30078:<PUBKEY>:metropolitan:npc:the-clockmaker"],
+        ["requires", "30078:<PUBKEY>:metropolitan:quest:quill-job-2", "complete", ""],
+        ["on-complete", "", "set-state", "active", "30078:<PUBKEY>:metropolitan:quest:quill-job-3"]
+      ],
+      "content": "Fenn has given Ida a name and a street. The clockmaker on Instrument Makers' Street, Portland Road. He will have a key — a cipher key for reading the solicitor's ledger. Go and collect it."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:quest:side-letter"],
+        ["t", "metropolitan"],
+        ["type", "quest"],
+        ["title", "The Letter"],
+        ["quest-type", "hidden"],
+        ["involves", "30078:<PUBKEY>:metropolitan:item:quill-delivery-letter"],
+        ["requires", "30078:<PUBKEY>:metropolitan:quest:quill-job-4", "active", ""]
+      ],
+      "content": "The letter Fenn gave her to deliver — she can open it or not. If she opens it, she learns something unexpected. The delivery arrives late either way."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:quest:concern-job-3-window"],
+        ["t", "metropolitan"],
+        ["type", "quest"],
+        ["title", "The Observer"],
+        ["quest-type", "hidden"],
+        ["involves", "30078:<PUBKEY>:metropolitan:npc:upper-faction-observer"],
+        ["requires", "30078:<PUBKEY>:metropolitan:quest:concern-job-3", "active", ""]
+      ],
+      "content": "Someone is watching the clockmaker's shop from Portland Road South. Ida has been sent to identify the leak among three Concern travellers. The observer on Portland Road may be part of the same problem — or a different one entirely."
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:portal:portland-road-platform-to-exit"],
+        ["t", "metropolitan"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:portland-road-platform", "out", "Up to Portland Road."],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:portland-road-exit", "in", "Back down to the platform."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:portal:portland-road-east"],
+        ["t", "metropolitan"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:portland-road-platform", "east", "Board the eastbound train toward Baker Street."],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:baker-street-platform", "west", "Alight at Portland Road."],
+        ["requires", "30078:<PUBKEY>:metropolitan:item:third-class-ticket", "", "The guard holds out his hand."],
+        ["transition-effect", "blackout"],
+        ["transition-duration", "800"],
+        ["transition-clear", "true"]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:portal:portland-road-west"],
+        ["t", "metropolitan"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:portland-road-platform", "west", "Board the westbound train toward Gower Street."],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:gower-street-platform", "east", "Alight at Portland Road."],
+        ["requires", "30078:<PUBKEY>:metropolitan:item:third-class-ticket", "", "The guard holds out his hand."],
+        ["transition-effect", "blackout"],
+        ["transition-duration", "800"],
+        ["transition-clear", "true"]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:portal:portland-road-exit-to-instrument"],
+        ["t", "metropolitan"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:portland-road-exit", "north", "North to Instrument Makers' Street."],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:instrument-makers-street", "south", "Back to Portland Road."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:portal:instrument-to-workshop"],
+        ["t", "metropolitan"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:instrument-makers-street", "east", "Into the clockmaker's shop."],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:forgers-workshop", "west", "Back to Instrument Makers' Street."],
+        ["requires", "30078:<PUBKEY>:metropolitan:quest:quill-introduction", "complete", "She has been told this shop exists. She has not been told to go yet."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:portal:portland-road-exit-to-south"],
+        ["t", "metropolitan"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:portland-road-exit", "south", "South toward Baker Street."],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:portland-road-south", "north", "Back to Portland Road exit."]
+      ],
+      "content": ""
+    },
+
+    {
+      "kind": 30078,
+      "tags": [
+        ["d", "metropolitan:portal:portland-road-south-to-baker"],
+        ["t", "metropolitan"],
+        ["type", "portal"],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:portland-road-south", "south", "South to Baker Street area."],
+        ["exit", "30078:<PUBKEY>:metropolitan:place:baker-street-exit", "north", "Back north toward Portland Road."]
+      ],
+      "content": ""
+    }
+
+  ]
+}

@@ -400,6 +400,7 @@ export const TAG_SCHEMAS = {
   },
   'max-inventory': { label: 'Max Inventory', desc: 'Inventory carry cap — blocks pickup when exceeded', fields: [{ name: 'max', type: 'number', required: true, placeholder: '6' }, { name: 'message', type: 'text', required: false, placeholder: "You're carrying too much." }] },
   hud: { label: 'HUD', desc: 'Persistent display — {{counter-name}} interpolation for player counters', repeatable: true, fields: [{ name: 'template', type: 'text', required: true, placeholder: 'Score: {{score}} | Moves: {{moves}}' }] },
+  map: { label: 'Map', desc: 'Enable in-game map overlay. "fog" = visited places only; "full" = also shows unnamed adjacent unvisited nodes', fields: [{ name: 'mode', type: 'select', required: true, options: ['fog', 'full'] }] },
   'on-inventory-full': {
     label: 'On Inventory Full',
     desc: 'Fires when pickup is blocked by max-inventory (world event only)',
@@ -650,7 +651,7 @@ export const TAGS_BY_EVENT_TYPE = {
   dialogue:    ['option', 'on-option', 'requires', 'requires-not', 'on-enter', 'content-type', 'sound'],
   consequence: ['respawn', 'clears', 'give-item', 'consume-item', 'deal-damage', 'set-state', 'content-type', 'sound'],
   sound:       ['note', 's', 'oscillator', 'noise', 'gain', 'slow', 'fast', 'pan', 'lpf', 'hpf', 'bpf', 'bpq', 'lpq', 'hpq', 'ftype', 'vowel', 'crush', 'shape', 'distort', 'coarse', 'room', 'roomsize', 'roomfade', 'roomlp', 'roomdim', 'delay', 'delaytime', 'delayfeedback', 'phaser', 'phaserdepth', 'phasercenter', 'phasersweep', 'rev', 'palindrome', 'degrade-by', 'jux', 'arp', 'sustain', 'attack', 'decay', 'release', 'lpenv', 'lpattack', 'lpdecay', 'lpsustain', 'lprelease', 'hpenv', 'hpattack', 'hpdecay', 'hpsustain', 'hprelease', 'bpenv', 'bpattack', 'bpdecay', 'bpsustain', 'bprelease', 'fanchor', 'penv', 'pattack', 'pdecay', 'prelease', 'pcurve', 'panchor', 'fm', 'fmh', 'fmattack', 'fmdecay', 'fmsustain', 'fmenv', 'vib', 'vibmod', 'tremolodepth', 'tremolosync', 'tremoloskew', 'tremolophase', 'tremoloshape', 'velocity', 'postgain', 'compressor', 'n', 'begin', 'end', 'speed', 'cut', 'loop', 'loop-begin', 'loop-end', 'loop-at', 'clip', 'chop', 'striate', 'fit', 'orbit', 'dry', 'xfade', 'early', 'late', 'swing', 'iter', 'ply', 'sample'],
-  world:       ['title', 'author', 'version', 'lang', 'voice', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'max-inventory', 'on-player-health', 'on-interact', 'on-inventory-full', 'on-move', 'counter', 'on-counter', 'hud', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'bpm', 'samples', 'content-type', 'media', 'w'],
+  world:       ['title', 'author', 'version', 'lang', 'voice', 'tag', 'cw', 'start', 'inventory', 'relay', 'collaboration', 'collaborator', 'health', 'max-health', 'max-inventory', 'on-player-health', 'on-interact', 'on-inventory-full', 'on-move', 'counter', 'on-counter', 'hud', 'map', 'theme', 'colour', 'font', 'cursor', 'effects', 'scanlines', 'glow', 'flicker', 'vignette', 'noise', 'sound', 'bpm', 'samples', 'content-type', 'media', 'w'],
   vouch:       ['pubkey', 'scope', 'can-vouch'],
   revoke:      ['pubkey'],
   quest:       ['title', 'quest-type', 'involves', 'requires', 'requires-not', 'on-complete', 'content-type', 'sound'],

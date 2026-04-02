@@ -324,6 +324,11 @@ export function mixMovement(Engine) {
     // Emit transition metadata from portal before entering room
     this._emitTransition(exit.portalEvent);
 
+    // Record portal traversal for map
+    const portalDtag = exit.portalEvent?.tags?.find((t) => t[0] === 'd')?.[1];
+    const portalRef = portalDtag ? `30078:${exit.portalEvent.pubkey}:${portalDtag}` : null;
+    if (portalRef) this.player.recordPortalUsed(portalRef);
+
     this.player.incrementMoveCount();
     this.processOnMove();
     this._processNpcOnMove();
@@ -363,6 +368,9 @@ export function mixMovement(Engine) {
 
     // Emit transition metadata from portal
     this._emitTransition(portal);
+
+    // Record portal traversal for map
+    this.player.recordPortalUsed(portalRef);
 
     this.player.incrementMoveCount();
     this.processOnMove();
