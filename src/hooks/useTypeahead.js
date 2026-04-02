@@ -92,8 +92,12 @@ export function computeSuggestion(rawInput, engine, events) {
     engine.player?.state?.inventory || [],
     engine._getRoamingNpcList?.()?.map(({ event }) => event) || [],
   );
+  // Include 'map' only when the world event has a map tag
+  const worldEvent = engine._findWorldEvent?.();
+  const hasMap = worldEvent?.tags?.some((t) => t[0] === 'map');
+  const builtIns = hasMap ? [...BUILT_IN_VERBS, 'map'] : BUILT_IN_VERBS;
   const verbCandidates = [
-    ...new Set([...BUILT_IN_VERBS, ...verbMap.keys()]),
+    ...new Set([...builtIns, ...verbMap.keys()]),
   ].sort((a, b) => a.length - b.length);
 
   // Visible exit directions for this room.

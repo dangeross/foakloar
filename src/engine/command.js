@@ -25,6 +25,7 @@ export function mixCommand(Engine) {
       ['talk &lt;someone&gt;', 'Talk to someone'],
       ['quests (q)', 'Show quest log'],
       ['restart', 'Start over (resets all progress)'],
+      ...(this._findWorldEvent?.()?.tags?.find((t) => t[0] === 'map') ? [['map', 'Toggle map']] : []),
       ...(this.config.trustSet?.collaboration === 'open' ? [['report [thing]', 'Report content (open worlds)']] : []),
       ['help (h)', 'Show this help'],
     ];
