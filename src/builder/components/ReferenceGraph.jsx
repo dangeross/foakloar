@@ -6,12 +6,13 @@
  * Multiple edges between the same node pair render as parallel offset lines.
  */
 
-import React, { useMemo, useCallback, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide, forceX, forceY } from 'd3-force';
 import {
   ReactFlow,
   Background,
   Controls,
+  EdgeLabelRenderer,
   Handle,
   Position,
   MarkerType,
@@ -118,6 +119,31 @@ function RefNode({ data }) {
   );
 }
 
+// ── Edge label text from metadata ────────────────────────────────────────────
+function edgeLabelText(data) {
+  if (!data) return '';
+  const { edgeType, trigger, verb, stateGuard, requiredState, negated, slot, entityType } = data;
+  if (edgeType === 'action') {
+    const { actionType } = data;
+    const parts = [trigger || 'on-?'];
+    if (verb)        parts.push(verb);
+    if (stateGuard)  parts.push(`[${stateGuard}]`);
+    if (actionType)  parts.push(actionType);
+    return parts.join(' · ');
+  }
+  if (edgeType === 'requires') {
+    const base = negated ? 'requires-not' : 'requires';
+    return requiredState ? `${base} · ${requiredState}` : base;
+  }
+  if (edgeType === 'portal')    return slot ? `slot: ${slot}` : 'portal';
+  if (edgeType === 'placement') return entityType || 'placed';
+  if (edgeType === 'dialogue') {
+    if (!data.gated) return 'dialogue';
+    return data.gateState ? `dialogue · req: ${data.gateState}` : 'dialogue · gated';
+  }
+  return edgeType;
+}
+
 // ── Custom edge — floating attachment + parallel offset ───────────────────────
 function ParallelEdge({ source, target, data, style, markerEnd }) {
   const sourceNode = useInternalNode(source);
@@ -138,11 +164,9 @@ function ParallelEdge({ source, target, data, style, markerEnd }) {
     y: targetNode.internals.positionAbsolute.y + th / 2,
   };
 
-  // Attach to node border rather than a fixed handle point
   const src = rectIntersection(srcCenter, tgtCenter, sw, sh);
   const tgt = rectIntersection(tgtCenter, srcCenter, tw, th);
 
-  // Parallel offset — perpendicular to the edge direction
   const dx = tgt.x - src.x;
   const dy = tgt.y - src.y;
   const len = Math.sqrt(dx * dx + dy * dy) || 1;
@@ -150,13 +174,49 @@ function ParallelEdge({ source, target, data, style, markerEnd }) {
   const perpY =  dx / len;
   const offset = data?.parallelOffset ?? 0;
 
+  const x1 = src.x + perpX * offset;
+  const y1 = src.y + perpY * offset;
+  const x2 = tgt.x + perpX * offset;
+  const y2 = tgt.y + perpY * offset;
+
+  // Label position — stagger along the line for parallel edges so labels don't
+  // stack on top of each other. parallelOffset encodes the group index:
+  // (i - (N-1)/2) * SPACING, so dividing by SPACING recovers a centred index.
+  const fracIdx = offset / 8; // e.g. -1, 0, 1 for a 3-edge group
+  const t = 0.5 + fracIdx * 0.1; // spread labels at 40%, 50%, 60% etc.
+  const midX = x1 + (x2 - x1) * t;
+  const midY = y1 + (y2 - y1) * t;
+
+  const colour = EDGE_COLOURS[data?.edgeType] ?? 'var(--colour-dim)';
+
   return (
-    <path
-      d={`M ${src.x + perpX * offset},${src.y + perpY * offset} L ${tgt.x + perpX * offset},${tgt.y + perpY * offset}`}
-      style={style}
-      markerEnd={markerEnd}
-      fill="none"
-    />
+    <>
+      <path
+        d={`M ${x1},${y1} L ${x2},${y2}`}
+        style={style}
+        markerEnd={markerEnd}
+        fill="none"
+      />
+      {data?.showLabel && (
+        <EdgeLabelRenderer>
+          <div style={{
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${midX}px, ${midY}px)`,
+            pointerEvents: 'none',
+            background: 'var(--colour-bg)',
+            border: `1px solid ${colour}`,
+            color: colour,
+            fontSize: '0.42rem',
+            fontFamily: 'inherit',
+            padding: '2px 5px',
+            whiteSpace: 'nowrap',
+            zIndex: 1000,
+          }}>
+            {edgeLabelText(data)}
+          </div>
+        </EdgeLabelRenderer>
+      )}
+    </>
   );
 }
 
@@ -202,13 +262,13 @@ function eventsToReferenceGraph(events) {
   }
 
   // Edge helper — validates + deduplicates
-  function pushEdge({ source, target, edgeType, tagName, tagIdx, label }) {
+  function pushEdge({ source, target, edgeType, tagName, tagIdx, meta = {} }) {
     if (source === target) return;
     if (!eventTypeMap.has(source) || !eventTypeMap.has(target)) return;
     const id = `${source}::${target}::${edgeType}::${tagName}::${tagIdx}`;
     if (edgeIdSet.has(id)) return;
     edgeIdSet.add(id);
-    rawEdges.push({ id, source, target, edgeType, label: label ?? undefined, data: { edgeType } });
+    rawEdges.push({ id, source, target, edgeType, data: { edgeType, ...meta } });
   }
 
   // Scan all events for references
@@ -225,7 +285,8 @@ function eventsToReferenceGraph(events) {
       if (['item', 'feature', 'npc', 'clue', 'sound'].includes(name)) {
         const target = tag[1];
         if (typeof target === 'string' && target.startsWith('30078:')) {
-          pushEdge({ source: ref, target, edgeType: 'placement', tagName: name, tagIdx });
+          pushEdge({ source: ref, target, edgeType: 'placement', tagName: name, tagIdx,
+            meta: { entityType: name } });
         }
         return;
       }
@@ -234,27 +295,33 @@ function eventsToReferenceGraph(events) {
       if (name === 'requires' || name === 'requires-not') {
         const target = tag[1];
         if (typeof target === 'string' && target.startsWith('30078:')) {
-          pushEdge({ source: ref, target, edgeType: 'requires', tagName: name, tagIdx });
+          const requiredState = tag[2] || '';
+          pushEdge({ source: ref, target, edgeType: 'requires', tagName: name, tagIdx,
+            meta: { negated: name === 'requires-not', requiredState } });
         }
         return;
       }
 
       // Portal connections — emit both directed edges
       if (name === 'exit' && eventType === 'portal') {
-        // Collect all exit tags to find pairs; handled as a group below
-        return;
+        return; // handled as a group below
       }
 
       // Dialogue links
       if (name === 'dialogue') {
         const nodeRef = tag[1];
         if (typeof nodeRef === 'string' && nodeRef.startsWith('30078:')) {
-          pushEdge({ source: ref, target: nodeRef, edgeType: 'dialogue', tagName: name, tagIdx });
-        }
-        // Dialogue requires gate at [2]
-        const reqRef = tag[2];
-        if (typeof reqRef === 'string' && reqRef.startsWith('30078:')) {
-          pushEdge({ source: ref, target: reqRef, edgeType: 'requires', tagName: `${name}-req`, tagIdx });
+          // Requires gate at tag[2], required state at tag[3]
+          const reqRef   = tag[2];
+          const reqState = tag[3] || '';
+          const hasReq   = typeof reqRef === 'string' && reqRef.startsWith('30078:');
+          pushEdge({ source: ref, target: nodeRef, edgeType: 'dialogue', tagName: name, tagIdx,
+            meta: { gated: hasReq, gateState: reqState } });
+          if (hasReq) {
+            pushEdge({ source: ref, target: reqRef, edgeType: 'requires',
+              tagName: `${name}-req`, tagIdx,
+              meta: { negated: false, requiredState: reqState } });
+          }
         }
         return;
       }
@@ -270,10 +337,28 @@ function eventsToReferenceGraph(events) {
 
       // Action targets — scan ALL values in on-* tags for event refs
       if (name.startsWith('on-')) {
+        // Extract trigger metadata per trigger type
+        let verb = '', stateGuard = '';
+        if (name === 'on-interact') {
+          verb       = tag[1] || '';
+          stateGuard = tag[2] || '';
+        } else if (name === 'on-enter' || name === 'on-exit' || name === 'on-timer') {
+          stateGuard = tag[1] || '';
+        } else if (name === 'on-drop') {
+          stateGuard = tag[2] || '';
+        } else if (name === 'on-counter' || name === 'on-health' || name === 'on-player-health') {
+          stateGuard = tag[3] || ''; // threshold acts as the guard
+        }
         for (let i = 1; i < tag.length; i++) {
           const val = tag[i];
           if (typeof val === 'string' && val.startsWith('30078:')) {
-            pushEdge({ source: ref, target: val, edgeType: 'action', tagName: name, tagIdx: `${tagIdx}-${i}` });
+            // The action type (give-item, set-state, consequence, …) always
+            // sits immediately before the event ref in every on-* tag shape.
+            const actionType = (i > 0 && typeof tag[i - 1] === 'string' && !tag[i - 1].startsWith('30078:'))
+              ? tag[i - 1] : '';
+            pushEdge({ source: ref, target: val, edgeType: 'action',
+              tagName: name, tagIdx: `${tagIdx}-${i}`,
+              meta: { trigger: name, verb, stateGuard, actionType } });
           }
         }
         return;
@@ -291,7 +376,8 @@ function eventsToReferenceGraph(events) {
             const tgt = exits[j][1];
             if (typeof src === 'string' && src.startsWith('30078:') &&
                 typeof tgt === 'string' && tgt.startsWith('30078:')) {
-              pushEdge({ source: src, target: tgt, edgeType: 'portal', tagName: 'exit', tagIdx: `${i}->${j}` });
+              pushEdge({ source: src, target: tgt, edgeType: 'portal', tagName: 'exit', tagIdx: `${i}->${j}`,
+                meta: { slot: exits[i][2] || '' } });
             }
           }
         }
@@ -465,6 +551,7 @@ export default function ReferenceGraph({
           type: 'parallel',
           style: buildEdgeStyle(e.edgeType, touches, !touches),
           markerEnd: buildMarker(e.edgeType),
+          data: { ...e.data, showLabel: touches && e.edgeType !== 'placement' },
         };
       }),
     };
@@ -474,44 +561,16 @@ export default function ReferenceGraph({
   const [nodes, setNodes, onNodesChangeInternal] = useNodesState(styledNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(styledEdges);
 
-  // Preserve drag positions across re-renders
-  const positionOverrides = useRef(new Map());
+  // Sync styled nodes and edges into XYFlow state
+  useEffect(() => { setNodes(styledNodes); }, [styledNodes, setNodes]);
+  useEffect(() => { setEdges(styledEdges); }, [styledEdges, setEdges]);
 
-  // Clear drag overrides when event set changes (fresh layout)
-  useEffect(() => {
-    positionOverrides.current.clear();
-  }, [rawNodes]);
-
-  // Sync styled nodes into XYFlow, merging drag position overrides
-  useEffect(() => {
-    setNodes(styledNodes.map(n => {
-      const override = positionOverrides.current.get(n.id);
-      return override ? { ...n, position: override } : n;
-    }));
-  }, [styledNodes, setNodes]);
-
-  // Sync styled edges
-  useEffect(() => {
-    setEdges(styledEdges);
-  }, [styledEdges, setEdges]);
-
-  const onNodesChange = useCallback((changes) => {
-    for (const change of changes) {
-      if (change.type === 'position' && change.position) {
-        positionOverrides.current.set(change.id, change.position);
-      }
-    }
-    onNodesChangeInternal(changes);
-  }, [onNodesChangeInternal]);
+  const onNodesChange = onNodesChangeInternal;
 
   const onNodeClick = useCallback((_, node) => {
     const ref = node.data?.ref;
     onSelectRef(ref === selectedRef ? null : ref);
   }, [onSelectRef, selectedRef]);
-
-  const onEdgeClick = useCallback((_, edge) => {
-    onSelectRef(edge.source);
-  }, [onSelectRef]);
 
   const onPaneClick = useCallback(() => {
     onSelectRef(null);
@@ -580,11 +639,11 @@ export default function ReferenceGraph({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeClick={onNodeClick}
-        onEdgeClick={onEdgeClick}
         onPaneClick={onPaneClick}
         nodeTypes={refNodeTypes}
         edgeTypes={parallelEdgeTypes}
         defaultEdgeOptions={{ type: 'parallel' }}
+        nodesDraggable={false}
         fitView
         fitViewOptions={{ padding: 0.3, maxZoom: 0.6 }}
         minZoom={0.05}
