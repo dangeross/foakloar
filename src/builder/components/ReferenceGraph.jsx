@@ -17,6 +17,7 @@ import {
   MarkerType,
   useNodesState,
   useEdgesState,
+  useInternalNode,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -27,11 +28,11 @@ const SKIP_TYPES = new Set(['vouch', 'revoke', 'player-state', 'report']);
 const EDGE_TYPES = ['placement', 'requires', 'action', 'portal', 'dialogue'];
 
 const EDGE_COLOURS = {
-  placement: 'var(--colour-dim)',
-  requires:  'var(--colour-exits)',
-  action:    'var(--colour-highlight)',
-  portal:    'var(--colour-exits)',
-  dialogue:  'var(--colour-npc)',
+  placement: '#4a9eff',  // blue   — entity placed in container
+  requires:  '#ff6b6b',  // red    — dependency / gate
+  action:    '#ffd700',  // gold   — on-* trigger target
+  portal:    '#00e676',  // green  — navigation connection
+  dialogue:  '#bf5af2',  // purple — NPC dialogue chain
 };
 
 const EDGE_DASH = {
@@ -57,6 +58,23 @@ const TYPE_COLOURS = {
   portal:      'var(--colour-exits)',
 };
 
+// ── Floating edge helpers ────────────────────────────────────────────────────
+
+/**
+ * Compute where the line from `center` toward `other` intersects the node
+ * rectangle (width × height, centred on `center`).
+ */
+function rectIntersection(center, other, w, h) {
+  const dx = other.x - center.x;
+  const dy = other.y - center.y;
+  if (dx === 0 && dy === 0) return center;
+  const hw = w / 2, hh = h / 2;
+  const scaleX = dx !== 0 ? hw / Math.abs(dx) : Infinity;
+  const scaleY = dy !== 0 ? hh / Math.abs(dy) : Infinity;
+  const s = Math.min(scaleX, scaleY);
+  return { x: center.x + dx * s, y: center.y + dy * s };
+}
+
 // ── Custom node — module-level to prevent XYFlow re-registration ─────────────
 function RefNode({ data }) {
   const colour = TYPE_COLOURS[data.eventType] ?? 'var(--colour-text)';
@@ -80,8 +98,12 @@ function RefNode({ data }) {
       overflow: 'hidden',
       boxSizing: 'border-box',
     }}>
-      <Handle type="target" position={Position.Left}
-        style={{ background: colour, width: 6, height: 6, opacity: 0.5 }} />
+      {/* Invisible handles at all four sides — floating edge logic overrides the
+          actual attachment point, but XYFlow still needs handles to exist. */}
+      <Handle type="target" position={Position.Top}    style={{ opacity: 0, width: 0, height: 0 }} />
+      <Handle type="target" position={Position.Left}   style={{ opacity: 0, width: 0, height: 0 }} />
+      <Handle type="source" position={Position.Bottom} style={{ opacity: 0, width: 0, height: 0 }} />
+      <Handle type="source" position={Position.Right}  style={{ opacity: 0, width: 0, height: 0 }} />
       <div style={{ fontSize: '0.38rem', opacity: 0.6, lineHeight: 1 }}>
         [{data.eventType}]
       </div>
@@ -92,27 +114,45 @@ function RefNode({ data }) {
       }}>
         {data.label}
       </div>
-      <Handle type="source" position={Position.Right}
-        style={{ background: colour, width: 6, height: 6, opacity: 0.5 }} />
     </div>
   );
 }
 
-// ── Custom edge — parallel offset straight lines ─────────────────────────────
-function ParallelEdge({ sourceX, sourceY, targetX, targetY, data, style, markerEnd }) {
-  const offset = data?.parallelOffset ?? 0;
-  const dx = targetX - sourceX;
-  const dy = targetY - sourceY;
+// ── Custom edge — floating attachment + parallel offset ───────────────────────
+function ParallelEdge({ source, target, data, style, markerEnd }) {
+  const sourceNode = useInternalNode(source);
+  const targetNode = useInternalNode(target);
+  if (!sourceNode || !targetNode) return null;
+
+  const sw = sourceNode.measured?.width  ?? NODE_W;
+  const sh = sourceNode.measured?.height ?? NODE_H;
+  const tw = targetNode.measured?.width  ?? NODE_W;
+  const th = targetNode.measured?.height ?? NODE_H;
+
+  const srcCenter = {
+    x: sourceNode.internals.positionAbsolute.x + sw / 2,
+    y: sourceNode.internals.positionAbsolute.y + sh / 2,
+  };
+  const tgtCenter = {
+    x: targetNode.internals.positionAbsolute.x + tw / 2,
+    y: targetNode.internals.positionAbsolute.y + th / 2,
+  };
+
+  // Attach to node border rather than a fixed handle point
+  const src = rectIntersection(srcCenter, tgtCenter, sw, sh);
+  const tgt = rectIntersection(tgtCenter, srcCenter, tw, th);
+
+  // Parallel offset — perpendicular to the edge direction
+  const dx = tgt.x - src.x;
+  const dy = tgt.y - src.y;
   const len = Math.sqrt(dx * dx + dy * dy) || 1;
   const perpX = -dy / len;
   const perpY =  dx / len;
-  const x1 = sourceX + perpX * offset;
-  const y1 = sourceY + perpY * offset;
-  const x2 = targetX + perpX * offset;
-  const y2 = targetY + perpY * offset;
+  const offset = data?.parallelOffset ?? 0;
+
   return (
     <path
-      d={`M ${x1},${y1} L ${x2},${y2}`}
+      d={`M ${src.x + perpX * offset},${src.y + perpY * offset} L ${tgt.x + perpX * offset},${tgt.y + perpY * offset}`}
       style={style}
       markerEnd={markerEnd}
       fill="none"
