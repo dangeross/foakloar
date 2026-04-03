@@ -1,0 +1,68 @@
+[
+  {
+    "tags": [
+      ["d", "the-lake:scenario:surface-explored"],
+      ["t", "the-lake"],
+      ["type", "scenario"],
+      ["title", "Surface Explored"],
+      ["place", "30078:<PUBKEY>:the-lake:place:hermit-cottage"],
+      ["set-state", "30078:<PUBKEY>:the-lake:feature:weathered-journal", "read"],
+      ["set-state", "30078:<PUBKEY>:the-lake:feature:standing-stone", "read"],
+      ["set-state", "30078:<PUBKEY>:the-lake:clue:journal-entry", "visible"],
+      ["give-item", "30078:<PUBKEY>:the-lake:item:brass-lantern"],
+      ["give-item", "30078:<PUBKEY>:the-lake:item:iron-key"],
+      ["set-state", "30078:<PUBKEY>:the-lake:item:brass-lantern", "on"]
+    ],
+    "content": "The player has explored the clearing, read the journal and standing stone, picked up the lantern (on) and iron key. They are at the hermit's cottage ready to open the chest or head into the cave."
+  },
+  {
+    "tags": [
+      ["d", "the-lake:scenario:cave-explored"],
+      ["t", "the-lake"],
+      ["type", "scenario"],
+      ["title", "Cave Explored — Hermit Dialogue Unlocked"],
+      ["chain", "the-lake:scenario:surface-explored"],
+      ["place", "30078:<PUBKEY>:the-lake:place:cave-network"],
+      ["set-state", "30078:<PUBKEY>:the-lake:feature:cave-paintings", "seen"],
+      ["set-state", "30078:<PUBKEY>:the-lake:clue:lake-history", "visible"],
+      ["set-state", "30078:<PUBKEY>:the-lake:feature:locked-chest", "open"],
+      ["give-item", "30078:<PUBKEY>:the-lake:item:serpent-amulet"]
+    ],
+    "content": "Extends surface-explored. The player has examined the cave paintings (lake-history clue now visible, unlocking hermit's after-cave dialogue), opened the chest with the iron key and collected the serpent amulet. Lantern is on."
+  },
+  {
+    "tags": [
+      ["d", "the-lake:scenario:chapel-complete"],
+      ["t", "the-lake"],
+      ["type", "scenario"],
+      ["title", "Chapel Complete — Riddle Solved"],
+      ["chain", "the-lake:scenario:cave-explored"],
+      ["place", "30078:<PUBKEY>:the-lake:place:underground-lake"],
+      ["set-state", "30078:<PUBKEY>:the-lake:feature:crumbling-inscription", "visible"],
+      ["set-state", "30078:<PUBKEY>:the-lake:feature:stained-glass", "seen"],
+      ["set-state", "30078:<PUBKEY>:the-lake:clue:serpent-staff", "visible"],
+      ["set-state", "30078:<PUBKEY>:the-lake:feature:bronze-altar", "prayed"],
+      ["set-state", "30078:<PUBKEY>:the-lake:clue:lake-remembers", "visible"],
+      ["set-state", "30078:<PUBKEY>:the-lake:portal:chapel-to-crypt", "visible"],
+      ["set-state", "30078:<PUBKEY>:the-lake:puzzle:chapel-riddle", "solved"],
+      ["set-state", "30078:<PUBKEY>:the-lake:feature:crumbling-inscription", "revealed"],
+      ["set-state", "30078:<PUBKEY>:the-lake:feature:iron-gate", "open"]
+    ],
+    "content": "Extends cave-explored. The player has examined the chapel (stained glass, inscription), solved the chapel riddle, prayed at the altar (crypt portal now visible, lake-remembers clue seen). Iron gate is open at the underground lake. Hermit now has after-chapel dialogue."
+  },
+  {
+    "tags": [
+      ["d", "the-lake:scenario:ready-for-mechanism"],
+      ["t", "the-lake"],
+      ["type", "scenario"],
+      ["title", "Ready for Mechanism — Full Kit"],
+      ["chain", "the-lake:scenario:chapel-complete"],
+      ["place", "30078:<PUBKEY>:the-lake:place:mechanism-chamber"],
+      ["set-state", "30078:<PUBKEY>:the-lake:feature:wall-carvings", "seen"],
+      ["set-state", "30078:<PUBKEY>:the-lake:clue:crypt-carvings", "visible"],
+      ["set-state", "30078:<PUBKEY>:the-lake:feature:stone-sarcophagus", "open"],
+      ["give-item", "30078:<PUBKEY>:the-lake:item:serpent-staff"]
+    ],
+    "content": "Extends chapel-complete. The player has explored the crypt (wall carvings seen, crypt-carvings clue visible), opened the sarcophagus and collected the serpent staff. They are at the mechanism chamber with both the amulet and staff, ready to solve the final puzzle."
+  }
+]

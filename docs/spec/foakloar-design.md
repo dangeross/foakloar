@@ -1852,6 +1852,66 @@ The `transition` table enforces legal state changes — the client blocks any `s
 
 ---
 
+### 2.13 Scenario Events (Dev Only)
+
+Scenarios are **dev-only test fixtures** for large worlds. They let an author jump directly into a specific game state — room, quest states, inventory, counters — without replaying the whole world. They are **never published to NOSTR relays** and exist only in `localStorage` under the key `foakloar:scenarios:<worldSlug>`.
+
+Scenarios are imported via the Drafts panel ("Import Scenarios" button) and applied via the Scenarios panel in the event graph (genesis/collaborator pubkeys only, or fully-draft worlds).
+
+**Tag shape:**
+
+```
+["d",           "<worldslug>:scenario:<id>"]
+["t",           "<worldslug>"]
+["type",        "scenario"]
+["title",       "Act 2 — After Job 3b"]
+["place",       "30078:<pk>:<worldslug>:place:<id>"]
+["set-state",   "30078:<pk>:<worldslug>:quest:<id>", "complete"]
+["set-state",   "30078:<pk>:<worldslug>:quest:<id>", "active"]
+["give-item",   "30078:<pk>:<worldslug>:item:<id>"]
+["set-counter", "<counter-name>", "<value>"]
+["chain",       "<worldslug>:scenario:<base-id>"]
+```
+
+| Tag | Description |
+|-----|-------------|
+| `d` | Unique identifier: `<worldslug>:scenario:<id>` |
+| `t` | World slug (for grouping) |
+| `type` | Must be `scenario` |
+| `title` | Human-readable name shown in the scenarios panel |
+| `place` | Start room (a-tag ref: `30078:<pk>:<worldslug>:place:<id>`) |
+| `set-state` | Set entity state (same shape as the action tag) |
+| `give-item` | Add item to inventory (same shape as the action tag) |
+| `set-counter` | Set a world-scoped counter (same shape as the action tag) |
+| `chain` | Inherit from a base scenario d-tag; base applied first, current overrides |
+
+Content field: plain text description of what game state this scenario represents.
+
+**Chaining:** A `chain` tag causes the client to resolve the base scenario first (depth-limited to 5), then apply the current scenario's tags as overrides. `set-state` and `set-counter` use last-write-wins per key; `give-item` uses union; `place` uses current over base.
+
+**Applying a scenario** writes the resolved player state to `localStorage` under the world slug key, then reloads the page. NPC state is not set — NPCs start in their default states.
+
+**File format** (`<worldslug>-scenarios.json`):
+
+```json
+[
+  {
+    "tags": [
+      ["d", "metropolitan:scenario:act2-start"],
+      ["t", "metropolitan"],
+      ["type", "scenario"],
+      ["title", "Act 2 — After Job 3b"],
+      ["place", "30078:<pk>:metropolitan:place:safehouse"],
+      ["set-state", "30078:<pk>:metropolitan:quest:job3b", "complete"],
+      ["give-item", "30078:<pk>:metropolitan:item:burner-phone"]
+    ],
+    "content": "Player has completed Job 3b, received the burner phone, and is at the safehouse."
+  }
+]
+```
+
+---
+
 ## 3. Cryptographic Puzzle Mechanics
 
 The central innovation: puzzle gates are not simulated — they use actual cryptography. A locked event cannot be read without the key, regardless of relay access.

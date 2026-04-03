@@ -20,6 +20,8 @@ import '@xyflow/react/dist/style.css';
 import Dagre from '@dagrejs/dagre';
 import { nip19 } from 'nostr-tools';
 import { validateWorld, extractDTagFromRef } from '../../builder/validateWorld.js';
+import { loadScenarios, applyScenario } from '../../engine/scenarios.js';
+import DOSPanel from '../../components/ui/DOSPanel.jsx';
 
 const GRAPH_EVENT_TYPES = [
   { value: 'place', label: 'Place' },
@@ -873,10 +875,31 @@ let savedViewport = null;
 export default function EventGraph({
   events, currentPlace, onEditEvent, onNewEvent, onNewPortal, onClose,
   pubkey, trustSet, clientMode, onVouch, onRevoke, onOpenDrafts, onOpenTrust, draftsCount, answers,
+  onImportScenarios,
 }) {
   const [showNewMenu, setShowNewMenu] = useState(false);
   const [selectedRef, setSelectedRef] = useState(null);
+  const [showScenarios, setShowScenarios] = useState(false);
+  const [scenarios, setScenarios] = useState([]);
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+
+  // Access control: genesis/collaborator pubkeys, or fully-draft world
+  const canUseScenarios = useMemo(() => {
+    if (!pubkey || !trustSet) {
+      // Fully draft world (all events are drafts)
+      return events && [...events.values()].every(e => e._isDraft);
+    }
+    return pubkey === trustSet.genesisPubkey || trustSet.collaborators?.has(pubkey);
+  }, [pubkey, trustSet, events]);
+
+  // Load scenarios when panel opens
+  useEffect(() => {
+    if (showScenarios && events) {
+      const worldEvent = [...events.values()].find(e => e.tags?.find(t => t[0] === 'type')?.[1] === 'world');
+      const slug = worldEvent?.tags?.find(t => t[0] === 't')?.[1] || 'default';
+      setScenarios(loadScenarios(slug));
+    }
+  }, [showScenarios, events]);
 
   const { nodes: initialNodes, edges: initialEdges, issuesByDTag } = useMemo(
     () => eventsToGraph(events, currentPlace, trustSet, clientMode, answers),
@@ -1016,6 +1039,18 @@ export default function EventGraph({
                         trust
                       </button>
                     )}
+                    {canUseScenarios && (
+                      <button
+                        onClick={() => { setShowNewMenu(false); setShowScenarios(true); }}
+                        className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                        style={{
+                          color: 'var(--colour-item)', background: 'none', border: 'none',
+                          font: 'inherit',
+                        }}
+                      >
+                        scenarios
+                      </button>
+                    )}
                     <div style={{ borderTop: '1px solid var(--colour-dim)', margin: '2px 0' }} />
                   </>
                 )}
@@ -1076,6 +1111,58 @@ export default function EventGraph({
         trustSet={trustSet}
         issuesByDTag={issuesByDTag}
       />
+
+      {/* Scenarios panel overlay */}
+      {showScenarios && canUseScenarios && (() => {
+        const worldEvent = events && [...events.values()].find(e => e.tags?.find(t => t[0] === 'type')?.[1] === 'world');
+        const worldSlug = worldEvent?.tags?.find(t => t[0] === 't')?.[1] || 'default';
+        // Resolve the actual pubkey to substitute <PUBKEY> placeholders in scenario refs
+        const worldPubkey = trustSet?.genesisPubkey
+          || worldEvent?.pubkey
+          || [...(events?.values() || [])].find(e => e.pubkey)?.pubkey
+          || '';
+        return (
+          <DOSPanel title="SCENARIOS" onClose={() => setShowScenarios(false)} minWidth="28em" zIndex={70}>
+            <div style={{ fontSize: '0.65rem' }}>
+              {scenarios.length === 0 ? (
+                <div style={{ color: 'var(--colour-dim)' }}>
+                  No scenarios loaded. Import a scenarios JSON file from the Drafts panel.
+                </div>
+              ) : (
+                scenarios.map((scenario, i) => {
+                  const title = scenario.tags?.find(t => t[0] === 'title')?.[1] || `Scenario ${i + 1}`;
+                  const desc = scenario.content ? scenario.content.substring(0, 120) : '';
+                  return (
+                    <div key={i} style={{ borderBottom: '1px solid var(--colour-dim)', padding: '0.4rem 0' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+                        <div>
+                          <div style={{ color: 'var(--colour-title)', marginBottom: 2 }}>{title}</div>
+                          {desc && (
+                            <div style={{ color: 'var(--colour-dim)', fontSize: '0.55rem' }}>
+                              {desc}{scenario.content?.length > 120 ? '…' : ''}
+                            </div>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => applyScenario(scenario, worldSlug, scenarios, worldPubkey)}
+                          style={{
+                            color: 'var(--colour-highlight)', background: 'none',
+                            border: '1px solid var(--colour-highlight)',
+                            font: 'inherit', fontSize: '0.55rem',
+                            padding: '1px 6px', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
+                          }}
+                        >
+                          Apply
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </DOSPanel>
+        );
+      })()}
     </div>
   );
 }

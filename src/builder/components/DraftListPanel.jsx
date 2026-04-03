@@ -9,9 +9,8 @@ import DOSPanel from '../../components/ui/DOSPanel.jsx';
 import DOSButton from './ui/DOSButton.jsx';
 import ImportPreviewPanel from './ImportPreviewPanel.jsx';
 import { validateEvent } from '../eventBuilder.js';
-import { validateImport, loadAnswers, loadWalkthrough, parseJsonLenient } from '../draftStore.js';
+import { validateImport, loadAnswers, parseJsonLenient } from '../draftStore.js';
 import { validateWorld, verifyPuzzleHashes } from '../validateWorld.js';
-import { runWalkthrough, smokeTest } from '../../engine/walkthrough.js';
 
 function getTagValue(event, name) {
   return event.tags?.find((t) => t[0] === name)?.[1] || null;
@@ -30,6 +29,7 @@ export default function DraftListPanel({
   onExport,
   onBulkPublish,
   onDeleteAll,
+  onImportScenarios,
   pendingImportData,
   onPendingImportConsumed,
   zIndex,
@@ -40,10 +40,9 @@ export default function DraftListPanel({
   const [confirmPublishAll, setConfirmPublishAll] = useState(false);
   const [expandedValidation, setExpandedValidation] = useState(null);
   const [importPreview, setImportPreview] = useState(null); // { validation, data }
-  const [playtestResult, setPlaytestResult] = useState(null); // { walkthrough?, smoke? }
-  const [playtesting, setPlaytesting] = useState(false);
   const [publishProgress, setPublishProgress] = useState(null); // { total, published, failed }
   const fileRef = useRef(null);
+  const scenarioFileRef = useRef(null);
   const pendingConsumed = useRef(false);
 
   // Auto-trigger import preview from pending Lobby import
@@ -137,70 +136,6 @@ export default function DraftListPanel({
     });
   }, [validations.puzzlesToVerify]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Playtest results panel
-  if (playtestResult) {
-    const { walkthrough: wResult, smoke } = playtestResult;
-    return (
-      <DOSPanel title="PLAYTEST RESULTS" onClose={() => setPlaytestResult(null)} minWidth="30em" zIndex={zIndex}>
-        <div style={{ fontSize: '0.65rem' }}>
-          {/* Smoke test results */}
-          {smoke && (
-            <div className="mb-3">
-              <div className="mb-1" style={{ color: 'var(--colour-title)', fontSize: '0.7rem' }}>Smoke Test</div>
-              <div style={{ color: 'var(--colour-highlight)' }}>
-                Places: {smoke.coverage.placesReachable}/{smoke.coverage.placesTotal} reachable
-              </div>
-              {smoke.issues.length === 0 && (
-                <div style={{ color: 'var(--colour-highlight)' }}>No issues found</div>
-              )}
-              {smoke.issues.map((issue, i) => {
-                const isError = issue.type === 'unreachable';
-                const isHint = issue.type === 'thin-noun' || issue.type === 'undiscoverable-verb';
-                const colour = isError ? 'var(--colour-error)' : isHint ? 'var(--colour-muted, #888)' : 'var(--colour-dim)';
-                const icon = isError ? '✗' : isHint ? '💡' : '⚠';
-                return (
-                  <div key={i} style={{ color: colour }}>
-                    {icon} {issue.message}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {/* Walkthrough results */}
-          {wResult && (
-            <div className="mb-3">
-              <div className="mb-1" style={{ color: 'var(--colour-title)', fontSize: '0.7rem' }}>
-                Walkthrough: {wResult.passed}/{wResult.passed + wResult.failed} passed
-              </div>
-              {wResult.results.map((step, i) => (
-                <div key={i} className="mb-1">
-                  <div style={{ color: step.pass ? 'var(--colour-highlight)' : 'var(--colour-error)' }}>
-                    {step.pass ? '✓' : '✗'} &gt; {step.input}
-                  </div>
-                  {step.errors.map((err, j) => (
-                    <div key={j} style={{ color: 'var(--colour-error)', paddingLeft: '1em' }}>
-                      {err}
-                    </div>
-                  ))}
-                </div>
-              ))}
-              {wResult.coverage.unvisited?.length > 0 && (
-                <div className="mt-2" style={{ color: 'var(--colour-dim)' }}>
-                  Unvisited places: {wResult.coverage.unvisited.length}
-                </div>
-              )}
-            </div>
-          )}
-
-          {!wResult && (
-            <div style={{ color: 'var(--colour-dim)' }}>No walkthrough in world data</div>
-          )}
-        </div>
-      </DOSPanel>
-    );
-  }
-
   // Import preview is showing — render that instead
   if (importPreview) {
     return (
@@ -209,12 +144,7 @@ export default function DraftListPanel({
         validation={importPreview.validation}
         onConfirm={() => {
           // Import only the valid events
-          const validData = {
-            events: importPreview.validation.valid,
-            answers: importPreview.data.answers || {},
-            walkthrough: importPreview.data.walkthrough || undefined,
-          };
-          onImport(validData);
+          onImport({ events: importPreview.validation.valid, answers: importPreview.data.answers || {} });
           setImportPreview(null);
         }}
         onClose={() => setImportPreview(null)}
@@ -394,24 +324,32 @@ export default function DraftListPanel({
           </DOSButton>
         )}
 
-        {/* Playtest */}
-        {events?.size > 0 && (
-          <DOSButton
-            onClick={async () => {
-              setPlaytesting(true);
-              try {
-                const smoke = await smokeTest(events);
-                const wt = loadWalkthrough(worldSlug);
-                const walkthrough = wt ? await runWalkthrough(events, wt) : null;
-                setPlaytestResult({ walkthrough, smoke });
-              } finally {
-                setPlaytesting(false);
-              }
-            }}
-            colour="dim"
-          >
-            {playtesting ? 'Testing...' : 'Playtest'}
-          </DOSButton>
+        {/* Import Scenarios */}
+        {onImportScenarios && (
+          <>
+            <input
+              ref={scenarioFileRef}
+              type="file"
+              accept=".json"
+              style={{ display: 'none' }}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                  try {
+                    const data = JSON.parse(ev.target.result);
+                    onImportScenarios(data);
+                  } catch { alert('Invalid JSON'); }
+                  e.target.value = '';
+                };
+                reader.readAsText(file);
+              }}
+            />
+            <DOSButton onClick={() => scenarioFileRef.current?.click()} colour="dim">
+              Import Scenarios
+            </DOSButton>
+          </>
         )}
 
         {/* Bulk publish */}

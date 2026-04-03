@@ -5,6 +5,16 @@
 
 ## [Unreleased] — April 2026
 
+### Added — Scenario events (dev only, spec section 2.13)
+
+Scenarios are dev-only test fixtures — never published to NOSTR relays. They write a resolved player state to `localStorage` and reload the page, jumping the author directly to a specific game state without replaying the world.
+
+**Tag shape:** `["type", "scenario"]` events support `place`, `set-state`, `give-item`, `set-counter`, and `chain` tags. Chain inheritance resolves bases recursively (depth 5); `set-state`/`set-counter` use last-write-wins, `give-item` uses union, `place` uses current over base.
+
+**Storage:** `foakloar:scenarios:<worldSlug>` in `localStorage`. Imported via the Drafts panel "Import Scenarios" button. Applied via the `[scenarios]` toolbar button in the event graph (genesis/collaborator access only, or fully-draft worlds).
+
+**File format:** `<worldslug>-scenarios.json` — array of scenario objects `{ tags, content }`.
+
 ### Added — `map` world event tag + `portalsUsed` player state
 
 **World event:** `["map", "fog"|"full"]` opts a world into the in-game map overlay.

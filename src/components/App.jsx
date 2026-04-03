@@ -39,6 +39,7 @@ import RelaySettingsPanel from './RelaySettingsPanel.jsx';
 import PublishProgressPanel from '../builder/components/PublishProgressPanel.jsx';
 import SoundToggle from './SoundToggle.jsx';
 import { evaluateSoundTags, isAudioReady, playOneShotRef, loadSamples, hush as hushSound, stopPreview, setEventsMap } from '../services/sound.js';
+import { importScenariosFromData } from '../engine/scenarios.js';
 
 /** Map entry types to colour slots */
 const TYPE_COLOUR = {
@@ -532,6 +533,14 @@ export default function App() {
     if (status === 'ready' && worldConfig && mergedEvents.size > 0 && log.length === 0) {
       const engine = getEngine();
 
+      // If the engine fell back to genesis because events loaded incrementally
+      // (e.g. first relay EOSE with few events, more arrive later), and the
+      // player's saved place is now present in mergedEvents, restore it.
+      const savedPlace = player.state.place;
+      if (savedPlace && mergedEvents.has(savedPlace) && engine.currentPlace !== savedPlace) {
+        engine.currentPlace = savedPlace;
+      }
+
       // Defer if the start place event hasn't arrived yet (world relays may
       // still be expanding after EOSE fires from the default relays).
       const startDtag = engine.currentPlace;
@@ -1019,6 +1028,14 @@ export default function App() {
           onOpenTrust={identity?.pubkey && trustInfo?.trustSet ? () => setShowTrust(true) : null}
           draftsCount={drafts.length}
           onClose={() => setBuildMode(false)}
+          onImportScenarios={
+            (identity?.pubkey && trustInfo?.trustSet && (
+              identity.pubkey === trustInfo.trustSet.genesisPubkey ||
+              trustInfo.trustSet.collaborators?.has(identity.pubkey)
+            )) || (drafts.length > 0 && mergedEvents.size === drafts.length)
+              ? (data) => { importScenariosFromData(worldTag, data); }
+              : undefined
+          }
         />
       )}
 
@@ -1093,6 +1110,14 @@ export default function App() {
             }
             // else: stay in drafts panel so user can import again
           }}
+          onImportScenarios={
+            (identity?.pubkey && trustInfo?.trustSet && (
+              identity.pubkey === trustInfo.trustSet.genesisPubkey ||
+              trustInfo.trustSet.collaborators?.has(identity.pubkey)
+            )) || (drafts.length > 0 && mergedEvents.size === drafts.length)
+              ? (data) => { importScenariosFromData(worldTag, data); }
+              : undefined
+          }
         />
       )}
 

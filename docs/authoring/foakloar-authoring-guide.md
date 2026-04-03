@@ -21,6 +21,7 @@ The spec is the only constraint. The schema supports non-linear structures, unre
 | [tag-reference.md](./tag-reference.md) | All tag shapes, event types, action types, trigger shapes |
 | [foakloar-design.md](../spec/foakloar-design.md) | Full canonical spec — trust model, combat, sound, NIP-44 |
 | [sample-presets.md](../spec/sample-presets.md) | Sound sample preset reference (dirt, classic) |
+| [testing-scenarios.md](./testing-scenarios.md) | Dev-only test fixtures — jump to any game state in one click |
 | `docs/worlds/` | Complete importable world JSON files |
 
 **Read the tag reference before writing any events.** This guide covers process and design thinking. The tag reference covers exact syntax.
