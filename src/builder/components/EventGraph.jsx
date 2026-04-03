@@ -879,7 +879,8 @@ export default function EventGraph({
   onImportScenarios,
 }) {
   const [showNewMenu, setShowNewMenu] = useState(false);
-  const [selectedRef, setSelectedRef] = useState(null);
+  const [selectedRef, setSelectedRef] = useState(null); // highlighted node (both modes)
+  const [sidebarRef, setSidebarRef] = useState(null);   // what the sidebar shows
   const [viewMode, setViewMode] = useState('places'); // 'places' | 'refs'
   const [showScenarios, setShowScenarios] = useState(false);
   const [scenarios, setScenarios] = useState([]);
@@ -917,18 +918,21 @@ export default function EventGraph({
   }, [initialNodes, initialEdges, setNodes, setEdges]);
 
   const onNodeClick = useCallback((_, node) => {
-    setSelectedRef(node.data?.ref || null);
+    const ref = node.data?.ref || null;
+    setSelectedRef(ref);
+    setSidebarRef(ref); // places mode: click opens sidebar immediately
   }, []);
 
   const onEdgeClick = useCallback((_, edge) => {
     if (edge.data?.portalRef) {
-      // Select the source place to show portal in sidebar
       setSelectedRef(edge.source);
+      setSidebarRef(edge.source);
     }
   }, []);
 
   const onPaneClick = useCallback(() => {
     setSelectedRef(null);
+    setSidebarRef(null);
   }, []);
 
   // Drag edge between two place nodes → create portal
@@ -1092,7 +1096,7 @@ export default function EventGraph({
       </div>
 
       {/* Graph */}
-      <div style={{ width: selectedRef && !isMobile ? 'calc(100% - 260px)' : '100%', height: '100%', paddingTop: 30, transition: 'width 0.15s' }}>
+      <div style={{ width: sidebarRef && !isMobile ? 'calc(100% - 260px)' : '100%', height: '100%', paddingTop: 30, transition: 'width 0.15s' }}>
         {viewMode === 'places' ? (
           <ReactFlow
             nodes={nodes}
@@ -1120,6 +1124,7 @@ export default function EventGraph({
             events={events}
             selectedRef={selectedRef}
             onSelectRef={setSelectedRef}
+            onOpenSidebar={setSidebarRef}
             onEditEvent={onEditEvent}
             trustSet={trustSet}
             clientMode={clientMode}
@@ -1129,13 +1134,13 @@ export default function EventGraph({
 
       {/* Sidebar */}
       <GraphSidebar
-        selectedRef={selectedRef}
+        selectedRef={sidebarRef}
         events={events}
         onEditEvent={onEditEvent}
         onNewPortal={onNewPortal}
         onVouch={onVouch}
         onRevoke={onRevoke}
-        onClose={() => setSelectedRef(null)}
+        onClose={() => setSidebarRef(null)}
         pubkey={pubkey}
         trustSet={trustSet}
         issuesByDTag={issuesByDTag}

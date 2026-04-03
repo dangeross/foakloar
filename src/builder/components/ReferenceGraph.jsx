@@ -415,7 +415,7 @@ function buildMarker(edgeType) {
 // ── ReferenceGraph component ─────────────────────────────────────────────────
 
 export default function ReferenceGraph({
-  events, selectedRef, onSelectRef, onEditEvent, trustSet, clientMode,
+  events, selectedRef, onSelectRef, onOpenSidebar, onEditEvent, trustSet, clientMode,
 }) {
   const [activeFilters, setActiveFilters] = useState(() => new Set(EDGE_TYPES));
 
@@ -539,7 +539,7 @@ export default function ReferenceGraph({
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       {/* Filter chips */}
       <div style={{
-        position: 'absolute', top: 8, left: 8, zIndex: 10,
+        position: 'absolute', top: 14, left: 8, zIndex: 10,
         display: 'flex', gap: 4, flexWrap: 'wrap',
         fontFamily: 'inherit',
       }}>
@@ -557,14 +557,32 @@ export default function ReferenceGraph({
                 border: `1px solid ${active ? colour : 'var(--colour-dim)'}`,
                 color: active ? colour : 'var(--colour-dim)',
                 font: 'inherit', fontSize: '0.5rem',
-                padding: '1px 6px', cursor: 'pointer',
+                padding: '3px 6px', cursor: 'pointer',
               }}
             >
               {et}
             </button>
           );
         })}
+
       </div>
+
+      {/* Details button — top-right, visible when a node is selected */}
+      {selectedRef && (
+        <button
+          onClick={() => onOpenSidebar?.(selectedRef)}
+          style={{
+            position: 'absolute', top: 14, right: 8, zIndex: 10,
+            background: 'var(--colour-bg)',
+            border: '1px solid var(--colour-highlight)',
+            color: 'var(--colour-highlight)',
+            font: 'inherit', fontSize: '0.5rem',
+            padding: '1px 6px', cursor: 'pointer',
+          }}
+        >
+          details
+        </button>
+      )}
 
       <ReactFlow
         nodes={nodes}
