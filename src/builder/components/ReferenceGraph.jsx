@@ -357,13 +357,14 @@ function eventsToReferenceGraph(events) {
       if (name.startsWith('on-')) {
         // Extract trigger metadata per trigger type
         let verb = '', stateGuard = '';
+        const isRef = v => typeof v === 'string' && v.startsWith('30078:');
         if (name === 'on-interact') {
           verb       = tag[1] || '';
           stateGuard = tag[2] || '';
         } else if (name === 'on-enter' || name === 'on-exit' || name === 'on-timer') {
-          stateGuard = tag[1] || '';
+          stateGuard = !isRef(tag[1]) ? (tag[1] || '') : '';
         } else if (name === 'on-drop') {
-          stateGuard = tag[2] || '';
+          stateGuard = !isRef(tag[2]) ? (tag[2] || '') : '';
         } else if (name === 'on-counter' || name === 'on-health' || name === 'on-player-health') {
           stateGuard = tag[3] || ''; // threshold acts as the guard
         }
@@ -372,8 +373,9 @@ function eventsToReferenceGraph(events) {
           if (typeof val === 'string' && val.startsWith('30078:')) {
             // The action type (give-item, set-state, consequence, …) always
             // sits immediately before the event ref in every on-* tag shape.
-            const actionType = (i > 0 && typeof tag[i - 1] === 'string' && !tag[i - 1].startsWith('30078:'))
-              ? tag[i - 1] : '';
+            const prev = i > 0 ? tag[i - 1] : '';
+            const actionType = (typeof prev === 'string' && prev && !prev.startsWith('30078:') && prev !== name)
+              ? prev : '';
             pushEdge({ source: ref, target: val, edgeType: 'action',
               tagName: name, tagIdx: `${tagIdx}-${i}`,
               meta: { trigger: name, verb, stateGuard, actionType } });
