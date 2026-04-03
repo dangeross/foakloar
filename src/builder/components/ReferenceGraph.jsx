@@ -7,6 +7,7 @@
  */
 
 import React, { useMemo, useCallback, useState, useEffect, useRef } from 'react';
+import dagre from '@dagrejs/dagre';
 import {
   ReactFlow,
   Background,
@@ -21,16 +22,6 @@ import '@xyflow/react/dist/style.css';
 
 // ── Skip types — internal/meta events with no gameplay references ────────────
 const SKIP_TYPES = new Set(['vouch', 'revoke', 'player-state', 'report']);
-
-// ── Row layout Y positions by event type ────────────────────────────────────
-const ROW_Y = {
-  world: 0,
-  place: 200,
-  npc: 400, dialogue: 400,
-  item: 600, feature: 600, clue: 600, puzzle: 600, recipe: 600,
-  quest: 800, consequence: 800, sound: 800, payment: 800, portal: 800,
-};
-const COL_SPACING = 220;
 
 // ── Edge type constants ──────────────────────────────────────────────────────
 const EDGE_TYPES = ['placement', 'requires', 'action', 'portal', 'dialogue'];
@@ -71,7 +62,7 @@ function RefNode({ data }) {
   const colour = TYPE_COLOURS[data.eventType] ?? 'var(--colour-text)';
   return (
     <div style={{
-      width: 120, height: 36,
+      width: NODE_W, height: NODE_H,
       border: `1px ${data.isDraft ? 'dashed' : 'solid'} ${colour}`,
       background: 'color-mix(in srgb, var(--colour-bg) 92%, var(--colour-dim))',
       color: colour,
@@ -271,22 +262,71 @@ function eventsToReferenceGraph(events) {
   return { rawNodes, rawEdges };
 }
 
+// Node dimensions used by dagre and RefNode
+const NODE_W = 140;
+const NODE_H = 40;
+
 /**
- * Compute type-grouped row layout. Mutates node positions.
+ * Compute dagre layout positions. Mutates node positions.
+ *
+ * Edge handling per type:
+ *   placement  → as-is (container → contained entity)
+ *   requires   → reversed (required item ranks LEFT of what needs it)
+ *   portal     → canonical single direction only (sort ids, take one)
+ *                prevents bidirectional cycles from collapsing places into one rank
+ *   dialogue   → as-is (forms trees)
+ *   action     → excluded (too cross-cutting; rendered visually only)
+ *
+ * LR (left→right) suits wide viewports and horizontal world exploration.
+ * acyclicer:'greedy' handles any remaining reference cycles.
  */
-function computeLayout(nodes) {
-  const rowGroups = new Map();
+function computeLayout(nodes, edges) {
+  const g = new dagre.graphlib.Graph();
+  g.setDefaultEdgeLabel(() => ({}));
+  g.setGraph({
+    rankdir: 'LR',
+    nodesep: 50,
+    ranksep: 120,
+    acyclicer: 'greedy',
+    ranker: 'network-simplex',
+    marginx: 40,
+    marginy: 40,
+  });
+
   for (const node of nodes) {
-    const y = ROW_Y[node.data.eventType] ?? 800;
-    if (!rowGroups.has(y)) rowGroups.set(y, []);
-    rowGroups.get(y).push(node);
+    g.setNode(node.id, { width: NODE_W, height: NODE_H });
   }
-  for (const [y, group] of rowGroups) {
-    const totalWidth = (group.length - 1) * COL_SPACING;
-    const startX = -totalWidth / 2;
-    group.forEach((node, i) => {
-      node.position = { x: startX + i * COL_SPACING, y };
-    });
+
+  const portalPairs = new Set(); // deduplicate bidirectional portal edges
+
+  for (const edge of edges) {
+    if (!g.hasNode(edge.source) || !g.hasNode(edge.target)) continue;
+
+    if (edge.edgeType === 'placement') {
+      g.setEdge(edge.source, edge.target);
+    } else if (edge.edgeType === 'requires') {
+      g.setEdge(edge.target, edge.source); // reversed
+    } else if (edge.edgeType === 'portal') {
+      const key = [edge.source, edge.target].sort().join('::');
+      if (!portalPairs.has(key)) {
+        portalPairs.add(key);
+        const [a, b] = key.split('::');
+        g.setEdge(a, b);
+      }
+    } else if (edge.edgeType === 'dialogue') {
+      g.setEdge(edge.source, edge.target);
+    }
+    // action — excluded from rank computation
+  }
+
+  dagre.layout(g);
+
+  for (const node of nodes) {
+    const pos = g.node(node.id);
+    if (pos) {
+      // Dagre gives centre coords; XYFlow uses top-left corner
+      node.position = { x: pos.x - NODE_W / 2, y: pos.y - NODE_H / 2 };
+    }
   }
 }
 
@@ -345,12 +385,12 @@ export default function ReferenceGraph({
     [events]
   );
 
-  // 2. Compute layout positions (fresh from rawNodes)
+  // 2. Compute layout positions using dagre (uses rawEdges for rank structure)
   const layoutNodes = useMemo(() => {
     const nodes = rawNodes.map(n => ({ ...n, position: { x: 0, y: 0 } }));
-    computeLayout(nodes);
+    computeLayout(nodes, rawEdges);
     return nodes;
-  }, [rawNodes]);
+  }, [rawNodes, rawEdges]);
 
   // 3. Filter edges by active filter chips
   const filteredRawEdges = useMemo(
