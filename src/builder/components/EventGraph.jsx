@@ -22,6 +22,7 @@ import { nip19 } from 'nostr-tools';
 import { validateWorld, extractDTagFromRef } from '../../builder/validateWorld.js';
 import { loadScenarios, applyScenario } from '../../engine/scenarios.js';
 import DOSPanel from '../../components/ui/DOSPanel.jsx';
+import ReferenceGraph from './ReferenceGraph.jsx';
 
 const GRAPH_EVENT_TYPES = [
   { value: 'place', label: 'Place' },
@@ -879,6 +880,7 @@ export default function EventGraph({
 }) {
   const [showNewMenu, setShowNewMenu] = useState(false);
   const [selectedRef, setSelectedRef] = useState(null);
+  const [viewMode, setViewMode] = useState('places'); // 'places' | 'refs'
   const [showScenarios, setShowScenarios] = useState(false);
   const [scenarios, setScenarios] = useState([]);
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
@@ -987,6 +989,22 @@ export default function EventGraph({
           >
             [X]
           </button>
+          <button
+            onClick={() => setViewMode('places')}
+            style={{
+              color: viewMode === 'places' ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+              background: 'none', border: 'none',
+              font: 'inherit', fontSize: '0.6rem', padding: '2px 4px', cursor: 'pointer',
+            }}
+          >[map]</button>
+          <button
+            onClick={() => setViewMode('refs')}
+            style={{
+              color: viewMode === 'refs' ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+              background: 'none', border: 'none',
+              font: 'inherit', fontSize: '0.6rem', padding: '2px 4px', cursor: 'pointer',
+            }}
+          >[refs]</button>
           <span style={{ color: 'var(--colour-dim)', fontFamily: 'inherit' }} className="text-xs sm:text-sm">
             {orphanCount > 0 && <span style={{ color: 'var(--colour-error)' }}>{orphanCount} orphan{orphanCount !== 1 ? 's' : ''}</span>}
             {orphanCount > 0 && issuesByDTag.size > 0 && ' · '}
@@ -1075,27 +1093,38 @@ export default function EventGraph({
 
       {/* Graph */}
       <div style={{ width: selectedRef && !isMobile ? 'calc(100% - 260px)' : '100%', height: '100%', paddingTop: 30, transition: 'width 0.15s' }}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onNodeClick={onNodeClick}
-          onEdgeClick={onEdgeClick}
-          onPaneClick={onPaneClick}
-          onConnect={onConnect}
-          onMoveEnd={onMoveEnd}
-          onInit={onInit}
-          nodeTypes={nodeTypes}
-          defaultViewport={savedViewport || { x: 0, y: 0, zoom: 0.5 }}
-          minZoom={0.2}
-          maxZoom={4}
-          proOptions={{ hideAttribution: true }}
-          defaultEdgeOptions={{ type: 'bezier' }}
-        >
-          <Background color="var(--colour-dim)" gap={40} size={1} style={{ opacity: 0.15 }} />
-          <Controls showInteractive={false} style={{ bottom: 10, left: 10 }} />
-        </ReactFlow>
+        {viewMode === 'places' ? (
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onNodeClick={onNodeClick}
+            onEdgeClick={onEdgeClick}
+            onPaneClick={onPaneClick}
+            onConnect={onConnect}
+            onMoveEnd={onMoveEnd}
+            onInit={onInit}
+            nodeTypes={nodeTypes}
+            defaultViewport={savedViewport || { x: 0, y: 0, zoom: 0.5 }}
+            minZoom={0.2}
+            maxZoom={4}
+            proOptions={{ hideAttribution: true }}
+            defaultEdgeOptions={{ type: 'bezier' }}
+          >
+            <Background color="var(--colour-dim)" gap={40} size={1} style={{ opacity: 0.15 }} />
+            <Controls showInteractive={false} style={{ bottom: 10, left: 10 }} />
+          </ReactFlow>
+        ) : (
+          <ReferenceGraph
+            events={events}
+            selectedRef={selectedRef}
+            onSelectRef={setSelectedRef}
+            onEditEvent={onEditEvent}
+            trustSet={trustSet}
+            clientMode={clientMode}
+          />
+        )}
       </div>
 
       {/* Sidebar */}
