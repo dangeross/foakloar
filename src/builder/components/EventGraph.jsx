@@ -22,6 +22,7 @@ import { nip19 } from 'nostr-tools';
 import { validateWorld, extractDTagFromRef } from '../../builder/validateWorld.js';
 import { loadScenarios, applyScenario } from '../../engine/scenarios.js';
 import DOSPanel from '../../components/ui/DOSPanel.jsx';
+import ReferenceGraph from './ReferenceGraph.jsx';
 
 const GRAPH_EVENT_TYPES = [
   { value: 'place', label: 'Place' },
@@ -878,7 +879,9 @@ export default function EventGraph({
   onImportScenarios,
 }) {
   const [showNewMenu, setShowNewMenu] = useState(false);
-  const [selectedRef, setSelectedRef] = useState(null);
+  const [selectedRef, setSelectedRef] = useState(null); // highlighted node (both modes)
+  const [sidebarRef, setSidebarRef] = useState(null);   // what the sidebar shows
+  const [viewMode, setViewMode] = useState('places'); // 'places' | 'refs'
   const [showScenarios, setShowScenarios] = useState(false);
   const [scenarios, setScenarios] = useState([]);
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
@@ -915,18 +918,21 @@ export default function EventGraph({
   }, [initialNodes, initialEdges, setNodes, setEdges]);
 
   const onNodeClick = useCallback((_, node) => {
-    setSelectedRef(node.data?.ref || null);
+    const ref = node.data?.ref || null;
+    setSelectedRef(ref);
+    setSidebarRef(ref); // places mode: click opens sidebar immediately
   }, []);
 
   const onEdgeClick = useCallback((_, edge) => {
     if (edge.data?.portalRef) {
-      // Select the source place to show portal in sidebar
       setSelectedRef(edge.source);
+      setSidebarRef(edge.source);
     }
   }, []);
 
   const onPaneClick = useCallback(() => {
     setSelectedRef(null);
+    setSidebarRef(null);
   }, []);
 
   // Drag edge between two place nodes → create portal
@@ -1015,6 +1021,28 @@ export default function EventGraph({
                   padding: '2px 0', minWidth: 140, maxHeight: 300, overflowY: 'auto',
                 }}
               >
+                {/* View mode */}
+                <button
+                  onClick={() => { setViewMode('places'); setShowNewMenu(false); }}
+                  className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                  style={{
+                    color: viewMode === 'places' ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+                    background: 'none', border: 'none', font: 'inherit',
+                  }}
+                >
+                  {viewMode === 'places' ? '✓ ' : '  '}map
+                </button>
+                <button
+                  onClick={() => { setViewMode('refs'); setShowNewMenu(false); }}
+                  className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                  style={{
+                    color: viewMode === 'refs' ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+                    background: 'none', border: 'none', font: 'inherit',
+                  }}
+                >
+                  {viewMode === 'refs' ? '✓ ' : '  '}refs
+                </button>
+                <div style={{ borderTop: '1px solid var(--colour-dim)', margin: '2px 0' }} />
                 {onOpenDrafts && (
                   <>
                     <button
@@ -1074,39 +1102,51 @@ export default function EventGraph({
       </div>
 
       {/* Graph */}
-      <div style={{ width: selectedRef && !isMobile ? 'calc(100% - 260px)' : '100%', height: '100%', paddingTop: 30, transition: 'width 0.15s' }}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onNodeClick={onNodeClick}
-          onEdgeClick={onEdgeClick}
-          onPaneClick={onPaneClick}
-          onConnect={onConnect}
-          onMoveEnd={onMoveEnd}
-          onInit={onInit}
-          nodeTypes={nodeTypes}
-          defaultViewport={savedViewport || { x: 0, y: 0, zoom: 0.5 }}
-          minZoom={0.2}
-          maxZoom={4}
-          proOptions={{ hideAttribution: true }}
-          defaultEdgeOptions={{ type: 'bezier' }}
-        >
-          <Background color="var(--colour-dim)" gap={40} size={1} style={{ opacity: 0.15 }} />
-          <Controls showInteractive={false} style={{ bottom: 10, left: 10 }} />
-        </ReactFlow>
+      <div style={{ width: sidebarRef && !isMobile ? 'calc(100% - 260px)' : '100%', height: '100%', paddingTop: 30, transition: 'width 0.15s' }}>
+        {viewMode === 'places' ? (
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onNodeClick={onNodeClick}
+            onEdgeClick={onEdgeClick}
+            onPaneClick={onPaneClick}
+            onConnect={onConnect}
+            onMoveEnd={onMoveEnd}
+            onInit={onInit}
+            nodeTypes={nodeTypes}
+            defaultViewport={savedViewport || { x: 0, y: 0, zoom: 0.5 }}
+            minZoom={0.2}
+            maxZoom={4}
+            proOptions={{ hideAttribution: true }}
+            defaultEdgeOptions={{ type: 'bezier' }}
+          >
+            <Background color="var(--colour-dim)" gap={40} size={1} style={{ opacity: 0.15 }} />
+            <Controls showInteractive={false} style={{ bottom: 10, left: 10 }} />
+          </ReactFlow>
+        ) : (
+          <ReferenceGraph
+            events={events}
+            selectedRef={selectedRef}
+            onSelectRef={setSelectedRef}
+            onOpenSidebar={setSidebarRef}
+            onEditEvent={onEditEvent}
+            trustSet={trustSet}
+            clientMode={clientMode}
+          />
+        )}
       </div>
 
       {/* Sidebar */}
       <GraphSidebar
-        selectedRef={selectedRef}
+        selectedRef={sidebarRef}
         events={events}
         onEditEvent={onEditEvent}
         onNewPortal={onNewPortal}
         onVouch={onVouch}
         onRevoke={onRevoke}
-        onClose={() => setSelectedRef(null)}
+        onClose={() => setSidebarRef(null)}
         pubkey={pubkey}
         trustSet={trustSet}
         issuesByDTag={issuesByDTag}
