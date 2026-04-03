@@ -7,7 +7,7 @@
  */
 
 import React, { useMemo, useCallback, useState, useEffect, useRef } from 'react';
-import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force';
+import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide, forceX, forceY } from 'd3-force';
 import {
   ReactFlow,
   Background,
@@ -338,16 +338,21 @@ function computeLayout(nodes, edges) {
   const LINK_DISTANCE = { portal: 100, placement: 140, dialogue: 90, requires: 220, action: 260 };
   const LINK_STRENGTH = { portal: 0.9, placement: 0.7, dialogue: 0.8, requires: 0.25, action: 0.15 };
 
+  // Soft Y targets by event type — bias toward a top-to-bottom reading order
+  // without overriding the organic clustering. Strength 0.08 is gentle enough
+  // that connected nodes still pull each other; just adds orientation.
   forceSimulation(nodes)
     .force('link', forceLink(simLinks)
       .id(d => d.id)
       .distance(d => LINK_DISTANCE[d.edgeType] ?? 180)
       .strength(d => LINK_STRENGTH[d.edgeType] ?? 0.5))
-    .force('charge', forceManyBody().strength(-500))
+    .force('charge', forceManyBody().strength(-800))
     .force('center', forceCenter(0, 0))
-    .force('collide', forceCollide(NODE_W * 0.6))
+    .force('collide', forceCollide(NODE_W * 0.8))
+    .force('x', forceX(0).strength(0.04))
+    .force('y', forceY(0).strength(0.04))
     .stop()
-    .tick(500);
+    .tick(600);
 
   // d3 sets x/y as node centres; XYFlow wants top-left
   for (const node of nodes) {
