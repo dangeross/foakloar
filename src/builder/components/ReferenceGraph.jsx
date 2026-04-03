@@ -7,7 +7,7 @@
  */
 
 import React, { useMemo, useCallback, useState, useEffect, useRef } from 'react';
-import dagre from '@dagrejs/dagre';
+import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force';
 import {
   ReactFlow,
   Background,
@@ -302,71 +302,56 @@ function eventsToReferenceGraph(events) {
   return { rawNodes, rawEdges };
 }
 
-// Node dimensions used by dagre and RefNode
+// Node dimensions used by layout and RefNode
 const NODE_W = 140;
 const NODE_H = 40;
 
 /**
- * Compute dagre layout positions. Mutates node positions.
- *
- * Edge handling per type:
- *   placement  → as-is (container → contained entity)
- *   requires   → reversed (required item ranks LEFT of what needs it)
- *   portal     → canonical single direction only (sort ids, take one)
- *                prevents bidirectional cycles from collapsing places into one rank
- *   dialogue   → as-is (forms trees)
- *   action     → excluded (too cross-cutting; rendered visually only)
- *
- * LR (left→right) suits wide viewports and horizontal world exploration.
- * acyclicer:'greedy' handles any remaining reference cycles.
+ * Compute force-directed layout positions. Mutates node positions.
+ * Runs the simulation synchronously for a fixed number of ticks.
+ * All edge types participate — connected nodes cluster naturally.
  */
 function computeLayout(nodes, edges) {
-  const g = new dagre.graphlib.Graph();
-  g.setDefaultEdgeLabel(() => ({}));
-  g.setGraph({
-    rankdir: 'LR',
-    nodesep: 50,
-    ranksep: 120,
-    acyclicer: 'greedy',
-    ranker: 'network-simplex',
-    marginx: 40,
-    marginy: 40,
+  const nodeById = new Map(nodes.map(n => [n.id, n]));
+
+  // Build deduplicated simulation links (skip unknown endpoints)
+  const simLinks = [];
+  const seen = new Set();
+  for (const edge of edges) {
+    if (!nodeById.has(edge.source) || !nodeById.has(edge.target)) continue;
+    const key = [edge.source, edge.target].sort().join('::');
+    if (seen.has(key)) continue;
+    seen.add(key);
+    simLinks.push({ source: edge.source, target: edge.target, edgeType: edge.edgeType });
+  }
+
+  // Seed positions in a circle to give the simulation a clean start
+  const R = Math.max(200, nodes.length * 12);
+  nodes.forEach((n, i) => {
+    const angle = (2 * Math.PI * i) / nodes.length;
+    n.x = R * Math.cos(angle);
+    n.y = R * Math.sin(angle);
   });
 
+  // Per-type link weights: distance controls how far apart connected nodes sit;
+  // strength controls how firmly the link enforces that distance.
+  const LINK_DISTANCE = { portal: 100, placement: 140, dialogue: 90, requires: 220, action: 260 };
+  const LINK_STRENGTH = { portal: 0.9, placement: 0.7, dialogue: 0.8, requires: 0.25, action: 0.15 };
+
+  forceSimulation(nodes)
+    .force('link', forceLink(simLinks)
+      .id(d => d.id)
+      .distance(d => LINK_DISTANCE[d.edgeType] ?? 180)
+      .strength(d => LINK_STRENGTH[d.edgeType] ?? 0.5))
+    .force('charge', forceManyBody().strength(-500))
+    .force('center', forceCenter(0, 0))
+    .force('collide', forceCollide(NODE_W * 0.6))
+    .stop()
+    .tick(500);
+
+  // d3 sets x/y as node centres; XYFlow wants top-left
   for (const node of nodes) {
-    g.setNode(node.id, { width: NODE_W, height: NODE_H });
-  }
-
-  const portalPairs = new Set(); // deduplicate bidirectional portal edges
-
-  for (const edge of edges) {
-    if (!g.hasNode(edge.source) || !g.hasNode(edge.target)) continue;
-
-    if (edge.edgeType === 'placement') {
-      g.setEdge(edge.source, edge.target);
-    } else if (edge.edgeType === 'requires') {
-      g.setEdge(edge.target, edge.source); // reversed
-    } else if (edge.edgeType === 'portal') {
-      const key = [edge.source, edge.target].sort().join('::');
-      if (!portalPairs.has(key)) {
-        portalPairs.add(key);
-        const [a, b] = key.split('::');
-        g.setEdge(a, b);
-      }
-    } else if (edge.edgeType === 'dialogue') {
-      g.setEdge(edge.source, edge.target);
-    }
-    // action — excluded from rank computation
-  }
-
-  dagre.layout(g);
-
-  for (const node of nodes) {
-    const pos = g.node(node.id);
-    if (pos) {
-      // Dagre gives centre coords; XYFlow uses top-left corner
-      node.position = { x: pos.x - NODE_W / 2, y: pos.y - NODE_H / 2 };
-    }
+    node.position = { x: node.x - NODE_W / 2, y: node.y - NODE_H / 2 };
   }
 }
 
