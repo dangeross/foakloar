@@ -993,22 +993,6 @@ export default function EventGraph({
           >
             [X]
           </button>
-          <button
-            onClick={() => setViewMode('places')}
-            style={{
-              color: viewMode === 'places' ? 'var(--colour-highlight)' : 'var(--colour-dim)',
-              background: 'none', border: 'none',
-              font: 'inherit', fontSize: '0.6rem', padding: '2px 4px', cursor: 'pointer',
-            }}
-          >[map]</button>
-          <button
-            onClick={() => setViewMode('refs')}
-            style={{
-              color: viewMode === 'refs' ? 'var(--colour-highlight)' : 'var(--colour-dim)',
-              background: 'none', border: 'none',
-              font: 'inherit', fontSize: '0.6rem', padding: '2px 4px', cursor: 'pointer',
-            }}
-          >[refs]</button>
           <span style={{ color: 'var(--colour-dim)', fontFamily: 'inherit' }} className="text-xs sm:text-sm">
             {orphanCount > 0 && <span style={{ color: 'var(--colour-error)' }}>{orphanCount} orphan{orphanCount !== 1 ? 's' : ''}</span>}
             {orphanCount > 0 && issuesByDTag.size > 0 && ' · '}
@@ -1037,6 +1021,28 @@ export default function EventGraph({
                   padding: '2px 0', minWidth: 140, maxHeight: 300, overflowY: 'auto',
                 }}
               >
+                {/* View mode */}
+                <button
+                  onClick={() => { setViewMode('places'); setShowNewMenu(false); }}
+                  className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                  style={{
+                    color: viewMode === 'places' ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+                    background: 'none', border: 'none', font: 'inherit',
+                  }}
+                >
+                  {viewMode === 'places' ? '✓ ' : '  '}map
+                </button>
+                <button
+                  onClick={() => { setViewMode('refs'); setShowNewMenu(false); }}
+                  className="block w-full text-left px-2 py-1 cursor-pointer hover:opacity-80"
+                  style={{
+                    color: viewMode === 'refs' ? 'var(--colour-highlight)' : 'var(--colour-dim)',
+                    background: 'none', border: 'none', font: 'inherit',
+                  }}
+                >
+                  {viewMode === 'refs' ? '✓ ' : '  '}refs
+                </button>
+                <div style={{ borderTop: '1px solid var(--colour-dim)', margin: '2px 0' }} />
                 {onOpenDrafts && (
                   <>
                     <button

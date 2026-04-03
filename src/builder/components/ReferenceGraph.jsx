@@ -42,21 +42,23 @@ const EDGE_DASH = {
 };
 
 // ── Node colour by event type ────────────────────────────────────────────────
+// Hardcoded so nodes are visually distinct regardless of world theme
+// (CSS variables collapse to 2–3 values in most themes).
 const TYPE_COLOURS = {
-  world:       'var(--colour-npc)',
-  place:       'var(--colour-title)',
-  npc:         'var(--colour-npc)',
-  dialogue:    'var(--colour-dim)',
-  item:        'var(--colour-item)',
-  feature:     'var(--colour-highlight)',
-  clue:        'var(--colour-clue)',
-  puzzle:      'var(--colour-puzzle)',
-  recipe:      'var(--colour-exits)',
-  quest:       'var(--colour-highlight)',
-  consequence: 'var(--colour-error)',
-  sound:       'var(--colour-dim)',
-  payment:     'var(--colour-item)',
-  portal:      'var(--colour-exits)',
+  world:       '#e0e0e0',  // white   — unique root node
+  place:       '#26c6da',  // cyan    — navigation nodes
+  portal:      '#00e676',  // green   — matches portal edges
+  npc:         '#ffb300',  // amber   — characters
+  dialogue:    '#bf5af2',  // purple  — matches dialogue edges
+  item:        '#4a9eff',  // blue    — matches placement edges
+  feature:     '#66bb6a',  // sage    — interactables
+  clue:        '#dce775',  // lime    — information / discovery
+  puzzle:      '#ff7043',  // orange  — challenges
+  recipe:      '#78909c',  // slate   — crafting
+  quest:       '#ffd54f',  // yellow  — objectives
+  consequence: '#ef5350',  // red     — matches requires/error edges
+  sound:       '#9e9e9e',  // gray       — ambient / passive
+  payment:     '#ffd54f',  // yellow  — same family as quest
 };
 
 // ── Floating edge helpers ────────────────────────────────────────────────────
@@ -135,7 +137,7 @@ function edgeLabelText(data) {
     const base = negated ? 'requires-not' : 'requires';
     return requiredState ? `${base} · ${requiredState}` : base;
   }
-  if (edgeType === 'portal')    return slot ? `slot: ${slot}` : 'portal';
+  if (edgeType === 'portal')    return slot || 'portal';
   if (edgeType === 'placement') return entityType || 'placed';
   if (edgeType === 'dialogue') {
     if (!data.gated) return 'dialogue';
@@ -237,11 +239,26 @@ function eventsToReferenceGraph(events) {
   const rawEdges = [];
   const edgeIdSet = new Set();
 
+  // Plain portals (no requires/state) are hidden as nodes — they'd just duplicate
+  // what the map view shows. Gated/stateful portals are kept as nodes because
+  // their conditional relationships are meaningful in the refs view.
+  const plainPortals = new Set(); // refs of portals to suppress as nodes
+  for (const [ref, event] of events) {
+    const eventType = event.tags?.find(t => t[0] === 'type')?.[1] ?? '';
+    if (eventType !== 'portal') continue;
+    const tags = event.tags || [];
+    const isInteresting = tags.some(t =>
+      t[0] === 'requires' || t[0] === 'requires-not' || t[0] === 'state'
+    );
+    if (!isInteresting) plainPortals.add(ref);
+  }
+
   // Build event type index for validation
   const eventTypeMap = new Map(); // ref → eventType
   for (const [ref, event] of events) {
     const eventType = event.tags?.find(t => t[0] === 'type')?.[1] ?? '';
     if (SKIP_TYPES.has(eventType)) continue;
+    if (plainPortals.has(ref)) continue; // suppress plain portals as nodes
     eventTypeMap.set(ref, eventType);
   }
 
@@ -249,6 +266,7 @@ function eventsToReferenceGraph(events) {
   for (const [ref, event] of events) {
     const eventType = event.tags?.find(t => t[0] === 'type')?.[1] ?? '';
     if (SKIP_TYPES.has(eventType)) continue;
+    if (plainPortals.has(ref)) continue;
     const label = event.tags?.find(t => t[0] === 'title')?.[1]
       || event.tags?.find(t => t[0] === 'd')?.[1]?.split(':').pop()
       || ref.split(':').pop()
@@ -365,20 +383,29 @@ function eventsToReferenceGraph(events) {
       }
     });
 
-    // Portal connections — scan exit tag pairs
+    // Portal connections
     if (eventType === 'portal') {
       const exits = tags.filter(t => t[0] === 'exit');
-      if (exits.length >= 2) {
+      if (plainPortals.has(ref)) {
+        // Plain portal: one undirected edge with combined slot label (e.g. "east/west")
+        if (exits.length >= 2) {
+          const src  = exits[0][1];
+          const tgt  = exits[1][1];
+          if (typeof src === 'string' && src.startsWith('30078:') &&
+              typeof tgt === 'string' && tgt.startsWith('30078:')) {
+            const slot = exits.map(e => e[2] || '').filter(Boolean).join('/');
+            pushEdge({ source: src, target: tgt, edgeType: 'portal',
+              tagName: 'exit', tagIdx: '0->1', meta: { slot } });
+          }
+        }
+      } else {
+        // Gated/stateful portal: keep as node, connect portal↔place
         for (let i = 0; i < exits.length; i++) {
-          for (let j = 0; j < exits.length; j++) {
-            if (i === j) continue;
-            const src = exits[i][1];
-            const tgt = exits[j][1];
-            if (typeof src === 'string' && src.startsWith('30078:') &&
-                typeof tgt === 'string' && tgt.startsWith('30078:')) {
-              pushEdge({ source: src, target: tgt, edgeType: 'portal', tagName: 'exit', tagIdx: `${i}->${j}`,
-                meta: { slot: exits[i][2] || '' } });
-            }
+          const placeRef = exits[i][1];
+          const slot     = exits[i][2] || '';
+          if (typeof placeRef === 'string' && placeRef.startsWith('30078:')) {
+            pushEdge({ source: ref, target: placeRef, edgeType: 'portal',
+              tagName: 'exit', tagIdx: i, meta: { slot } });
           }
         }
       }
@@ -411,6 +438,42 @@ function computeLayout(nodes, edges) {
     simLinks.push({ source: edge.source, target: edge.target, edgeType: edge.edgeType });
   }
 
+  // Compass unit vectors (x right, y down)
+  const SLOT_V = {
+    north:     [ 0,     -1    ],
+    south:     [ 0,      1    ],
+    east:      [ 1,      0    ],
+    west:      [-1,      0    ],
+    up:        [ 0,     -1    ],
+    down:      [ 0,      1    ],
+    northeast: [ 0.707, -0.707],
+    northwest: [-0.707, -0.707],
+    southeast: [ 0.707,  0.707],
+    southwest: [-0.707,  0.707],
+  };
+  const DIR_DIST = 160;
+  const DIR_STR  = 0.2;
+
+  // Collect portal edges that have a recognisable compass slot.
+  // For combined labels like "east/west" use the first slot (outbound direction).
+  const dirLinks = [];
+  for (const edge of edges) {
+    if (edge.edgeType !== 'portal') continue;
+    const slot = (edge.data?.slot ?? '').split('/')[0].toLowerCase();
+    const v = SLOT_V[slot];
+    if (!v) continue;
+    const src = nodeById.get(edge.source);
+    const tgt = nodeById.get(edge.target);
+    if (src && tgt) dirLinks.push({ src, tgt, v });
+  }
+
+  function portalDirForce(alpha) {
+    for (const { src, tgt, v } of dirLinks) {
+      tgt.vx += (src.x + v[0] * DIR_DIST - tgt.x) * DIR_STR * alpha;
+      tgt.vy += (src.y + v[1] * DIR_DIST - tgt.y) * DIR_STR * alpha;
+    }
+  }
+
   // Seed positions in a circle to give the simulation a clean start
   const R = Math.max(200, nodes.length * 12);
   nodes.forEach((n, i) => {
@@ -437,6 +500,7 @@ function computeLayout(nodes, edges) {
     .force('collide', forceCollide(NODE_W * 0.8))
     .force('x', forceX(0).strength(0.04))
     .force('y', forceY(0).strength(0.04))
+    .force('portal-dir', portalDirForce)
     .stop()
     .tick(600);
 
