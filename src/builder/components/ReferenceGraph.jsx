@@ -438,42 +438,6 @@ function computeLayout(nodes, edges) {
     simLinks.push({ source: edge.source, target: edge.target, edgeType: edge.edgeType });
   }
 
-  // Compass unit vectors (x right, y down)
-  const SLOT_V = {
-    north:     [ 0,     -1    ],
-    south:     [ 0,      1    ],
-    east:      [ 1,      0    ],
-    west:      [-1,      0    ],
-    up:        [ 0,     -1    ],
-    down:      [ 0,      1    ],
-    northeast: [ 0.707, -0.707],
-    northwest: [-0.707, -0.707],
-    southeast: [ 0.707,  0.707],
-    southwest: [-0.707,  0.707],
-  };
-  const DIR_DIST = 160;
-  const DIR_STR  = 0.2;
-
-  // Collect portal edges that have a recognisable compass slot.
-  // For combined labels like "east/west" use the first slot (outbound direction).
-  const dirLinks = [];
-  for (const edge of edges) {
-    if (edge.edgeType !== 'portal') continue;
-    const slot = (edge.data?.slot ?? '').split('/')[0].toLowerCase();
-    const v = SLOT_V[slot];
-    if (!v) continue;
-    const src = nodeById.get(edge.source);
-    const tgt = nodeById.get(edge.target);
-    if (src && tgt) dirLinks.push({ src, tgt, v });
-  }
-
-  function portalDirForce(alpha) {
-    for (const { src, tgt, v } of dirLinks) {
-      tgt.vx += (src.x + v[0] * DIR_DIST - tgt.x) * DIR_STR * alpha;
-      tgt.vy += (src.y + v[1] * DIR_DIST - tgt.y) * DIR_STR * alpha;
-    }
-  }
-
   // Seed positions in a circle to give the simulation a clean start
   const R = Math.max(200, nodes.length * 12);
   nodes.forEach((n, i) => {
@@ -500,7 +464,6 @@ function computeLayout(nodes, edges) {
     .force('collide', forceCollide(NODE_W * 0.8))
     .force('x', forceX(0).strength(0.04))
     .force('y', forceY(0).strength(0.04))
-    .force('portal-dir', portalDirForce)
     .stop()
     .tick(600);
 
