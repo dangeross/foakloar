@@ -85,7 +85,7 @@ function RefNode({ data }) {
     <div style={{
       width: NODE_W, height: NODE_H,
       border: `1px ${data.isDraft ? 'dashed' : 'solid'} ${colour}`,
-      background: 'color-mix(in srgb, var(--colour-bg) 92%, var(--colour-dim))',
+      background: 'color-mix(in srgb, #0a0a0a 92%, #222)',
       color: colour,
       fontSize: '0.5rem',
       fontFamily: 'inherit',
@@ -205,7 +205,7 @@ function ParallelEdge({ source, target, data, style, markerEnd }) {
             position: 'absolute',
             transform: `translate(-50%, -50%) translate(${midX}px, ${midY}px)`,
             pointerEvents: 'none',
-            background: 'var(--colour-bg)',
+            background: '#0a0a0a',
             border: `1px solid ${colour}`,
             color: colour,
             fontSize: '0.42rem',
@@ -647,7 +647,7 @@ export default function ReferenceGraph({
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative', background: '#0a0a0a' }}>
       {/* Filter chips */}
       <div style={{
         position: 'absolute', top: 14, left: 8, zIndex: 10,
@@ -665,8 +665,8 @@ export default function ReferenceGraph({
                 onClick={() => toggleNodeType(nt)}
                 style={{
                   background: active
-                    ? `color-mix(in srgb, ${colour} 20%, var(--colour-bg))`
-                    : 'var(--colour-bg)',
+                    ? `color-mix(in srgb, ${colour} 20%, #0a0a0a)`
+                    : '#0a0a0a',
                   border: `1px solid ${active ? colour : 'var(--colour-dim)'}`,
                   color: active ? colour : 'var(--colour-dim)',
                   font: 'inherit', fontSize: '0.5rem',
@@ -689,8 +689,8 @@ export default function ReferenceGraph({
                 onClick={() => toggleFilter(et)}
                 style={{
                   background: active
-                    ? `color-mix(in srgb, ${colour} 20%, var(--colour-bg))`
-                    : 'var(--colour-bg)',
+                    ? `color-mix(in srgb, ${colour} 20%, #0a0a0a)`
+                    : '#0a0a0a',
                   border: `1px solid ${active ? colour : 'var(--colour-dim)'}`,
                   color: active ? colour : 'var(--colour-dim)',
                   font: 'inherit', fontSize: '0.5rem',
