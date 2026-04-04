@@ -437,7 +437,11 @@ function computeLayout(nodes, edges) {
     const key = [edge.source, edge.target].sort().join('::');
     if (seen.has(key)) continue;
     seen.add(key);
-    simLinks.push({ source: edge.source, target: edge.target, edgeType: edge.edgeType });
+    simLinks.push({
+      source: edge.source, target: edge.target, edgeType: edge.edgeType,
+      sourceEventType: nodeById.get(edge.source)?.data?.eventType ?? '',
+      targetEventType: nodeById.get(edge.target)?.data?.eventType ?? '',
+    });
   }
 
   // Seed positions in a circle to give the simulation a clean start
@@ -448,20 +452,23 @@ function computeLayout(nodes, edges) {
     n.y = R * Math.sin(angle);
   });
 
-  // Per-type link weights: distance controls how far apart connected nodes sit;
-  // strength controls how firmly the link enforces that distance.
-  const LINK_DISTANCE = { portal: 100, placement: 140, dialogue: 90, requires: 220, action: 260 };
-  const LINK_STRENGTH = { portal: 0.9, placement: 0.7, dialogue: 0.8, requires: 0.25, action: 0.15 };
+  const LINK_DISTANCE = { portal: 160, placement: 160, dialogue: 90, requires: 180, action: 200 };
+  const LINK_STRENGTH = { portal: 0.2, placement: 0.4, dialogue: 0.8, requires: 0.4, action: 0.35 };
+  function linkParams(d) {
+    if (d.edgeType === 'dialogue') return { dist:  90, str: 0.8 };
+    if (d.edgeType === 'portal')   return { dist: 160, str: 0.2 };
+    return {
+      dist: LINK_DISTANCE[d.edgeType] ?? 180,
+      str:  LINK_STRENGTH[d.edgeType] ?? 0.35,
+    };
+  }
 
-  // Soft Y targets by event type — bias toward a top-to-bottom reading order
-  // without overriding the organic clustering. Strength 0.08 is gentle enough
-  // that connected nodes still pull each other; just adds orientation.
   forceSimulation(nodes)
     .force('link', forceLink(simLinks)
       .id(d => d.id)
-      .distance(d => LINK_DISTANCE[d.edgeType] ?? 180)
-      .strength(d => LINK_STRENGTH[d.edgeType] ?? 0.5))
-    .force('charge', forceManyBody().strength(-800))
+      .distance(d => linkParams(d).dist)
+      .strength(d => linkParams(d).str))
+    .force('charge', forceManyBody().strength(-800).distanceMax(500))
     .force('center', forceCenter(0, 0))
     .force('collide', forceCollide(NODE_W * 0.8))
     .force('x', forceX(0).strength(0.04))
