@@ -523,6 +523,7 @@ export default function ReferenceGraph({
   events, selectedRef, onSelectRef, onOpenSidebar, onEditEvent, trustSet, clientMode,
 }) {
   const [activeFilters, setActiveFilters] = useState(() => new Set(EDGE_TYPES));
+  const [hiddenNodeTypes, setHiddenNodeTypes] = useState(() => new Set());
 
   // 1. Build raw graph
   const { rawNodes, rawEdges } = useMemo(
@@ -530,17 +531,37 @@ export default function ReferenceGraph({
     [events]
   );
 
-  // 2. Compute layout positions using dagre (uses rawEdges for rank structure)
+  // Unique event types present in the world (for node filter chips)
+  const allNodeTypes = useMemo(
+    () => [...new Set(rawNodes.map(n => n.data.eventType))].sort(),
+    [rawNodes]
+  );
+
+  // 2. Compute layout positions (uses all nodes — filtering doesn't affect layout)
   const layoutNodes = useMemo(() => {
     const nodes = rawNodes.map(n => ({ ...n, position: { x: 0, y: 0 } }));
     computeLayout(nodes, rawEdges);
     return nodes;
   }, [rawNodes, rawEdges]);
 
-  // 3. Filter edges by active filter chips
+  // 3a. Filter nodes by type
+  const visibleNodes = useMemo(
+    () => layoutNodes.filter(n => !hiddenNodeTypes.has(n.data.eventType)),
+    [layoutNodes, hiddenNodeTypes]
+  );
+  const visibleNodeIds = useMemo(
+    () => new Set(visibleNodes.map(n => n.id)),
+    [visibleNodes]
+  );
+
+  // 3b. Filter edges by type and visible endpoints
   const filteredRawEdges = useMemo(
-    () => rawEdges.filter(e => activeFilters.has(e.edgeType)),
-    [rawEdges, activeFilters]
+    () => rawEdges.filter(e =>
+      activeFilters.has(e.edgeType) &&
+      visibleNodeIds.has(e.source) &&
+      visibleNodeIds.has(e.target)
+    ),
+    [rawEdges, activeFilters, visibleNodeIds]
   );
 
   // 4. Assign parallel offsets after filtering (so visible edges are centered)
@@ -553,7 +574,7 @@ export default function ReferenceGraph({
   const { styledNodes, styledEdges } = useMemo(() => {
     if (!selectedRef) {
       return {
-        styledNodes: layoutNodes.map(n => ({ ...n, data: { ...n.data, dimmed: false } })),
+        styledNodes: visibleNodes.map(n => ({ ...n, data: { ...n.data, dimmed: false } })),
         styledEdges: offsetEdges.map(e => ({
           ...e,
           type: 'parallel',
@@ -569,7 +590,7 @@ export default function ReferenceGraph({
     }
     const highlighted = new Set([selectedRef, ...connected]);
     return {
-      styledNodes: layoutNodes.map(n => ({
+      styledNodes: visibleNodes.map(n => ({
         ...n,
         data: { ...n.data, dimmed: !highlighted.has(n.id) },
       })),
@@ -598,8 +619,12 @@ export default function ReferenceGraph({
 
   const onNodeClick = useCallback((_, node) => {
     const ref = node.data?.ref;
-    onSelectRef(ref === selectedRef ? null : ref);
-  }, [onSelectRef, selectedRef]);
+    if (ref === selectedRef) {
+      onOpenSidebar?.(ref); // second click opens sidebar
+    } else {
+      onSelectRef(ref);
+    }
+  }, [onSelectRef, onOpenSidebar, selectedRef]);
 
   const onPaneClick = useCallback(() => {
     onSelectRef(null);
@@ -613,54 +638,72 @@ export default function ReferenceGraph({
     });
   }, []);
 
+  const toggleNodeType = useCallback((nt) => {
+    setHiddenNodeTypes(prev => {
+      const next = new Set(prev);
+      next.has(nt) ? next.delete(nt) : next.add(nt);
+      return next;
+    });
+  }, []);
+
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       {/* Filter chips */}
       <div style={{
         position: 'absolute', top: 14, left: 8, zIndex: 10,
-        display: 'flex', gap: 4, flexWrap: 'wrap',
+        display: 'flex', flexDirection: 'column', gap: 4,
         fontFamily: 'inherit',
       }}>
-        {EDGE_TYPES.map(et => {
-          const active = activeFilters.has(et);
-          const colour = EDGE_COLOURS[et];
-          return (
-            <button
-              key={et}
-              onClick={() => toggleFilter(et)}
-              style={{
-                background: active
-                  ? `color-mix(in srgb, ${colour} 20%, var(--colour-bg))`
-                  : 'var(--colour-bg)',
-                border: `1px solid ${active ? colour : 'var(--colour-dim)'}`,
-                color: active ? colour : 'var(--colour-dim)',
-                font: 'inherit', fontSize: '0.5rem',
-                padding: '3px 6px', cursor: 'pointer',
-              }}
-            >
-              {et}
-            </button>
-          );
-        })}
-
+        {/* Node type filters */}
+        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+          {allNodeTypes.map(nt => {
+            const active = !hiddenNodeTypes.has(nt);
+            const colour = TYPE_COLOURS[nt] ?? 'var(--colour-dim)';
+            return (
+              <button
+                key={nt}
+                onClick={() => toggleNodeType(nt)}
+                style={{
+                  background: active
+                    ? `color-mix(in srgb, ${colour} 20%, var(--colour-bg))`
+                    : 'var(--colour-bg)',
+                  border: `1px solid ${active ? colour : 'var(--colour-dim)'}`,
+                  color: active ? colour : 'var(--colour-dim)',
+                  font: 'inherit', fontSize: '0.5rem',
+                  padding: '3px 6px', cursor: 'pointer',
+                }}
+              >
+                {nt}
+              </button>
+            );
+          })}
+        </div>
+        {/* Edge type filters */}
+        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+          {EDGE_TYPES.map(et => {
+            const active = activeFilters.has(et);
+            const colour = EDGE_COLOURS[et];
+            return (
+              <button
+                key={et}
+                onClick={() => toggleFilter(et)}
+                style={{
+                  background: active
+                    ? `color-mix(in srgb, ${colour} 20%, var(--colour-bg))`
+                    : 'var(--colour-bg)',
+                  border: `1px solid ${active ? colour : 'var(--colour-dim)'}`,
+                  color: active ? colour : 'var(--colour-dim)',
+                  font: 'inherit', fontSize: '0.5rem',
+                  padding: '3px 6px', cursor: 'pointer',
+                }}
+              >
+                {et}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Details button — top-right, visible when a node is selected */}
-      {selectedRef && (
-        <button
-          onClick={() => onOpenSidebar?.(selectedRef)}
-          style={{
-            position: 'absolute', top: 14, right: 8, zIndex: 10,
-            background: 'var(--colour-bg)',
-            border: '1px solid var(--colour-highlight)',
-            color: 'var(--colour-highlight)',
-            font: 'inherit', fontSize: '0.5rem',
-            padding: '1px 6px', cursor: 'pointer',
-          }}
-        >
-          details
-        </button>
-      )}
 
       <ReactFlow
         nodes={nodes}
